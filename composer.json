@@ -1,0 +1,33 @@
+{
+    "name": "mep-agency/web-toolkit",
+    "description": "A set of tools to create new websites easily",
+    "authors": [
+        {
+            "name": "Marco Lipparini",
+            "email": "developer@liarco.net"
+        },
+        {
+            "name": "MEP Development Team",
+            "homepage": "https://www.mep.it"
+        }
+    ],
+    "require": {
+        "nette/utils": "^3.2",
+        "php": "^8.0"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^0.12",
+        "phpunit/phpunit": "^9.5",
+        "symplify/monorepo-builder": "^9.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mep\\MonorepoUtils\\": "composer/packages/monorepo-utils/src",
+            "Mep\\WebToolkitBundle\\": "composer/packages/web-toolkit-bundle/src"
+        }
+    },
+    "replace": {
+        "mep-agency/monorepo-utils": "self.version",
+        "mep-agency/web-toolkit-bundle": "self.version"
+    }
+}

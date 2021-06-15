@@ -1,0 +1,29 @@
+{
+    "name": "mep-agency/monorepo-utils",
+    "description": "Utilities used by this monorepo (internal)",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Marco Lipparini",
+            "email": "developer@liarco.net"
+        },
+        {
+            "name": "MEP Development Team",
+            "homepage": "https://www.mep.it"
+        }
+    ],
+    "require": {
+        "php": "^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mep\\MonorepoUtils\\": "src"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1-dev"
+        }
+    }
+}
