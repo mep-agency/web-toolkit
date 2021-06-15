@@ -34,10 +34,7 @@ jobs:
         if: "!startsWith(github.ref, 'refs/tags/')"
         uses: "symplify/monorepo-split-github-action@2.0"
         with:
-          # ↓ split "packages/easy-coding-standard" directory
-          package-directory: '${{ matrix.package.local_path }}'
-
-          # ↓ into https://github.com/symplify/easy-coding-standard repository
+          package-directory: 'composer/${{ matrix.package.local_path }}'
           split-repository-organization: 'mep-agency'
           split-repository-name: '${{ matrix.package.split_repository }}'
 
@@ -48,9 +45,6 @@ jobs:
         with:
           tag: ${GITHUB_REF#refs/tags/}
 
-          # ↓ split "packages/easy-coding-standard" directory
-          package-directory: '${{ matrix.package.local_path }}'
-
-          # ↓ into https://github.com/symplify/easy-coding-standard repository
+          package-directory: 'composer/${{ matrix.package.local_path }}'
           split-repository-organization: 'mep-agency'
           split-repository-name: '${{ matrix.package.split_repository }}'
