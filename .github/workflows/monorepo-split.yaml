@@ -38,6 +38,9 @@ jobs:
           split-repository-organization: 'mep-agency'
           split-repository-name: '${{ matrix.package.split_repository }}'
 
+          user-name: "GitHub Action"
+          user-email: "action@github.com"
+
       # with tag
       -
         if: "startsWith(github.ref, 'refs/tags/')"
@@ -48,3 +51,6 @@ jobs:
           package-directory: 'composer/${{ matrix.package.local_path }}'
           split-repository-organization: 'mep-agency'
           split-repository-name: '${{ matrix.package.split_repository }}'
+
+          user-name: "GitHub Action"
+          user-email: "action@github.com"
