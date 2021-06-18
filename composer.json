@@ -16,6 +16,8 @@
         "php": "^8.0"
     },
     "require-dev": {
+        "easycorp/easyadmin-bundle": "^3.0",
+        "knplabs/doctrine-behaviors": "^2.2",
         "phpstan/phpstan": "^0.12",
         "phpunit/phpunit": "^9.5",
         "symplify/monorepo-builder": "^9.3"

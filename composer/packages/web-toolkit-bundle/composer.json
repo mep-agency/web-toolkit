@@ -14,7 +14,9 @@
         }
     ],
     "require": {
-        "php": "^8.0"
+        "php": "^8.0",
+        "easycorp/easyadmin-bundle": "^3.3",
+        "knplabs/doctrine-behaviors": "^2.2"
     },
     "autoload": {
         "psr-4": {

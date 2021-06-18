@@ -11,7 +11,8 @@
 
 declare(strict_types=1);
 
-use Mep\WebToolkitBundle\Service\TestService;
+use EasyCorp\Bundle\EasyAdminBundle\DependencyInjection\EasyAdminExtension;
+use Mep\WebToolkitBundle\Admin\Field\Configurator\TranslatableFieldConfigurator;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 /**
@@ -20,5 +21,10 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 return static function (ContainerConfigurator $containerConfigurator): void {
     $services = $containerConfigurator->services();
 
-    $services->set(TestService::class);
+    $services->defaults()
+        ->autoconfigure(true)
+        ->autowire(true);
+
+    $services->set(TranslatableFieldConfigurator::class)
+        ->tag(EasyAdminExtension::TAG_FIELD_CONFIGURATOR);
 };
