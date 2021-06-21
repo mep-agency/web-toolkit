@@ -1,0 +1,25 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{% extends '@!EasyAdmin/layout.html.twig' %}
+
+{% block header_custom_menu %}
+    {{ parent() }}
+
+    {# TODO: complete this implementation #}
+    <nav id="language-switcher">
+        <ul>
+            {% for locale in locales %}
+                {% set is_current_locale = locale == app.request.locale %}
+                {% set localized_url = path(
+                    app.request.attributes.get('_route'),
+                    app.request.attributes.get('_route_params')|merge(app.request.query.all)|merge({'_locale': locale})) %}
+
+                <li{% if is_current_locale %} class="current"{% endif %}>
+                    {% if not is_current_locale %}<a href="{{ localized_url }}" title="Switch to {{ locale }}">{% endif %}
+                        {{ locale|upper }}
+                    {% if not is_current_locale %}</a>{% endif %}
+                </li>
+
+            {% endfor %}
+        </ul>
+    </nav>
+{% endblock %}

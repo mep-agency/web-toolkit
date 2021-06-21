@@ -16,12 +16,13 @@ namespace Mep\WebToolkitBundle\DependencyInjection;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
  */
-class WebToolkitExtension extends Extension
+class WebToolkitExtension extends Extension implements PrependExtensionInterface
 {
     public function load(array $configs, ContainerBuilder $container)
     {
@@ -31,5 +32,15 @@ class WebToolkitExtension extends Extension
         );
 
         $loader->load('services.php');
+    }
+
+    public function prepend(ContainerBuilder $container)
+    {
+        $container->loadFromExtension('twig', [
+            'paths' => [
+                // '%kernel.project_dir%/vendor/mep-agency/web-toolkit-bundle/src/Resources/views/bundles/EasyAdminBundle' => 'EasyAdmin',
+                realpath(__DIR__ . '/..') . '/Resources/views/bundles/EasyAdminBundle' => 'EasyAdmin',
+            ],
+        ]);
     }
 }

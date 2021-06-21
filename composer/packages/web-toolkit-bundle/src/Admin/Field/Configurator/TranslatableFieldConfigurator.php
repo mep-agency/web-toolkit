@@ -47,8 +47,8 @@ class TranslatableFieldConfigurator implements FieldConfiguratorInterface
         /** @var class-string<TranslatableInterface> $entityFqcn */
 
         return
-            ! property_exists($entityDto->getFqcn(), $field->getProperty())
-            && property_exists($entityDto->getFqcn()::getTranslationEntityClass(), $field->getProperty());
+            ! property_exists($entityFqcn, $field->getProperty())
+            && property_exists($entityFqcn::getTranslationEntityClass(), $field->getProperty());
     }
 
     public function configure(FieldDto $field, EntityDto $entityDto, AdminContext $context): void
@@ -56,7 +56,7 @@ class TranslatableFieldConfigurator implements FieldConfiguratorInterface
         if (self::isTranslatableProperty($entityDto, $field)) {
             /** @var TranslatableInterface $instance */
             $instance = $entityDto->getInstance();
-            $isNew = $instance->getNewTranslations()->containsKey($this->localeProvider->provideCurrentLocale());
+            $isNew = ! $instance->getTranslations()->containsKey($this->localeProvider->provideCurrentLocale());
             $currentLocale = $this->localeProvider->provideCurrentLocale();
 
             $field->setFormTypeOption(
