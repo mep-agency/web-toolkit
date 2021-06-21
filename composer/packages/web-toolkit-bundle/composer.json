@@ -15,7 +15,7 @@
     ],
     "require": {
         "php": "^8.0",
-        "easycorp/easyadmin-bundle": "^3.3",
+        "easycorp/easyadmin-bundle": "dev-master",
         "knplabs/doctrine-behaviors": "^2.2"
     },
     "autoload": {
