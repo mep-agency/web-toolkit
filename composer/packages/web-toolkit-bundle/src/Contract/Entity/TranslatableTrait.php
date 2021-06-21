@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Mep\WebToolkitBundle\Contract;
+namespace Mep\WebToolkitBundle\Contract\Entity;
 
 use Doctrine\Common\Collections\Collection;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;

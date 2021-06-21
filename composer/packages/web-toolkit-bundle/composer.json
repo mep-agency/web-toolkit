@@ -16,7 +16,8 @@
     "require": {
         "php": "^8.0",
         "easycorp/easyadmin-bundle": "dev-master",
-        "knplabs/doctrine-behaviors": "^2.2"
+        "knplabs/doctrine-behaviors": "^2.2",
+        "symfony/validator": "^5.3"
     },
     "autoload": {
         "psr-4": {

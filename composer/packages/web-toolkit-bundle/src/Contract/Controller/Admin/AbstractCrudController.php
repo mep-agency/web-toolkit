@@ -11,10 +11,9 @@
 
 declare(strict_types=1);
 
-namespace Mep\WebToolkitBundle\Contract;
+namespace Mep\WebToolkitBundle\Contract\Controller\Admin;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
@@ -35,6 +34,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Security\Permission;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface;
+use Mep\WebToolkitBundle\Contract\Repository\LocalizedRepositoryInterface;
 use RuntimeException;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -170,19 +170,13 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
         $queryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
 
         if (self::isTranslatableEntity($entityDto)) {
-            /** @var class-string<TranslatableInterface> $entityFqcn */
-            $entityFqcn = $entityDto->getFqcn();
-            $rootAlias = $queryBuilder->getRootAliases()[0];
+            $entityRepository = $this->getDoctrine()->getRepository($entityDto->getFqcn());
 
-            $queryBuilder
-                ->innerJoin(
-                    $entityFqcn::getTranslationEntityClass(),
-                    'translation',
-                    Join::WITH,
-                    $rootAlias . '.' . $entityDto->getPrimaryKeyName() . ' = translation.translatable AND translation.locale = :locale'
-                )
-                ->setParameter('locale', $this->localeProvider->provideCurrentLocale())
-            ;
+            if (! $entityRepository instanceof LocalizedRepositoryInterface) {
+                throw new RuntimeException('Repositories of Translatable entities must implement the LocalizedRepositoryInterface');
+            }
+
+            $entityRepository->localizeQueryBuilder($queryBuilder);
         }
 
         return $queryBuilder;
