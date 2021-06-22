@@ -18,6 +18,7 @@ use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface;
+use Symfony\Contracts\Service\Attribute\Required;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
@@ -44,7 +45,17 @@ trait LocalizedRepositoryTrait
      */
     abstract public function createQueryBuilder($alias, $indexBy = null);
 
-    abstract private function getLocaleProvider(): LocaleProviderInterface;
+    private LocaleProviderInterface $localeProvider;
+
+    public function getLocaleProvider(): LocaleProviderInterface
+    {
+        return $this->localeProvider;
+    }
+
+    #[Required]
+    public function setLocaleProvider(LocaleProviderInterface $localeProvider): void {
+        $this->localeProvider = $localeProvider;
+    }
 
     public function createLocalizedQueryBuilder(string $alias, ?string $indexBy = null): QueryBuilder
     {
