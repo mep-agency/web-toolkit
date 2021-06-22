@@ -12,8 +12,8 @@
 declare(strict_types=1);
 
 use EasyCorp\Bundle\EasyAdminBundle\DependencyInjection\EasyAdminExtension;
-use Mep\WebToolkitBundle\Admin\Field\Configurator\TranslatableFieldConfigurator;
-use Mep\WebToolkitBundle\Admin\Field\Configurator\TranslatableFieldPreConfigurator;
+use Mep\WebToolkitBundle\Field\Configurator\TranslatableFieldConfigurator;
+use Mep\WebToolkitBundle\Field\Configurator\TranslatableFieldPreConfigurator;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 /**

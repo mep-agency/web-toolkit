@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Mep\WebToolkitBundle\Contract\Admin\Field\Configurator;
+namespace Mep\WebToolkitBundle\Contract\Field\Configurator;
 
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldConfiguratorInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;

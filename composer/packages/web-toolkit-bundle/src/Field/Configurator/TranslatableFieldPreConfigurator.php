@@ -11,12 +11,12 @@
 
 declare(strict_types=1);
 
-namespace Mep\WebToolkitBundle\Admin\Field\Configurator;
+namespace Mep\WebToolkitBundle\Field\Configurator;
 
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto;
-use Mep\WebToolkitBundle\Contract\Admin\Field\Configurator\AbstractTranslatableFieldConfigurator;
+use Mep\WebToolkitBundle\Contract\Field\Configurator\AbstractTranslatableFieldConfigurator;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
