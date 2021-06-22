@@ -14,87 +14,35 @@ declare(strict_types=1);
 namespace Mep\WebToolkitBundle\Admin\Field\Configurator;
 
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
-use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldConfiguratorInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Configurator\CommonPreConfigurator;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
-use Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface;
-use Symfony\Component\Form\FormRegistryInterface;
-use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
+use Mep\WebToolkitBundle\Contract\Admin\Field\Configurator\AbstractTranslatableFieldConfigurator;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
  */
-class TranslatableFieldConfigurator implements FieldConfiguratorInterface
+class TranslatableFieldConfigurator extends AbstractTranslatableFieldConfigurator
 {
-    public function __construct(
-        private LocaleProviderInterface $localeProvider,
-        private PropertyAccessorInterface $propertyAccessor,
-        private FormRegistryInterface $formRegistry,
-    ) {}
-
-    public function supports(FieldDto $field, EntityDto $entityDto): bool
-    {
-        if (! in_array(
-            TranslatableInterface::class,
-            class_implements($entityFqcn = $entityDto->getFqcn()),
-            true
-        )) {
-            return false;
-        }
-
-        /** @var class-string<TranslatableInterface> $entityFqcn */
-
-        return
-            ! property_exists($entityFqcn, $field->getProperty())
-            && property_exists($entityFqcn::getTranslationEntityClass(), $field->getProperty());
-    }
-
     public function configure(FieldDto $field, EntityDto $entityDto, AdminContext $context): void
     {
-        if (self::isTranslatableProperty($entityDto, $field)) {
-            /** @var TranslatableInterface $instance */
-            $instance = $entityDto->getInstance();
-            $isNew = ! $instance->getTranslations()->containsKey($this->localeProvider->provideCurrentLocale());
-            $currentLocale = $this->localeProvider->provideCurrentLocale();
+        /** @var TranslatableInterface $instance */
+        $instance = $entityDto->getInstance();
+        $isNew = ! $instance->getTranslations()->containsKey($this->localeProvider->provideCurrentLocale());
+        $currentLocale = $this->localeProvider->provideCurrentLocale();
 
-            $field->setFormTypeOption(
-                'property_path',
-                ($isNew ? 'newTranslations[' : 'translations[') . $currentLocale . '].' . $field->getProperty()
-            );
+        $field->setFormTypeOption(
+            'property_path',
+            ($isNew ? 'newTranslations[' : 'translations[') . $currentLocale . '].' . $field->getProperty()
+        );
 
-            $value = $this->rebuildValueOption($field, $entityDto);
-            $field->setValue($value);
-            $field->setFormattedValue($value);
+        $value = $this->rebuildValueOption($field, $entityDto);
+        $field->setValue($value);
+        $field->setFormattedValue($value);
 
-            $templatePath = $this->rebuildTemplatePathOption($context, $field, $entityDto);
-            $field->setTemplatePath($templatePath);
-
-            /*
-            // Testing type-guessing
-            dump(
-                $entityDto->getFqcn()::getTranslationEntityClass(),
-                $field->getProperty(),
-                $this->formRegistry
-                    ->getTypeGuesser()
-                    ->guessType($entityDto->getFqcn()::getTranslationEntityClass(), $field->getProperty()),
-                $this->formRegistry
-                    ->getTypeGuesser()
-                    ->guessRequired($entityDto->getFqcn()::getTranslationEntityClass(), $field->getProperty()),
-                $this->formRegistry
-                    ->getTypeGuesser()
-                    ->guessPattern($entityDto->getFqcn()::getTranslationEntityClass(), $field->getProperty()),
-                $this->formRegistry
-                    ->getTypeGuesser()
-                    ->guessMaxLength($entityDto->getFqcn()::getTranslationEntityClass(), $field->getProperty()),
-            );*/
-        }
-    }
-
-    private static function isTranslatableProperty(EntityDto $entityDto, FieldDto $fieldDto): bool
-    {
-        return ! property_exists($entityDto->getFqcn(), $fieldDto->getProperty()) && property_exists($entityDto->getFqcn()::getTranslationEntityClass(), $fieldDto->getProperty());
+        $templatePath = $this->rebuildTemplatePathOption($context, $field, $entityDto);
+        $field->setTemplatePath($templatePath);
     }
 
     /**

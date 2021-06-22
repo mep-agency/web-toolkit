@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 use EasyCorp\Bundle\EasyAdminBundle\DependencyInjection\EasyAdminExtension;
 use Mep\WebToolkitBundle\Admin\Field\Configurator\TranslatableFieldConfigurator;
+use Mep\WebToolkitBundle\Admin\Field\Configurator\TranslatableFieldPreConfigurator;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 /**
@@ -24,6 +25,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services->defaults()
         ->autoconfigure(true)
         ->autowire(true);
+
+    $services->set(TranslatableFieldPreConfigurator::class)
+        ->tag(EasyAdminExtension::TAG_FIELD_CONFIGURATOR, ['priority' => 99999]);
 
     $services->set(TranslatableFieldConfigurator::class)
         ->tag(EasyAdminExtension::TAG_FIELD_CONFIGURATOR);
