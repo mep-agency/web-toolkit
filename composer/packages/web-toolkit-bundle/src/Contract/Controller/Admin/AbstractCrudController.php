@@ -15,6 +15,8 @@ namespace Mep\WebToolkitBundle\Contract\Controller\Admin;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ObjectRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -30,13 +32,16 @@ use EasyCorp\Bundle\EasyAdminBundle\Event\AfterCrudActionEvent;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeCrudActionEvent;
 use EasyCorp\Bundle\EasyAdminBundle\Exception\ForbiddenActionException;
 use EasyCorp\Bundle\EasyAdminBundle\Exception\InsufficientEntityPermissionException;
+use EasyCorp\Bundle\EasyAdminBundle\Factory\EntityFactory;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Security\Permission;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface;
+use Mep\WebToolkitBundle\Contract\Repository\AbstractSingleInstanceRepository;
 use Mep\WebToolkitBundle\Contract\Repository\LocalizedRepositoryInterface;
 use RuntimeException;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
@@ -59,9 +64,77 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
         return $instance;
     }
 
+    public function index(AdminContext $context)
+    {
+        return $this->redirectToSingleInstance($context) ?? parent::index($context);
+    }
+
+    public function new(AdminContext $context)
+    {
+        return $this->redirectToSingleInstance($context) ?? parent::new($context);
+    }
+
+    /**
+     * Redirects to:
+     * - the NEW action if no instance is found
+     * - the EDIT action if an instance is found
+     */
+    private function redirectToSingleInstance(AdminContext $context): ?Response
+    {
+        if ($this->isSingleInstance()) {
+            $repository = $this->getRepository();
+
+            $singleInstance = $repository->getInstance();
+
+            if ($singleInstance === null) {
+                if ($context->getCrud()->getCurrentAction() === Action::NEW) {
+                    // This is already a NEW action, no redirect needed
+                    return null;
+                }
+
+                return $this->redirect(
+                    $this->get(AdminUrlGenerator::class)
+                        ->setAction(Action::NEW)
+                        ->generateUrl()
+                );
+            }
+
+            /** @var EntityFactory $entityFactory */
+            $entityFactory = $this->get(EntityFactory::class);
+
+            return $this->redirect(
+                $this->get(AdminUrlGenerator::class)
+                    ->setAction(Action::EDIT)
+                    ->setEntityId($entityFactory->createForEntityInstance($singleInstance)->getPrimaryKeyValue())
+                    ->generateUrl()
+            );
+        }
+
+        return null;
+    }
+
+    public function configureCrud(Crud $crud): Crud
+    {
+        $crud = parent::configureCrud($crud);
+
+        if ($this->isSingleInstance()) {
+            // Reset page title to entity label (singular)
+            $crud->setPageTitle(Action::NEW, '%entity_label_singular%');
+            $crud->setPageTitle(Action::EDIT, '%entity_label_singular%');
+        }
+
+        return $crud;
+    }
+
     public function configureActions(Actions $actions): Actions
     {
         $actionsConfiguration = parent::configureActions($actions);
+
+        if ($this->isSingleInstance()) {
+            // Remove useless actions
+            $actionsConfiguration->remove(Crud::PAGE_NEW, Action::SAVE_AND_ADD_ANOTHER);
+            $actionsConfiguration->remove(Crud::PAGE_EDIT, Action::SAVE_AND_CONTINUE);
+        }
 
         if (self::isTranslatableEntity()) {
             $actionsConfiguration
@@ -169,7 +242,7 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
     {
         $queryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
 
-        if (self::isTranslatableEntity($entityDto)) {
+        if (self::isTranslatableEntity()) {
             $entityRepository = $this->getDoctrine()->getRepository($entityDto->getFqcn());
 
             if (! $entityRepository instanceof LocalizedRepositoryInterface) {
@@ -180,6 +253,19 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
         }
 
         return $queryBuilder;
+    }
+
+    private function getRepository(): ObjectRepository
+    {
+        /** @var ManagerRegistry $doctrine */
+        $doctrine = $this->get('doctrine');
+
+        return $doctrine->getRepository(static::getEntityFqcn());
+    }
+
+    private function isSingleInstance(): bool
+    {
+        return $this->getRepository() instanceof AbstractSingleInstanceRepository;
     }
 
     private function overrideDefaultLocaleIfIsTranslatable(?object $instance): void
@@ -195,17 +281,11 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
         }
     }
 
-    private static function isTranslatableEntity(?EntityDto $entityDto = null): bool
+    private static function isTranslatableEntity(): bool
     {
-        if ($entityDto !== null) {
-            $entityFqcn = $entityDto->getFqcn();
-        } else {
-            $entityFqcn = static::getEntityFqcn();
-        }
-
         return in_array(
             TranslatableInterface::class,
-            class_implements($entityFqcn),
+            class_implements(static::getEntityFqcn()),
             true);
     }
 

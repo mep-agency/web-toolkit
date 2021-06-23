@@ -12,6 +12,7 @@
 declare(strict_types=1);
 
 use EasyCorp\Bundle\EasyAdminBundle\DependencyInjection\EasyAdminExtension;
+use Mep\WebToolkitBundle\EventListener\ForceSingleInstanceEventListener;
 use Mep\WebToolkitBundle\Field\Configurator\TranslatableFieldConfigurator;
 use Mep\WebToolkitBundle\Field\Configurator\TranslatableFieldPreConfigurator;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -26,9 +27,16 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->autoconfigure(true)
         ->autowire(true);
 
+    // Single instance support
+    $services->set(ForceSingleInstanceEventListener::class)
+        ->tag('doctrine.event_listener', [
+            'event' => 'prePersist',
+            'priority' => 9999,
+        ]);
+
+    // Translatable support
     $services->set(TranslatableFieldPreConfigurator::class)
         ->tag(EasyAdminExtension::TAG_FIELD_CONFIGURATOR, ['priority' => 99999]);
-
     $services->set(TranslatableFieldConfigurator::class)
         ->tag(EasyAdminExtension::TAG_FIELD_CONFIGURATOR);
 };
