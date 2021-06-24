@@ -17,24 +17,20 @@ use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Configurator\CommonPreConfigurator;
-use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Mep\WebToolkitBundle\Contract\Field\Configurator\AbstractTranslatableFieldConfigurator;
+use RuntimeException;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
+ * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 class TranslatableFieldConfigurator extends AbstractTranslatableFieldConfigurator
 {
     public function configure(FieldDto $field, EntityDto $entityDto, AdminContext $context): void
     {
-        /** @var TranslatableInterface $instance */
-        $instance = $entityDto->getInstance();
-        $isNew = ! $instance->getTranslations()->containsKey($this->localeProvider->provideCurrentLocale());
-        $currentLocale = $this->localeProvider->provideCurrentLocale();
-
         $field->setFormTypeOption(
             'property_path',
-            ($isNew ? 'newTranslations[' : 'translations[') . $currentLocale . '].' . $field->getProperty()
+            $this->getFieldPropertyPath($field, $entityDto),
         );
 
         $value = $this->rebuildValueOption($field, $entityDto);
@@ -85,7 +81,7 @@ class TranslatableFieldConfigurator extends AbstractTranslatableFieldConfigurato
         }
 
         if (null === $templateName = $field->getTemplateName()) {
-            throw new \RuntimeException(sprintf('Fields must define either their templateName or their templatePath. None given for "%s" field.', $field->getProperty()));
+            throw new RuntimeException(sprintf('Fields must define either their templateName or their templatePath. None given for "%s" field.', $field->getProperty()));
         }
 
         return $adminContext->getTemplatePath($templateName);

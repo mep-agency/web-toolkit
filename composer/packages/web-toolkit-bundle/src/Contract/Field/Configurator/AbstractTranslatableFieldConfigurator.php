@@ -24,6 +24,7 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
+ * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 abstract class AbstractTranslatableFieldConfigurator implements FieldConfiguratorInterface
 {
@@ -62,5 +63,15 @@ abstract class AbstractTranslatableFieldConfigurator implements FieldConfigurato
     protected function getTranslationFqcn(EntityDto $entityDto): string
     {
         return $this->getTranslatableFqcn($entityDto)::getTranslationEntityClass();
+    }
+
+    protected function getFieldPropertyPath(FieldDto $field, EntityDto $entityDto): string
+    {
+        /** @var TranslatableInterface $instance */
+        $instance = $entityDto->getInstance();
+        $isNew = ! $instance->getTranslations()->containsKey($this->localeProvider->provideCurrentLocale());
+        $currentLocale = $this->localeProvider->provideCurrentLocale();
+
+        return ($isNew ? 'newTranslations[' : 'translations[') . $currentLocale . '].' . $field->getProperty();
     }
 }
