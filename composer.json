@@ -16,6 +16,7 @@
         "knplabs/doctrine-behaviors": "^2.2",
         "nette/utils": "^3.2",
         "php": "^8.0",
+        "symfony/security-bundle": "^5.3",
         "symfony/validator": "^5.3"
     },
     "require-dev": {

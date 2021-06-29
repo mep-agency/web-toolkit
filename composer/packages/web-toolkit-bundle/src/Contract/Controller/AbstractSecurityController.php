@@ -18,14 +18,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 use Symfony\Component\Security\Http\LoginLink\LoginLinkDetails;
 use Symfony\Component\Security\Http\LoginLink\LoginLinkHandlerInterface;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
  */
-abstract class AbstractSecurityController extends AbstractController
+abstract class AbstractSecurityController extends AbstractController implements AuthenticationEntryPointInterface
 {
     #[Route('/login', name: 'login')]
     public function login(Request $request, LoginLinkHandlerInterface $loginLinkHandler): Response
@@ -66,6 +68,11 @@ abstract class AbstractSecurityController extends AbstractController
     public function loginCheck(): void
     {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+    }
+
+    public function start(Request $request, AuthenticationException $authException = null)
+    {
+        return $this->redirectToRoute('login');
     }
 
     /**
