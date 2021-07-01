@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Mep\WebToolkitBundle\Exception;
+namespace Mep\WebToolkitBundle\Exception\Entity;
 
 use RuntimeException;
 use Mep\WebToolkitBundle\Contract\Repository\AbstractSingleInstanceRepository;

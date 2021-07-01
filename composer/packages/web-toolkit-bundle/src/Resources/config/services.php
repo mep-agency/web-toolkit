@@ -12,11 +12,15 @@
 declare(strict_types=1);
 
 use EasyCorp\Bundle\EasyAdminBundle\DependencyInjection\EasyAdminExtension;
+use Mep\WebToolkitBundle\DependencyInjection\WebToolkitExtension;
 use Mep\WebToolkitBundle\EventListener\ForceSingleInstanceEventListener;
 use Mep\WebToolkitBundle\Field\Configurator\TranslatableBooleanConfigurator;
 use Mep\WebToolkitBundle\Field\Configurator\TranslatableFieldConfigurator;
 use Mep\WebToolkitBundle\Field\Configurator\TranslatableFieldPreConfigurator;
+use Mep\WebToolkitBundle\Mail\TemplateProvider\TwigTemplateProvider;
+use Mep\WebToolkitBundle\Mail\TemplateRenderer;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
@@ -42,4 +46,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->tag(EasyAdminExtension::TAG_FIELD_CONFIGURATOR);
     $services->set(TranslatableBooleanConfigurator::class)
         ->tag(EasyAdminExtension::TAG_FIELD_CONFIGURATOR, ['priority' => -9998]);
+
+    // Mail templates support
+    $services->set(TemplateRenderer::class)
+        ->arg(0, tagged_iterator(WebToolkitExtension::TAG_MAIL_TEMPLATE_PROVIDER));
+    $services->set(TwigTemplateProvider::class);
 };

@@ -15,7 +15,7 @@ namespace Mep\WebToolkitBundle\EventListener;
 
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Mep\WebToolkitBundle\Contract\Repository\AbstractSingleInstanceRepository;
-use Mep\WebToolkitBundle\Exception\MultipleInstancesOfSingleInstanceEntityException;
+use Mep\WebToolkitBundle\Exception\Entity\MultipleInstancesOfSingleInstanceEntityException;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>

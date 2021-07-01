@@ -17,6 +17,7 @@
         "php": "^8.0",
         "easycorp/easyadmin-bundle": "dev-master",
         "knplabs/doctrine-behaviors": "^2.2",
+        "symfony/mailer": "^5.3",
         "symfony/security-bundle": "^5.3",
         "symfony/validator": "^5.3"
     },

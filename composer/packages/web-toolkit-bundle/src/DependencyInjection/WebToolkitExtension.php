@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\DependencyInjection;
 
+use Mep\WebToolkitBundle\Contract\Mail\TemplateProviderInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -24,8 +25,13 @@ use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
  */
 class WebToolkitExtension extends Extension implements PrependExtensionInterface
 {
+    public const TAG_MAIL_TEMPLATE_PROVIDER = 'mep.web_toolkit.mail_template_provider';
+
     public function load(array $configs, ContainerBuilder $container)
     {
+        $container->registerForAutoconfiguration(TemplateProviderInterface::class)
+            ->addTag(self::TAG_MAIL_TEMPLATE_PROVIDER);
+
         $loader = new PhpFileLoader(
             $container,
             new FileLocator(__DIR__ . '/../Resources/config')
