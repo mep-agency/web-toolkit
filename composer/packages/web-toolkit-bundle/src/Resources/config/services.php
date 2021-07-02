@@ -17,6 +17,7 @@ use Mep\WebToolkitBundle\EventListener\ForceSingleInstanceEventListener;
 use Mep\WebToolkitBundle\Field\Configurator\TranslatableBooleanConfigurator;
 use Mep\WebToolkitBundle\Field\Configurator\TranslatableFieldConfigurator;
 use Mep\WebToolkitBundle\Field\Configurator\TranslatableFieldPreConfigurator;
+use Mep\WebToolkitBundle\Mail\TemplateProvider\DummyTemplateProvider;
 use Mep\WebToolkitBundle\Mail\TemplateProvider\TwigTemplateProvider;
 use Mep\WebToolkitBundle\Mail\TemplateRenderer;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -51,4 +52,5 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services->set(TemplateRenderer::class)
         ->arg(0, tagged_iterator(WebToolkitExtension::TAG_MAIL_TEMPLATE_PROVIDER));
     $services->set(TwigTemplateProvider::class);
+    $services->set(DummyTemplateProvider::class);
 };
