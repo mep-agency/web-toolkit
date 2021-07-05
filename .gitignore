@@ -179,6 +179,7 @@ web_modules/
 # dotenv environment variables file
 .env
 .env.test
+!composer/projects/symfony-web-toolkit-skeleton/.env
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
