@@ -1,5 +1,6 @@
 Internationalization
 ====================
+
 Internationalization is managed using `DoctrineBehaviors Translatable`_ entities.
 
 To make the system work, you should follow the next steps.
