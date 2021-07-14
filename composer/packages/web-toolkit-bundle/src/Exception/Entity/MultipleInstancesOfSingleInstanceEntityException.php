@@ -16,6 +16,9 @@ namespace Mep\WebToolkitBundle\Exception\Entity;
 use RuntimeException;
 use Mep\WebToolkitBundle\Contract\Repository\AbstractSingleInstanceRepository;
 
+/**
+ * @author Marco Lipparini <developer@liarco.net>
+ */
 class MultipleInstancesOfSingleInstanceEntityException extends RuntimeException
 {
     public function __construct()

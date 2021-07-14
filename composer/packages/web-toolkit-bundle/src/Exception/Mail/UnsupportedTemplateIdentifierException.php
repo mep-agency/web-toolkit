@@ -16,6 +16,9 @@ namespace Mep\WebToolkitBundle\Exception\Mail;
 use Mep\WebToolkitBundle\Contract\Mail\TemplateIdentifierInterface;
 use RuntimeException;
 
+/**
+ * @author Marco Lipparini <developer@liarco.net>
+ */
 class UnsupportedTemplateIdentifierException extends RuntimeException
 {
     public function __construct(TemplateIdentifierInterface $templateIdentifier)

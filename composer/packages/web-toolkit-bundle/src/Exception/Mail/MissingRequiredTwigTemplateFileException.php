@@ -17,6 +17,9 @@ use Mep\WebToolkitBundle\Mail\TemplateIdentifier\TwigTemplate;
 use Mep\WebToolkitBundle\Mail\TemplateProvider\TwigTemplateProvider;
 use RuntimeException;
 
+/**
+ * @author Marco Lipparini <developer@liarco.net>
+ */
 class MissingRequiredTwigTemplateFileException extends RuntimeException
 {
     public function __construct(TwigTemplate $twigTemplate)
