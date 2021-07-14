@@ -53,4 +53,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->arg(0, tagged_iterator(WebToolkitExtension::TAG_MAIL_TEMPLATE_PROVIDER));
     $services->set(TwigTemplateProvider::class);
     $services->set(DummyTemplateProvider::class);
+
+    // Attachments support
+    $services->load('Mep\WebToolkitBundle\Repository\\', __DIR__ . '/../../Repository/*')
+        ->tag('doctrine.repository_service');
 };
