@@ -12,6 +12,7 @@
         }
     ],
     "require": {
+        "aws/aws-sdk-php": "^3.185",
         "easycorp/easyadmin-bundle": "dev-master",
         "knplabs/doctrine-behaviors": "^2.2",
         "nette/utils": "^3.2",
