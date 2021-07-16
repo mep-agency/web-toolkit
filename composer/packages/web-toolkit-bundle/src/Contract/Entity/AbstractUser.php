@@ -20,7 +20,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * @author Marco Lipparini <developer@liarco.net>
  */
-class AbstractUser implements UserInterface
+abstract class AbstractUser implements UserInterface
 {
     /**
      * @ORM\Id
