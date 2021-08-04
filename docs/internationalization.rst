@@ -71,4 +71,58 @@ This abstract controller adds these features:
 - Merges new translations before persist or update an entity
 - Joins translatable properties for index view
 
+Configuration
+-------------
+
+Add ``app.locales`` and ``app.default_locale`` in ``service.yaml``, like so::
+
+    // config/service.yaml
+
+    // ...
+
+    parameters:
+        app.locales: ['en', 'it']
+        app.default_locale: 'en'
+
+    // ...
+
+
+Replace ``default_locale`` and ``fallbacks`` in ``translations.yaml``::
+
+    // config/packages/translations.yaml
+
+    framework:
+        default_locale: '%app.default_locale%'
+        translator:
+            default_path: '%kernel.project_dir%/translations'
+            fallbacks:
+                - '%app.default_locale%'
+
+    // ...
+
+Add global ``locales`` in ``twig.yaml``::
+
+    // config/packages/twig.yaml
+
+    twig:
+        default_path: '%kernel.project_dir%/templates'
+
+        globals:
+            locales: '%app.locales%'
+
+    // ...
+
+And finally add ``prefix`` in ``annotations.yaml``::
+
+    // config/routes/annotations.yaml
+
+    controllers:
+        resource: ../../src/Controller/
+        type: annotation
+        prefix:
+            en: '/en'
+            it: '/it'
+
+    // ...
+
 .. _`DoctrineBehaviors Translatable`: https://github.com/KnpLabs/DoctrineBehaviors/blob/master/docs/translatable.md

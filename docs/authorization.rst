@@ -1,7 +1,7 @@
 Authorization
 =============
 
-Authorization uses standard Symfony user login, but with passwordless links.
+Authorization uses standard Symfony user login, but with `passwordless`_ links.
 
 To make the system work, you should follow the next steps.
 
@@ -68,7 +68,7 @@ The abstract controller implements come routes (login and logout).
 Configuration
 -------------
 
-Change ``app_user_provider`` and ``main`` in ``security.yaml``, like so::
+Change ``providers`` and ``firewalls`` in ``security.yaml``, like so::
 
     // config/packages/security.yaml
 
@@ -112,3 +112,4 @@ Optionally you can change also ``framework.yaml`` for better session handling::
 
     // ...
 
+.. _`passwordless`: https://symfony.com/doc/current/security/login_link.html
