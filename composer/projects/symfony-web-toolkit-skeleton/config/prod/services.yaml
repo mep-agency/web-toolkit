@@ -1,0 +1,13 @@
+services:
+  # add more service definitions when explicit configuration is needed
+  # please note that last definitions always *replace* previous ones
+  Mep\WebToolkitBundle\Contract\FileStorage\FileStorageDriverInterface: '@Mep\WebToolkitBundle\FileStorage\S3FileStorageDriver'
+  Mep\WebToolkitBundle\FileStorage\S3FileStorageDriver:
+    arguments:
+      $region: 'TODO'
+      $endpointUrl: 'TOD'
+      $key: 'TOD'
+      $secret: 'TODO'
+      $bucketName: 'TODO'
+      $cdnUrl: 'TODO'
+      $objectsKeyPrefix: 'TODO'

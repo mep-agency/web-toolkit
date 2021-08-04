@@ -25,3 +25,10 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    Mep\WebToolkitBundle\Contract\FileStorage\FileStorageDriverInterface: '@Mep\WebToolkitBundle\FileStorage\LocalFileStorageDriver'
+    Mep\WebToolkitBundle\FileStorage\LocalFileStorageDriver:
+        arguments:
+            $storagePath: '%kernel.project_dir%/public/storage'
+            $publicUrlPathPrefix: '/storage'
+            # optional
+            #$publicUrlPrefix: 'http://127.0.0.1:8000'
