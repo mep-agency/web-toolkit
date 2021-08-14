@@ -20,7 +20,10 @@ use Mep\WebToolkitBundle\Mail\TemplateIdentifier\TwigTemplate;
 use Symfony\Component\Mime\Email;
 use Twig\Environment;
 
-class TemplateRenderer
+/**
+ * @author Marco Lipparini <developer@liarco.net>
+ */
+final class TemplateRenderer
 {
     /**
      * @param iterable<TemplateProviderInterface> $templateProviders

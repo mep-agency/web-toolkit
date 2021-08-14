@@ -19,7 +19,7 @@ use Mep\WebToolkitBundle\Contract\Repository\AbstractSingleInstanceRepository;
 /**
  * @author Marco Lipparini <developer@liarco.net>
  */
-class MultipleInstancesOfSingleInstanceEntityException extends RuntimeException
+final class MultipleInstancesOfSingleInstanceEntityException extends RuntimeException
 {
     public function __construct()
     {

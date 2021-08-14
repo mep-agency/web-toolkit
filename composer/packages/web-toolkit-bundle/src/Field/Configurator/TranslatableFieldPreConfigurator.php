@@ -21,7 +21,7 @@ use Mep\WebToolkitBundle\Contract\Field\Configurator\AbstractTranslatableFieldCo
 /**
  * @author Marco Lipparini <developer@liarco.net>
  */
-class TranslatableFieldPreConfigurator extends AbstractTranslatableFieldConfigurator
+final class TranslatableFieldPreConfigurator extends AbstractTranslatableFieldConfigurator
 {
     public function configure(FieldDto $field, EntityDto $entityDto, AdminContext $context): void
     {

@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\File\File;
 /**
  * @author Marco Lipparini <developer@liarco.net>
  */
-class S3FileStorageDriver implements FileStorageDriverInterface
+final class S3FileStorageDriver implements FileStorageDriverInterface
 {
     private S3Client $s3Client;
 

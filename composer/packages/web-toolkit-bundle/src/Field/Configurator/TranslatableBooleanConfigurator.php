@@ -26,7 +26,7 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
  * @author Marco Lipparini <developer@liarco.net>
  * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
-class TranslatableBooleanConfigurator extends AbstractTranslatableFieldConfigurator
+final class TranslatableBooleanConfigurator extends AbstractTranslatableFieldConfigurator
 {
     public function __construct(
         protected LocaleProviderInterface $localeProvider,

@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * @author Marco Lipparini <developer@liarco.net>
  */
-class LocalFileStorageDriver implements FileStorageDriverInterface
+final class LocalFileStorageDriver implements FileStorageDriverInterface
 {
     private Filesystem $filesystem;
 

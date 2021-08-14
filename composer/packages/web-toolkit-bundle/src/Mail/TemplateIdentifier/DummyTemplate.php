@@ -15,7 +15,10 @@ namespace Mep\WebToolkitBundle\Mail\TemplateIdentifier;
 
 use Mep\WebToolkitBundle\Contract\Mail\TemplateIdentifierInterface;
 
-class DummyTemplate implements TemplateIdentifierInterface
+/**
+ * @author Marco Lipparini <developer@liarco.net>
+ */
+final class DummyTemplate implements TemplateIdentifierInterface
 {
     // Nothing to do here...
 }

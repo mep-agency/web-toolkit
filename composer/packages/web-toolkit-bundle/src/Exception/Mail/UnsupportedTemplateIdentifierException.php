@@ -19,7 +19,7 @@ use RuntimeException;
 /**
  * @author Marco Lipparini <developer@liarco.net>
  */
-class UnsupportedTemplateIdentifierException extends RuntimeException
+final class UnsupportedTemplateIdentifierException extends RuntimeException
 {
     public function __construct(TemplateIdentifierInterface $templateIdentifier)
     {

@@ -20,7 +20,7 @@ use Mep\WebToolkitBundle\Exception\Entity\MultipleInstancesOfSingleInstanceEntit
 /**
  * @author Marco Lipparini <developer@liarco.net>
  */
-class ForceSingleInstanceEventListener
+final class ForceSingleInstanceEventListener
 {
     public function prePersist(LifecycleEventArgs $args): void
     {

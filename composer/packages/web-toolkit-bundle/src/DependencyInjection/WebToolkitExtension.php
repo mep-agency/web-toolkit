@@ -23,7 +23,7 @@ use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 /**
  * @author Marco Lipparini <developer@liarco.net>
  */
-class WebToolkitExtension extends Extension implements PrependExtensionInterface
+final class WebToolkitExtension extends Extension implements PrependExtensionInterface
 {
     public const REFERENCE_PREFIX = 'mep_web_toolkit.';
 

@@ -20,7 +20,7 @@ use RuntimeException;
 /**
  * @author Marco Lipparini <developer@liarco.net>
  */
-class MissingRequiredTwigTemplateFileException extends RuntimeException
+final class MissingRequiredTwigTemplateFileException extends RuntimeException
 {
     public function __construct(TwigTemplate $twigTemplate)
     {

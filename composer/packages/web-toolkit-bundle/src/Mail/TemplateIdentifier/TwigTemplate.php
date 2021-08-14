@@ -15,7 +15,10 @@ namespace Mep\WebToolkitBundle\Mail\TemplateIdentifier;
 
 use Mep\WebToolkitBundle\Contract\Mail\TemplateIdentifierInterface;
 
-class TwigTemplate implements TemplateIdentifierInterface
+/**
+ * @author Marco Lipparini <developer@liarco.net>
+ */
+final class TwigTemplate implements TemplateIdentifierInterface
 {
     public function __construct(private string $templatesFolder)
     {}

@@ -18,6 +18,6 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 /**
  * @author Marco Lipparini <developer@liarco.net>
  */
-class WebToolkitBundle extends Bundle
+final class WebToolkitBundle extends Bundle
 {
 }

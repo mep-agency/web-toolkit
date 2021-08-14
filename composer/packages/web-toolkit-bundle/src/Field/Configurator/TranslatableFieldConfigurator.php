@@ -24,7 +24,7 @@ use RuntimeException;
  * @author Marco Lipparini <developer@liarco.net>
  * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
-class TranslatableFieldConfigurator extends AbstractTranslatableFieldConfigurator
+final class TranslatableFieldConfigurator extends AbstractTranslatableFieldConfigurator
 {
     public function configure(FieldDto $field, EntityDto $entityDto, AdminContext $context): void
     {

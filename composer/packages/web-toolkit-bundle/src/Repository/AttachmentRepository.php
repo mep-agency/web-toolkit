@@ -25,7 +25,7 @@ use Doctrine\Persistence\ManagerRegistry;
  *
  * @author Marco Lipparini <developer@liarco.net>
  */
-class AttachmentRepository extends ServiceEntityRepository
+final class AttachmentRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
