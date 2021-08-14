@@ -28,7 +28,7 @@ trait TranslatableTrait
     /**
      * @var TranslationInterface[]|Collection
      *
-     * @Assert\Valid()
+     * @Assert\Valid
      */
     protected $translations;
 
@@ -36,7 +36,7 @@ trait TranslatableTrait
      * @see mergeNewTranslations
      * @var TranslationInterface[]|Collection
      *
-     * @Assert\Valid()
+     * @Assert\Valid
      */
     protected $newTranslations;
 }

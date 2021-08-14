@@ -13,12 +13,11 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Entity;
 
-use Mep\WebToolkitBundle\Repository\AttachmentRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
 
 /**
- * @ORM\Entity(repositoryClass=AttachmentRepository::class)
+ * @ORM\Entity
  *
  * @author Marco Lipparini <developer@liarco.net>
  */

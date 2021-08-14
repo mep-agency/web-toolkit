@@ -25,7 +25,25 @@ use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
  */
 class WebToolkitExtension extends Extension implements PrependExtensionInterface
 {
-    public const TAG_MAIL_TEMPLATE_PROVIDER = 'mep.web_toolkit.mail_template_provider';
+    public const REFERENCE_PREFIX = 'mep_web_toolkit.';
+
+    public const SERVICE_FORCE_SINGLE_INSTANCE_EVENT_LISTENER = self::REFERENCE_PREFIX . 'force_single_instance_event_listener';
+
+    public const SERVICE_TRANSLATABLE_FIELD_PRE_CONFIGURATOR = self::REFERENCE_PREFIX . 'translatable_field_pre_configurator';
+
+    public const SERVICE_TRANSLATABLE_FIELD_CONFIGURATOR = self::REFERENCE_PREFIX . 'translatable_field_configurator';
+
+    public const SERVICE_TRANSLATABLE_BOOLEAN_CONFIGURATOR = self::REFERENCE_PREFIX . 'translatable_boolean_configurator';
+
+    public const SERVICE_TEMPLATE_RENDERER = self::REFERENCE_PREFIX . 'template_renderer';
+
+    public const SERVICE_TWIG_TEMPLATE_PROVIDER = self::REFERENCE_PREFIX . 'twig_template_provider';
+
+    public const SERVICE_DUMMY_TEMPLATE_PROVIDER = self::REFERENCE_PREFIX . 'dummy_template_provider';
+
+    public const SERVICE_ATTACHMENT_REPOSITORY = self::REFERENCE_PREFIX . 'attachment_repository';
+
+    public const TAG_MAIL_TEMPLATE_PROVIDER = self::REFERENCE_PREFIX . 'mail_template_provider';
 
     public function load(array $configs, ContainerBuilder $container)
     {
