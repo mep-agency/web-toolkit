@@ -15,7 +15,10 @@ use Doctrine\Persistence\ManagerRegistry;
 use EasyCorp\Bundle\EasyAdminBundle\DependencyInjection\EasyAdminExtension;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Configurator\BooleanConfigurator;
 use Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface;
+use Mep\WebToolkitBundle\Contract\FileStorage\FileStorageDriverInterface;
 use Mep\WebToolkitBundle\DependencyInjection\WebToolkitExtension;
+use Mep\WebToolkitBundle\Entity\Attachment;
+use Mep\WebToolkitBundle\EventListener\AttachmentRemoveEventListener;
 use Mep\WebToolkitBundle\EventListener\ForceSingleInstanceEventListener;
 use Mep\WebToolkitBundle\Field\Configurator\TranslatableBooleanConfigurator;
 use Mep\WebToolkitBundle\Field\Configurator\TranslatableFieldConfigurator;
@@ -88,5 +91,13 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->arg(0, new Reference(ManagerRegistry::class))
         ->tag('doctrine.repository_service')
         ->alias(AttachmentRepository::class, WebToolkitExtension::SERVICE_ATTACHMENT_REPOSITORY)
+    ;
+    $services->set(WebToolkitExtension::SERVICE_ATTACHMENT_REMOVE_EVENT_LISTENER, AttachmentRemoveEventListener::class)
+        ->arg(0, new Reference(FileStorageDriverInterface::class))
+        ->tag('doctrine.orm.entity_listener', [
+            'entity' => Attachment::class,
+            'event' => 'preRemove',
+            'method' => 'removeAttachedFile',
+        ])
     ;
 };

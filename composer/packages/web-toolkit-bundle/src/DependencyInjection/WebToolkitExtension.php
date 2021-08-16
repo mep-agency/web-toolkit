@@ -43,6 +43,8 @@ final class WebToolkitExtension extends Extension implements PrependExtensionInt
 
     public const SERVICE_ATTACHMENT_REPOSITORY = self::REFERENCE_PREFIX . 'attachment_repository';
 
+    public const SERVICE_ATTACHMENT_REMOVE_EVENT_LISTENER = self::REFERENCE_PREFIX . 'force_attachment_remove_event_listener';
+
     public const TAG_MAIL_TEMPLATE_PROVIDER = self::REFERENCE_PREFIX . 'mail_template_provider';
 
     public function load(array $configs, ContainerBuilder $container)

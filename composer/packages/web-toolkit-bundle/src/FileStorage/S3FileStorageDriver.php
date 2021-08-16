@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use JetBrains\PhpStorm\Pure;
 use Mep\WebToolkitBundle\Contract\FileStorage\FileStorageDriverInterface;
 use Mep\WebToolkitBundle\Entity\Attachment;
+use Mep\WebToolkitBundle\Exception\FileStorage\AttachedFileNotFoundException;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\File;
 
@@ -79,10 +80,11 @@ final class S3FileStorageDriver implements FileStorageDriverInterface
         return $attachment;
     }
 
-    public function remove(Attachment $attachment): void
+    public function removeAttachedFile(Attachment $attachment): void
     {
-        $this->entityManager->remove($attachment);
-        $this->entityManager->flush();
+        if (! $this->s3Client->doesObjectExist($this->bucketName, $this->buildFileKey($attachment))) {
+            throw new AttachedFileNotFoundException($attachment);
+        }
 
         $this->s3Client->deleteObject([
             'Bucket' => $this->bucketName,

@@ -8,6 +8,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use JetBrains\PhpStorm\Pure;
 use Mep\WebToolkitBundle\Contract\FileStorage\FileStorageDriverInterface;
 use Mep\WebToolkitBundle\Entity\Attachment;
+use Mep\WebToolkitBundle\Exception\FileStorage\AttachedFileNotFoundException;
+use Mep\WebToolkitBundle\Exception\FileStorage\LocalFileNotFoundException;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
@@ -33,12 +35,7 @@ final class LocalFileStorageDriver implements FileStorageDriverInterface
     public function store(File $file, array $metadata = []): Attachment
     {
         if (! $filePath = $file->getRealPath()) {
-            throw new FileNotFoundException(
-                null,
-                0,
-                null,
-                $file->getPathname()
-            );
+            throw new LocalFileNotFoundException($file->getPathname());
         }
 
         $attachment = new Attachment(
@@ -57,18 +54,18 @@ final class LocalFileStorageDriver implements FileStorageDriverInterface
         return $attachment;
     }
 
-    public function remove(Attachment $attachment): void
+    public function removeAttachedFile(Attachment $attachment): void
     {
-        $file = new File($this->buildFilePath($attachment));
+        try {
+            $file = new File($this->buildFilePath($attachment));
 
-        $this->entityManager->remove($attachment);
-        $this->entityManager->flush();
-
-        // Remove the parent folder in order to avoid leaving it empty.
-        $this->filesystem->remove($file->getPath());
+            // Remove the parent folder in order to avoid leaving it empty.
+            $this->filesystem->remove($file->getPath());
+        } catch (FileNotFoundException $e) {
+            throw new AttachedFileNotFoundException($attachment);
+        }
     }
 
-    #[Pure]
     public function getPublicUrl(Attachment $attachment): string
     {
         return $this->getPublicUrlPrefix() . $this->publicUrlPathPrefix . '/' . $attachment->getId() . '/' . $attachment->getFileName();

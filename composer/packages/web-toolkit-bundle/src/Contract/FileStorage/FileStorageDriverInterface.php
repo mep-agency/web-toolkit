@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Mep\WebToolkitBundle\Contract\FileStorage;
 
 use Mep\WebToolkitBundle\Entity\Attachment;
+use Mep\WebToolkitBundle\Exception\FileStorage\AttachedFileNotFoundException;
 use Symfony\Component\HttpFoundation\File\File;
 
 /**
@@ -26,7 +27,13 @@ interface FileStorageDriverInterface
      */
     public function store(File $file, array $metadata = []): Attachment;
 
-    public function remove(Attachment $attachment): void;
+    /**
+     * @internal Don't call this directly. This method is called by a dedicated Doctrine
+     *           EventListener when an Attachment entity is deleted.
+     *
+     * @throws AttachedFileNotFoundException
+     */
+    public function removeAttachedFile(Attachment $attachment): void;
 
     public function getPublicUrl(Attachment $attachment): string;
 }
