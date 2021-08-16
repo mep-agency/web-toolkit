@@ -3,11 +3,12 @@
 be used in a EasyAdmin Dashboard controller, where 'ea' is defined
 or from any other Symfony controller, where 'ea' is not defined #}
 {% extends '@!EasyAdmin/page/login.html.twig' %}
+{% trans_default_domain 'WebToolkitBundle' %}
 
 {% block wrapper_wrapper %}
 {% set page_title = page_title ?? block('page_title') %}
-{% set _username_label = username_label is defined ? username_label|trans : 'login_page.username'|trans({}, 'EasyAdminBundle') %}
-{% set _sign_in_label = sign_in_label is defined ? sign_in_label|trans : 'login_page.sign_in'|trans({}, 'EasyAdminBundle') %}
+{% set _username_label = username_label is defined ? username_label|trans : 'login_page.username'|trans() %}
+{% set _sign_in_label = sign_in_label is defined ? sign_in_label|trans : 'login_page.sign_in'|trans() %}
 
 <div class="login-wrapper">
     <header class="main-header mb-4">
