@@ -16,9 +16,7 @@ namespace Mep\WebToolkitBundle\Mail;
 use Mep\WebToolkitBundle\Contract\Mail\TemplateIdentifierInterface;
 use Mep\WebToolkitBundle\Contract\Mail\TemplateProviderInterface;
 use Mep\WebToolkitBundle\Exception\Mail\UnsupportedTemplateIdentifierException;
-use Mep\WebToolkitBundle\Mail\TemplateIdentifier\TwigTemplate;
 use Symfony\Component\Mime\Email;
-use Twig\Environment;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
@@ -28,8 +26,9 @@ final class TemplateRenderer
     /**
      * @param iterable<TemplateProviderInterface> $templateProviders
      */
-    public function __construct(private iterable $templateProviders)
-    {}
+    public function __construct(
+        private iterable $templateProviders,
+    ) {}
 
     /**
      * @param array<string, mixed> $parameters

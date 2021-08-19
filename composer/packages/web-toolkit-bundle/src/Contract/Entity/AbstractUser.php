@@ -22,21 +22,15 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 abstract class AbstractUser implements UserInterface
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: "integer")]
     protected $id;
 
-    /**
-     * @ORM\Column(type="string", length=255, unique=true)
-     */
+    #[ORM\Column(type: "string", length: 255, unique: true)]
     protected $email;
 
-    /**
-     * @ORM\Column(type="json")
-     */
+    #[ORM\Column(type: "json")]
     protected $roles = [];
 
     public function getId(): ?int

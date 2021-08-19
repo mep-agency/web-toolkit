@@ -27,16 +27,14 @@ trait TranslatableTrait
 
     /**
      * @var TranslationInterface[]|Collection
-     *
-     * @Assert\Valid
      */
+    #[Assert\Valid]
     protected $translations;
 
     /**
      * @see mergeNewTranslations
      * @var TranslationInterface[]|Collection
-     *
-     * @Assert\Valid
      */
+    #[Assert\Valid]
     protected $newTranslations;
 }

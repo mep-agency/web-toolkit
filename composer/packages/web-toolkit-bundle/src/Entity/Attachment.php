@@ -14,13 +14,17 @@ declare(strict_types=1);
 namespace Mep\WebToolkitBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Mep\WebToolkitBundle\Validator\AssociativeArrayOfScalarValues;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Validator\Constraints\PositiveOrZero;
 
 /**
- * @ORM\Entity
- *
  * @author Marco Lipparini <developer@liarco.net>
  */
+#[ORM\Entity]
 class Attachment
 {
     /**
@@ -33,23 +37,27 @@ class Attachment
      * @internal Attachment instances should be created by a FileStorageDriverInterface only.
      */
     public function __construct(
-        /**
-         * @ORM\Column(type="string", length=255)
-         */
+        #[ORM\Column(type: "string", length: 255)]
+        #[NotNull]
+        #[NotBlank]
+        #[Length(max: 255)]
         private string $fileName,
-        /**
-         * @ORM\Column(type="string", length=255)
-         */
+
+        #[ORM\Column(type: "string", length: 255)]
+        #[NotNull]
+        #[NotBlank]
+        #[Length(max: 255)]
         private string $mimeType,
-        /**
-         * @ORM\Column(type="integer")
-         */
+
+        #[ORM\Column(type: "integer")]
+        #[PositiveOrZero]
         private int $fileSize,
+
         /**
-         * @ORM\Column(type="json")
-         *
-         * @var array<string, mixed>
+         * @var array<string, scalar>
          */
+        #[ORM\Column(type: "json")]
+        #[AssociativeArrayOfScalarValues]
         private array $metadata = [],
     ) {
         $this->id = Uuid::v6();
@@ -76,7 +84,7 @@ class Attachment
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array<string, scalar>
      */
     public function getMetadata(): array
     {
@@ -94,7 +102,7 @@ class Attachment
     /**
      * Sets a single metadata value by key.
      *
-     * @param mixed $value
+     * @param scalar $value
      */
     public function set(string $key, $value): self
     {
@@ -105,6 +113,6 @@ class Attachment
 
     public function __toString(): string
     {
-        return (string) $this->getId();
+        return $this->getId()->toRfc4122();
     }
 }

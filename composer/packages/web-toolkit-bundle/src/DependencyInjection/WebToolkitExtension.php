@@ -68,5 +68,14 @@ final class WebToolkitExtension extends Extension implements PrependExtensionInt
                 realpath(__DIR__ . '/..') . '/Resources/views/bundles/EasyAdminBundle' => 'EasyAdmin',
             ],
         ]);
+
+        // Enable PHP attributes in Doctrine mappings
+        $container->loadFromExtension('doctrine', [
+            'orm' => [
+                'mappings' => [
+                    (new ReflectionClass(WebToolkitBundle::class))->getShortName() => 'attribute',
+                ],
+            ],
+        ]);
     }
 }
