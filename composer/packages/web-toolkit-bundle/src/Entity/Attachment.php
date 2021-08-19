@@ -27,14 +27,12 @@ use Symfony\Component\Validator\Constraints\PositiveOrZero;
 #[ORM\Entity]
 class Attachment
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="uuid", unique=true)
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: "uuid", unique: true)]
     private Uuid $id;
 
     /**
-     * @internal Attachment instances should be created by a FileStorageDriverInterface only.
+     * @internal Attachment instances should be created by the FileStorageManager only.
      */
     public function __construct(
         #[ORM\Column(type: "string", length: 255)]

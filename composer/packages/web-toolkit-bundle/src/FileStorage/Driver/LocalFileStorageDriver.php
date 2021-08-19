@@ -2,20 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Mep\WebToolkitBundle\FileStorage;
+namespace Mep\WebToolkitBundle\FileStorage\Driver;
 
-use Doctrine\ORM\EntityManagerInterface;
 use JetBrains\PhpStorm\Pure;
 use Mep\WebToolkitBundle\Contract\FileStorage\FileStorageDriverInterface;
 use Mep\WebToolkitBundle\Entity\Attachment;
-use Mep\WebToolkitBundle\Exception\FileStorage\AttachedFileNotFoundException;
-use Mep\WebToolkitBundle\Exception\FileStorage\LocalFileNotFoundException;
-use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
+ * @internal Don't use this class directly, use the FileStorageManager class instead.
+ *
  * @author Marco Lipparini <developer@liarco.net>
  */
 final class LocalFileStorageDriver implements FileStorageDriverInterface
@@ -25,45 +23,30 @@ final class LocalFileStorageDriver implements FileStorageDriverInterface
     public function __construct(
         private string $storagePath,
         private string $publicUrlPathPrefix,
-        private EntityManagerInterface $entityManager,
         private RequestStack $requestStack,
         private ?string $publicUrlPrefix = null,
     ) {
         $this->filesystem = new Filesystem();
     }
 
-    public function store(File $file, array $metadata = []): Attachment
+    public function store(File $file, Attachment $attachment): void
     {
-        if (! $filePath = $file->getRealPath()) {
-            throw new LocalFileNotFoundException($file->getPathname());
-        }
-
-        $attachment = new Attachment(
-            $file->getFilename(),
-            $file->getMimeType() ?? 'application/octet-stream',
-            $file->getSize(),
-            $metadata,
-        );
-
         // Copy new file to storage
-        $this->filesystem->copy($filePath, $this->buildFilePath($attachment));
+        $this->filesystem->copy($file->getRealPath(), $this->buildFilePath($attachment));
+    }
 
-        $this->entityManager->persist($attachment);
-        $this->entityManager->flush();
-
-        return $attachment;
+    #[Pure]
+    public function attachedFileExists(Attachment $attachment): bool
+    {
+        return is_file($this->buildFilePath($attachment));
     }
 
     public function removeAttachedFile(Attachment $attachment): void
     {
-        try {
-            $file = new File($this->buildFilePath($attachment));
+        $file = new File($this->buildFilePath($attachment));
 
-            // Remove the parent folder in order to avoid leaving it empty.
-            $this->filesystem->remove($file->getPath());
-        } catch (FileNotFoundException $e) {
-            throw new AttachedFileNotFoundException($attachment);
-        }
+        // Remove the parent folder in order to avoid leaving it empty.
+        $this->filesystem->remove($file->getPath());
     }
 
     public function getPublicUrl(Attachment $attachment): string

@@ -13,7 +13,10 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\DependencyInjection;
 
+use Mep\WebToolkitBundle\Contract\FileStorage\FileStorageProcessorInterface;
 use Mep\WebToolkitBundle\Contract\Mail\TemplateProviderInterface;
+use Mep\WebToolkitBundle\WebToolkitBundle;
+use ReflectionClass;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -25,32 +28,13 @@ use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
  */
 final class WebToolkitExtension extends Extension implements PrependExtensionInterface
 {
-    public const REFERENCE_PREFIX = 'mep_web_toolkit.';
-
-    public const SERVICE_FORCE_SINGLE_INSTANCE_EVENT_LISTENER = self::REFERENCE_PREFIX . 'force_single_instance_event_listener';
-
-    public const SERVICE_TRANSLATABLE_FIELD_PRE_CONFIGURATOR = self::REFERENCE_PREFIX . 'translatable_field_pre_configurator';
-
-    public const SERVICE_TRANSLATABLE_FIELD_CONFIGURATOR = self::REFERENCE_PREFIX . 'translatable_field_configurator';
-
-    public const SERVICE_TRANSLATABLE_BOOLEAN_CONFIGURATOR = self::REFERENCE_PREFIX . 'translatable_boolean_configurator';
-
-    public const SERVICE_TEMPLATE_RENDERER = self::REFERENCE_PREFIX . 'template_renderer';
-
-    public const SERVICE_TWIG_TEMPLATE_PROVIDER = self::REFERENCE_PREFIX . 'twig_template_provider';
-
-    public const SERVICE_DUMMY_TEMPLATE_PROVIDER = self::REFERENCE_PREFIX . 'dummy_template_provider';
-
-    public const SERVICE_ATTACHMENT_REPOSITORY = self::REFERENCE_PREFIX . 'attachment_repository';
-
-    public const SERVICE_ATTACHMENT_REMOVE_EVENT_LISTENER = self::REFERENCE_PREFIX . 'force_attachment_remove_event_listener';
-
-    public const TAG_MAIL_TEMPLATE_PROVIDER = self::REFERENCE_PREFIX . 'mail_template_provider';
-
     public function load(array $configs, ContainerBuilder $container)
     {
+        $container->registerForAutoconfiguration(FileStorageProcessorInterface::class)
+            ->addTag(WebToolkitBundle::TAG_FILE_STORAGE_PROCESSOR);
+
         $container->registerForAutoconfiguration(TemplateProviderInterface::class)
-            ->addTag(self::TAG_MAIL_TEMPLATE_PROVIDER);
+            ->addTag(WebToolkitBundle::TAG_MAIL_TEMPLATE_PROVIDER);
 
         $loader = new PhpFileLoader(
             $container,

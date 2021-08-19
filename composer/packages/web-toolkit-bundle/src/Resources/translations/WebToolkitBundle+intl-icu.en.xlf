@@ -1,34 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file source-language="en" target-language="en" datatype="plaintext" original="file.ext">
-    <header>
-      <tool tool-id="symfony" tool-name="Symfony"/>
-    </header>
-    <body>
-      <trans-unit id=".tbrCTv" resname="language_switcher.header">
+<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.0" srcLang="en" trgLang="en">
+  <file id="WebToolkitBundle.en">
+    <unit id=".tbrCTv" name="language_switcher.header">
+      <segment>
         <source>language_switcher.header</source>
         <target>Locales</target>
-      </trans-unit>
-      <trans-unit id="MeBKL1V" resname="language_switcher.switch_link_title">
+      </segment>
+    </unit>
+    <unit id="MeBKL1V" name="language_switcher.switch_link_title">
+      <segment>
         <source>language_switcher.switch_link_title</source>
         <target>Switch to {locale}</target>
-      </trans-unit>
-      <trans-unit id="4J45.H4" resname="login_page.username">
+      </segment>
+    </unit>
+    <unit id="4J45.H4" name="login_page.username">
+      <segment>
         <source>login_page.username</source>
         <target>Username</target>
-      </trans-unit>
-      <trans-unit id="W0jkiQG" resname="login_page.sign_in">
+      </segment>
+    </unit>
+    <unit id="W0jkiQG" name="login_page.sign_in">
+      <segment>
         <source>login_page.sign_in</source>
         <target>Sign in</target>
-      </trans-unit>
-      <trans-unit id="sL0h.WU" resname="language_switcher.locales.it">
+      </segment>
+    </unit>
+    <unit id="sL0h.WU" name="language_switcher.locales.it">
+      <segment>
         <source>language_switcher.locales.it</source>
         <target>Italian</target>
-      </trans-unit>
-      <trans-unit id="4b0zy8p" resname="language_switcher.locales.en">
+      </segment>
+    </unit>
+    <unit id="4b0zy8p" name="language_switcher.locales.en">
+      <segment>
         <source>language_switcher.locales.en</source>
         <target>English</target>
-      </trans-unit>
-    </body>
+      </segment>
+    </unit>
   </file>
 </xliff>

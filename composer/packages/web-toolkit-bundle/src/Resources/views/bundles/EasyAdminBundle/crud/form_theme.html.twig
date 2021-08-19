@@ -1,0 +1,66 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{% extends '@!EasyAdmin/crud/form_theme.html.twig' %}
+
+{# Widgets #}
+
+{# TODO: This is a rough implementation #}
+{% block mwt_admin_attachment_widget -%}
+    {{ form_widget(form) }}
+
+    {% if form.vars.valid and form.vars.value is not empty %}
+        <img src="{{ attachment_public_url(form.vars.data) }}" style="max-height: 10em;">
+
+        {{ dump(form.vars.value.metadata) }}
+    {% endif %}
+
+    <div style="margin-top:0.5em; padding: 1em; background-color: var(--gray-100); border: 1px solid var(--gray-200);; border-radius: 5px">
+        <div>
+            <label for="{{ form.vars.id }}__file_file" class="required">File</label>
+            <input id="{{ form.vars.id }}__file" type="file">
+        </div>
+        <div>
+            <label for="{{ form.vars.id }}__context">Context</label>
+            <input type="text" id="{{ form.vars.id }}__context">
+        </div>
+
+        <button id="{{ form.vars.id }}__button">Upload</button>
+    </div>
+    <script defer="defer">
+        document.addEventListener('DOMContentLoaded', () => {
+            /** @type HTMLInputElement */
+            const input = document.getElementById('{{ form.vars.id }}');
+            /** @type HTMLInputElement */
+            const fileInput = document.getElementById('{{ form.vars.id }}__file');
+            /** @type HTMLInputElement */
+            const contextInput = document.getElementById('{{ form.vars.id }}__context');
+            const button = document.getElementById('{{ form.vars.id }}__button');
+
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+
+                const formData = new FormData();
+                formData.append('file', fileInput.files[0]);
+                formData.append('context', contextInput.value);
+                formData.append('_token', '{{ csrf_token(form.vars.api_token_id)|e('html_attr') }}');
+
+                fetch('{{ form.vars.api_url|raw }}', {
+                    method: 'POST',
+                    body: formData,
+                }).then(response => {
+                    if (!response.ok) {
+                        throw response.json();
+                    }
+
+                    return response.json();
+                })
+                .then(result => {
+                    console.log('Success:', result);
+                    input.value = result.uuid;
+                })
+                .catch(error => {
+                    error.then(console.log);
+                });
+            })
+        });
+    </script>
+{%- endblock mwt_admin_attachment_widget %}

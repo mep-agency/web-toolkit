@@ -2,18 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Mep\WebToolkitBundle\FileStorage;
+namespace Mep\WebToolkitBundle\FileStorage\Driver;
 
 use Aws\S3\S3Client;
-use Doctrine\ORM\EntityManagerInterface;
 use JetBrains\PhpStorm\Pure;
 use Mep\WebToolkitBundle\Contract\FileStorage\FileStorageDriverInterface;
 use Mep\WebToolkitBundle\Entity\Attachment;
-use Mep\WebToolkitBundle\Exception\FileStorage\AttachedFileNotFoundException;
-use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\File;
 
 /**
+ * @internal Don't use this class directly, use the FileStorageManager class instead.
+ *
  * @author Marco Lipparini <developer@liarco.net>
  */
 final class S3FileStorageDriver implements FileStorageDriverInterface
@@ -27,7 +26,6 @@ final class S3FileStorageDriver implements FileStorageDriverInterface
         private string $secret,
         private string $bucketName,
         private string $cdnUrl,
-        private EntityManagerInterface $entityManager,
         private string $objectsKeyPrefix = '',
         private int $cdnCacheMaxAge = 604800,
     ) {
@@ -46,46 +44,27 @@ final class S3FileStorageDriver implements FileStorageDriverInterface
         ]);
     }
 
-    public function store(File $file, array $metadata = []): Attachment
+    public function store(File $file, Attachment $attachment): void
     {
-        if (! $filePath = $file->getRealPath()) {
-            throw new FileNotFoundException(
-                null,
-                0,
-                null,
-                $file->getPathname()
-            );
-        }
-
-        $attachment = new Attachment(
-            $file->getFilename(),
-            $file->getMimeType() ?? 'application/octet-stream',
-            $file->getSize(),
-            $metadata,
-        );
-
         // Copy new file to storage
         $this->s3Client->putObject([
             'Bucket' => $this->bucketName,
             'CacheControl' => 'max-age=' . $this->cdnCacheMaxAge,
             'ACL' => 'public-read',
             'Key' => $this->buildFileKey($attachment),
-            'SourceFile' => $filePath,
+            'SourceFile' => $file->getRealPath(),
             'ContentType' => $attachment->getMimeType(),
         ]);
+    }
 
-        $this->entityManager->persist($attachment);
-        $this->entityManager->flush();
-
-        return $attachment;
+    #[Pure]
+    public function attachedFileExists(Attachment $attachment): bool
+    {
+        return ! $this->s3Client->doesObjectExist($this->bucketName, $this->buildFileKey($attachment));
     }
 
     public function removeAttachedFile(Attachment $attachment): void
     {
-        if (! $this->s3Client->doesObjectExist($this->bucketName, $this->buildFileKey($attachment))) {
-            throw new AttachedFileNotFoundException($attachment);
-        }
-
         $this->s3Client->deleteObject([
             'Bucket' => $this->bucketName,
             'Key' => $this->buildFileKey($attachment),

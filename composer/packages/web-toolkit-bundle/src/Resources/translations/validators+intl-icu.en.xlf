@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.0" srcLang="en" trgLang="en">
+  <file id="validators.en">
+    <unit id="mep_web_toolkit.validators.admin_attachment_upload_type.max_size_exceeded" name="mep_web_toolkit.validators.admin_attachment_upload_type.max_size_exceeded">
+      <segment>
+        <source>The attached file exceeds the max file size of {max_size} bytes.</source>
+        <target>The attached file exceeds the max file size of {max_size} bytes.</target>
+      </segment>
+    </unit>
+    <unit id="mep_web_toolkit.validators.admin_attachment_upload_type.invalid_mime_type" name="mep_web_toolkit.validators.admin_attachment_upload_type.invalid_mime_type">
+      <segment>
+        <source>File type "{mime_type}" is not allowed.</source>
+        <target>File type "{mime_type}" is not allowed.</target>
+      </segment>
+    </unit>
+    <unit id="mep_web_toolkit.validators.admin_attachment_upload_type.invalid_file_name" name="mep_web_toolkit.validators.admin_attachment_upload_type.invalid_file_name">
+      <segment>
+        <source>Invalid file name.</source>
+        <target>Invalid file name.</target>
+      </segment>
+    </unit>
+  </file>
+</xliff>

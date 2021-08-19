@@ -39,8 +39,14 @@ use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface;
 use Mep\WebToolkitBundle\Contract\Repository\AbstractSingleInstanceRepository;
 use Mep\WebToolkitBundle\Contract\Repository\LocalizedRepositoryInterface;
+use Mep\WebToolkitBundle\Dto\AdminAttachmentUploadDto;
+use Mep\WebToolkitBundle\FileStorage\FileStorageManager;
+use Mep\WebToolkitBundle\Form\AdminAttachmentUploadApiType;
 use RuntimeException;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -50,9 +56,12 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
 {
     public const ACTION_DELETE_TRANSLATION = 'deleteTranslation';
 
+    public const ACTION_ATTACH_FILE = 'attachFile';
+
     public function __construct(
         protected LocaleProviderInterface $localeProvider,
         protected AdminUrlGenerator $adminUrlGenerator,
+        protected FileStorageManager $fileStorageManager,
     ) {}
 
     public function createEntity(string $entityFqcn)
@@ -294,5 +303,64 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
         if ($instance instanceof TranslatableInterface) {
             $instance->mergeNewTranslations();
         }
+    }
+
+    public function attachFile(AdminContext $context): JsonResponse
+    {
+        if ($context->getRequest()->getMethod() !== Request::METHOD_POST) {
+            throw new BadRequestException('A request to "' . self::ACTION_ATTACH_FILE . '" must use "' . Request::METHOD_POST . '" HTTP method.');
+        }
+
+        $form = $this->createForm(
+            AdminAttachmentUploadApiType::class,
+            null,
+            // Using EA::ROUTE_PARAMS to have them included in URL signature validation
+            $context->getRequest()->get(EA::ROUTE_PARAMS)
+        );
+        $form->handleRequest($context->getRequest());
+
+        if (! $form->isSubmitted()) {
+            throw new BadRequestException('Expected form data cannot be found.');
+        }
+
+        if (! $form->isValid()) {
+            $errors = [];
+
+            foreach ($form->getErrors(true) as $error) {
+                $errors[] = [
+                    'property' => (string) $error->getOrigin()->getPropertyPath(),
+                    'message' => $error->getMessage(),
+                ];
+            }
+
+            return new JsonResponse(
+                [
+                    'message' => 'Invalid form data',
+                    'errors' => $errors,
+                ],
+                Response::HTTP_BAD_REQUEST,
+            );
+        }
+
+        /** @var AdminAttachmentUploadDto $formData */
+        $formData = $form->getData();
+        $crudControllerFqcn = $form->getConfig()->getOption(AdminAttachmentUploadApiType::CRUD_CONTROLER_FQCN);
+        $propertyPath = $form->getConfig()->getOption(AdminAttachmentUploadApiType::PROPERTY_PATH);
+        /** @var array<string, scalar> $metadata */
+        $metadata = $form->getConfig()->getOption(AdminAttachmentUploadApiType::METADATA);
+        /** @var array<string, scalar> $metadata */
+        $processorsOptions = $form->getConfig()->getOption(AdminAttachmentUploadApiType::PROCESSORS_OPTIONS);
+        $frontEndContext = $formData->context !== null ? '#' . $formData->context : '';
+
+        if (! isset($metadata['context'])) {
+            $metadata['context'] = $crudControllerFqcn . '@' . $propertyPath . $frontEndContext;
+        }
+
+        $attachment = $this->fileStorageManager->store($formData->file, $metadata, $processorsOptions);
+
+        return new JsonResponse([
+            'uuid' => $attachment->getId()->toRfc4122(),
+            'publicUrl' => $this->fileStorageManager->getPublicUrl($attachment),
+        ]);
     }
 }
