@@ -40,6 +40,9 @@ final class AttachmentLifecycleEventListener
 
     public function removeAttachedFile(Attachment $attachment, LifecycleEventArgs $args): void
     {
-        $this->fileStorageDriver->removeAttachedFile($attachment);
+        // Attachment objects may be orphan (the associated file doesn't exist)
+        if ($this->fileStorageDriver->attachedFileExists($attachment)) {
+            $this->fileStorageDriver->removeAttachedFile($attachment);
+        }
     }
 }
