@@ -17,7 +17,7 @@ use Mep\WebToolkitBundle\Entity\Attachment;
 use Symfony\Component\HttpFoundation\File\File;
 
 /**
- * @internal Don't use this class directly, use the FileStorageManager class instead.
+ * @internal Do not use this class directly, use the FileStorageManager class instead.
  *
  * @author Marco Lipparini <developer@liarco.net>
  */

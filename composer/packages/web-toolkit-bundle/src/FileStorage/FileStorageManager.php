@@ -42,13 +42,7 @@ final class FileStorageManager
             );
         }
 
-        $unprocessedAttachment = new UnprocessedAttachmentDto(
-            $file,
-            $file->getFilename(),
-            $file->getMimeType() ?? 'application/octet-stream',
-            $file->getSize(),
-            $metadata,
-        );
+        $unprocessedAttachment = new UnprocessedAttachmentDto($file, $metadata);
 
         // Run processors
         foreach ($this->processors as $processor) {
@@ -57,12 +51,7 @@ final class FileStorageManager
             }
         }
 
-        $attachment = new Attachment(
-            $unprocessedAttachment->fileName,
-            $unprocessedAttachment->mimeType,
-            $unprocessedAttachment->fileSize,
-            $unprocessedAttachment->metadata,
-        );
+        $attachment = $unprocessedAttachment->createAttachment();
 
         $this->fileStorageDriver->store(
             $unprocessedAttachment->file,

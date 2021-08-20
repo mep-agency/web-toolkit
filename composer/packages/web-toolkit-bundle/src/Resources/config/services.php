@@ -14,19 +14,21 @@ declare(strict_types=1);
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use EasyCorp\Bundle\EasyAdminBundle\DependencyInjection\EasyAdminExtension;
+use EasyCorp\Bundle\EasyAdminBundle\Factory\EntityFactory;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Configurator\BooleanConfigurator;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface;
 use Mep\WebToolkitBundle\Entity\Attachment;
 use Mep\WebToolkitBundle\EventListener\AttachmentLifecycleEventListener;
 use Mep\WebToolkitBundle\EventListener\ForceSingleInstanceEventListener;
+use Mep\WebToolkitBundle\Field\Configurator\TypeGuesserConfigurator;
 use Mep\WebToolkitBundle\Field\Configurator\TranslatableBooleanConfigurator;
 use Mep\WebToolkitBundle\Field\Configurator\TranslatableFieldConfigurator;
 use Mep\WebToolkitBundle\Field\Configurator\TranslatableFieldPreConfigurator;
 use Mep\WebToolkitBundle\FileStorage\FileStorageManager;
-use Mep\WebToolkitBundle\FileStorage\Processor\UploadedFileProcessor;
 use Mep\WebToolkitBundle\Form\AdminAttachmentUploadApiType;
 use Mep\WebToolkitBundle\Form\AdminAttachmentType;
+use Mep\WebToolkitBundle\Form\TypeGuesser\AdminAttachmentTypeGuesser;
 use Mep\WebToolkitBundle\Mail\TemplateProvider\DummyTemplateProvider;
 use Mep\WebToolkitBundle\Mail\TemplateProvider\TwigTemplateProvider;
 use Mep\WebToolkitBundle\Mail\TemplateRenderer;
@@ -64,6 +66,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->arg(0, new Reference(LocaleProviderInterface::class))
         ->arg(1, new Reference(PropertyAccessorInterface::class))
         ->arg(2, new Reference(FormRegistryInterface::class))
+        ->arg(3, new Reference(EntityFactory::class))
+        ->arg(4, new Reference(WebToolkitBundle::SERVICE_TYPE_GUESSER_CONFIGURATOR))
         ->tag(EasyAdminExtension::TAG_FIELD_CONFIGURATOR, ['priority' => 99999])
     ;
     $services->set(WebToolkitBundle::SERVICE_TRANSLATABLE_FIELD_CONFIGURATOR, TranslatableFieldConfigurator::class)
@@ -100,9 +104,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->arg(2, tagged_iterator(WebToolkitBundle::TAG_FILE_STORAGE_PROCESSOR))
         ->alias(FileStorageManager::class, WebToolkitBundle::SERVICE_FILE_STORAGE_MANAGER)
     ;
-    $services->set(WebToolkitBundle::SERVICE_UPLOADED_FILE_PROCESSOR, UploadedFileProcessor::class)
-        ->tag(WebToolkitBundle::TAG_FILE_STORAGE_PROCESSOR, ['priority' => -9999])
-    ;
     $services->set(WebToolkitBundle::SERVICE_ATTACHMENT_REPOSITORY, AttachmentRepository::class)
         ->arg(0, new Reference(ManagerRegistry::class))
         ->tag('doctrine.repository_service')
@@ -132,9 +133,18 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->arg(1, new Reference(AdminUrlGenerator::class))
         ->tag('form.type')
     ;
+    $services->set(WebToolkitBundle::SERVICE_ADMIN_ATTACHMENT_TYPE_GUESSER, AdminAttachmentTypeGuesser::class)
+        ->tag('form.type_guesser')
+    ;
     $services->set(WebToolkitBundle::SERVICE_TWIG_ATTACHMENT_EXTENSION, AttachmentExtension::class)
         ->arg(0, new Reference(WebToolkitBundle::SERVICE_ATTACHMENT_REPOSITORY))
         ->arg(1, new Reference(FileStorageManager::class))
         ->tag('twig.extension')
+    ;
+
+    // EasyAdminBundle enhancements
+    $services->set(WebToolkitBundle::SERVICE_TYPE_GUESSER_CONFIGURATOR, TypeGuesserConfigurator::class)
+        ->arg(0, new Reference(FormRegistryInterface::class))
+        ->tag(EasyAdminExtension::TAG_FIELD_CONFIGURATOR, ['priority' => 99999])
     ;
 };

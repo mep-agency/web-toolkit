@@ -41,10 +41,14 @@ final class WebToolkitBundle extends Bundle
     public const SERVICE_ATTACHMENT_LIFECYCLE_EVENT_LISTENER = self::REFERENCE_PREFIX . 'attachment_lifecycle_event_listener';
     public const SERVICE_ADMIN_ATTACHMENT_TYPE = self::REFERENCE_PREFIX . 'admin_attachment_type';
     public const SERVICE_ADMIN_ATTACHMENT_UPLOAD_API_TYPE = self::REFERENCE_PREFIX . 'admin_attachment_upload_type';
+    public const SERVICE_ADMIN_ATTACHMENT_TYPE_GUESSER = self::REFERENCE_PREFIX . 'admin_attachment_type_guesser';
     public const SERVICE_TWIG_ATTACHMENT_EXTENSION = self::REFERENCE_PREFIX . 'service_twig_attachment_extension';
 
     // Attachments support
     public const SERVICE_TEMPLATE_RENDERER = self::REFERENCE_PREFIX . 'template_renderer';
     public const SERVICE_TWIG_TEMPLATE_PROVIDER = self::REFERENCE_PREFIX . 'twig_template_provider';
     public const SERVICE_DUMMY_TEMPLATE_PROVIDER = self::REFERENCE_PREFIX . 'dummy_template_provider';
+
+    // EasyAdminBundle enhancements
+    public const SERVICE_TYPE_GUESSER_CONFIGURATOR = self::REFERENCE_PREFIX . 'type_guesser_configurator';
 }

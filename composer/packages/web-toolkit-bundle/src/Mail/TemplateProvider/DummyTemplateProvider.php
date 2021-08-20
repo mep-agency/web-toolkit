@@ -18,7 +18,10 @@ use Mep\WebToolkitBundle\Contract\Mail\TemplateProviderInterface;
 use Mep\WebToolkitBundle\Mail\TemplateIdentifier\DummyTemplate;
 use Symfony\Component\Mime\Email;
 
-class DummyTemplateProvider implements TemplateProviderInterface
+/**
+ * @author Marco Lipparini <developer@liarco.net>
+ */
+final class DummyTemplateProvider implements TemplateProviderInterface
 {
     public function supports(TemplateIdentifierInterface $templateIdentifier): bool
     {

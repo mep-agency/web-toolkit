@@ -22,7 +22,7 @@ use Symfony\Component\Validator\Constraints\NotNull;
  *
  * @author Marco Lipparini <developer@liarco.net>
  */
-class AdminAttachmentUploadDto
+final class AdminAttachmentUploadDto
 {
     #[NotBlank]
     #[NotNull]

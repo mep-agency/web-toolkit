@@ -15,6 +15,7 @@ namespace Mep\WebToolkitBundle\Form;
 
 use Mep\WebToolkitBundle\Dto\AdminAttachmentUploadDto;
 use Mep\WebToolkitBundle\Validator\AssociativeArrayOfScalarValues;
+use Mep\WebToolkitBundle\Validator\ValidAttachmentFile;
 use Nette\Utils\Json;
 use RuntimeException;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -23,11 +24,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Callback;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Validation;
 
 /**
@@ -41,36 +39,15 @@ final class AdminAttachmentUploadApiType extends AdminAttachmentType
     {
         $builder
             ->add('file', FileType::class, [
-                'constraints' => [new Callback(function (UploadedFile $file, ExecutionContextInterface $context) use ($options) {
-                    if ($options[self::MAX_SIZE] > 0 && $file->getSize() > $options[self::MAX_SIZE]) {
-                        $context->buildViolation('mep_web_toolkit.validators.admin_attachment_upload_type.max_size_exceeded')
-                            ->setParameter('max_size', (string) $options[self::MAX_SIZE])
-                            ->addViolation();
-                    }
-
-                    // No value -> no restriction
-                    $mimeIsValid = count($options[self::ALLOWED_MIME_TYPES]) < 1;
-
-                    foreach ($options[self::ALLOWED_MIME_TYPES] as $allowedMimeType) {
-                        if (preg_match($allowedMimeType, $file->getMimeType()) === 1) {
-                            $mimeIsValid = true;
-                        }
-                    }
-
-                    if (! $mimeIsValid) {
-                        $context->buildViolation('mep_web_toolkit.validators.admin_attachment_upload_type.invalid_mime_type')
-                            ->setParameter('mime_type', $file->getMimeType())
-                            ->addViolation();
-                    }
-
-                    if (
-                        $options[self::ALLOWED_NAME_PATTERN] !== null &&
-                        preg_match($options[self::ALLOWED_NAME_PATTERN], $file->getClientOriginalName()) !== 1
-                    ) {
-                        $context->buildViolation('mep_web_toolkit.validators.admin_attachment_upload_type.invalid_file_name')
-                            ->addViolation();
-                    }
-                })],
+                'constraints' => [
+                    new ValidAttachmentFile(
+                        $options[self::MAX_SIZE],
+                        $options[self::ALLOWED_MIME_TYPES],
+                        $options[self::ALLOWED_NAME_PATTERN],
+                        $options[self::METADATA],
+                        $options[self::PROCESSORS_OPTIONS],
+                    ),
+                ],
             ])
             ->add('context', TextType::class, [
                 'required' => false,

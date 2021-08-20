@@ -22,6 +22,8 @@ use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\PositiveOrZero;
 
 /**
+ * @final You should not extend this class.
+ *
  * @author Marco Lipparini <developer@liarco.net>
  */
 #[ORM\Entity]
@@ -94,7 +96,7 @@ class Attachment
      */
     public function get(string $key): mixed
     {
-        return $this->metadata[$key];
+        return $this->metadata[$key] ?? null;
     }
 
     /**

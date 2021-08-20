@@ -16,46 +16,34 @@ namespace Mep\WebToolkitBundle\Field\Configurator;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto;
+use EasyCorp\Bundle\EasyAdminBundle\Factory\EntityFactory;
+use Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface;
 use Mep\WebToolkitBundle\Contract\Field\Configurator\AbstractTranslatableFieldConfigurator;
+use Symfony\Component\Form\FormRegistryInterface;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
  */
 final class TranslatableFieldPreConfigurator extends AbstractTranslatableFieldConfigurator
 {
+    public function __construct(
+        protected LocaleProviderInterface   $localeProvider,
+        protected PropertyAccessorInterface $propertyAccessor,
+        protected FormRegistryInterface     $formRegistry,
+        private EntityFactory               $entityFactory,
+        private TypeGuesserConfigurator     $typeGuessConfigurator,
+    ) {
+        parent::__construct($localeProvider, $propertyAccessor, $formRegistry);
+    }
+
     public function configure(FieldDto $field, EntityDto $entityDto, AdminContext $context): void
     {
-        // Using type-guessing based on the property of the TranslationInterface class
-        $translationFqcn = $this->getTranslationFqcn($entityDto);
-        $typeGuesser = $this->formRegistry
-            ->getTypeGuesser();
-        $typeGuess = $typeGuesser->guessType($translationFqcn, $field->getProperty());
-        $options = $field->getFormTypeOptions();
-
-        // Merge options with guessed options
-        if ($typeGuess !== null && $typeGuess->getType() === $field->getFormType()) {
-            $options = array_merge($typeGuess->getOptions(), $field->getFormTypeOptions());
-        }
-
-        // Set required based on guessed value
-        if ($field->getFormTypeOption('required') === null) {
-            $requiredGuess = $typeGuesser->guessRequired($translationFqcn, $field->getProperty());
-
-            $options = array_merge(['required' => $requiredGuess?->getValue()], $options);
-        }
-
-        // Set pattern based on guessed value
-        $patternGuess = $typeGuesser->guessPattern($translationFqcn, $field->getProperty());
-        if ($patternGuess !== null) {
-            $options = array_replace_recursive(['attr' => ['pattern' => $patternGuess->getValue()]], $options);
-        }
-
-        // Set maxlength based on guessed value
-        $maxLengthGuess = $typeGuesser->guessMaxLength($translationFqcn, $field->getProperty());
-        if ($maxLengthGuess !== null) {
-            $options = array_replace_recursive(['attr' => ['maxlength' => $maxLengthGuess->getValue()]], $options);
-        }
-
-        $field->setFormTypeOptions($options);
+        $this->typeGuessConfigurator->configure(
+            $field,
+            $this->entityFactory
+                ->create($this->getTranslationFqcn($entityDto)),
+            $context,
+        );
     }
 }
