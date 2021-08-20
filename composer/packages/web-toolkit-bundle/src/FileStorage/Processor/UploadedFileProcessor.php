@@ -27,11 +27,6 @@ final class UploadedFileProcessor implements FileStorageProcessorInterface
 
         $attachment->fileName = $file->getClientOriginalName();
 
-        if (isset($processorsOptions['do_stuff']) && $processorsOptions['do_stuff'] === true) {
-            unset($processorsOptions['do_stuff']);
-            $attachment->metadata['stuff_done'] = true;
-        }
-
         return $attachment;
     }
 }
