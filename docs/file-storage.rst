@@ -38,6 +38,19 @@ Autowire ``FileStorageDriverInterface`` and use its methods to store, get public
 Configuration
 -------------
 
+Change ``type`` to ``attribute`` in ``doctrine.yaml``::
+
+    // config/doctrine.yaml
+
+    // ...
+
+    App:
+        is_bundle: false
+        type: attribute
+        dir: '%kernel.project_dir%/src/Entity'
+        prefix: 'App\Entity'
+        alias: App
+
 Add ``LocalFileStorageDriver`` service in ``services.yaml`` to implement local storage in the ``dev`` environment::
 
     // config/services.yaml
@@ -48,8 +61,8 @@ Add ``LocalFileStorageDriver`` service in ``services.yaml`` to implement local s
 
         # add more service definitions when explicit configuration is needed
         # please note that last definitions always *replace* previous ones
-        Mep\WebToolkitBundle\Contract\FileStorage\FileStorageDriverInterface: '@Mep\WebToolkitBundle\FileStorage\LocalFileStorageDriver'
-        Mep\WebToolkitBundle\FileStorage\LocalFileStorageDriver:
+        mep_web_toolkit.file_storage_driver:
+            class: Mep\WebToolkitBundle\FileStorage\Driver\LocalFileStorageDriver
             arguments:
                 $storagePath: '%kernel.project_dir%/public/storage'
                 $publicUrlPathPrefix: '/storage'
@@ -68,8 +81,8 @@ For ``prod`` environment instead add ``S3FileStorageDriver`` service in ``servic
 
         # add more service definitions when explicit configuration is needed
         # please note that last definitions always *replace* previous ones
-        Mep\WebToolkitBundle\Contract\FileStorage\FileStorageDriverInterface: '@Mep\WebToolkitBundle\FileStorage\S3FileStorageDriver'
-        Mep\WebToolkitBundle\FileStorage\S3FileStorageDriver:
+        mep_web_toolkit.file_storage_driver:
+            class: Mep\WebToolkitBundle\FileStorage\Driver\S3FileStorageDriver
             arguments:
                 $region: 'region'
                 $endpointUrl: 'endpointUrl'
@@ -81,3 +94,4 @@ For ``prod`` environment instead add ``S3FileStorageDriver`` service in ``servic
 
     // ...
 
+Remember to replace the placeholders with actual data.
