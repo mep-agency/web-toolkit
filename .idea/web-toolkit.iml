@@ -6,17 +6,8 @@
       <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/composer/packages/monorepo-utils/src" isTestSource="false" packagePrefix="Mep\MonorepoUtils\" />
       <sourceFolder url="file://$MODULE_DIR$/composer/packages/web-toolkit-bundle/src" isTestSource="false" packagePrefix="Mep\WebToolkitBundle\" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symplify/composer-json-manipulator" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symplify/symplify-kernel" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/diff" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symplify/smart-file-system" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symplify/easy-testing" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symplify/console-color-diff" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symplify/console-package-builder" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symplify/monorepo-builder" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symplify/package-builder" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symplify/autowire-array-parameter" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/process" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/dependency-injection" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/error-handler" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/http-foundation" />
@@ -32,7 +23,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-php80" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-php73" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phar-io/version" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/nette/neon" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/nette/utils" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/psr/log" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/http-kernel" />
@@ -129,6 +119,14 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-php72" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/mailer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-intl-idn" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/guzzlehttp/promises" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/guzzlehttp/guzzle" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/guzzlehttp/psr7" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/ralouphie/getallheaders" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/aws/aws-sdk-php" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/psr/http-client" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/psr/http-message" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/mtdowling/jmespath.php" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
