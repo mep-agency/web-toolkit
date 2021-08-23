@@ -2,6 +2,18 @@
 {% extends '@!EasyAdmin/layout.html.twig' %}
 {% trans_default_domain 'WebToolkitBundle' %}
 
+{% block configured_stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/webtoolkit/app.css')|e('html_attr') }}">
+
+    {{ parent() }}
+{% endblock %}
+
+{% block configured_javascripts %}
+    <script src="{{ asset('bundles/webtoolkit/app.js')|e('html_attr') }}"></script>
+
+    {{ parent() }}
+{% endblock %}
+
 {% block user_menu %}
     {{ parent() }}
 
@@ -18,7 +30,7 @@
 
             <li>
                 <a href="{{ localized_url }}" title="{% trans with {locale: current_locale_name} %}language_switcher.switch_link_title{% endtrans %}" class="dropdown-item{% if is_current_locale %} active{% endif %}"{% if is_current_locale %} aria-current="true"{% endif %}>
-                {{ current_locale_name }}
+                    {{ current_locale_name }}
                 </a>
             </li>
         {% endfor %}

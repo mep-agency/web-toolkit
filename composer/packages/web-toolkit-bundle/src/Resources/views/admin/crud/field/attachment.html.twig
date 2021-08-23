@@ -1,0 +1,11 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
+{# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
+
+{# TODO: This is a temporary implementation... #}
+
+{% if field.value is not empty %}
+    <a class="btn btn-sm btn-primary" href="{{ attachment_public_url(field.value) }}" target="_blank">Preview <i class="fas fa-external-link-alt"></i></a>
+{% else %}
+    <span class="badge badge-secondary">Null</span>
+{% endif %}

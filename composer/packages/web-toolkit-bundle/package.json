@@ -1,0 +1,22 @@
+{
+  "author": "Marco Lipparini <developer@liarco.net>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "@symfony/webpack-encore": "^1.5.0",
+    "@types/webpack-env": "^1.16.0",
+    "autoprefixer": "^10.2.6",
+    "core-js": "^3.0.0",
+    "postcss-loader": "^5.0.0",
+    "sass": "^1.34.1",
+    "sass-loader": "^11.0.0",
+    "ts-loader": "^8.0.1",
+    "typescript": "^4.3.2",
+    "webpack-notifier": "^1.6.0"
+  },
+  "scripts": {
+    "dev": "encore dev",
+    "watch": "encore dev --watch",
+    "build": "encore production --progress"
+  }
+}

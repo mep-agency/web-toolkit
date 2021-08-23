@@ -42,6 +42,7 @@ final class WebToolkitBundle extends Bundle
     public const SERVICE_ADMIN_ATTACHMENT_TYPE = self::REFERENCE_PREFIX . 'admin_attachment_type';
     public const SERVICE_ADMIN_ATTACHMENT_UPLOAD_API_TYPE = self::REFERENCE_PREFIX . 'admin_attachment_upload_type';
     public const SERVICE_ADMIN_ATTACHMENT_TYPE_GUESSER = self::REFERENCE_PREFIX . 'admin_attachment_type_guesser';
+    public const SERVICE_ATTACHMENT_FIELD_CONFIGURATOR = self::REFERENCE_PREFIX . 'attachment_field_configurator';
     public const SERVICE_TWIG_ATTACHMENT_EXTENSION = self::REFERENCE_PREFIX . 'service_twig_attachment_extension';
 
     // Attachments support

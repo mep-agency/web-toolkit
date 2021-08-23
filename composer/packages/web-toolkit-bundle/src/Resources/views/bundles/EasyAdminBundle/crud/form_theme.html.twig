@@ -3,19 +3,32 @@
 
 {# Widgets #}
 
-{# TODO: This is a rough implementation #}
 {% block mwt_admin_attachment_widget -%}
-    {{ form_widget(form) }}
+    {# TODO: This is a temporary implementation... #}
+
+    <div class="input-group">
+        {{ form_widget(form, {attr: {
+            class: 'mwt-attachment-field form-control',
+            'data-api-url': form.vars.api_url,
+            'data-csrf-token': csrf_token(form.vars.api_token_id),
+        }}) }}
+
+        {% if form.vars.valid and form.vars.value is not empty %}
+            <button type="button" class="btn btn-secondary" onclick="javascript:document.getElementById('{{ form.vars.id }}__metadata').classList.toggle('visually-hidden')"><i class="fas fa-list" style="padding-right: 2px;"></i></button>
+
+            <a class="btn btn-primary" style="height: 28px; margin-top: 1px;" href="{{ attachment_public_url(form.vars.data) }}" target="_blank">Preview <i class="fas fa-external-link-alt"></i></a>
+        {% endif %}
+    </div>
+
+    <div id="{{ form.vars.id }}__metadata" class="mt-3 visually-hidden">{{ dump(form.vars.value.metadata) }}</div>
 
     {% if form.vars.valid and form.vars.value is not empty %}
-        <img src="{{ attachment_public_url(form.vars.data) }}" style="max-height: 10em;">
-
-        {{ dump(form.vars.value.metadata) }}
+        <div class="mt-3"></div>
     {% endif %}
 
-    <div style="margin-top:0.5em; padding: 1em; background-color: var(--gray-100); border: 1px solid var(--gray-200);; border-radius: 5px">
+    <div class="mwt-upload-widget mt-3">
         <div>
-            <label for="{{ form.vars.id }}__file_file" class="required">File</label>
+            <label for="{{ form.vars.id }}__file" class="required">File</label>
             <input id="{{ form.vars.id }}__file" type="file">
         </div>
         <div>
@@ -23,44 +36,6 @@
             <input type="text" id="{{ form.vars.id }}__context">
         </div>
 
-        <button id="{{ form.vars.id }}__button">Upload</button>
+        <button class="btn btn-primary" id="{{ form.vars.id }}__upload_button">Upload</button>
     </div>
-    <script defer="defer">
-        document.addEventListener('DOMContentLoaded', () => {
-            /** @type HTMLInputElement */
-            const input = document.getElementById('{{ form.vars.id }}');
-            /** @type HTMLInputElement */
-            const fileInput = document.getElementById('{{ form.vars.id }}__file');
-            /** @type HTMLInputElement */
-            const contextInput = document.getElementById('{{ form.vars.id }}__context');
-            const button = document.getElementById('{{ form.vars.id }}__button');
-
-            button.addEventListener('click', (e) => {
-                e.preventDefault();
-
-                const formData = new FormData();
-                formData.append('file', fileInput.files[0]);
-                formData.append('context', contextInput.value);
-                formData.append('_token', '{{ csrf_token(form.vars.api_token_id)|e('html_attr') }}');
-
-                fetch('{{ form.vars.api_url|raw }}', {
-                    method: 'POST',
-                    body: formData,
-                }).then(response => {
-                    if (!response.ok) {
-                        throw response.json();
-                    }
-
-                    return response.json();
-                })
-                .then(result => {
-                    console.log('Success:', result);
-                    input.value = result.uuid;
-                })
-                .catch(error => {
-                    error.then(console.log);
-                });
-            })
-        });
-    </script>
 {%- endblock mwt_admin_attachment_widget %}

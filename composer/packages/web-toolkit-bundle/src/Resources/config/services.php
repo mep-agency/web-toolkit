@@ -16,11 +16,13 @@ use Doctrine\Persistence\ManagerRegistry;
 use EasyCorp\Bundle\EasyAdminBundle\DependencyInjection\EasyAdminExtension;
 use EasyCorp\Bundle\EasyAdminBundle\Factory\EntityFactory;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Configurator\BooleanConfigurator;
+use EasyCorp\Bundle\EasyAdminBundle\Provider\AdminContextProvider;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface;
 use Mep\WebToolkitBundle\Entity\Attachment;
 use Mep\WebToolkitBundle\EventListener\AttachmentLifecycleEventListener;
 use Mep\WebToolkitBundle\EventListener\ForceSingleInstanceEventListener;
+use Mep\WebToolkitBundle\Field\Configurator\AttachmentFieldConfigurator;
 use Mep\WebToolkitBundle\Field\Configurator\TypeGuesserConfigurator;
 use Mep\WebToolkitBundle\Field\Configurator\TranslatableBooleanConfigurator;
 use Mep\WebToolkitBundle\Field\Configurator\TranslatableFieldConfigurator;
@@ -135,6 +137,10 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     ;
     $services->set(WebToolkitBundle::SERVICE_ADMIN_ATTACHMENT_TYPE_GUESSER, AdminAttachmentTypeGuesser::class)
         ->tag('form.type_guesser')
+    ;
+    $services->set(WebToolkitBundle::SERVICE_ATTACHMENT_FIELD_CONFIGURATOR, AttachmentFieldConfigurator::class)
+        ->arg(0, new Reference(AdminContextProvider::class))
+        ->tag(EasyAdminExtension::TAG_FIELD_CONFIGURATOR, ['priority' => -99999])
     ;
     $services->set(WebToolkitBundle::SERVICE_TWIG_ATTACHMENT_EXTENSION, AttachmentExtension::class)
         ->arg(0, new Reference(WebToolkitBundle::SERVICE_ATTACHMENT_REPOSITORY))
