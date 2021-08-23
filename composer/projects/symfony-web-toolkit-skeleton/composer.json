@@ -39,7 +39,6 @@
         "symfony/yaml": "*"
     },
     "require-dev": {
-
     },
     "flex-require-dev": {
         "doctrine/doctrine-fixtures-bundle": "*",
@@ -72,7 +71,6 @@
     },
     "scripts": {
         "auto-scripts": [
-
         ],
         "post-install-cmd": [
             "@auto-scripts"
