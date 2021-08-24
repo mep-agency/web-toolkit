@@ -2,18 +2,18 @@
   "entrypoints": {
     "app": {
       "css": [
-        "./app.31d6cfe0.css"
+        "./app.css"
       ],
       "js": [
-        "./app.31d6cfe0.js"
+        "./app.js"
       ]
     },
     "attachment-field": {
       "css": [
-        "./attachment-field.ff832fd4.css"
+        "./attachment-field.css"
       ],
       "js": [
-        "./attachment-field.645b9209.js"
+        "./attachment-field.js"
       ]
     }
   }

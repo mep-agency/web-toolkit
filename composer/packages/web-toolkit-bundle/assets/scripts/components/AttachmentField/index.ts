@@ -52,15 +52,15 @@ class AttachmentField implements Field {
         return response.json();
       })
         .then(result => {
-          console.log('Success:', result.publicUrl);
+          console.log(`Success: ${result.publicUrl}`);
           this.input.value = result.uuid;
         })
         .catch(error => {
           error.then((result: any) => {
-            console.error(result.message);
+            console.error(`ERROR: ${result.message}`);
 
             for (const error of result.errors) {
-              console.error(error.message);
+              console.error(`Validation message: ${error.message}`);
             }
           });
         });

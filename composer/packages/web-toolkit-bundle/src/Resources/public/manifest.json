@@ -1,6 +1,6 @@
 {
-  "bundles/webtoolkit/app.css": "./app.31d6cfe0.css",
-  "bundles/webtoolkit/app.js": "./app.31d6cfe0.js",
-  "bundles/webtoolkit/attachment-field.css": "./attachment-field.ff832fd4.css",
-  "bundles/webtoolkit/attachment-field.js": "./attachment-field.645b9209.js"
+  "bundles/webtoolkit/app.css": "./app.css",
+  "bundles/webtoolkit/app.js": "./app.js",
+  "bundles/webtoolkit/attachment-field.css": "./attachment-field.css",
+  "bundles/webtoolkit/attachment-field.js": "./attachment-field.js"
 }
