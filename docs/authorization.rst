@@ -16,9 +16,7 @@ Extend ``AbstractUser`` in the entity, like this::
     // ...
     use Mep\WebToolkitBundle\Contract\Entity\AbstractUser;
 
-    /**
-     * @ORM\Entity(repositoryClass=UserRepository::class)
-     */
+    #[ORM\Entity(repositoryClass: UserRepository::class)]
     class User extends AbstractUser
     {
         // ...

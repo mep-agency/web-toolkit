@@ -20,7 +20,8 @@
         "knplabs/doctrine-behaviors": "^2.2",
         "symfony/mailer": "^5.3",
         "symfony/security-bundle": "^5.3",
-        "symfony/validator": "^5.3"
+        "symfony/validator": "^5.3",
+        "tinify/tinify": "^1.5"
     },
     "autoload": {
         "psr-4": {

@@ -27,8 +27,8 @@ This will return an ``Email`` object and therefore can be manipulated as usual::
                 new TwigTemplate('mail'),
                 ['name' => 'John', 'surname' => 'Doe']
             );
-            $email->to(new Address('to@example.com', "To"));
-            $email->from(new Address('from@example.com', "From"));
+            $email->to(new Address('to@example.com', 'To'));
+            $email->from(new Address('from@example.com', 'From'));
 
             $mailer->send($email);
 
