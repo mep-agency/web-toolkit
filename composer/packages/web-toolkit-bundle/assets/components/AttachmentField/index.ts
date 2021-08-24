@@ -16,55 +16,178 @@ import FieldsManager, { Field } from "../../scripts/FieldsManager";
 class AttachmentField implements Field {
   private readonly input: HTMLInputElement;
   private readonly fileInput: HTMLInputElement;
-  private readonly contextInput: HTMLInputElement;
-  private readonly uploadButton: HTMLButtonElement;
+  private readonly uploadButton: HTMLInputElement;
+  private readonly deleteButton: HTMLButtonElement;
   private readonly apiUrl: string;
   private readonly csrfToken: string;
+  private readonly errorButton: HTMLElement;
+  private readonly errorList: HTMLElement;
+  private fileData = {
+    fileURL: '',
+    fileType: '',
+    fileSize: ''
+  };
 
   public constructor(input: HTMLInputElement)
   {
     this.input = input;
+    this.uploadButton = document.getElementById(`${input.id}__file`) as HTMLInputElement;
+    this.errorButton = document.getElementById(`${input.id}__error_button`) as HTMLElement;
+    this.errorList = document.getElementById(`${input.id}__error_list`) as HTMLElement;
     this.fileInput = document.getElementById(`${input.id}__file`) as HTMLInputElement;
-    this.contextInput = document.getElementById(`${input.id}__context`) as HTMLInputElement;
-    this.uploadButton = document.getElementById(`${input.id}__upload_button`) as HTMLButtonElement;
+    this.deleteButton = document.getElementById(`${input.id}__delete_button`) as HTMLButtonElement;
     this.apiUrl = this.input.getAttribute('data-api-url')!;
     this.csrfToken = this.input.getAttribute('data-csrf-token')!;
+    this.fileData.fileURL = this.input.getAttribute('data-public-url')!;
   }
 
   public init()
   {
-    this.uploadButton.addEventListener('click', (e) => {
+    if(this.fileData.fileURL != '') {
+      getFileData(this.fileData);
+    }
+
+    this.uploadButton.addEventListener('change', (e) => {
       e.preventDefault();
 
       const formData = new FormData();
       formData.append('file', this.fileInput.files![0]);
-      formData.append('context', this.contextInput.value);
+
       formData.append('_token', this.csrfToken);
 
-      fetch(this.apiUrl, {
-        method: 'POST',
-        body: formData,
-      }).then(response => {
-        if (!response.ok) {
-          throw response.json();
+      uploadFile(formData, this.apiUrl).then(result => {
+        this.errorButton.classList.add('hidden');
+
+        console.log(`Success: ${result.publicUrl}`);
+
+        this.input.value = result.uuid;
+        this.fileData.fileURL = result.publicUrl;
+
+        getFileData(this.fileData);
+      }).catch(error => {
+        this.errorButton.classList.remove('hidden');
+        this.errorList.innerHTML = '';
+
+        console.error(`ERROR: ${error.message}`);
+
+        for (const err of error.errors) {
+          let entry = document.createElement('li');
+          entry.appendChild(document.createTextNode(err.message));
+
+          this.errorList.appendChild(entry);
+
+          console.error(`Validation message: ${err.message}`);
         }
-
-        return response.json();
-      })
-        .then(result => {
-          console.log(`Success: ${result.publicUrl}`);
-          this.input.value = result.uuid;
-        })
-        .catch(error => {
-          error.then((result: any) => {
-            console.error(`ERROR: ${result.message}`);
-
-            for (const error of result.errors) {
-              console.error(`Validation message: ${error.message}`);
-            }
-          });
-        });
+      });
     })
+
+    this.deleteButton.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      this.fileInput.value = "";
+
+      if(this.input.value != "") this.input.value = "";
+
+      passFileData();
+    })
+  }
+}
+
+// === ASYNC FETCH FUNCTIONS
+async function uploadFile(formData:FormData ,apiUrl: string) {
+  const response:any = await fetch(apiUrl, {
+    method: 'POST',
+    body: formData,
+  });
+
+  if (!response.ok) {
+    throw await response.json();
+  }
+
+  return await response.json();
+}
+
+async function fetchFileData(fileData:any) {
+  const response = await fetch(fileData.fileURL, {
+    method: 'HEAD',
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! Status Code: ${response.status}`);
+  }
+
+  fileData.fileSize=fileSizeFormatter(response.headers.get('content-length')!);
+  fileData.fileType=response.headers.get('content-type');
+  fileData.fileName=fileData.fileURL.split('/')[5];
+
+  passFileData(fileData);
+}
+
+// === AUX FUNCTIONS
+function getFileData(fileData:any) {
+  fetchFileData(fileData).catch(error => {
+    console.log('Error: ' + error.message);
+  })
+}
+
+function passFileData(fileData?:any) {
+  const container = document.getElementById('previewer') as HTMLAnchorElement;
+  const doc = document.getElementById('document-preview') as HTMLAnchorElement;
+  const image = document.getElementById('image-preview') as HTMLImageElement;
+  let fileVariables;
+
+  if(!fileData) {
+    fileVariables = {
+      fileSize: 'Empty',
+      fileType: 'Empty',
+      fileName: 'Empty',
+      fileURL: ''
+    }
+  }
+  else
+  {
+    fileVariables = fileData;
+  }
+
+  document.getElementById('file-size')!.textContent = fileVariables.fileSize;
+  document.getElementById('file-type')!.textContent = fileVariables.fileType;
+  document.getElementById('file-name')!.textContent = fileVariables.fileName;
+
+  // TODO: improve this switch
+  if (fileVariables.fileType == 'Empty')
+  {
+    container.classList.add('hidden');
+  }
+  else
+  {
+    container.classList.remove('hidden');
+    container.href = fileVariables.fileURL;
+
+    if(fileVariables.fileType.split('/')[0] == 'image')
+    {
+      image.src = fileVariables.fileURL;
+      image.classList.remove('hidden');
+      doc.classList.add('hidden');
+    }
+    else
+    {
+      doc.href = fileVariables.fileURL;
+      doc.classList.remove('hidden');
+      image.classList.add('hidden');
+    }
+  }
+}
+
+function fileSizeFormatter(size:string) {
+  const bytes = parseFloat(size);
+  const kiloBytes = Math.round((bytes/1024) * 100) / 100;
+
+  if(kiloBytes > 1000) {
+    return (Math.round((kiloBytes/1024) * 100) / 100) + ' MB';
+  }
+  else
+  {
+    return kiloBytes + ' kB';
   }
 }
 

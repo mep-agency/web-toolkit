@@ -9,6 +9,15 @@
 
 // TODO: This is a temporary implementation...
 
+.file-preview {
+  display: grid;
+  grid-template: "metadata preview" / auto 10em;
+  grid-gap: 2em;
+  height: 10em;
+  width: 35em;
+  padding: 1em;
+}
+/*
 .mwt-upload-widget {
   margin-top:0.5em;
   padding: 1em;
@@ -16,4 +25,172 @@
   border: 1px solid var(--gray-200);
   border-radius: 5px;
   background-color: var(--gray-100);
+
+  & > div {
+    display: grid;
+    grid-template: "label input" / 5em auto;
+
+    & > * {
+      margin-bottom: 1em;
+    }
+
+    & > label {
+      grid-area: label;
+    }
+
+    & > input {
+      grid-area: input;
+    }
+
+    & > button {
+      margin-bottom: 0;
+
+      &:nth-child(2) {
+        margin-left: 1em;
+      }
+    }
+  }
+}
+ */
+.mwt-upload-widget {
+  display: grid;
+  grid-template: "preview metadata" 2fr
+                 "preview .       " auto
+                 "preview actions "  1fr / 1fr minmax(0, 2fr);
+  grid-gap: 0.5em;
+
+  max-width: 25em;
+  max-height: 10em;
+
+  border-radius: 10px;
+  box-shadow:
+          0 4px 6px -1px rgba(0, 0, 0, 0.3),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: .5em;
+
+  .metadata {
+    grid-area: metadata;
+    border-radius: 10px;
+    border: 1px solid grey;
+    background-color: whitesmoke;
+    width: 100%;
+    font-size: .9em;
+    padding: .5em;
+
+    & > div {
+      display: flex;
+
+      & > p {
+        display: inline-block;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .display {
+    grid-area: preview;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    background-color: lightgrey;
+    border-radius: 10px;
+
+    & > a {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      align-self: center;
+      text-align: center;
+
+      & > img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        border-radius: 10px;
+      }
+
+      & > i {
+        color: grey;
+        font-size: 3.5em;
+        width: 100%;
+        align-self: center;
+        text-align: center;
+      }
+    }
+  }
+
+  .actions {
+    grid-area: actions;
+    display: flex;
+    justify-content: flex-end;
+
+    .error-button {
+      position: relative;
+      display: flex;
+      align-self: center;
+      justify-content: center;
+      align-items: center;
+      width: 1.5em;
+      height: 1.5em;
+      padding-right: 1em;
+      color: red;
+
+      &::before {
+        position: absolute;
+        content: '';
+        display: block;
+        width: 100%;
+        height: 100%;
+
+        border: 2px solid;
+        border-radius: 50%;
+      }
+    }
+
+    .delete-button {
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+      border: none;
+      background-color: dodgerblue;
+      display: inline-block;
+      padding: 6px 12px;
+      cursor: pointer;
+      color: white;
+
+      &:hover {
+        background-color: darkblue;
+      }
+    }
+
+    .input-file {
+      width: min-content;
+
+      & > label {
+        display: inline-block;
+        padding: 6px 12px;
+        cursor: pointer;
+        height: 100%;
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+        background-color: dodgerblue;
+
+        color: white;
+
+        &:hover {
+          background-color: darkblue;
+        }
+      }
+
+      & > input[type="file"] {
+        display: none;
+      }
+    }
+  }
+
+  .hidden {
+    display: none !important;
+  }
 }
