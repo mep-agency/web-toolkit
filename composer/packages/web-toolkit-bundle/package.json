@@ -1,4 +1,6 @@
 {
+  "name": "@mep-agency/web-toolkit-bundle",
+  "version": "0.0.0",
   "author": "Marco Lipparini <developer@liarco.net>",
   "license": "MIT",
   "private": true,

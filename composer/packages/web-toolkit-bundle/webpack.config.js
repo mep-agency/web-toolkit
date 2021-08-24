@@ -25,7 +25,7 @@ Encore
     .enableTypeScriptLoader()
 
     .addEntry('app', './assets/scripts/app.ts')
-    .addEntry('attachment-field', './assets/scripts/components/AttachmentField/index.ts')
+    .addEntry('attachment-field', './assets/components/AttachmentField/index.ts')
 ;
 
 module.exports = Encore.getWebpackConfig();

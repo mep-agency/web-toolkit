@@ -9,7 +9,7 @@
 
 import './attachment-field.scss';
 
-import FieldsManager, { Field } from "../FieldsManager";
+import FieldsManager, { Field } from "../../scripts/FieldsManager";
 
 // TODO: This is a temporary implementation...
 
