@@ -40,15 +40,19 @@ final class UnprocessedAttachmentDto
     #[PositiveOrZero]
     public int $fileSize;
 
+    /**
+     * @param array<string, scalar> $metadata
+     * @param array<string, scalar> $processorsOptions
+     */
     public function __construct(
         #[NotNull]
         public File $file,
 
-        /**
-         * @var array<string, scalar>
-         */
         #[AssociativeArrayOfScalarValues]
         public array $metadata = [],
+
+        #[AssociativeArrayOfScalarValues]
+        public array $processorsOptions = [],
     ) {
         $this->fileName = $file instanceof UploadedFile ? $file->getClientOriginalName() : $file->getFilename();
         $this->mimeType = $file->getMimeType() ?? 'application/octet-stream';

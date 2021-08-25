@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Mep\WebToolkitBundle\FileStorage;
 
 use Doctrine\ORM\EntityManagerInterface;
-use JetBrains\PhpStorm\Pure;
 use Mep\WebToolkitBundle\Contract\FileStorage\FileStorageDriverInterface;
 use Mep\WebToolkitBundle\Contract\FileStorage\FileStorageProcessorInterface;
 use Mep\WebToolkitBundle\Dto\UnprocessedAttachmentDto;
 use Mep\WebToolkitBundle\Entity\Attachment;
+use Mep\WebToolkitBundle\Exception\FileStorage\InvalidProcessorOptionsException;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\File;
 
@@ -42,13 +42,19 @@ final class FileStorageManager
             );
         }
 
-        $unprocessedAttachment = new UnprocessedAttachmentDto($file, $metadata);
+        $unprocessedAttachment = new UnprocessedAttachmentDto($file, $metadata, $processorsOptions);
 
         // Run processors
         foreach ($this->processors as $processor) {
             if ($processor->supports($unprocessedAttachment)) {
-                $unprocessedAttachment = $processor->run($unprocessedAttachment, $processorsOptions);
+                $unprocessedAttachment = $processor->run($unprocessedAttachment);
             }
+        }
+
+        if (! empty($unprocessedAttachment->processorsOptions)) {
+            throw new InvalidProcessorOptionsException(
+                'Processors options are not empty, but all processors have been run. Some configuration may be wrong/missing.'
+            );
         }
 
         $attachment = $unprocessedAttachment->createAttachment();
@@ -64,7 +70,6 @@ final class FileStorageManager
         return $attachment;
     }
 
-    #[Pure]
     public function getPublicUrl(Attachment $attachment): string
     {
         return $this->fileStorageDriver->getPublicUrl($attachment);

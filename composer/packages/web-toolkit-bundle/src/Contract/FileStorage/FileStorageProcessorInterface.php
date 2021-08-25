@@ -14,16 +14,17 @@ declare(strict_types=1);
 namespace Mep\WebToolkitBundle\Contract\FileStorage;
 
 use Mep\WebToolkitBundle\Dto\UnprocessedAttachmentDto;
+use Mep\WebToolkitBundle\Exception\FileStorage\InvalidProcessorOptionsException;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
  */
 interface FileStorageProcessorInterface
 {
+    /**
+     * @throws InvalidProcessorOptionsException
+     */
     public function supports(UnprocessedAttachmentDto $attachment): bool;
 
-    /**
-     * @param array<string, scalar> $processorsOptions
-     */
-    public function run(UnprocessedAttachmentDto $attachment, array $processorsOptions): UnprocessedAttachmentDto;
+    public function run(UnprocessedAttachmentDto $attachment): UnprocessedAttachmentDto;
 }
