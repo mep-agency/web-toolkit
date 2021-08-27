@@ -22,7 +22,7 @@ use Mep\WebToolkitBundle\Repository\AttachmentRepository;
 use Mep\WebToolkitBundle\Validator\AssociativeArrayOfScalarValues;
 use Nette\Utils\Json;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\CallbackTransformer;
+use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -37,7 +37,7 @@ use Symfony\Component\Validator\Validation;
 /**
  * @author Marco Lipparini <developer@liarco.net>
  */
-class AdminAttachmentType extends AbstractType
+class AdminAttachmentType extends AbstractType implements DataTransformerInterface
 {
     public const CRUD_CONTROLER_FQCN = 'crud_controller_fqcn';
 
@@ -63,55 +63,23 @@ class AdminAttachmentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->addModelTransformer(new CallbackTransformer(
-                // Convert for the view
-                function ($value): ?Attachment {
-                    return $value;
-                },
-                // Converto from the request to an Attachment instance or null
-                function ($value): ?Attachment {
-                    if ($value instanceof Attachment) {
-                        return $value;
-                    }
-
-                    if (is_string($value)) {
-                        try {
-                            $value = Uuid::fromString($value);
-                        } catch (InvalidArgumentException $e) {
-                            throw new TransformationFailedException($e->getMessage());
-                        }
-                    }
-
-                    $result = $value ? $this->attachmentRepository->find($value) : null;
-
-                    if ($result === null) {
-                        throw new TransformationFailedException('Attachment not found: "' . $value . '"');
-                    }
-
-                    return $result;
-                }
-            ))
+            ->addModelTransformer($this)
+            ->addViewTransformer($this)
         ;
     }
 
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $view->vars['api_url'] = $this->adminUrlGenerator
-            ->unsetAll()
-            ->setController($options[self::CRUD_CONTROLER_FQCN])
-            ->setAction(AbstractCrudController::ACTION_ATTACH_FILE)
-            ->set(EA::ROUTE_PARAMS, [
-                'csrf_token_id' => self::CSRF_TOKEN_ID,
-                self::CRUD_CONTROLER_FQCN => $options[self::CRUD_CONTROLER_FQCN],
-                self::PROPERTY_PATH => $options[self::PROPERTY_PATH],
-                self::MAX_SIZE => $options[self::MAX_SIZE],
-                self::ALLOWED_MIME_TYPES => $options[self::ALLOWED_MIME_TYPES],
-                self::ALLOWED_NAME_PATTERN => $options[self::ALLOWED_NAME_PATTERN],
-                self::METADATA => Json::encode($options[self::METADATA]),
-                self::PROCESSORS_OPTIONS => Json::encode($options[self::PROCESSORS_OPTIONS]),
-            ])
-            ->generateUrl();
-
+        $view->vars['api_url'] = $this->generateApiUrl([
+            'csrf_token_id' => self::CSRF_TOKEN_ID,
+            self::CRUD_CONTROLER_FQCN => $options[self::CRUD_CONTROLER_FQCN],
+            self::PROPERTY_PATH => $options[self::PROPERTY_PATH],
+            self::MAX_SIZE => $options[self::MAX_SIZE],
+            self::ALLOWED_MIME_TYPES => $options[self::ALLOWED_MIME_TYPES],
+            self::ALLOWED_NAME_PATTERN => $options[self::ALLOWED_NAME_PATTERN],
+            self::METADATA => Json::encode($options[self::METADATA]),
+            self::PROCESSORS_OPTIONS => Json::encode($options[self::PROCESSORS_OPTIONS]),
+        ]);
         $view->vars['api_token_id'] = self::CSRF_TOKEN_ID;
     }
 
@@ -167,5 +135,48 @@ class AdminAttachmentType extends AbstractType
     public function getParent()
     {
         return TextType::class;
+    }
+
+    /**
+     * @param array<string, mixed> $routeParams
+     */
+    protected function generateApiUrl(array $routeParams): string
+    {
+        return $this->adminUrlGenerator
+            ->unsetAll()
+            ->setController($routeParams[self::CRUD_CONTROLER_FQCN])
+            ->setAction(AbstractCrudController::ACTION_ATTACH_FILE)
+            ->set(EA::ROUTE_PARAMS, $routeParams)
+            ->generateUrl();
+    }
+
+    public function transform($data): ?Attachment
+    {
+        // Model data should not be transformed
+        return $data;
+    }
+
+    public function reverseTransform($data): ?Attachment {
+        if ($data instanceof Attachment) {
+            return $data;
+        }
+
+        if (is_string($data)) {
+            try {
+                $data = Uuid::fromString($data);
+            } catch (InvalidArgumentException $e) {
+                throw new TransformationFailedException($e->getMessage());
+            }
+        } else {
+            throw new TransformationFailedException('Invalid attachment value.');
+        }
+
+        $result = $data ? $this->attachmentRepository->find($data) : null;
+
+        if ($result === null) {
+            throw new TransformationFailedException('Attachment not found: "' . $data . '".');
+        }
+
+        return $result;
     }
 }
