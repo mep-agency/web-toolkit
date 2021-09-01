@@ -15,6 +15,14 @@
       "js": [
         "./attachment-field.js"
       ]
+    },
+    "editorjs-field": {
+      "css": [
+        "./editorjs-field.css"
+      ],
+      "js": [
+        "./editorjs-field.js"
+      ]
     }
   }
 }

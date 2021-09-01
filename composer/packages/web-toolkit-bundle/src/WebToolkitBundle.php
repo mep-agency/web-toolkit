@@ -36,6 +36,7 @@ final class WebToolkitBundle extends Bundle
 
     // Attachments support
     public const SERVICE_FILE_STORAGE_MANAGER = self::REFERENCE_PREFIX . 'file_storage_manager';
+    public const SERVICE_ATTACHMENTS_ADMIN_API_URL_GENERATOR = self::REFERENCE_PREFIX . 'service_attachments_admin_api_url_generator';
     public const SERVICE_UPLOADED_FILE_PROCESSOR = self::REFERENCE_PREFIX . 'uploaded_file_processor';
     public const SERVICE_FILE_STORAGE_DRIVER = self::REFERENCE_PREFIX . 'file_storage_driver';
     public const SERVICE_ATTACHMENT_REPOSITORY = self::REFERENCE_PREFIX . 'attachment_repository';
@@ -43,7 +44,6 @@ final class WebToolkitBundle extends Bundle
     public const SERVICE_ADMIN_ATTACHMENT_TYPE = self::REFERENCE_PREFIX . 'admin_attachment_type';
     public const SERVICE_ADMIN_ATTACHMENT_UPLOAD_API_TYPE = self::REFERENCE_PREFIX . 'admin_attachment_upload_type';
     public const SERVICE_ADMIN_ATTACHMENT_TYPE_GUESSER = self::REFERENCE_PREFIX . 'admin_attachment_type_guesser';
-    public const SERVICE_ATTACHMENT_FIELD_CONFIGURATOR = self::REFERENCE_PREFIX . 'attachment_field_configurator';
     public const SERVICE_TWIG_ATTACHMENT_EXTENSION = self::REFERENCE_PREFIX . 'service_twig_attachment_extension';
 
     // FileStorage processors
@@ -56,4 +56,6 @@ final class WebToolkitBundle extends Bundle
 
     // EasyAdminBundle enhancements
     public const SERVICE_TYPE_GUESSER_CONFIGURATOR = self::REFERENCE_PREFIX . 'type_guesser_configurator';
+    public const SERVICE_ADMIN_EDITORJS_TYPE = self::REFERENCE_PREFIX . 'admin_editorjs_type';
+    public const SERVICE_ADMIN_EDITORJS_TYPE_GUESSER = self::REFERENCE_PREFIX . 'admin_editorjs_type_guesser';
 }

@@ -56,7 +56,7 @@ final class TinifyProcessor implements FileStorageProcessorInterface
             return false;
         }
 
-        return in_array(mb_strtolower($attachment->mimeType), ['image/jpeg', 'image/png']);
+        return in_array(mb_strtolower($attachment->mimeType), ['image/jpeg', 'image/png'], true);
     }
 
     public function run(UnprocessedAttachmentDto $attachment): UnprocessedAttachmentDto

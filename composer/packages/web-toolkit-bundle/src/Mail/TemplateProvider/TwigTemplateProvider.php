@@ -20,7 +20,10 @@ use Mep\WebToolkitBundle\Mail\TemplateIdentifier\TwigTemplate;
 use Symfony\Component\Mime\Email;
 use Twig\Environment;
 
-class TwigTemplateProvider implements TemplateProviderInterface
+/**
+ * @author Marco Lipparini <developer@liarco.net>
+ */
+final class TwigTemplateProvider implements TemplateProviderInterface
 {
     public const SUBJECT_TEMPLATE_NAME = 'subject.html.twig';
 

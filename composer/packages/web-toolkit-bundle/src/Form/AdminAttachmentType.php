@@ -13,11 +13,9 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Form;
 
-use EasyCorp\Bundle\EasyAdminBundle\Config\Option\EA;
-use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use InvalidArgumentException;
-use Mep\WebToolkitBundle\Contract\Controller\Admin\AbstractCrudController;
 use Mep\WebToolkitBundle\Entity\Attachment;
+use Mep\WebToolkitBundle\Router\AttachmentsAdminApiUrlGenerator;
 use Mep\WebToolkitBundle\Repository\AttachmentRepository;
 use Mep\WebToolkitBundle\Validator\AssociativeArrayOfScalarValues;
 use Nette\Utils\Json;
@@ -39,8 +37,6 @@ use Symfony\Component\Validator\Validation;
  */
 class AdminAttachmentType extends AbstractType implements DataTransformerInterface
 {
-    public const CRUD_CONTROLER_FQCN = 'crud_controller_fqcn';
-
     public const PROPERTY_PATH = 'attachment_property_path';
 
     public const MAX_SIZE = 'max_size';
@@ -57,7 +53,7 @@ class AdminAttachmentType extends AbstractType implements DataTransformerInterfa
 
     public function __construct(
         private AttachmentRepository $attachmentRepository,
-        private AdminUrlGenerator $adminUrlGenerator,
+        private AttachmentsAdminApiUrlGenerator $attachmentsAdminApiUrlGenerator,
     ) {}
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -70,9 +66,8 @@ class AdminAttachmentType extends AbstractType implements DataTransformerInterfa
 
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $view->vars['api_url'] = $this->generateApiUrl([
+        $view->vars['api_url'] = $this->attachmentsAdminApiUrlGenerator->generate([
             'csrf_token_id' => self::CSRF_TOKEN_ID,
-            self::CRUD_CONTROLER_FQCN => $options[self::CRUD_CONTROLER_FQCN],
             self::PROPERTY_PATH => $options[self::PROPERTY_PATH],
             self::MAX_SIZE => $options[self::MAX_SIZE],
             self::ALLOWED_MIME_TYPES => $options[self::ALLOWED_MIME_TYPES],
@@ -94,11 +89,9 @@ class AdminAttachmentType extends AbstractType implements DataTransformerInterfa
         ]);
 
         $resolver->setRequired([
-            self::CRUD_CONTROLER_FQCN,
             self::PROPERTY_PATH,
         ]);
 
-        $resolver->setAllowedTypes(self::CRUD_CONTROLER_FQCN, ['string', 'null']);
         $resolver->setAllowedTypes(self::PROPERTY_PATH, 'string');
         $resolver->setAllowedTypes(self::MAX_SIZE, ['int', 'string']);
         $resolver->setAllowedTypes(self::ALLOWED_MIME_TYPES, 'array');
@@ -114,9 +107,6 @@ class AdminAttachmentType extends AbstractType implements DataTransformerInterfa
             return $value;
         });
 
-        $resolver->setAllowedValues(self::CRUD_CONTROLER_FQCN, function (?string $value) {
-            return $value === null || class_exists($value);
-        });
         $resolver->setAllowedValues(self::MAX_SIZE, Validation::createIsValidCallable(
             new PositiveOrZero()
         ));
@@ -137,27 +127,14 @@ class AdminAttachmentType extends AbstractType implements DataTransformerInterfa
         return TextType::class;
     }
 
-    /**
-     * @param array<string, mixed> $routeParams
-     */
-    protected function generateApiUrl(array $routeParams): string
-    {
-        return $this->adminUrlGenerator
-            ->unsetAll()
-            ->setController($routeParams[self::CRUD_CONTROLER_FQCN])
-            ->setAction(AbstractCrudController::ACTION_ATTACH_FILE)
-            ->set(EA::ROUTE_PARAMS, $routeParams)
-            ->generateUrl();
-    }
-
-    public function transform($data): ?Attachment
+    public function transform($data)
     {
         // Model data should not be transformed
         return $data;
     }
 
-    public function reverseTransform($data): ?Attachment {
-        if ($data instanceof Attachment) {
+    public function reverseTransform($data) {
+        if ($data === null || $data instanceof Attachment) {
             return $data;
         }
 

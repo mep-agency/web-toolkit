@@ -11,7 +11,10 @@ use Mep\WebToolkitBundle\Repository\AttachmentRepository;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
-class AttachmentExtension extends AbstractExtension
+/**
+ * @author Marco Lipparini <developer@liarco.net>
+ */
+final class AttachmentExtension extends AbstractExtension
 {
     public function __construct(
         private AttachmentRepository $attachmentRepository,

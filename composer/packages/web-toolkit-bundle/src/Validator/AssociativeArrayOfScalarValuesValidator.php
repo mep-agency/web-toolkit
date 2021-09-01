@@ -19,7 +19,7 @@ use Symfony\Component\Validator\ConstraintValidator;
 /**
  * @author Marco Lipparini <developer@liarco.net>
  */
-class AssociativeArrayOfScalarValuesValidator extends ConstraintValidator
+final class AssociativeArrayOfScalarValuesValidator extends ConstraintValidator
 {
     public function validate($metadata, Constraint $constraint)
     {

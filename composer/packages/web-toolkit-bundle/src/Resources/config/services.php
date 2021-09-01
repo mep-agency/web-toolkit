@@ -31,11 +31,14 @@ use Mep\WebToolkitBundle\FileStorage\FileStorageManager;
 use Mep\WebToolkitBundle\FileStorage\Processor\TinifyProcessor;
 use Mep\WebToolkitBundle\Form\AdminAttachmentUploadApiType;
 use Mep\WebToolkitBundle\Form\AdminAttachmentType;
+use Mep\WebToolkitBundle\Form\AdminEditorJsType;
 use Mep\WebToolkitBundle\Form\TypeGuesser\AdminAttachmentTypeGuesser;
+use Mep\WebToolkitBundle\Form\TypeGuesser\AdminEditorJsTypeGuesser;
 use Mep\WebToolkitBundle\Mail\TemplateProvider\DummyTemplateProvider;
 use Mep\WebToolkitBundle\Mail\TemplateProvider\TwigTemplateProvider;
 use Mep\WebToolkitBundle\Mail\TemplateRenderer;
 use Mep\WebToolkitBundle\Repository\AttachmentRepository;
+use Mep\WebToolkitBundle\Router\AttachmentsAdminApiUrlGenerator;
 use Mep\WebToolkitBundle\Twig\AttachmentExtension;
 use Mep\WebToolkitBundle\WebToolkitBundle;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -108,6 +111,11 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->arg(2, tagged_iterator(WebToolkitBundle::TAG_FILE_STORAGE_PROCESSOR))
         ->alias(FileStorageManager::class, WebToolkitBundle::SERVICE_FILE_STORAGE_MANAGER)
     ;
+    $services->set(WebToolkitBundle::SERVICE_ATTACHMENTS_ADMIN_API_URL_GENERATOR, AttachmentsAdminApiUrlGenerator::class)
+        ->arg(0, new Reference(AdminContextProvider::class))
+        ->arg(1, new Reference(AdminUrlGenerator::class))
+        ->alias(AttachmentsAdminApiUrlGenerator::class, WebToolkitBundle::SERVICE_ATTACHMENTS_ADMIN_API_URL_GENERATOR)
+    ;
     $services->set(WebToolkitBundle::SERVICE_ATTACHMENT_REPOSITORY, AttachmentRepository::class)
         ->arg(0, new Reference(ManagerRegistry::class))
         ->tag('doctrine.repository_service')
@@ -129,20 +137,16 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     ;
     $services->set(WebToolkitBundle::SERVICE_ADMIN_ATTACHMENT_TYPE, AdminAttachmentType::class)
         ->arg(0, new Reference(WebToolkitBundle::SERVICE_ATTACHMENT_REPOSITORY))
-        ->arg(1, new Reference(AdminUrlGenerator::class))
+        ->arg(1, new Reference(AttachmentsAdminApiUrlGenerator::class))
         ->tag('form.type')
     ;
     $services->set(WebToolkitBundle::SERVICE_ADMIN_ATTACHMENT_UPLOAD_API_TYPE, AdminAttachmentUploadApiType::class)
         ->arg(0, new Reference(WebToolkitBundle::SERVICE_ATTACHMENT_REPOSITORY))
-        ->arg(1, new Reference(AdminUrlGenerator::class))
+        ->arg(1, new Reference(AttachmentsAdminApiUrlGenerator::class))
         ->tag('form.type')
     ;
     $services->set(WebToolkitBundle::SERVICE_ADMIN_ATTACHMENT_TYPE_GUESSER, AdminAttachmentTypeGuesser::class)
         ->tag('form.type_guesser')
-    ;
-    $services->set(WebToolkitBundle::SERVICE_ATTACHMENT_FIELD_CONFIGURATOR, AttachmentFieldConfigurator::class)
-        ->arg(0, new Reference(AdminContextProvider::class))
-        ->tag(EasyAdminExtension::TAG_FIELD_CONFIGURATOR, ['priority' => -99999])
     ;
     $services->set(WebToolkitBundle::SERVICE_TWIG_ATTACHMENT_EXTENSION, AttachmentExtension::class)
         ->arg(0, new Reference(WebToolkitBundle::SERVICE_ATTACHMENT_REPOSITORY))
@@ -160,5 +164,12 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services->set(WebToolkitBundle::SERVICE_TYPE_GUESSER_CONFIGURATOR, TypeGuesserConfigurator::class)
         ->arg(0, new Reference(FormRegistryInterface::class))
         ->tag(EasyAdminExtension::TAG_FIELD_CONFIGURATOR, ['priority' => 99999])
+    ;
+    $services->set(WebToolkitBundle::SERVICE_ADMIN_EDITORJS_TYPE, AdminEditorJsType::class)
+        ->arg(0, new Reference(AttachmentsAdminApiUrlGenerator::class))
+        ->tag('form.type')
+    ;
+    $services->set(WebToolkitBundle::SERVICE_ADMIN_EDITORJS_TYPE_GUESSER, AdminEditorJsTypeGuesser::class)
+        ->tag('form.type_guesser')
     ;
 };

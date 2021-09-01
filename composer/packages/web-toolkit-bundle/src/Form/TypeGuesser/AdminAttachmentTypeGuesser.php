@@ -10,7 +10,10 @@ use Symfony\Component\Form\FormTypeGuesserInterface;
 use Symfony\Component\Form\Guess\Guess;
 use Symfony\Component\Form\Guess\TypeGuess;
 
-class AdminAttachmentTypeGuesser implements FormTypeGuesserInterface
+/**
+ * @author Marco Lipparini <developer@liarco.net>
+ */
+final class AdminAttachmentTypeGuesser implements FormTypeGuesserInterface
 {
     public function guessType(string $class, string $property): ?TypeGuess
     {
@@ -20,18 +23,19 @@ class AdminAttachmentTypeGuesser implements FormTypeGuesserInterface
             return null;
         }
 
-        $validAttachmentAttributes = $reflectionProperty->getAttributes(ValidAttachment::class);
-        $attributeArguments = ($validAttachmentAttributes[0] ?? null)?->getArguments();
+        /** @var ?ValidAttachment $validAttachmentAttribute */
+        $validAttachmentAttribute = ($reflectionProperty->getAttributes(ValidAttachment::class)[0] ?? null)
+            ?->newInstance();
 
         return new TypeGuess(
             AdminAttachmentType::class,
-            $attributeArguments === null ? [] :
+            $validAttachmentAttribute === null ? [] :
                 [
-                    AdminAttachmentType::MAX_SIZE => $attributeArguments['maxSize'] ?? 0,
-                    AdminAttachmentType::ALLOWED_MIME_TYPES => $attributeArguments['allowedMimeTypes'] ?? [],
-                    AdminAttachmentType::ALLOWED_NAME_PATTERN => $attributeArguments['allowedNamePattern'] ?? null,
-                    AdminAttachmentType::METADATA => $attributeArguments['metadata'] ?? [],
-                    AdminAttachmentType::PROCESSORS_OPTIONS => $attributeArguments['processorsOptions'] ?? [],
+                    AdminAttachmentType::MAX_SIZE => $validAttachmentAttribute->maxSize,
+                    AdminAttachmentType::ALLOWED_MIME_TYPES => $validAttachmentAttribute->allowedMimeTypes,
+                    AdminAttachmentType::ALLOWED_NAME_PATTERN => $validAttachmentAttribute->allowedNamePattern,
+                    AdminAttachmentType::METADATA => $validAttachmentAttribute->metadata,
+                    AdminAttachmentType::PROCESSORS_OPTIONS => $validAttachmentAttribute->processorsOptions,
                 ],
             Guess::HIGH_CONFIDENCE
         );

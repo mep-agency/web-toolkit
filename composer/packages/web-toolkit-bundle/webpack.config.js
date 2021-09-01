@@ -26,6 +26,7 @@ Encore
 
     .addEntry('app', './assets/scripts/app.ts')
     .addEntry('attachment-field', './assets/components/AttachmentField/index.ts')
+    .addEntry('editorjs-field', './assets/components/EditorJsField/index.ts')
 ;
 
 module.exports = Encore.getWebpackConfig();

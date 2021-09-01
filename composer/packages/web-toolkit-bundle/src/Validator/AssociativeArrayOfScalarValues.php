@@ -20,7 +20,7 @@ use Symfony\Component\Validator\Constraint;
  * @author Marco Lipparini <developer@liarco.net>
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class AssociativeArrayOfScalarValues extends Constraint
+final class AssociativeArrayOfScalarValues extends Constraint
 {
     // Nothing to do here...
 }

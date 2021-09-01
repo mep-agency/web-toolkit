@@ -33,6 +33,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeCrudActionEvent;
 use EasyCorp\Bundle\EasyAdminBundle\Exception\ForbiddenActionException;
 use EasyCorp\Bundle\EasyAdminBundle\Exception\InsufficientEntityPermissionException;
 use EasyCorp\Bundle\EasyAdminBundle\Factory\EntityFactory;
+use EasyCorp\Bundle\EasyAdminBundle\Provider\AdminContextProvider;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Security\Permission;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
@@ -60,6 +61,7 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
 
     public function __construct(
         protected LocaleProviderInterface $localeProvider,
+        protected AdminContextProvider $adminContextProvider,
         protected AdminUrlGenerator $adminUrlGenerator,
         protected FileStorageManager $fileStorageManager,
     ) {}
@@ -344,7 +346,10 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
 
         /** @var AdminAttachmentUploadDto $formData */
         $formData = $form->getData();
-        $crudControllerFqcn = $form->getConfig()->getOption(AdminAttachmentUploadApiType::CRUD_CONTROLER_FQCN);
+        $crudControllerFqcn = $this->adminContextProvider
+            ?->getContext()
+            ?->getCrud()
+            ?->getControllerFqcn();
         $propertyPath = $form->getConfig()->getOption(AdminAttachmentUploadApiType::PROPERTY_PATH);
         /** @var array<string, scalar> $metadata */
         $metadata = $form->getConfig()->getOption(AdminAttachmentUploadApiType::METADATA);

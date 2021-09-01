@@ -37,3 +37,18 @@
         <button class="btn btn-primary" id="{{ form.vars.id }}__upload_button">Upload</button>
     </div>
 {%- endblock mwt_admin_attachment_widget %}
+
+{% block mwt_admin_editorjs_widget -%}
+    {# TODO: This is a temporary implementation... #}
+
+        {{ form_widget(form, {
+            value: value|json_encode,
+            type: 'hidden',
+            attr: {
+                class: 'mwt-editorjs-field form-control',
+                'data-tools-options': tools_options|json_encode,
+            }
+        }) }}
+
+        <div id="{{ id }}__editor" class="ea-text-editor-wrapper"></div>
+{%- endblock mwt_admin_editorjs_widget %}
