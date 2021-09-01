@@ -37,7 +37,7 @@ final class AdminAttachmentTypeGuesser implements FormTypeGuesserInterface
                     AdminAttachmentType::METADATA => $validAttachmentAttribute->metadata,
                     AdminAttachmentType::PROCESSORS_OPTIONS => $validAttachmentAttribute->processorsOptions,
                 ],
-            Guess::HIGH_CONFIDENCE
+            Guess::VERY_HIGH_CONFIDENCE
         );
     }
 

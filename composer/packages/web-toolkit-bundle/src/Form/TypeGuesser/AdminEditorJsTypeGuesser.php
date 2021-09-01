@@ -35,7 +35,7 @@ final class AdminEditorJsTypeGuesser implements FormTypeGuesserInterface
                 AdminEditorJsType::ENABLED_TOOLS => $editorJsAttribute->enabledTools,
                 AdminEditorJsType::TOOLS_OPTIONS => $editorJsAttribute->options,
             ],
-            Guess::HIGH_CONFIDENCE
+            Guess::VERY_HIGH_CONFIDENCE
         );
     }
 
