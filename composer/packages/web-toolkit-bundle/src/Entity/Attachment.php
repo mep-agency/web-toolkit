@@ -27,36 +27,37 @@ use Symfony\Component\Validator\Constraints\PositiveOrZero;
  * @author Marco Lipparini <developer@liarco.net>
  */
 #[ORM\Entity]
+#[ORM\Table(name: 'mwt_attachment')]
 class Attachment
 {
     #[ORM\Id]
-    #[ORM\Column(type: "uuid", unique: true)]
+    #[ORM\Column(type: 'uuid', unique: true)]
     private Uuid $id;
 
     /**
      * @internal Attachment instances should be created by the FileStorageManager only.
      */
     public function __construct(
-        #[ORM\Column(type: "string", length: 255)]
+        #[ORM\Column(type: 'string', length: 255)]
         #[NotNull]
         #[NotBlank]
         #[Length(max: 255)]
         private string $fileName,
 
-        #[ORM\Column(type: "string", length: 255)]
+        #[ORM\Column(type: 'string', length: 255)]
         #[NotNull]
         #[NotBlank]
         #[Length(max: 255)]
         private string $mimeType,
 
-        #[ORM\Column(type: "integer")]
+        #[ORM\Column(type: 'integer')]
         #[PositiveOrZero]
         private int $fileSize,
 
         /**
          * @var array<string, scalar>
          */
-        #[ORM\Column(type: "json")]
+        #[ORM\Column(type: 'json')]
         #[AssociativeArrayOfScalarValues]
         private array $metadata = [],
     ) {
