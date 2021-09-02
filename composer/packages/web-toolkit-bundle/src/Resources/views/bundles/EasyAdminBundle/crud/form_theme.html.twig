@@ -45,10 +45,10 @@
             value: value|json_encode,
             type: 'hidden',
             attr: {
-                class: 'mwt-editorjs-field form-control',
+                class: 'mwt-editorjs-field',
                 'data-tools-options': tools_options|json_encode,
             }
         }) }}
 
-        <div id="{{ id }}__editor" class="ea-text-editor-wrapper"></div>
+        <div id="{{ id }}__editor" class="form-control mwt-widget-wrapper mwt-editorjs-wrapper"></div>
 {%- endblock mwt_admin_editorjs_widget %}
