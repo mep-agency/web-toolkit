@@ -87,5 +87,5 @@
             }
         }) }}
 
-        <div id="{{ id }}__editor" class="form-control mwt-widget-wrapper mwt-editorjs-wrapper"></div>
+        <div id="{{ id }}__editor" class="form-control mwt-widget-wrapper mwt-editorjs-wrapper{% if not valid %} is-invalid{% endif %}"></div>
 {%- endblock mwt_admin_editorjs_widget %}
