@@ -22,6 +22,7 @@ class AttachmentField implements Field {
   private readonly csrfToken: string;
   private readonly errorButton: HTMLElement;
   private readonly errorList: HTMLElement;
+  private readonly widget: HTMLElement;
   private fileData = {
     fileURL: '',
     fileType: '',
@@ -31,6 +32,7 @@ class AttachmentField implements Field {
   public constructor(input: HTMLInputElement)
   {
     this.input = input;
+    this.widget = document.getElementById('mwt-upload-widget') as HTMLElement;
     this.uploadButton = document.getElementById(`${input.id}__file`) as HTMLInputElement;
     this.errorButton = document.getElementById(`${input.id}__error_button`) as HTMLElement;
     this.errorList = document.getElementById(`${input.id}__error_list`) as HTMLElement;
@@ -44,11 +46,11 @@ class AttachmentField implements Field {
   public init()
   {
     if(this.fileData.fileURL != '') {
-      getFileData(this.fileData);
+      this.getFileData(this.fileData);
     }
     else
     {
-      passFileData();
+      AttachmentField.passFileData();
     }
 
     this.uploadButton.addEventListener('change', (e) => {
@@ -59,18 +61,17 @@ class AttachmentField implements Field {
 
       formData.append('_token', this.csrfToken);
 
-      uploadFile(formData, this.apiUrl).then(result => {
-        this.errorButton.classList.add('visually-hidden');
+      this.uploadFile(formData, this.apiUrl).then(result => {
+        this.errorDisplay(false);
 
         console.log(`Success: ${result.publicUrl}`);
 
         this.input.value = result.uuid;
         this.fileData.fileURL = result.publicUrl;
 
-        getFileData(this.fileData);
+        this.getFileData(this.fileData);
       }).catch(error => {
-        this.errorButton.classList.remove('visually-hidden');
-        this.errorList.innerHTML = '';
+        this.errorDisplay(true);
 
         console.error(`ERROR: ${error.message}`);
 
@@ -92,109 +93,125 @@ class AttachmentField implements Field {
 
       if(this.input.value != "") this.input.value = "";
 
-      this.errorButton.classList.add('visually-hidden');
+      this.errorDisplay(false);
 
-      passFileData();
+      AttachmentField.passFileData();
     })
   }
-}
 
-// === ASYNC FETCH FUNCTIONS
-async function uploadFile(formData:FormData ,apiUrl: string) {
-  const response:any = await fetch(apiUrl, {
-    method: 'POST',
-    body: formData,
-  });
+  // === ASYNC FETCH FUNCTIONS
+  async uploadFile(formData:FormData ,apiUrl: string) {
+      const response:any = await fetch(apiUrl, {
+        method: 'POST',
+        body: formData,
+      });
 
-  if (!response.ok) {
-    throw await response.json();
-  }
+      if (!response.ok) {
+        throw await response.json();
+      }
 
-  return await response.json();
-}
-
-async function fetchFileData(fileData:any) {
-  const response = await fetch(fileData.fileURL, {
-    method: 'HEAD',
-  });
-
-  if (!response.ok) {
-    throw new Error(`HTTP error! Status Code: ${response.status}`);
-  }
-
-  fileData.fileSize=fileSizeFormatter(response.headers.get('content-length')!);
-  fileData.fileType=response.headers.get('content-type');
-  fileData.fileName=fileData.fileURL.split('/')[5];
-
-  passFileData(fileData);
-}
-
-// === AUX FUNCTIONS
-function getFileData(fileData:any) {
-  fetchFileData(fileData).catch(error => {
-    console.log('Error: ' + error.message);
-  })
-}
-
-function passFileData(fileData?:any) {
-  const container = document.getElementById('previewer') as HTMLAnchorElement;
-  const doc = document.getElementById('document-preview') as HTMLAnchorElement;
-  const image = document.getElementById('image-preview') as HTMLImageElement;
-  let fileVariables;
-
-  if(!fileData) {
-    fileVariables = {
-      fileSize: '\xa0Empty',
-      fileType: '\xa0Empty',
-      fileName: '\xa0Empty',
-      fileURL: ''
+      return await response.json();
     }
-  }
-  else
-  {
-    fileVariables = fileData;
+
+  async fetchFileData(fileData:any) {
+      const response = await fetch(fileData.fileURL, {
+        method: 'HEAD',
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status Code: ${response.status}`);
+      }
+
+      fileData.fileSize=AttachmentField.fileSizeFormatter(response.headers.get('content-length')!);
+      fileData.fileType=response.headers.get('content-type');
+      fileData.fileName=fileData.fileURL.split('/')[5];
+
+      AttachmentField.passFileData(fileData);
+    }
+
+  // === AUX FUNCTIONS
+  private getFileData(fileData:any) {
+    this.fetchFileData(fileData).catch(error => {
+      console.log('Error: ' + error.message);
+    })
   }
 
-  document.getElementById('file-size')!.textContent = '\xa0'+fileVariables.fileSize;
-  document.getElementById('file-type')!.textContent = '\xa0'+fileVariables.fileType;
-  document.getElementById('file-name')!.textContent = '\xa0'+fileVariables.fileName;
-
-  // TODO: improve this switch
-  if (fileVariables.fileType == '\xa0Empty')
-  {
-    container.classList.add('visually-hidden');
-  }
-  else
-  {
-    container.classList.remove('visually-hidden');
-    container.href = fileVariables.fileURL;
-
-    if(fileVariables.fileType.split('/')[0] == 'image')
+  private errorDisplay(isError:boolean) {
+    if(isError)
     {
-      image.src = fileVariables.fileURL;
-      image.classList.remove('visually-hidden');
-      doc.classList.add('visually-hidden');
+      this.widget.classList.add('is-invalid');
+      this.errorButton.classList.remove('visually-hidden');
+      this.errorList.innerHTML = '';
     }
     else
     {
-      doc.href = fileVariables.fileURL;
-      doc.classList.remove('visually-hidden');
-      image.classList.add('visually-hidden');
+      this.errorButton.classList.add('visually-hidden');
+      this.widget.classList.remove('is-invalid');
+    }
+  }
+
+  // === STATIC FUNCTIONS
+  private static passFileData(fileData?:any) {
+    const container = document.getElementById('previewer') as HTMLAnchorElement;
+    const doc = document.getElementById('document-preview') as HTMLAnchorElement;
+    const image = document.getElementById('image-preview') as HTMLImageElement;
+    let fileVariables;
+
+    if(!fileData) {
+      fileVariables = {
+        fileSize: '\xa0Empty',
+        fileType: '\xa0Empty',
+        fileName: '\xa0Empty',
+        fileURL: ''
+      }
+    }
+    else
+    {
+      fileVariables = fileData;
+    }
+
+    document.getElementById('file-size')!.textContent = '\xa0'+fileVariables.fileSize;
+    document.getElementById('file-type')!.textContent = '\xa0'+fileVariables.fileType;
+    document.getElementById('file-name')!.textContent = '\xa0'+fileVariables.fileName;
+
+    if (fileVariables.fileURL == '')
+    {
+      container.classList.add('visually-hidden');
+    }
+    else
+    {
+      container.classList.remove('visually-hidden');
+      container.href = fileVariables.fileURL;
+
+      if(fileVariables.fileType.split('/')[0] == 'image')
+      {
+        image.src = fileVariables.fileURL;
+        image.classList.remove('visually-hidden');
+        doc.classList.add('visually-hidden');
+      }
+      else
+      {
+        doc.href = fileVariables.fileURL;
+        doc.classList.remove('visually-hidden');
+        image.classList.add('visually-hidden');
+      }
+    }
+  }
+
+  private static fileSizeFormatter(size:string) {
+    const bytes = parseFloat(size);
+    const kiloBytes = Math.round((bytes/1024) * 100) / 100;
+
+    if(kiloBytes > 1000) {
+      return (Math.round((kiloBytes/1024) * 100) / 100) + ' MB';
+    }
+    else
+    {
+      return kiloBytes + ' kB';
     }
   }
 }
 
-function fileSizeFormatter(size:string) {
-  const bytes = parseFloat(size);
-  const kiloBytes = Math.round((bytes/1024) * 100) / 100;
 
-  if(kiloBytes > 1000) {
-    return (Math.round((kiloBytes/1024) * 100) / 100) + ' MB';
-  }
-  else
-  {
-    return kiloBytes + ' kB';
-  }
-}
 
 FieldsManager.registerField('mwt-attachment-field', AttachmentField);

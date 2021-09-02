@@ -21,6 +21,7 @@
   max-height: 10em;
 
   padding: .5em;
+  position: relative;
 
   .metadata {
     grid-area: metadata;
@@ -80,34 +81,6 @@
     display: flex;
     justify-content: flex-end;
 
-    // TODO: substitute with class
-    .error-button {
-      position: relative;
-      display: flex;
-      align-self: center;
-      justify-content: center;
-      align-items: center;
-      width: 1.5em;
-      height: 1.5em;
-      padding-right: 1em;
-      color: red;
-
-      &::before {
-        position: absolute;
-        content: '';
-        display: block;
-        width: 100%;
-        height: 100%;
-
-        border: 2px solid;
-        border-radius: 50%;
-      }
-    }
-
-    .error-list > li {
-        color: var(--bs-danger);
-    }
-
     .input-file {
       width: min-content;
       padding: 0;
@@ -126,5 +99,16 @@
       padding: 6px 12px;
       color: var(--text-on-primary);;
     }
+  }
+
+  .error-button {
+    position: absolute;
+    right: 0;
+    width: calc(1.5em + .75rem);
+    height: 100%;
+  }
+
+  .error-list > li {
+    color: var(--bs-danger);
   }
 }

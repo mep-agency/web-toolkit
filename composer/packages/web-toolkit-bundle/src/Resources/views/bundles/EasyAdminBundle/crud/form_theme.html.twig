@@ -38,7 +38,7 @@
         <div id="{{ id }}__metadata" class="mt-3 visually-hidden">{{ dump(data.metadata) }}</div>
     {% endif %}
 
-    <div class="mwt-upload-widget form-control">
+    <div class="mwt-upload-widget form-control" id="mwt-upload-widget">
         <div class="display form-control">
             <a id="previewer" href="" target="_blank">
                 <i id="document-preview" class="fas fa-file visually-hidden"></i>
@@ -52,17 +52,7 @@
             <div><strong>Size:</strong><p id="file-size"></p></div>
         </div>
 
-        <div class="actions">
-            <a id="{{ id }}__error_button"
-               class="error-button visually-hidden"
-               type="button"
-               data-bs-toggle="dropdown"
-               data-bs-offset="0,5"
-               aria-expanded="false"><i class="fas fa-exclamation"></i></a>
-            <ul id="{{ id }}__error_list" class="error-list dropdown-menu dropdown-menu-end">
-                <li class></li>
-            </ul>
-
+        <div class="actions dropup">
             <div class="input-file btn btn-primary">
                 <label for="{{ id }}__file"  class="{# required #}">
                     <i class="fas fa-upload"></i>
@@ -72,6 +62,14 @@
 
             <button class="delete-button btn btn-primary" id="{{ id }}__delete_button"><i class="fas fa-trash-alt"></i></button>
         </div>
+
+        <a id="{{ id }}__error_button"
+           class="error-button visually-hidden"
+           type="button"
+           data-bs-toggle="dropdown"
+           data-bs-offset="0,5"
+           aria-expanded="false"></a>
+        <ul id="{{ id }}__error_list" class="error-list dropdown-menu dropdown-menu-end invalid-feedback"></ul>
     </div>
 {%- endblock mwt_admin_attachment_widget %}
 
