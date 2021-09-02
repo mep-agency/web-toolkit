@@ -46,6 +46,10 @@ class AttachmentField implements Field {
     if(this.fileData.fileURL != '') {
       getFileData(this.fileData);
     }
+    else
+    {
+      passFileData();
+    }
 
     this.uploadButton.addEventListener('change', (e) => {
       e.preventDefault();
@@ -56,7 +60,7 @@ class AttachmentField implements Field {
       formData.append('_token', this.csrfToken);
 
       uploadFile(formData, this.apiUrl).then(result => {
-        this.errorButton.classList.add('hidden');
+        this.errorButton.classList.add('visually-hidden');
 
         console.log(`Success: ${result.publicUrl}`);
 
@@ -65,7 +69,7 @@ class AttachmentField implements Field {
 
         getFileData(this.fileData);
       }).catch(error => {
-        this.errorButton.classList.remove('hidden');
+        this.errorButton.classList.remove('visually-hidden');
         this.errorList.innerHTML = '';
 
         console.error(`ERROR: ${error.message}`);
@@ -87,6 +91,8 @@ class AttachmentField implements Field {
       this.fileInput.value = "";
 
       if(this.input.value != "") this.input.value = "";
+
+      this.errorButton.classList.add('visually-hidden');
 
       passFileData();
     })
@@ -138,9 +144,9 @@ function passFileData(fileData?:any) {
 
   if(!fileData) {
     fileVariables = {
-      fileSize: 'Empty',
-      fileType: 'Empty',
-      fileName: 'Empty',
+      fileSize: '\xa0Empty',
+      fileType: '\xa0Empty',
+      fileName: '\xa0Empty',
       fileURL: ''
     }
   }
@@ -149,31 +155,31 @@ function passFileData(fileData?:any) {
     fileVariables = fileData;
   }
 
-  document.getElementById('file-size')!.textContent = fileVariables.fileSize;
-  document.getElementById('file-type')!.textContent = fileVariables.fileType;
-  document.getElementById('file-name')!.textContent = fileVariables.fileName;
+  document.getElementById('file-size')!.textContent = '\xa0'+fileVariables.fileSize;
+  document.getElementById('file-type')!.textContent = '\xa0'+fileVariables.fileType;
+  document.getElementById('file-name')!.textContent = '\xa0'+fileVariables.fileName;
 
   // TODO: improve this switch
-  if (fileVariables.fileType == 'Empty')
+  if (fileVariables.fileType == '\xa0Empty')
   {
-    container.classList.add('hidden');
+    container.classList.add('visually-hidden');
   }
   else
   {
-    container.classList.remove('hidden');
+    container.classList.remove('visually-hidden');
     container.href = fileVariables.fileURL;
 
     if(fileVariables.fileType.split('/')[0] == 'image')
     {
       image.src = fileVariables.fileURL;
-      image.classList.remove('hidden');
-      doc.classList.add('hidden');
+      image.classList.remove('visually-hidden');
+      doc.classList.add('visually-hidden');
     }
     else
     {
       doc.href = fileVariables.fileURL;
-      doc.classList.remove('hidden');
-      image.classList.add('hidden');
+      doc.classList.remove('visually-hidden');
+      image.classList.add('visually-hidden');
     }
   }
 }
