@@ -58,7 +58,6 @@ class AttachmentField implements Field {
 
       const formData = new FormData();
       formData.append('file', this.fileInput.files![0]);
-
       formData.append('_token', this.csrfToken);
 
       this.uploadFile(formData, this.apiUrl).then(result => {
@@ -159,9 +158,9 @@ class AttachmentField implements Field {
 
     if(!fileData) {
       fileVariables = {
-        fileSize: '\xa0Empty',
-        fileType: '\xa0Empty',
-        fileName: '\xa0Empty',
+        fileSize: 'Empty',
+        fileType: 'Empty',
+        fileName: 'Empty',
         fileURL: ''
       }
     }
@@ -186,17 +185,28 @@ class AttachmentField implements Field {
       if(fileVariables.fileType.split('/')[0] == 'image')
       {
         image.src = fileVariables.fileURL;
-        image.classList.remove('visually-hidden');
-        doc.classList.add('visually-hidden');
+        this.switchHiddenElement(image, doc);
       }
       else
       {
         doc.href = fileVariables.fileURL;
-        doc.classList.remove('visually-hidden');
-        image.classList.add('visually-hidden');
+        this.switchHiddenElement(doc, image);
       }
     }
   }
+
+  private static switchHiddenElement(firstElement:HTMLElement, secondElement:HTMLElement) {
+      if(firstElement.classList.contains('visually-hidden'))
+      {
+        firstElement.classList.remove('visually-hidden');
+        secondElement.classList.add('visually-hidden');
+      }
+      else
+      {
+        firstElement.classList.add('visually-hidden');
+        secondElement.classList.remove('visually-hidden');
+      }
+    }
 
   private static fileSizeFormatter(size:string) {
     const bytes = parseFloat(size);
@@ -211,7 +221,5 @@ class AttachmentField implements Field {
     }
   }
 }
-
-
 
 FieldsManager.registerField('mwt-attachment-field', AttachmentField);
