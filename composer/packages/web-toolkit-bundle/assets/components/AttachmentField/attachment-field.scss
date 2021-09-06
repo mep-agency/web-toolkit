@@ -14,13 +14,13 @@
   grid-template: "preview metadata" 2fr
                  "preview .       " auto
                  "preview actions "  1fr / 9em minmax(0, 2fr);
-  grid-column-gap: 0.5em;
-  grid-row-gap: 0.25em;
+  grid-column-gap: 1em;
+  grid-row-gap: 0.5em;
 
   max-width: 100%;
-  max-height: 10em;
+  max-height: 12em;
 
-  padding: .5em;
+  padding: 1em;
   position: relative;
 
   .metadata {
@@ -80,11 +80,12 @@
     grid-area: actions;
     display: flex;
     justify-content: flex-end;
+    gap: 1em;
 
     .input-file {
       width: min-content;
       padding: 0;
-      border-radius: var(--border-radius) 0 0 var(--border-radius);
+      //border-radius: var(--border-radius) 0 0 var(--border-radius);
       box-shadow: none;
 
       & > label {
@@ -99,7 +100,7 @@
 
     .delete-button {
       padding: 6px 12px;
-      border-radius: 0 var(--border-radius) var(--border-radius) 0;
+      //border-radius: 0 var(--border-radius) var(--border-radius) 0;
       box-shadow: none;
     }
   }

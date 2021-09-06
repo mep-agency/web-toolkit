@@ -151,9 +151,7 @@ class AttachmentField implements Field {
 
   // === STATIC FUNCTIONS
   private static passFileData(fileData?:any) {
-    const container = document.getElementById('previewer') as HTMLAnchorElement;
-    const doc = document.getElementById('document-preview') as HTMLAnchorElement;
-    const image = document.getElementById('image-preview') as HTMLImageElement;
+    const container = document.getElementById('display') as HTMLElement;
     let fileVariables;
 
     if(!fileData) {
@@ -173,40 +171,32 @@ class AttachmentField implements Field {
     document.getElementById('file-type')!.textContent = '\xa0'+fileVariables.fileType;
     document.getElementById('file-name')!.textContent = '\xa0'+fileVariables.fileName;
 
-    if (fileVariables.fileURL == '')
-    {
-      container.classList.add('visually-hidden');
-    }
-    else
-    {
-      container.classList.remove('visually-hidden');
-      container.href = fileVariables.fileURL;
+    this.createDisplayElement(container, fileVariables.fileType.split('/')[0], fileVariables.fileURL);
 
-      if(fileVariables.fileType.split('/')[0] == 'image')
-      {
-        image.src = fileVariables.fileURL;
-        this.switchHiddenElement(image, doc);
-      }
-      else
-      {
-        doc.href = fileVariables.fileURL;
-        this.switchHiddenElement(doc, image);
-      }
-    }
   }
 
-  private static switchHiddenElement(firstElement:HTMLElement, secondElement:HTMLElement) {
-      if(firstElement.classList.contains('visually-hidden'))
-      {
-        firstElement.classList.remove('visually-hidden');
-        secondElement.classList.add('visually-hidden');
+  private static createDisplayElement(parent:HTMLElement, type:string, url:string) {
+    parent.innerHTML = '';
+
+    let container = document.createElement('a');
+    container.href = url;
+    container.target = '_blank';
+    let displayElement;
+
+    if(type != 'Empty') {
+      if (type == 'image') {
+        displayElement = document.createElement('img');
+        displayElement.setAttribute('src', url);
+        container.appendChild(displayElement);
+      } else {
+        displayElement = document.createElement('i');
+        displayElement.classList.add('fas');
+        displayElement.classList.add('fa-file');
+        container.appendChild(displayElement);
       }
-      else
-      {
-        firstElement.classList.add('visually-hidden');
-        secondElement.classList.remove('visually-hidden');
-      }
+      parent.appendChild(container);
     }
+  }
 
   private static fileSizeFormatter(size:string) {
     const bytes = parseFloat(size);
