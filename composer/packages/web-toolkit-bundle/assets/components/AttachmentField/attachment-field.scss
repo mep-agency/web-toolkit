@@ -82,15 +82,18 @@
     justify-content: flex-end;
     gap: 1em;
 
+    & > button {
+      padding: 6px 12px;
+    }
+
     .input-file {
-      width: min-content;
-      padding: 0;
-      //border-radius: var(--border-radius) 0 0 var(--border-radius);
+      width: 5em;
+
       box-shadow: none;
 
       & > label {
         display: inline-block;
-        padding: 6px 12px;
+        padding: 0;
         cursor: pointer;
         height: 100%;
 
@@ -99,9 +102,8 @@
     }
 
     .delete-button {
-      padding: 6px 12px;
-      //border-radius: 0 var(--border-radius) var(--border-radius) 0;
-      box-shadow: none;
+      color: var(--bs-danger);
+      border-color: var(--bs-danger);
     }
   }
 
