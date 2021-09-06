@@ -139,9 +139,7 @@ class AttachmentField implements Field {
       this.widget.classList.add('is-invalid');
       this.errorButton.classList.remove('visually-hidden');
       this.errorList.innerHTML = '';
-    }
-    else
-    {
+    } else {
       this.errorButton.classList.add('visually-hidden');
       this.widget.classList.remove('is-invalid');
     }
@@ -189,9 +187,7 @@ class AttachmentField implements Field {
         container.appendChild(displayElement);
       }
       parent.appendChild(container);
-    }
-    else
-    {
+    } else {
       let emptyElement = document.createElement('i');
       emptyElement.classList.add('fas');
       emptyElement.classList.add('fa-ban');
@@ -205,9 +201,7 @@ class AttachmentField implements Field {
 
     if(kiloBytes > 1000) {
       return (Math.round((kiloBytes/1024) * 100) / 100) + ' MB';
-    }
-    else
-    {
+    } else {
       return kiloBytes + ' kB';
     }
   }
