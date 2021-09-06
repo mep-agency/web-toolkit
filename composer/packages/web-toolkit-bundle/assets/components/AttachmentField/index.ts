@@ -33,11 +33,11 @@ class AttachmentField implements Field {
   {
     this.input = input;
     this.widget = document.getElementById(`${input.id}__mwt-upload-widget`) as HTMLElement;
-    this.fileInput = this.widget.querySelector('#file') as HTMLInputElement;
-    this.uploadButton = this.widget.querySelector('#upload_button') as HTMLInputElement;
-    this.deleteButton = this.widget.querySelector('#delete_button') as HTMLButtonElement;
-    this.errorButton = this.widget.querySelector('#error_button') as HTMLElement;
-    this.errorList = this.widget.querySelector('#error_list') as HTMLElement;
+    this.fileInput = document.getElementById(`${input.id}__file`) as HTMLInputElement;
+    this.uploadButton = this.widget.querySelector('.upload-button') as HTMLInputElement;
+    this.deleteButton = this.widget.querySelector('.delete-button') as HTMLButtonElement;
+    this.errorButton = this.widget.querySelector('.error-button') as HTMLElement;
+    this.errorList = this.widget.querySelector('.error-list') as HTMLElement;
     this.apiUrl = this.input.getAttribute('data-api-url')!;
     this.csrfToken = this.input.getAttribute('data-csrf-token')!;
     this.fileData.fileURL = this.input.getAttribute('data-public-url')!;
@@ -160,9 +160,9 @@ class AttachmentField implements Field {
     } else {
       fileVariables = fileData;
     }
-    this.widget.querySelector('#file-size')!.textContent = fileVariables.fileSize;
-    this.widget.querySelector('#file-type')!.textContent = fileVariables.fileType;
-    this.widget.querySelector('#file-name')!.textContent = fileVariables.fileName;
+    this.widget.querySelector('.file-size')!.textContent = fileVariables.fileSize;
+    this.widget.querySelector('.file-type')!.textContent = fileVariables.fileType;
+    this.widget.querySelector('.file-name')!.textContent = fileVariables.fileName;
 
     AttachmentField.createDisplayElement(container, fileVariables.fileType.split('/')[0], fileVariables.fileURL);
   }

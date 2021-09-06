@@ -42,29 +42,28 @@
         <div class="display form-control"></div>
 
         <div class="metadata form-control">
-            <div><strong>Name:</strong> <span id="file-name"></span></div>
-            <div><strong>Type:</strong> <span id="file-type"></span></div>
-            <div><strong>Size:</strong> <span id="file-size"></span></div>
+            <div><strong>Name:</strong> <span class="file-name"></span></div>
+            <div><strong>Type:</strong> <span class="file-type"></span></div>
+            <div><strong>Size:</strong> <span class="file-size"></span></div>
         </div>
 
         <div class="actions">
-            <button id="upload_button" class="btn btn-primary" type="button">
-                <label for="file">
+            <button class="upload-button btn btn-primary" type="button">
+                <label for="{{ id }}__file">
                     <i class="fas fa-upload"></i>
                 </label>
-                <input id="file" type="file" class="visually-hidden">
+                <input id="{{ id }}__file" type="file" class="visually-hidden">
             </button>
 
-            <button id="delete_button" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></button>
+            <button class="delete-button btn btn-outline-danger"><i class="fas fa-trash-alt"></i></button>
         </div>
 
-        <a id="error_button"
-           class="visually-hidden"
+        <a class="error-button visually-hidden"
            type="button"
            data-bs-toggle="dropdown"
            data-bs-offset="0,5"
            aria-expanded="false"></a>
-        <ul id="error_list" class="dropdown-menu dropdown-menu-end invalid-feedback"></ul>
+        <ul class="error-list dropdown-menu dropdown-menu-end invalid-feedback"></ul>
     </div>
 {%- endblock mwt_admin_attachment_widget %}
 
