@@ -33,11 +33,11 @@ class AttachmentField implements Field {
   {
     this.input = input;
     this.widget = document.getElementById('mwt-upload-widget') as HTMLElement;
-    this.uploadButton = document.getElementById(`${input.id}__file`) as HTMLInputElement;
-    this.errorButton = document.getElementById(`${input.id}__error_button`) as HTMLElement;
-    this.errorList = document.getElementById(`${input.id}__error_list`) as HTMLElement;
     this.fileInput = document.getElementById(`${input.id}__file`) as HTMLInputElement;
+    this.uploadButton = document.getElementById(`${input.id}__upload_button`) as HTMLInputElement;
+    this.errorButton = document.getElementById(`${input.id}__error_button`) as HTMLElement;
     this.deleteButton = document.getElementById(`${input.id}__delete_button`) as HTMLButtonElement;
+    this.errorList = document.getElementById(`${input.id}__error_list`) as HTMLElement;
     this.apiUrl = this.input.getAttribute('data-api-url')!;
     this.csrfToken = this.input.getAttribute('data-csrf-token')!;
     this.fileData.fileURL = this.input.getAttribute('data-public-url')!;
