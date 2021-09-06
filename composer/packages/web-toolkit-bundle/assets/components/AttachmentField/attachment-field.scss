@@ -28,13 +28,18 @@
     background-color: var(--fieldset-bg);
     width: 100%;
     font-size: var(--font-size-xs);
-    padding: .5em;
+    padding: 1em;
 
     & > div {
       display: flex;
       color: var(--text-color);
 
-      & > p {
+      &:not(:last-child)
+      {
+        margin-bottom: .5em;
+      }
+
+      & > span {
         display: inline-block;
         text-overflow: ellipsis;
         overflow: hidden;
@@ -59,20 +64,20 @@
       align-self: center;
       text-align: center;
 
-      & > img {
+      & img {
         height: 100%;
         width: 100%;
         object-fit: cover;
         border-radius: var(--border-radius);
       }
+    }
 
-      & > i {
-        color: var(--text-color-light);
-        font-size: 3.5em;
-        width: 100%;
-        align-self: center;
-        text-align: center;
-      }
+    & i {
+      color: var(--text-color-light);
+      font-size: 3.5em;
+      width: 100%;
+      align-self: center;
+      text-align: center;
     }
   }
 
@@ -86,10 +91,8 @@
       padding: 6px 12px;
     }
 
-    .input-file {
+    #upload_button {
       width: 5em;
-
-      box-shadow: none;
 
       & > label {
         display: inline-block;
@@ -101,20 +104,24 @@
       }
     }
 
-    .delete-button {
+    #delete_button {
       color: var(--bs-danger);
       border-color: var(--bs-danger);
+
+      &:hover {
+        color: var(--white) !important;
+      }
     }
   }
 
-  .error-button {
+  #error_button {
     position: absolute;
     right: 0;
     width: calc(1.5em + .75rem);
     height: 100%;
   }
 
-  .error-list > li {
+  #error_list > li {
     color: var(--bs-danger);
   }
 }
