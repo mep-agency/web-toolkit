@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Form;
 
+use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Mep\WebToolkitBundle\Entity\Attachment;
 use Mep\WebToolkitBundle\Router\AttachmentsAdminApiUrlGenerator;
-use Mep\WebToolkitBundle\Repository\AttachmentRepository;
 use Mep\WebToolkitBundle\Validator\AssociativeArrayOfScalarValues;
 use Nette\Utils\Json;
 use Symfony\Component\Form\AbstractType;
@@ -52,7 +52,7 @@ class AdminAttachmentType extends AbstractType implements DataTransformerInterfa
     protected const CSRF_TOKEN_ID = 'mwt_admin_attachment_upload_api';
 
     public function __construct(
-        private AttachmentRepository $attachmentRepository,
+        private EntityManagerInterface $entityManager,
         private AttachmentsAdminApiUrlGenerator $attachmentsAdminApiUrlGenerator,
     ) {}
 
@@ -148,7 +148,9 @@ class AdminAttachmentType extends AbstractType implements DataTransformerInterfa
             throw new TransformationFailedException('Invalid attachment value.');
         }
 
-        $result = $data ? $this->attachmentRepository->find($data) : null;
+        $result = $data ? $this->entityManager
+            ->getRepository(Attachment::class)
+            ->find($data) : null;
 
         if ($result === null) {
             throw new TransformationFailedException('Attachment not found: "' . $data . '".');

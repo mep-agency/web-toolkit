@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Twig;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Mep\WebToolkitBundle\Entity\Attachment;
 use Mep\WebToolkitBundle\Exception\FileStorage\AttachmentNotFoundException;
 use Mep\WebToolkitBundle\FileStorage\FileStorageManager;
-use Mep\WebToolkitBundle\Repository\AttachmentRepository;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -17,7 +17,7 @@ use Twig\TwigFunction;
 final class AttachmentExtension extends AbstractExtension
 {
     public function __construct(
-        private AttachmentRepository $attachmentRepository,
+        private EntityManagerInterface $entityManager,
         private FileStorageManager $fileStorageManager,
     ) {}
 
@@ -36,7 +36,9 @@ final class AttachmentExtension extends AbstractExtension
     {
         if (!($attachment instanceof Attachment)) {
             $uuid = $attachment;
-            $attachment = $this->attachmentRepository->find($uuid);
+            $attachment = $this->entityManager
+                ->getRepository(Attachment::class)
+                ->find($uuid);
         }
 
         if ($attachment === null) {

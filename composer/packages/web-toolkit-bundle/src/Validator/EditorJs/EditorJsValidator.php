@@ -11,8 +11,10 @@
 
 declare(strict_types=1);
 
-namespace Mep\WebToolkitBundle\Validator;
+namespace Mep\WebToolkitBundle\Validator\EditorJs;
 
+use Mep\WebToolkitBundle\Entity\EditorJs\Block;
+use Mep\WebToolkitBundle\Entity\EditorJs\EditorJsContent;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -21,22 +23,24 @@ use Symfony\Component\Validator\ConstraintValidator;
  */
 final class EditorJsValidator extends ConstraintValidator
 {
+    /**
+     * @param EditorJsContent|string|null $value
+     * @param EditorJS $constraint
+     */
     public function validate($value, Constraint $constraint)
     {
-        /* @var $constraint EditorJs */
-
-        if (null === $value || '' === $value) {
+        if ($value === null || $value === '') {
             return;
         }
 
-        if (! is_array($value)) {
+        if (! $value instanceof EditorJsContent) {
             $this->context->buildViolation('Invalid data. EditorJs values must be arrays.')
                 ->addViolation();
         }
 
-        foreach ($value['blocks'] as $block) {
-            if (! in_array($type = $block['type'], $constraint->enabledTools, true)) {
-                $this->context->buildViolation('Invalid block. Block type "' . $type . '" is not allowed in this content.')
+        foreach ($value->getBlocks() as $block) {
+            if (! in_array($type = get_class($block), $constraint->enabledTools, true)) {
+                $this->context->buildViolation('Block type "' . Block::getTypeByClass($type) . '" is not allowed in this content.')
                     ->addViolation();
             }
         }

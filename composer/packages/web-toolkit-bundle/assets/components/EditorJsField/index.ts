@@ -140,15 +140,11 @@ class EditorJsField implements Field {
     const editor = new EditorJS({
       holder: this.editor,
       tools: toolsOptions,
-      data: JSON.parse(this.input.value),
+      data: JSON.parse(this.input.value ? this.input.value : '{}'),
       onChange: async () => {
         const content = await editor.save();
 
-        if (content.blocks.length > 0) {
-          this.input.value = JSON.stringify(content);
-        } else {
-          this.input.value = '';
-        }
+        this.input.value = JSON.stringify(content);
       },
       // see https://github.com/codex-team/editor.js/issues/1576
       logLevel: 'ERROR' as LogLevels,

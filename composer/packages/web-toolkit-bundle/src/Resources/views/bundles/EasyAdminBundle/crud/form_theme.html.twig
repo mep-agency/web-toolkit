@@ -70,14 +70,14 @@
 {% block mwt_admin_editorjs_widget -%}
     {# TODO: This is a temporary implementation... #}
 
-        {{ form_widget(form, {
-            value: value|json_encode,
-            type: 'hidden',
-            attr: {
-                class: 'mwt-editorjs-field',
-                'data-tools-options': tools_options|json_encode,
-            }
-        }) }}
+    {{ form_widget(form, {
+        value: value is null ? '' : value|json_encode,
+        type: 'hidden',
+        attr: {
+            class: 'mwt-editorjs-field',
+            'data-tools-options': tools_options|json_encode,
+        }
+    }) }}
 
-        <div id="{{ id }}__editor" class="form-control mwt-widget-wrapper mwt-editorjs-wrapper{% if not valid %} is-invalid{% endif %}"></div>
+    <div id="{{ id }}__editor" class="form-control mwt-widget-wrapper mwt-editorjs-wrapper{% if not valid %} is-invalid{% endif %}"></div>
 {%- endblock mwt_admin_editorjs_widget %}

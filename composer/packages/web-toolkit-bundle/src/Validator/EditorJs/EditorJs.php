@@ -11,10 +11,12 @@
 
 declare(strict_types=1);
 
-namespace Mep\WebToolkitBundle\Validator;
+namespace Mep\WebToolkitBundle\Validator\EditorJs;
 
 use Attribute;
+use Mep\WebToolkitBundle\Entity\EditorJs\Block;
 use Mep\WebToolkitBundle\Exception\InvalidConfigurationException;
+use Mep\WebToolkitBundle\Validator\AssociativeArrayOfScalarValues;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -27,42 +29,6 @@ use Symfony\Component\Validator\Validation;
 #[Attribute(Attribute::TARGET_PROPERTY)]
 final class EditorJs extends Constraint
 {
-    public const PARAGRAPHS = 'paragraph';
-    // @editorjs/header
-    public const HEADINGS = 'header';
-    // @editorjs/nested-list
-    public const LISTS = 'list';
-    // @editorjs/delimiter
-    public const DELIMITERS = 'delimiter';
-    // @editorjs/quote
-    public const QUOTES = 'quote';
-    // @editorjs/warning
-    public const WARNINGS = 'warning';
-    // @editorjs/image
-    public const IMAGES = 'image';
-    // @editorjs/embed
-    public const EMBEDS = 'embed';
-    // @editorjs/table
-    public const TABLES = 'table';
-    // @editorjs/attaches
-    public const ATTACHMENTS = 'attaches';
-    // @editorjs/raw
-    public const RAW_CODE = 'raw';
-
-    private const AVALIABLE_TOOLS = [
-        self::PARAGRAPHS,
-        self::HEADINGS,
-        self::LISTS,
-        self::DELIMITERS,
-        self::QUOTES,
-        self::WARNINGS,
-        //self::IMAGES,
-        //self::EMBEDS,
-        self::TABLES,
-        self::ATTACHMENTS,
-        self::RAW_CODE,
-    ];
-
     /**
      * @var array<string, OptionsResolver>
      */
@@ -88,16 +54,16 @@ final class EditorJs extends Constraint
 
         // Enable all tools by default
         if (empty($this->enabledTools)) {
-            $this->enabledTools = self::AVALIABLE_TOOLS;
+            $this->enabledTools = Block::getSupportedClasses();
         } else {
-            if (! empty($unknownTools = array_diff($this->enabledTools, self::AVALIABLE_TOOLS))) {
+            if (! empty($unknownTools = array_diff($this->enabledTools, Block::getSupportedClasses()))) {
                 throw new InvalidConfigurationException(
                     'Invalid EditorJs configuration: unknown tool(s): "' . implode('", "', $unknownTools) . '" (enabled).'
                 );
             }
         }
 
-        if (! empty($unknownTools = array_diff($this->disabledTools, self::AVALIABLE_TOOLS))) {
+        if (! empty($unknownTools = array_diff($this->disabledTools, Block::getSupportedClasses()))) {
             throw new InvalidConfigurationException(
                 'Invalid EditorJs configuration: unknown tool(s): "' . implode('", "', $unknownTools) . '" (disabled).'
             );
@@ -108,6 +74,12 @@ final class EditorJs extends Constraint
             if (($key = array_search($disabledTool, $this->enabledTools, true)) !== false) {
                 unset($this->enabledTools[$key]);
             }
+        }
+
+        if (! in_array(Block\Paragraph::class, $this->enabledTools, true)) {
+            throw new InvalidConfigurationException(
+                'Invalid EditorJs configuration: the "paragraph" tool is mandatory.'
+            );
         }
 
         $this->buildOptionResolvers();
@@ -124,15 +96,15 @@ final class EditorJs extends Constraint
             new AssociativeArrayOfScalarValues(),
         );
 
-        foreach (self::AVALIABLE_TOOLS as $tool) {
+        foreach (Block::getSupportedClasses() as $tool) {
             $optionsResolver = new OptionsResolver();
 
             switch ($tool) {
-                case self::PARAGRAPHS:
+                case Block\Paragraph::class:
                     // No config params...
 
                     break;
-                case self::HEADINGS:
+                case Block\Header::class:
                     // see https://github.com/editor-js/header#config-params
                     $optionsResolver->define('placeholder')
                         ->default(null)
@@ -149,17 +121,17 @@ final class EditorJs extends Constraint
                         ->allowedTypes('int')
                     ;
                     break;
-                case self::LISTS:
+                case Block\NestedList::class:
                     // see https://github.com/editor-js/nested-list#config-params
                     // No config params...
 
                     break;
-                case self::DELIMITERS:
+                case Block\Delimiter::class:
                     // see https://github.com/editor-js/delimiter#config-params
                     // No config params...
 
                     break;
-                case self::QUOTES:
+                case Block\Quote::class:
                     // see https://github.com/editor-js/quote#config-params
                     $optionsResolver->define('quotePlaceholder')
                         ->default(null)
@@ -172,7 +144,7 @@ final class EditorJs extends Constraint
                     ;
 
                     break;
-                case self::WARNINGS:
+                case Block\Warning::class:
                     // see https://github.com/editor-js/warning#config-params
                     $optionsResolver->define('titlePlaceholder')
                         ->default(null)
@@ -185,7 +157,7 @@ final class EditorJs extends Constraint
                     ;
 
                     break;
-                case self::IMAGES:
+                case Block\Image::class:
                     // see https://github.com/editor-js/image#config-params
                     $optionsResolver->define('captionPlaceholder')
                         ->default(null)
@@ -211,12 +183,12 @@ final class EditorJs extends Constraint
                     $optionsResolver->setAllowedValues('processorsOptions', $associativeArrayOfScalarValuesValidator);
 
                     break;
-                case self::EMBEDS:
+                case Block\Embed::class:
                     // see https://github.com/editor-js/embed#available-configuration
                     // No config params...
 
                     break;
-                case self::TABLES:
+                case Block\Table::class:
                     // see https://github.com/editor-js/table#config-params
                     $optionsResolver->define('rows')
                         ->default(2)
@@ -229,7 +201,7 @@ final class EditorJs extends Constraint
                     ;
 
                     break;
-                case self::ATTACHMENTS:
+                case Block\Attaches::class:
                     // see https://github.com/editor-js/attaches#config-params
                     $optionsResolver->define('buttonText')
                         ->default(null)
@@ -255,7 +227,7 @@ final class EditorJs extends Constraint
                     $optionsResolver->setAllowedValues('processorsOptions', $associativeArrayOfScalarValuesValidator);
 
                     break;
-                case self::RAW_CODE:
+                case Block\Raw::class:
                     // see https://github.com/editor-js/raw#config-params
                     $optionsResolver->define('placeholder')
                         ->default(null)

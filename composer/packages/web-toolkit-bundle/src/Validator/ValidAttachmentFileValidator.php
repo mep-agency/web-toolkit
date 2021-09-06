@@ -28,12 +28,13 @@ use Symfony\Component\Validator\Constraint;
  */
 final class ValidAttachmentFileValidator extends ValidAttachmentValidator
 {
+    /**
+     * @param UploadedFile|string|null $file
+     * @param ValidAttachmentFile $constraint
+     */
     public function validate($file, Constraint $constraint)
     {
-        /* @var $file UploadedFile */
-        /* @var $constraint ValidAttachmentFile */
-
-        if (null === $file || '' === $file) {
+        if ($file === null || $file === '') {
             return;
         }
 

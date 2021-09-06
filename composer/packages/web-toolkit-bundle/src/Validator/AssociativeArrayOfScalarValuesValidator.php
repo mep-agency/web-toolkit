@@ -21,11 +21,13 @@ use Symfony\Component\Validator\ConstraintValidator;
  */
 final class AssociativeArrayOfScalarValuesValidator extends ConstraintValidator
 {
+    /**
+     * @param array|string|null $metadata
+     * @param AssociativeArrayOfScalarValues $constraint
+     */
     public function validate($metadata, Constraint $constraint)
     {
-        /* @var $constraint AssociativeArrayOfScalarValues */
-
-        if (null === $metadata || '' === $metadata) {
+        if ($metadata === null || $metadata === '') {
             return;
         }
 

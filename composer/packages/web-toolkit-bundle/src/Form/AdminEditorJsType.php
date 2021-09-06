@@ -13,17 +13,19 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Form;
 
+use Mep\WebToolkitBundle\Entity\EditorJs\Block;
+use Mep\WebToolkitBundle\Entity\EditorJs\EditorJsContent;
 use Mep\WebToolkitBundle\Router\AttachmentsAdminApiUrlGenerator;
-use Mep\WebToolkitBundle\Validator\EditorJs;
-use Nette\Utils\Json;
-use Nette\Utils\JsonException;
+use Mep\WebToolkitBundle\Validator\EditorJs\EditorJsNotEmpty;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\DataTransformerInterface;
-use Symfony\Component\Form\Exception\TransformationFailedException;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Constraints\Valid;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
@@ -44,6 +46,7 @@ final class AdminEditorJsType extends AbstractType implements DataTransformerInt
 
     public function __construct(
         private AttachmentsAdminApiUrlGenerator $attachmentsAdminApiUrlGenerator,
+        private SerializerInterface $serializer,
     ) {}
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -57,48 +60,48 @@ final class AdminEditorJsType extends AbstractType implements DataTransformerInt
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         // Normalize tool options for EditorJs
-        $view->vars['tools_options'] = $options[self::TOOLS_OPTIONS];
+        $view->vars['tools_options'] = [];
 
         foreach ($options[self::ENABLED_TOOLS] as $enabledTool) {
-            if (! isset($view->vars['tools_options'][$enabledTool])) {
-                $view->vars['tools_options'][$enabledTool] = [];
+            if (isset($options[self::TOOLS_OPTIONS][$enabledTool])) {
+                $view->vars['tools_options'][Block::getTypeByClass($enabledTool)] = $options[self::TOOLS_OPTIONS][$enabledTool];
+
+                continue;
             }
+
+            $view->vars['tools_options'][Block::getTypeByClass($enabledTool)] = [];
         }
 
-        if (isset($view->vars['tools_options'][EditorJs::IMAGES])) {
-            $view->vars['tools_options'][EditorJs::IMAGES]['api_token_id'] = self::CSRF_TOKEN_ID_IMAGES;
+        // TODO: Implement image block (EditorJs)
+        if (isset($options[self::TOOLS_OPTIONS][Block\Image::class])) {
+            $view->vars['tools_options'][Block::getTypeByClass(Block\Image::class)]['api_token_id'] = self::CSRF_TOKEN_ID_IMAGES;
 
-            $view->vars['tools_options'][EditorJs::IMAGES]['endpoints'] = [
+            $view->vars['tools_options'][Block::getTypeByClass(Block\Image::class)]['endpoints'] = [
                 'byFile' => $this->attachmentsAdminApiUrlGenerator->generate([
                     'csrf_token_id' => self::CSRF_TOKEN_ID_IMAGES,
                     AdminAttachmentType::PROPERTY_PATH => $options[AdminAttachmentType::PROPERTY_PATH],
-                    AdminAttachmentType::MAX_SIZE => $view->vars['tools_options'][EditorJs::IMAGES]['maxSize'],
+                    AdminAttachmentType::MAX_SIZE => $options[self::TOOLS_OPTIONS][Block\Image::class]['maxSize'],
                     AdminAttachmentType::ALLOWED_MIME_TYPES => ['/image\/.+/'],
                     AdminAttachmentType::ALLOWED_NAME_PATTERN => null,
                     AdminAttachmentType::METADATA => [],
-                    AdminAttachmentType::PROCESSORS_OPTIONS => $view->vars['tools_options'][EditorJs::IMAGES]['processorsOptions'],
+                    AdminAttachmentType::PROCESSORS_OPTIONS => $options[self::TOOLS_OPTIONS][Block\Image::class]['processorsOptions'],
                 ]),
             ];
-
-            // Unset options which are not used by JS
-            unset($view->vars['tools_options'][EditorJs::IMAGES]['processorsOptions']);
         }
 
-        if (isset($view->vars['tools_options'][EditorJs::ATTACHMENTS])) {
-            $view->vars['tools_options'][EditorJs::ATTACHMENTS]['api_token_id'] = self::CSRF_TOKEN_ID_ATTACHMENTS;
+        // TODO: Implement attaches block (EditorJs)
+        if (isset($options[self::TOOLS_OPTIONS][Block\Attaches::class])) {
+            $view->vars['tools_options'][Block::getTypeByClass(Block\Attaches::class)]['api_token_id'] = self::CSRF_TOKEN_ID_ATTACHMENTS;
 
-            $view->vars['tools_options'][EditorJs::ATTACHMENTS]['endpoint'] = $this->attachmentsAdminApiUrlGenerator->generate([
+            $view->vars['tools_options'][Block::getTypeByClass(Block\Attaches::class)]['endpoint'] = $this->attachmentsAdminApiUrlGenerator->generate([
                 'csrf_token_id' => self::CSRF_TOKEN_ID_ATTACHMENTS,
                 AdminAttachmentType::PROPERTY_PATH => $options[AdminAttachmentType::PROPERTY_PATH],
-                AdminAttachmentType::MAX_SIZE => $view->vars['tools_options'][EditorJs::ATTACHMENTS]['maxSize'],
+                AdminAttachmentType::MAX_SIZE => $options[self::TOOLS_OPTIONS][Block\Attaches::class]['maxSize'],
                 AdminAttachmentType::ALLOWED_MIME_TYPES => [],
                 AdminAttachmentType::ALLOWED_NAME_PATTERN => null,
                 AdminAttachmentType::METADATA => [],
-                AdminAttachmentType::PROCESSORS_OPTIONS => $view->vars['tools_options'][EditorJs::ATTACHMENTS]['processorsOptions'],
+                AdminAttachmentType::PROCESSORS_OPTIONS => $options[self::TOOLS_OPTIONS][Block\Attaches::class]['processorsOptions'],
             ]);
-
-            // Unset options which are not used by JS
-            unset($view->vars['tools_options'][EditorJs::ATTACHMENTS]['processorsOptions']);
         }
     }
 
@@ -108,6 +111,9 @@ final class AdminEditorJsType extends AbstractType implements DataTransformerInt
 
         $resolver->setDefaults([
             'compound' => false,
+            'constraints' => [
+                new Valid(),
+            ],
             self::TOOLS_OPTIONS => [],
         ]);
 
@@ -119,6 +125,17 @@ final class AdminEditorJsType extends AbstractType implements DataTransformerInt
         $resolver->setAllowedTypes(self::PROPERTY_PATH, 'string');
         $resolver->setAllowedTypes(self::TOOLS_OPTIONS, 'array');
         $resolver->setAllowedTypes(self::ENABLED_TOOLS, ['array']);
+
+        $resolver->addNormalizer(
+            'constraints',
+            function (Options $options, $value): mixed {
+                if ($options->offsetGet('required')) {
+                    $value[] = new EditorJsNotEmpty();
+                }
+
+                return $value;
+            },
+        );
     }
 
     public function getBlockPrefix(): string
@@ -126,23 +143,17 @@ final class AdminEditorJsType extends AbstractType implements DataTransformerInt
         return 'mwt_admin_editorjs';
     }
 
-    public function transform($data): ?array
+    public function transform($data): ?EditorJsContent
     {
         return $data;
     }
 
-    /**
-     * @return array<string, mixed>|null
-     */
-    public function reverseTransform($data): ?array {
-        if ($data === null || is_array($data)) {
+    public function reverseTransform($data): ?EditorJsContent
+    {
+        if (empty($data) || $data instanceof EditorJsContent) {
             return $data;
         }
 
-        try {
-            return Json::decode($data, JSON::FORCE_ARRAY);
-        } catch (JsonException $e) {
-            throw new TransformationFailedException('Invalid EditorJs value: ' . $e->getMessage());
-        }
+        return $this->serializer->deserialize($data, EditorJsContent::class, 'json');
     }
 }

@@ -24,12 +24,13 @@ use Symfony\Component\Validator\ConstraintValidator;
  */
 class ValidAttachmentValidator extends ConstraintValidator
 {
+    /**
+     * @param AttachmentEntity|string|null $attachment
+     * @param ValidAttachment $constraint
+     */
     public function validate($attachment, Constraint $constraint)
     {
-        /* @var $attachment AttachmentEntity */
-        /* @var $constraint ValidAttachment */
-
-        if (null === $attachment || '' === $attachment) {
+        if ($attachment === null || $attachment === '') {
             return;
         }
 

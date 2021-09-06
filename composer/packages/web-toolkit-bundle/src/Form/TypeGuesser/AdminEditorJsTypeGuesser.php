@@ -2,8 +2,9 @@
 
 namespace Mep\WebToolkitBundle\Form\TypeGuesser;
 
+use Mep\WebToolkitBundle\Entity\EditorJs\EditorJsContent;
 use Mep\WebToolkitBundle\Form\AdminEditorJsType;
-use Mep\WebToolkitBundle\Validator\EditorJs;
+use Mep\WebToolkitBundle\Validator\EditorJs\EditorJs;
 use ReflectionProperty;
 use Symfony\Component\Form\FormTypeGuesserInterface;
 use Symfony\Component\Form\Guess\Guess;
@@ -17,7 +18,8 @@ final class AdminEditorJsTypeGuesser implements FormTypeGuesserInterface
     public function guessType(string $class, string $property): ?TypeGuess
     {
         $reflectionProperty = new ReflectionProperty($class, $property);
-        if ($reflectionProperty->getType()?->getName() !== 'array') {
+
+        if ($reflectionProperty->getType()?->getName() !== EditorJsContent::class) {
             return null;
         }
 
@@ -25,16 +27,13 @@ final class AdminEditorJsTypeGuesser implements FormTypeGuesserInterface
         $editorJsAttribute = ($reflectionProperty->getAttributes(EditorJs::class)[0] ?? null)
             ?->newInstance();
 
-        if ($editorJsAttribute === null) {
-            return null;
-        }
-
         return new TypeGuess(
             AdminEditorJsType::class,
-            [
-                AdminEditorJsType::ENABLED_TOOLS => $editorJsAttribute->enabledTools,
-                AdminEditorJsType::TOOLS_OPTIONS => $editorJsAttribute->options,
-            ],
+            $editorJsAttribute === null ? [] :
+                [
+                    AdminEditorJsType::ENABLED_TOOLS => $editorJsAttribute->enabledTools,
+                    AdminEditorJsType::TOOLS_OPTIONS => $editorJsAttribute->options,
+                ],
             Guess::VERY_HIGH_CONFIDENCE
         );
     }

@@ -12,7 +12,6 @@
 declare(strict_types=1);
 
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ManagerRegistry;
 use EasyCorp\Bundle\EasyAdminBundle\DependencyInjection\EasyAdminExtension;
 use EasyCorp\Bundle\EasyAdminBundle\Factory\EntityFactory;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Configurator\BooleanConfigurator;
@@ -22,7 +21,6 @@ use Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface;
 use Mep\WebToolkitBundle\Entity\Attachment;
 use Mep\WebToolkitBundle\EventListener\AttachmentLifecycleEventListener;
 use Mep\WebToolkitBundle\EventListener\ForceSingleInstanceEventListener;
-use Mep\WebToolkitBundle\Field\Configurator\AttachmentFieldConfigurator;
 use Mep\WebToolkitBundle\Field\Configurator\TypeGuesserConfigurator;
 use Mep\WebToolkitBundle\Field\Configurator\TranslatableBooleanConfigurator;
 use Mep\WebToolkitBundle\Field\Configurator\TranslatableFieldConfigurator;
@@ -37,14 +35,16 @@ use Mep\WebToolkitBundle\Form\TypeGuesser\AdminEditorJsTypeGuesser;
 use Mep\WebToolkitBundle\Mail\TemplateProvider\DummyTemplateProvider;
 use Mep\WebToolkitBundle\Mail\TemplateProvider\TwigTemplateProvider;
 use Mep\WebToolkitBundle\Mail\TemplateRenderer;
-use Mep\WebToolkitBundle\Repository\AttachmentRepository;
 use Mep\WebToolkitBundle\Router\AttachmentsAdminApiUrlGenerator;
+use Mep\WebToolkitBundle\Serializer\EditorJsContentNormalizer;
 use Mep\WebToolkitBundle\Twig\AttachmentExtension;
 use Mep\WebToolkitBundle\WebToolkitBundle;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Form\FormRegistryInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Twig\Environment;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
@@ -116,11 +116,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->arg(1, new Reference(AdminUrlGenerator::class))
         ->alias(AttachmentsAdminApiUrlGenerator::class, WebToolkitBundle::SERVICE_ATTACHMENTS_ADMIN_API_URL_GENERATOR)
     ;
-    $services->set(WebToolkitBundle::SERVICE_ATTACHMENT_REPOSITORY, AttachmentRepository::class)
-        ->arg(0, new Reference(ManagerRegistry::class))
-        ->tag('doctrine.repository_service')
-        ->alias(AttachmentRepository::class, WebToolkitBundle::SERVICE_ATTACHMENT_REPOSITORY)
-    ;
     $services->set(WebToolkitBundle::SERVICE_ATTACHMENT_LIFECYCLE_EVENT_LISTENER, AttachmentLifecycleEventListener::class)
         ->arg(0, new Reference(WebToolkitBundle::SERVICE_FILE_STORAGE_DRIVER))
         ->arg(1, new Reference(ValidatorInterface::class))
@@ -136,12 +131,12 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ])
     ;
     $services->set(WebToolkitBundle::SERVICE_ADMIN_ATTACHMENT_TYPE, AdminAttachmentType::class)
-        ->arg(0, new Reference(WebToolkitBundle::SERVICE_ATTACHMENT_REPOSITORY))
+        ->arg(0, new Reference(EntityManagerInterface::class))
         ->arg(1, new Reference(AttachmentsAdminApiUrlGenerator::class))
         ->tag('form.type')
     ;
     $services->set(WebToolkitBundle::SERVICE_ADMIN_ATTACHMENT_UPLOAD_API_TYPE, AdminAttachmentUploadApiType::class)
-        ->arg(0, new Reference(WebToolkitBundle::SERVICE_ATTACHMENT_REPOSITORY))
+        ->arg(0, new Reference(EntityManagerInterface::class))
         ->arg(1, new Reference(AttachmentsAdminApiUrlGenerator::class))
         ->tag('form.type')
     ;
@@ -149,7 +144,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->tag('form.type_guesser')
     ;
     $services->set(WebToolkitBundle::SERVICE_TWIG_ATTACHMENT_EXTENSION, AttachmentExtension::class)
-        ->arg(0, new Reference(WebToolkitBundle::SERVICE_ATTACHMENT_REPOSITORY))
+        ->arg(0, new Reference(EntityManagerInterface::class))
         ->arg(1, new Reference(FileStorageManager::class))
         ->tag('twig.extension')
     ;
@@ -160,16 +155,23 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->arg(1, ! isset($_ENV['TINIFY_API_KEY']) && $_ENV['APP_ENV'] === 'dev')
         ->tag(WebToolkitBundle::TAG_FILE_STORAGE_PROCESSOR);
 
-    // EasyAdminBundle enhancements
-    $services->set(WebToolkitBundle::SERVICE_TYPE_GUESSER_CONFIGURATOR, TypeGuesserConfigurator::class)
-        ->arg(0, new Reference(FormRegistryInterface::class))
-        ->tag(EasyAdminExtension::TAG_FIELD_CONFIGURATOR, ['priority' => 99999])
+    // EditorJs support
+    $services->set(WebToolkitBundle::SERVICE_EDITORJS_CONTENT_NORMALIZER, EditorJsContentNormalizer::class)
+        ->arg(0, new Reference(ObjectNormalizer::class))
+        ->tag('serializer.normalizer')
     ;
     $services->set(WebToolkitBundle::SERVICE_ADMIN_EDITORJS_TYPE, AdminEditorJsType::class)
         ->arg(0, new Reference(AttachmentsAdminApiUrlGenerator::class))
+        ->arg(1, new Reference(SerializerInterface::class))
         ->tag('form.type')
     ;
     $services->set(WebToolkitBundle::SERVICE_ADMIN_EDITORJS_TYPE_GUESSER, AdminEditorJsTypeGuesser::class)
         ->tag('form.type_guesser')
+    ;
+
+    // EasyAdminBundle enhancements
+    $services->set(WebToolkitBundle::SERVICE_TYPE_GUESSER_CONFIGURATOR, TypeGuesserConfigurator::class)
+        ->arg(0, new Reference(FormRegistryInterface::class))
+        ->tag(EasyAdminExtension::TAG_FIELD_CONFIGURATOR, ['priority' => 99999])
     ;
 };
