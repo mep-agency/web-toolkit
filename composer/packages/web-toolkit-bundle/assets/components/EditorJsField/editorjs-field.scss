@@ -8,7 +8,7 @@
  */
 
 .mwt-editorjs-wrapper {
-  padding-top: 3em;
+  padding: 0;
 
   &.is-invalid {
     padding-right: 0.75rem;
@@ -17,9 +17,15 @@
     background-position: right 0.5em top 0.5em;
   }
 
-  .ce-block:first-of-type {
-    h1, h2, h3, h4, h5, h6 {
-      padding-top: 0;
+  .codex-editor {
+    .codex-editor__redactor {
+      padding-top: 3em;
+    }
+
+    .ce-block:first-of-type {
+      h1, h2, h3, h4, h5, h6 {
+        padding-top: 0;
+      }
     }
   }
 }

@@ -23,6 +23,8 @@ use Symfony\Component\Validator\Constraints\Valid;
 /**
  * @final You should not extend this class.
  *
+ * @see https://github.com/editor-js/nested-list
+ *
  * @author Marco Lipparini <developer@liarco.net>
  */
 #[ORM\Entity]

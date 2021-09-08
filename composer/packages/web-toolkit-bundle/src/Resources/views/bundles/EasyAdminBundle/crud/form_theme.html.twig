@@ -71,7 +71,7 @@
     {# TODO: This is a temporary implementation... #}
 
     {{ form_widget(form, {
-        value: value is null ? '' : value|json_encode,
+        value: value is null ? '' : value|serialize('json'),
         type: 'hidden',
         attr: {
             class: 'mwt-editorjs-field',

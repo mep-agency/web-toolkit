@@ -20,6 +20,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @final You should not extend this class.
  *
+ * @see https://github.com/editor-js/table
+ *
  * @author Marco Lipparini <developer@liarco.net>
  */
 #[ORM\Entity]

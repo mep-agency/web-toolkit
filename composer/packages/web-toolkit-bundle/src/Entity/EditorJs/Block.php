@@ -38,27 +38,16 @@ abstract class Block implements JsonSerializable
     public const BLOCKS_MAPPING = [
         // Built-in
         'paragraph' => Block\Paragraph::class,
-        // @editorjs/header
         'header' => Block\Header::class,
-        // @editorjs/nested-list
         'list' => Block\NestedList::class,
-        // @editorjs/delimiter
         'delimiter' => Block\Delimiter::class,
-        // @editorjs/quote
         'quote' => Block\Quote::class,
-        // @editorjs/warning
         'warning' => Block\Warning::class,
-        // @editorjs/image
-        // TODO: Implement image block (EditorJs)
-        //'image' => Block\Image::class,
-        // @editorjs/embed
+        'image' => Block\Image::class,
         'embed' => Block\Embed::class,
-        // @editorjs/table
         'table' => Block\Table::class,
-        // @editorjs/attaches
         // TODO: Implement attaches block (EditorJs)
         //'attaches' => Block\Attaches::class,
-        // @editorjs/raw
         'raw' => Block\Raw::class,
     ];
 

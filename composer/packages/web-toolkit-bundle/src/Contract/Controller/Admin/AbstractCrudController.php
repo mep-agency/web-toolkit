@@ -49,6 +49,7 @@ use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
@@ -64,6 +65,7 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
         protected AdminContextProvider $adminContextProvider,
         protected AdminUrlGenerator $adminUrlGenerator,
         protected FileStorageManager $fileStorageManager,
+        protected NormalizerInterface $normalizer,
     ) {}
 
     public function createEntity(string $entityFqcn)
@@ -346,10 +348,6 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
 
         /** @var AdminAttachmentUploadDto $formData */
         $formData = $form->getData();
-        $crudControllerFqcn = $this->adminContextProvider
-            ?->getContext()
-            ?->getCrud()
-            ?->getControllerFqcn();
         $propertyPath = $form->getConfig()->getOption(AdminAttachmentUploadApiType::PROPERTY_PATH);
         /** @var array<string, scalar> $metadata */
         $metadata = $form->getConfig()->getOption(AdminAttachmentUploadApiType::METADATA);
@@ -358,14 +356,11 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
         $frontEndContext = $formData->context !== null ? '#' . $formData->context : '';
 
         if (! isset($metadata['context'])) {
-            $metadata['context'] = $crudControllerFqcn . '@' . $propertyPath . $frontEndContext;
+            $metadata['context'] = static::getEntityFqcn() . '@' . $propertyPath . $frontEndContext;
         }
 
         $attachment = $this->fileStorageManager->store($formData->file, $metadata, $processorsOptions);
 
-        return new JsonResponse([
-            'uuid' => $attachment->getId()->toRfc4122(),
-            'publicUrl' => $this->fileStorageManager->getPublicUrl($attachment),
-        ]);
+        return new JsonResponse($this->normalizer->normalize($attachment, 'json'));
     }
 }

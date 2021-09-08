@@ -19,6 +19,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @final You should not extend this class.
  *
+ * @see https://github.com/editor-js/paragraph
+ *
  * @author Marco Lipparini <developer@liarco.net>
  */
 #[ORM\Entity]

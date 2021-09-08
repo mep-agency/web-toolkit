@@ -10,13 +10,13 @@
 import './editorjs-field.scss';
 
 import FieldsManager, {Field} from '../../scripts/FieldsManager';
-import EditorJS, {ToolConstructable, ToolSettings, LogLevels} from '@editorjs/editorjs';
+import CustomImageTool from './Tool/CustomImageTool';
+import EditorJS, { ToolConstructable, ToolSettings, LogLevels } from '@editorjs/editorjs';
 
 const HeaderTool = require('@editorjs/header');
 const NestedListTool = require('@editorjs/nested-list');
 const QuoteTool = require('@editorjs/quote');
 const DelimiterTool = require('@editorjs/delimiter');
-const ImageTool = require('@editorjs/image');
 const EmbedTool = require('@editorjs/embed');
 const AttachesTool = require('@editorjs/attaches');
 const RawTool = require('@editorjs/raw');
@@ -43,7 +43,7 @@ const TOOLS_CONFIG_NORMALIZERS: {[toolName: string]: {(config: ToolSettings): To
   }),
   delimiter: (config) => DelimiterTool,
   image: (config) => ({
-    class: ImageTool,
+    class: CustomImageTool,
     config: config,
   }),
   embed: (config) => ({
@@ -97,6 +97,7 @@ const TOOLS_CONFIG_NORMALIZERS: {[toolName: string]: {(config: ToolSettings): To
     },
   }),
   attaches: (config) => ({
+    // TODO: This is a temporary implementation...
     class: AttachesTool,
     config: config,
   }),
@@ -115,8 +116,6 @@ const TOOLS_CONFIG_NORMALIZERS: {[toolName: string]: {(config: ToolSettings): To
     config: config,
   }),
 }
-
-// TODO: This is a temporary implementation...
 
 class EditorJsField implements Field {
   private readonly input: HTMLInputElement;
@@ -137,15 +136,19 @@ class EditorJsField implements Field {
       toolsOptions[toolName] = TOOLS_CONFIG_NORMALIZERS[toolName](toolsOptions[toolName] as ToolSettings);
     });
 
+    const onChange = async () => {
+      const content = await editor.save();
+
+      this.input.value = JSON.stringify(content);
+    };
+
     const editor = new EditorJS({
       holder: this.editor,
       tools: toolsOptions,
       data: JSON.parse(this.input.value ? this.input.value : '{}'),
-      onChange: async () => {
-        const content = await editor.save();
-
-        this.input.value = JSON.stringify(content);
-      },
+      onChange,
+      // Ensure that the initial empty value is always valid
+      onReady: onChange,
       // see https://github.com/codex-team/editor.js/issues/1576
       logLevel: 'ERROR' as LogLevels,
     });

@@ -25,6 +25,7 @@ final class WebToolkitBundle extends Bundle
 
     public const TAG_FILE_STORAGE_PROCESSOR = self::REFERENCE_PREFIX . 'file_storage_processor';
     public const TAG_MAIL_TEMPLATE_PROVIDER = self::REFERENCE_PREFIX . 'mail_template_provider';
+    public const TAG_ATTACHMENTS_GARBAGE_COLLECTOR = self::REFERENCE_PREFIX . 'attachments_garbage_collector';
 
     // Single instance support
     public const SERVICE_FORCE_SINGLE_INSTANCE_EVENT_LISTENER = self::REFERENCE_PREFIX . 'force_single_instance_event_listener';
@@ -45,6 +46,7 @@ final class WebToolkitBundle extends Bundle
     public const SERVICE_UPLOADED_FILE_PROCESSOR = self::REFERENCE_PREFIX . 'uploaded_file_processor';
     public const SERVICE_FILE_STORAGE_DRIVER = self::REFERENCE_PREFIX . 'file_storage_driver';
     public const SERVICE_ATTACHMENT_LIFECYCLE_EVENT_LISTENER = self::REFERENCE_PREFIX . 'attachment_lifecycle_event_listener';
+    public const SERVICE_ATTACHMENT_NORMALIZER = self::REFERENCE_PREFIX . 'attachment_normalizer';
     public const SERVICE_ADMIN_ATTACHMENT_TYPE = self::REFERENCE_PREFIX . 'admin_attachment_type';
     public const SERVICE_ADMIN_ATTACHMENT_UPLOAD_API_TYPE = self::REFERENCE_PREFIX . 'admin_attachment_upload_type';
     public const SERVICE_ADMIN_ATTACHMENT_TYPE_GUESSER = self::REFERENCE_PREFIX . 'admin_attachment_type_guesser';

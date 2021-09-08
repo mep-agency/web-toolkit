@@ -24,6 +24,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Constraints\Valid;
 
@@ -47,6 +48,7 @@ final class AdminEditorJsType extends AbstractType implements DataTransformerInt
     public function __construct(
         private AttachmentsAdminApiUrlGenerator $attachmentsAdminApiUrlGenerator,
         private SerializerInterface $serializer,
+        private CsrfTokenManagerInterface $tokenManager,
     ) {}
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -64,44 +66,55 @@ final class AdminEditorJsType extends AbstractType implements DataTransformerInt
 
         foreach ($options[self::ENABLED_TOOLS] as $enabledTool) {
             if (isset($options[self::TOOLS_OPTIONS][$enabledTool])) {
+                if ($enabledTool === Block\Image::class) {
+                    $view->vars['tools_options'][Block::getTypeByClass(Block\Image::class)]['context'] = Block\Image::ATTACHMENTS_CONTEXT;
+
+                    $view->vars['tools_options'][Block::getTypeByClass(Block\Image::class)]['captionPlaceholder'] = $options[self::TOOLS_OPTIONS][Block\Image::class]['captionPlaceholder'];
+
+                    $view->vars['tools_options'][Block::getTypeByClass(Block\Image::class)]['buttonContent'] = $options[self::TOOLS_OPTIONS][Block\Image::class]['buttonContent'];
+
+                    $view->vars['tools_options'][Block::getTypeByClass(Block\Image::class)]['api_token'] = $this->tokenManager
+                        ->getToken(self::CSRF_TOKEN_ID_IMAGES)
+                        ->getValue();
+
+                    $view->vars['tools_options'][Block::getTypeByClass(Block\Image::class)]['endpoint'] = $this->attachmentsAdminApiUrlGenerator->generate([
+                        'csrf_token_id' => self::CSRF_TOKEN_ID_IMAGES,
+                        AdminAttachmentType::PROPERTY_PATH => $options[AdminAttachmentType::PROPERTY_PATH],
+                        AdminAttachmentType::MAX_SIZE => $options[self::TOOLS_OPTIONS][Block\Image::class]['maxSize'],
+                        AdminAttachmentType::ALLOWED_MIME_TYPES => ['/image\/.+/'],
+                        AdminAttachmentType::ALLOWED_NAME_PATTERN => null,
+                        AdminAttachmentType::METADATA => [],
+                        AdminAttachmentType::PROCESSORS_OPTIONS => $options[self::TOOLS_OPTIONS][Block\Image::class]['processorsOptions'],
+                    ]);
+
+                    continue;
+                }
+
+                // TODO: Implement attaches block (EditorJs)
+                if ($enabledTool === Block\Attaches::class) {
+                    $view->vars['tools_options'][Block::getTypeByClass(Block\Attaches::class)]['api_token'] = $this->tokenManager
+                        ->getToken(self::CSRF_TOKEN_ID_ATTACHMENTS)
+                        ->getValue();
+
+                    $view->vars['tools_options'][Block::getTypeByClass(Block\Attaches::class)]['endpoint'] = $this->attachmentsAdminApiUrlGenerator->generate([
+                        'csrf_token_id' => self::CSRF_TOKEN_ID_ATTACHMENTS,
+                        AdminAttachmentType::PROPERTY_PATH => $options[AdminAttachmentType::PROPERTY_PATH],
+                        AdminAttachmentType::MAX_SIZE => $options[self::TOOLS_OPTIONS][Block\Attaches::class]['maxSize'],
+                        AdminAttachmentType::ALLOWED_MIME_TYPES => [],
+                        AdminAttachmentType::ALLOWED_NAME_PATTERN => null,
+                        AdminAttachmentType::METADATA => [],
+                        AdminAttachmentType::PROCESSORS_OPTIONS => $options[self::TOOLS_OPTIONS][Block\Attaches::class]['processorsOptions'],
+                    ]);
+
+                    continue;
+                }
+
                 $view->vars['tools_options'][Block::getTypeByClass($enabledTool)] = $options[self::TOOLS_OPTIONS][$enabledTool];
 
                 continue;
             }
 
             $view->vars['tools_options'][Block::getTypeByClass($enabledTool)] = [];
-        }
-
-        // TODO: Implement image block (EditorJs)
-        if (isset($options[self::TOOLS_OPTIONS][Block\Image::class])) {
-            $view->vars['tools_options'][Block::getTypeByClass(Block\Image::class)]['api_token_id'] = self::CSRF_TOKEN_ID_IMAGES;
-
-            $view->vars['tools_options'][Block::getTypeByClass(Block\Image::class)]['endpoints'] = [
-                'byFile' => $this->attachmentsAdminApiUrlGenerator->generate([
-                    'csrf_token_id' => self::CSRF_TOKEN_ID_IMAGES,
-                    AdminAttachmentType::PROPERTY_PATH => $options[AdminAttachmentType::PROPERTY_PATH],
-                    AdminAttachmentType::MAX_SIZE => $options[self::TOOLS_OPTIONS][Block\Image::class]['maxSize'],
-                    AdminAttachmentType::ALLOWED_MIME_TYPES => ['/image\/.+/'],
-                    AdminAttachmentType::ALLOWED_NAME_PATTERN => null,
-                    AdminAttachmentType::METADATA => [],
-                    AdminAttachmentType::PROCESSORS_OPTIONS => $options[self::TOOLS_OPTIONS][Block\Image::class]['processorsOptions'],
-                ]),
-            ];
-        }
-
-        // TODO: Implement attaches block (EditorJs)
-        if (isset($options[self::TOOLS_OPTIONS][Block\Attaches::class])) {
-            $view->vars['tools_options'][Block::getTypeByClass(Block\Attaches::class)]['api_token_id'] = self::CSRF_TOKEN_ID_ATTACHMENTS;
-
-            $view->vars['tools_options'][Block::getTypeByClass(Block\Attaches::class)]['endpoint'] = $this->attachmentsAdminApiUrlGenerator->generate([
-                'csrf_token_id' => self::CSRF_TOKEN_ID_ATTACHMENTS,
-                AdminAttachmentType::PROPERTY_PATH => $options[AdminAttachmentType::PROPERTY_PATH],
-                AdminAttachmentType::MAX_SIZE => $options[self::TOOLS_OPTIONS][Block\Attaches::class]['maxSize'],
-                AdminAttachmentType::ALLOWED_MIME_TYPES => [],
-                AdminAttachmentType::ALLOWED_NAME_PATTERN => null,
-                AdminAttachmentType::METADATA => [],
-                AdminAttachmentType::PROCESSORS_OPTIONS => $options[self::TOOLS_OPTIONS][Block\Attaches::class]['processorsOptions'],
-            ]);
         }
     }
 

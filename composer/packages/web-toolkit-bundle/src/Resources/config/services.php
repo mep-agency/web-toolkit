@@ -26,6 +26,7 @@ use Mep\WebToolkitBundle\Field\Configurator\TranslatableBooleanConfigurator;
 use Mep\WebToolkitBundle\Field\Configurator\TranslatableFieldConfigurator;
 use Mep\WebToolkitBundle\Field\Configurator\TranslatableFieldPreConfigurator;
 use Mep\WebToolkitBundle\FileStorage\FileStorageManager;
+use Mep\WebToolkitBundle\FileStorage\GarbageCollector\EditorJsImageGarbageCollector;
 use Mep\WebToolkitBundle\FileStorage\Processor\TinifyProcessor;
 use Mep\WebToolkitBundle\Form\AdminAttachmentUploadApiType;
 use Mep\WebToolkitBundle\Form\AdminAttachmentType;
@@ -36,6 +37,7 @@ use Mep\WebToolkitBundle\Mail\TemplateProvider\DummyTemplateProvider;
 use Mep\WebToolkitBundle\Mail\TemplateProvider\TwigTemplateProvider;
 use Mep\WebToolkitBundle\Mail\TemplateRenderer;
 use Mep\WebToolkitBundle\Router\AttachmentsAdminApiUrlGenerator;
+use Mep\WebToolkitBundle\Serializer\AttachmentNormalizer;
 use Mep\WebToolkitBundle\Serializer\EditorJsContentNormalizer;
 use Mep\WebToolkitBundle\Twig\AttachmentExtension;
 use Mep\WebToolkitBundle\WebToolkitBundle;
@@ -43,6 +45,7 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Form\FormRegistryInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -105,6 +108,13 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     ;
 
     // Attachments support
+    $services->set(/*WebToolkitBundle::SERVICE_FILE_STORAGE_MANAGER,*/ \Mep\WebToolkitBundle\Command\AttachmentsGarbageCollectionCommand::class)
+        ->arg(0, new Reference(EntityManagerInterface::class))
+        ->arg(1, new Reference(WebToolkitBundle::SERVICE_FILE_STORAGE_MANAGER))
+        ->arg(2, tagged_iterator(WebToolkitBundle::TAG_ATTACHMENTS_GARBAGE_COLLECTOR))
+        //->alias(FileStorageManager::class, WebToolkitBundle::SERVICE_FILE_STORAGE_MANAGER)
+        ->tag('console.command')
+    ;
     $services->set(WebToolkitBundle::SERVICE_FILE_STORAGE_MANAGER, FileStorageManager::class)
         ->arg(0, new Reference(WebToolkitBundle::SERVICE_FILE_STORAGE_DRIVER))
         ->arg(1, new Reference(EntityManagerInterface::class))
@@ -127,17 +137,27 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->tag('doctrine.orm.entity_listener', [
             'entity' => Attachment::class,
             'event' => 'preRemove',
+            'method' => 'initializeAttachmentProxy',
+        ])
+        ->tag('doctrine.orm.entity_listener', [
+            'entity' => Attachment::class,
+            'event' => 'postRemove',
             'method' => 'removeAttachedFile',
         ])
     ;
+    $services->set(WebToolkitBundle::SERVICE_ATTACHMENT_NORMALIZER, AttachmentNormalizer::class)
+        ->arg(0, new Reference(WebToolkitBundle::SERVICE_FILE_STORAGE_MANAGER))
+        ->arg(1, new Reference(EntityManagerInterface::class))
+        ->tag('serializer.normalizer')
+    ;
     $services->set(WebToolkitBundle::SERVICE_ADMIN_ATTACHMENT_TYPE, AdminAttachmentType::class)
         ->arg(0, new Reference(EntityManagerInterface::class))
-        ->arg(1, new Reference(AttachmentsAdminApiUrlGenerator::class))
+        ->arg(1, new Reference(WebToolkitBundle::SERVICE_ATTACHMENTS_ADMIN_API_URL_GENERATOR))
         ->tag('form.type')
     ;
     $services->set(WebToolkitBundle::SERVICE_ADMIN_ATTACHMENT_UPLOAD_API_TYPE, AdminAttachmentUploadApiType::class)
         ->arg(0, new Reference(EntityManagerInterface::class))
-        ->arg(1, new Reference(AttachmentsAdminApiUrlGenerator::class))
+        ->arg(1, new Reference(WebToolkitBundle::SERVICE_ATTACHMENTS_ADMIN_API_URL_GENERATOR))
         ->tag('form.type')
     ;
     $services->set(WebToolkitBundle::SERVICE_ADMIN_ATTACHMENT_TYPE_GUESSER, AdminAttachmentTypeGuesser::class)
@@ -145,9 +165,13 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     ;
     $services->set(WebToolkitBundle::SERVICE_TWIG_ATTACHMENT_EXTENSION, AttachmentExtension::class)
         ->arg(0, new Reference(EntityManagerInterface::class))
-        ->arg(1, new Reference(FileStorageManager::class))
+        ->arg(1, new Reference(WebToolkitBundle::SERVICE_FILE_STORAGE_MANAGER))
         ->tag('twig.extension')
     ;
+
+    // FileStorage processors
+    $services->set(/*WebToolkitBundle::SERVICE_TINIFY_PROCESSOR,*/ EditorJsImageGarbageCollector::class)
+        ->tag(WebToolkitBundle::TAG_ATTACHMENTS_GARBAGE_COLLECTOR);
 
     // FileStorage processors
     $services->set(WebToolkitBundle::SERVICE_TINIFY_PROCESSOR, TinifyProcessor::class)
@@ -161,8 +185,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->tag('serializer.normalizer')
     ;
     $services->set(WebToolkitBundle::SERVICE_ADMIN_EDITORJS_TYPE, AdminEditorJsType::class)
-        ->arg(0, new Reference(AttachmentsAdminApiUrlGenerator::class))
+        ->arg(0, new Reference(WebToolkitBundle::SERVICE_ATTACHMENTS_ADMIN_API_URL_GENERATOR))
         ->arg(1, new Reference(SerializerInterface::class))
+        ->arg(2, new Reference(CsrfTokenManagerInterface::class))
         ->tag('form.type')
     ;
     $services->set(WebToolkitBundle::SERVICE_ADMIN_EDITORJS_TYPE_GUESSER, AdminEditorJsTypeGuesser::class)

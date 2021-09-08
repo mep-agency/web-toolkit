@@ -20,12 +20,16 @@ use Doctrine\ORM\Mapping as ORM;
  * TODO: Implement attaches block (EditorJs)
  * @final You should not extend this class.
  *
+ * @see https://github.com/editor-js/attaches
+ *
  * @author Marco Lipparini <developer@liarco.net>
  */
 ##[ORM\Entity]
 ##[ORM\Table(name: 'mwt_editor_js_attaches')]
 class Attaches extends Block
 {
+    public const ATTACHMENTS_CONTEXT = 'editorJsAttachesBlock';
+
     public function __construct(
         string $id,
     ) {

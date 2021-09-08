@@ -13,8 +13,10 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\DependencyInjection;
 
+use Mep\WebToolkitBundle\Contract\Attachment\AttachmentsGarbageCollectorInterface;
 use Mep\WebToolkitBundle\Contract\FileStorage\FileStorageProcessorInterface;
 use Mep\WebToolkitBundle\Contract\Mail\TemplateProviderInterface;
+use Mep\WebToolkitBundle\Dql\JsonExtract;
 use Mep\WebToolkitBundle\WebToolkitBundle;
 use ReflectionClass;
 use Symfony\Component\Config\FileLocator;
@@ -35,6 +37,9 @@ final class WebToolkitExtension extends Extension implements PrependExtensionInt
 
         $container->registerForAutoconfiguration(TemplateProviderInterface::class)
             ->addTag(WebToolkitBundle::TAG_MAIL_TEMPLATE_PROVIDER);
+
+        $container->registerForAutoconfiguration(AttachmentsGarbageCollectorInterface::class)
+            ->addTag(WebToolkitBundle::TAG_ATTACHMENTS_GARBAGE_COLLECTOR);
 
         $loader = new PhpFileLoader(
             $container,
@@ -58,6 +63,11 @@ final class WebToolkitExtension extends Extension implements PrependExtensionInt
             'orm' => [
                 'mappings' => [
                     (new ReflectionClass(WebToolkitBundle::class))->getShortName() => 'attribute',
+                ],
+                'dql' => [
+                    'string_functions' => [
+                        'JSON_EXTRACT' => JsonExtract::class,
+                    ],
                 ],
             ],
         ]);

@@ -38,6 +38,12 @@ final class AttachmentLifecycleEventListener
         }
     }
 
+    public function initializeAttachmentProxy(Attachment $attachment, LifecycleEventArgs $args): void
+    {
+        // Ensure that the "postRemove" EventListener doesn't receive an uninitialized proxy
+        $args->getObjectManager()->initializeObject($attachment);
+    }
+
     public function removeAttachedFile(Attachment $attachment, LifecycleEventArgs $args): void
     {
         // Attachment objects may be orphan (the associated file doesn't exist)
