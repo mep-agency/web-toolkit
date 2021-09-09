@@ -16,10 +16,12 @@ namespace Mep\WebToolkitBundle\Contract\Entity;
 use Doctrine\Common\Collections\Collection;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
 use Knp\DoctrineBehaviors\Model\Translatable\TranslatableTrait as OriginalTranslatableTrait;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
+ * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 trait TranslatableTrait
 {
@@ -37,4 +39,15 @@ trait TranslatableTrait
      */
     #[Assert\Valid]
     protected $newTranslations;
+
+    public function __call(string $name, array $arguments)
+    {
+        return PropertyAccess::createPropertyAccessor()->getValue(
+            $this->getTranslations()
+                ->get($this->currentLocale) ??
+            $this->getTranslations()
+                ->first(),
+            $name
+        );
+    }
 }
