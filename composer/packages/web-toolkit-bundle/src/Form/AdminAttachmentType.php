@@ -28,6 +28,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints\PositiveOrZero;
 use Symfony\Component\Validator\Validation;
@@ -54,6 +55,7 @@ class AdminAttachmentType extends AbstractType implements DataTransformerInterfa
     public function __construct(
         private EntityManagerInterface $entityManager,
         private AttachmentsAdminApiUrlGenerator $attachmentsAdminApiUrlGenerator,
+        private CsrfTokenManagerInterface $tokenManager,
     ) {}
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -75,7 +77,10 @@ class AdminAttachmentType extends AbstractType implements DataTransformerInterfa
             self::METADATA => Json::encode($options[self::METADATA]),
             self::PROCESSORS_OPTIONS => Json::encode($options[self::PROCESSORS_OPTIONS]),
         ]);
-        $view->vars['api_token_id'] = self::CSRF_TOKEN_ID;
+
+        $view->vars['api_token'] = $this->tokenManager
+            ->getToken(self::CSRF_TOKEN_ID)
+            ->getValue();
     }
 
     public function configureOptions(OptionsResolver $resolver)
