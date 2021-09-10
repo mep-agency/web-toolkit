@@ -42,6 +42,7 @@ final class WebToolkitBundle extends Bundle
 
     // Attachments support
     public const SERVICE_FILE_STORAGE_MANAGER = self::REFERENCE_PREFIX . 'file_storage_manager';
+    public const SERVICE_ATTACHMENTS_GARBAGE_COLLECTION_COMMAND = self::REFERENCE_PREFIX . 'attachments_garbage_collection_command';
     public const SERVICE_ATTACHMENTS_ADMIN_API_URL_GENERATOR = self::REFERENCE_PREFIX . 'service_attachments_admin_api_url_generator';
     public const SERVICE_UPLOADED_FILE_PROCESSOR = self::REFERENCE_PREFIX . 'uploaded_file_processor';
     public const SERVICE_FILE_STORAGE_DRIVER = self::REFERENCE_PREFIX . 'file_storage_driver';
@@ -50,7 +51,10 @@ final class WebToolkitBundle extends Bundle
     public const SERVICE_ADMIN_ATTACHMENT_TYPE = self::REFERENCE_PREFIX . 'admin_attachment_type';
     public const SERVICE_ADMIN_ATTACHMENT_UPLOAD_API_TYPE = self::REFERENCE_PREFIX . 'admin_attachment_upload_type';
     public const SERVICE_ADMIN_ATTACHMENT_TYPE_GUESSER = self::REFERENCE_PREFIX . 'admin_attachment_type_guesser';
-    public const SERVICE_TWIG_ATTACHMENT_EXTENSION = self::REFERENCE_PREFIX . 'service_twig_attachment_extension';
+    public const SERVICE_TWIG_ATTACHMENT_EXTENSION = self::REFERENCE_PREFIX . 'twig_attachment_extension';
+
+    // Attachment garbage collectors
+    public const SERVICE_EDITORJS_IMAGE_GARBAGE_COLLECTOR = self::REFERENCE_PREFIX . 'editorjs_image_garbage_collector';
 
     // FileStorage processors
     public const SERVICE_TINIFY_PROCESSOR = self::REFERENCE_PREFIX . 'tinify_processor';

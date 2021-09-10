@@ -241,74 +241,6 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
         throw new RuntimeException('Trying to perform "deleteTranslation" action on a non-translatable entity.');
     }
 
-    public function createEditFormBuilder(EntityDto $entityDto, KeyValueStore $formOptions, AdminContext $context): FormBuilderInterface
-    {
-        /** @var TranslatableInterface $instance */
-        $instance = $entityDto->getInstance();
-
-        $this->overrideDefaultLocaleIfIsTranslatable($instance);
-
-        return parent::createEditFormBuilder($entityDto, $formOptions, $context);
-    }
-
-    public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
-    {
-        $queryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
-
-        if (self::isTranslatableEntity()) {
-            $entityRepository = $this->getDoctrine()->getRepository($entityDto->getFqcn());
-
-            if (! $entityRepository instanceof LocalizedRepositoryInterface) {
-                throw new RuntimeException('Repositories of Translatable entities must implement the LocalizedRepositoryInterface');
-            }
-
-            $entityRepository->localizeQueryBuilder($queryBuilder);
-        }
-
-        return $queryBuilder;
-    }
-
-    private function getRepository(): ObjectRepository
-    {
-        /** @var ManagerRegistry $doctrine */
-        $doctrine = $this->get('doctrine');
-
-        return $doctrine->getRepository(static::getEntityFqcn());
-    }
-
-    private function isSingleInstance(): bool
-    {
-        return $this->getRepository() instanceof AbstractSingleInstanceRepository;
-    }
-
-    private function overrideDefaultLocaleIfIsTranslatable(?object $instance): void
-    {
-        if ($instance !== null && $instance instanceof TranslatableInterface) {
-            $instance->setDefaultLocale(
-                $this->localeProvider
-                    ->provideCurrentLocale()
-            );
-
-            // Ensure a new translation is ready for the current locale (if needed)
-            $instance->translate(null, false);
-        }
-    }
-
-    private static function isTranslatableEntity(): bool
-    {
-        return in_array(
-            TranslatableInterface::class,
-            class_implements(static::getEntityFqcn()),
-            true);
-    }
-
-    private static function mergeNewTranslationsIfIsTranslatable(?object $instance): void
-    {
-        if ($instance instanceof TranslatableInterface) {
-            $instance->mergeNewTranslations();
-        }
-    }
-
     public function attachFile(AdminContext $context): JsonResponse
     {
         if ($context->getRequest()->getMethod() !== Request::METHOD_POST) {
@@ -362,5 +294,73 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
         $attachment = $this->fileStorageManager->store($formData->file, $metadata, $processorsOptions);
 
         return new JsonResponse($this->normalizer->normalize($attachment, 'json'));
+    }
+
+    public function createEditFormBuilder(EntityDto $entityDto, KeyValueStore $formOptions, AdminContext $context): FormBuilderInterface
+    {
+        /** @var TranslatableInterface $instance */
+        $instance = $entityDto->getInstance();
+
+        $this->overrideDefaultLocaleIfIsTranslatable($instance);
+
+        return parent::createEditFormBuilder($entityDto, $formOptions, $context);
+    }
+
+    public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
+    {
+        $queryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
+
+        if (self::isTranslatableEntity()) {
+            $entityRepository = $this->getDoctrine()->getRepository($entityDto->getFqcn());
+
+            if (! $entityRepository instanceof LocalizedRepositoryInterface) {
+                throw new RuntimeException('Repositories of Translatable entities must implement the LocalizedRepositoryInterface');
+            }
+
+            $entityRepository->localizeQueryBuilder($queryBuilder);
+        }
+
+        return $queryBuilder;
+    }
+
+    private function getRepository(): ObjectRepository
+    {
+        /** @var ManagerRegistry $doctrine */
+        $doctrine = $this->get('doctrine');
+
+        return $doctrine->getRepository(static::getEntityFqcn());
+    }
+
+    private function isSingleInstance(): bool
+    {
+        return $this->getRepository() instanceof AbstractSingleInstanceRepository;
+    }
+
+    private function overrideDefaultLocaleIfIsTranslatable(?object $instance): void
+    {
+        if ($instance instanceof TranslatableInterface) {
+            $instance->setDefaultLocale(
+                $this->localeProvider
+                    ->provideCurrentLocale()
+            );
+
+            // Ensure a new translation is ready for the current locale (if needed)
+            $instance->translate(null, false);
+        }
+    }
+
+    private static function isTranslatableEntity(): bool
+    {
+        return in_array(
+            TranslatableInterface::class,
+            class_implements(static::getEntityFqcn()),
+            true);
+    }
+
+    private static function mergeNewTranslationsIfIsTranslatable(?object $instance): void
+    {
+        if ($instance instanceof TranslatableInterface) {
+            $instance->mergeNewTranslations();
+        }
     }
 }
