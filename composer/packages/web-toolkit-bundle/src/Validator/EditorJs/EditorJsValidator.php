@@ -27,7 +27,7 @@ final class EditorJsValidator extends ConstraintValidator
      * @param null|EditorJsContent|string $value
      * @param EditorJS                    $constraint
      */
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         if (null === $value || '' === $value) {
             return;
@@ -39,8 +39,8 @@ final class EditorJsValidator extends ConstraintValidator
             ;
         }
 
-        foreach ($value->getBlocks() as $block) {
-            $type = get_class($block);
+        foreach ($value->getBlocks() as $arrayCollection) {
+            $type = $arrayCollection::class;
 
             if (! in_array($type, $constraint->enabledTools, true)) {
                 $this->context->buildViolation(

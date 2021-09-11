@@ -27,11 +27,9 @@ use Mep\WebToolkitBundle\Entity\EditorJs\Block;
 #[ORM\Table(name: 'mwt_editor_js_delimiter')]
 class Delimiter extends Block
 {
-    public function __construct(string $id)
-    {
-        parent::__construct($id);
-    }
-
+    /**
+     * @return array<string, mixed>
+     */
     protected function getData(): array
     {
         return [];

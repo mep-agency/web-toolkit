@@ -26,7 +26,7 @@ final class EditorJsNotEmptyValidator extends ConstraintValidator
      * @param null|EditorJsContent|string $editorJsContent
      * @param EditorJsNotEmpty            $constraint
      */
-    public function validate($editorJsContent, Constraint $constraint)
+    public function validate($editorJsContent, Constraint $constraint): void
     {
         if (null === $editorJsContent || '' === $editorJsContent) {
             return;

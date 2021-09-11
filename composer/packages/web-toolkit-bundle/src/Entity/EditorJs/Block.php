@@ -35,8 +35,10 @@ use Symfony\Component\Uid\Uuid;
 )]
 abstract class Block implements JsonSerializable
 {
+    /**
+     * @var array<string, class-string<Block>>
+     */
     public const BLOCKS_MAPPING = [
-        // Built-in
         'paragraph' => Block\Paragraph::class,
         'header' => Block\Header::class,
         'list' => Block\NestedList::class,
@@ -135,9 +137,9 @@ abstract class Block implements JsonSerializable
         return $this->parent;
     }
 
-    public function setParent(?EditorJsContent $parent): self
+    public function setParent(?EditorJsContent $editorJsContent): self
     {
-        $this->parent = $parent;
+        $this->parent = $editorJsContent;
 
         return $this;
     }
@@ -151,5 +153,8 @@ abstract class Block implements JsonSerializable
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     abstract protected function getData(): array;
 }

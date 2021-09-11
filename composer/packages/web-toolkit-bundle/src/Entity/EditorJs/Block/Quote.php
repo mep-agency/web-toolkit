@@ -54,6 +54,9 @@ class Quote extends Block
         return $this->alignment;
     }
 
+    /**
+     * @return array<string, string>
+     */
     protected function getData(): array
     {
         return [

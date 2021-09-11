@@ -29,28 +29,31 @@ use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
  */
 final class WebToolkitExtension extends Extension implements PrependExtensionInterface
 {
-    public function load(array $configs, ContainerBuilder $container)
+    /**
+     * @param array<string, mixed> $configs
+     */
+    public function load(array $configs, ContainerBuilder $containerBuilder): void
     {
-        $container->registerForAutoconfiguration(ProcessorInterface::class)
+        $containerBuilder->registerForAutoconfiguration(ProcessorInterface::class)
             ->addTag(WebToolkitBundle::TAG_FILE_STORAGE_PROCESSOR)
         ;
 
-        $container->registerForAutoconfiguration(TemplateProviderInterface::class)
+        $containerBuilder->registerForAutoconfiguration(TemplateProviderInterface::class)
             ->addTag(WebToolkitBundle::TAG_MAIL_TEMPLATE_PROVIDER)
         ;
 
-        $container->registerForAutoconfiguration(GarbageCollectorInterface::class)
+        $containerBuilder->registerForAutoconfiguration(GarbageCollectorInterface::class)
             ->addTag(WebToolkitBundle::TAG_ATTACHMENTS_GARBAGE_COLLECTOR)
         ;
 
-        $loader = new PhpFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $phpFileLoader = new PhpFileLoader($containerBuilder, new FileLocator(__DIR__.'/../Resources/config'));
 
-        $loader->load('services.php');
+        $phpFileLoader->load('services.php');
     }
 
-    public function prepend(ContainerBuilder $container)
+    public function prepend(ContainerBuilder $containerBuilder): void
     {
-        $container->loadFromExtension('twig', [
+        $containerBuilder->loadFromExtension('twig', [
             'paths' => [
                 // '%kernel.project_dir%/vendor/mep-agency/web-toolkit-bundle/src/Resources/views/bundles/EasyAdminBundle' => 'EasyAdmin',
                 realpath(__DIR__.'/..').'/Resources/views/bundles/EasyAdminBundle' => 'EasyAdmin',
@@ -58,7 +61,7 @@ final class WebToolkitExtension extends Extension implements PrependExtensionInt
         ]);
 
         // Enable PHP attributes in Doctrine mappings
-        $container->loadFromExtension('doctrine', [
+        $containerBuilder->loadFromExtension('doctrine', [
             'orm' => [
                 'mappings' => [
                     (new ReflectionClass(WebToolkitBundle::class))->getShortName() => 'attribute',

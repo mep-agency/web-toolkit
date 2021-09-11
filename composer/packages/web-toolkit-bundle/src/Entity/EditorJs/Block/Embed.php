@@ -75,6 +75,9 @@ class Embed extends Block
         return $this->caption;
     }
 
+    /**
+     * @return array<string, int|string>
+     */
     protected function getData(): array
     {
         return [

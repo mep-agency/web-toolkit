@@ -15,6 +15,7 @@ namespace Mep\WebToolkitBundle\Contract\Controller;
 
 use Mep\WebToolkitBundle\Contract\Entity\AbstractUser;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -44,15 +45,15 @@ abstract class AbstractSecurityController extends AbstractController implements 
                 return $this->sendUrlToUser($user, $loginLinkDetails);
             }
 
-            $error = new UserNotFoundException();
-            $error->setUserIdentifier($email);
+            $userNotFoundException = new UserNotFoundException();
+            $userNotFoundException->setUserIdentifier($email);
         }
 
         return $this->render(
             '@EasyAdmin/page/login.html.twig',
             $this->configureLoginTemplateParameters([
                 'last_username' => $lastUsername ?? null,
-                'error' => $error ?? null,
+                'error' => $userNotFoundException ?? null,
                 'csrf_token_intention' => 'authenticate',
             ]),
         );
@@ -74,8 +75,10 @@ abstract class AbstractSecurityController extends AbstractController implements 
         );
     }
 
-    public function start(Request $request, AuthenticationException $authException = null)
-    {
+    public function start(
+        Request $request,
+        AuthenticationException $authenticationException = null,
+    ): RedirectResponse {
         return $this->redirectToRoute('login');
     }
 

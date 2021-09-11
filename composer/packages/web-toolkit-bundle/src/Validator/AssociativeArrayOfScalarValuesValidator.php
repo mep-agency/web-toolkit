@@ -25,7 +25,7 @@ final class AssociativeArrayOfScalarValuesValidator extends ConstraintValidator
      * @param null|array|string              $metadata
      * @param AssociativeArrayOfScalarValues $constraint
      */
-    public function validate($metadata, Constraint $constraint)
+    public function validate($metadata, Constraint $constraint): void
     {
         if (null === $metadata || '' === $metadata) {
             return;

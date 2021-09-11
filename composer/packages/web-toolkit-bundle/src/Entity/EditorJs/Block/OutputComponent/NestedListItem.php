@@ -68,12 +68,12 @@ class NestedListItem implements JsonSerializable
         }
     }
 
-    public function getUuid(): ?Uuid
+    public function getUuid(): Uuid
     {
         return $this->uuid;
     }
 
-    public function getContent(): ?string
+    public function getContent(): string
     {
         return $this->content;
     }
@@ -98,11 +98,9 @@ class NestedListItem implements JsonSerializable
 
     public function removeItem(self $item): self
     {
-        if ($this->items->removeElement($item)) {
-            // set the owning side to null (unless already changed)
-            if ($item->getParent() === $this) {
-                $item->setParent(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->items->removeElement($item) && $item->getParent() === $this) {
+            $item->setParent(null);
         }
 
         return $this;
@@ -113,6 +111,9 @@ class NestedListItem implements JsonSerializable
         return $this->parent;
     }
 
+    /**
+     * @param null|\Mep\WebToolkitBundle\Entity\EditorJs\Block\OutputComponent\NestedListItem $parent
+     */
     public function setParent(?self $parent): self
     {
         $this->parent = $parent;
@@ -120,7 +121,10 @@ class NestedListItem implements JsonSerializable
         return $this;
     }
 
-    public function jsonSerialize()
+    /**
+     * @return array<string, mixed[]>|array<string, string>
+     */
+    public function jsonSerialize(): array
     {
         return [
             'content' => $this->content,

@@ -33,6 +33,9 @@ class EditorJsContent implements JsonSerializable
     #[ORM\Column(type: 'uuid', unique: true)]
     private Uuid $id;
 
+    /**
+     * @var Block[]|Collection<Block>
+     */
     #[ORM\OneToMany(targetEntity: Block::class, mappedBy: 'parent', orphanRemoval: true, cascade: [
         'persist',
         'remove',
@@ -41,7 +44,7 @@ class EditorJsContent implements JsonSerializable
         'uuid' => 'ASC',
     ])]
     #[Valid]
-    private $blocks;
+    private Collection $blocks;
 
     public function __construct(
         #[ORM\Column(type: 'bigint')]
@@ -58,18 +61,18 @@ class EditorJsContent implements JsonSerializable
         return $this->id;
     }
 
-    public function getTime(): ?string
+    public function getTime(): string
     {
         return $this->time;
     }
 
-    public function getVersion(): ?string
+    public function getVersion(): string
     {
         return $this->version;
     }
 
     /**
-     * @return Block[]|Collection
+     * @return Block[]|Collection<Block>
      */
     public function getBlocks(): Collection
     {
@@ -88,16 +91,17 @@ class EditorJsContent implements JsonSerializable
 
     public function removeBlock(Block $block): self
     {
-        if ($this->blocks->removeElement($block)) {
-            // set the owning side to null (unless already changed)
-            if ($block->getParent() === $this) {
-                $block->setParent(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->blocks->removeElement($block) && $block->getParent() === $this) {
+            $block->setParent(null);
         }
 
         return $this;
     }
 
+    /**
+     * @return array<string, int|mixed|string>
+     */
     public function jsonSerialize(): array
     {
         return [

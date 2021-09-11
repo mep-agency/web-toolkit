@@ -40,6 +40,9 @@ class Raw extends Block
         return $this->html;
     }
 
+    /**
+     * @return array<string, string>
+     */
     protected function getData(): array
     {
         return [

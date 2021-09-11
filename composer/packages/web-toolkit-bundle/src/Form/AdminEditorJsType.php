@@ -34,55 +34,70 @@ use Symfony\Component\Validator\Constraints\Valid;
  */
 final class AdminEditorJsType extends AbstractType implements DataTransformerInterface
 {
+    /**
+     * @var string
+     */
     public const TOOLS_OPTIONS = 'tools_options';
 
+    /**
+     * @var string
+     */
     public const ENABLED_TOOLS = 'enabled_tools';
 
+    /**
+     * @var string
+     */
     public const CSRF_TOKEN_ID_IMAGES = self::CSRF_TOKEN_ID.'_images';
 
+    /**
+     * @var string
+     */
     public const CSRF_TOKEN_ID_ATTACHMENTS = self::CSRF_TOKEN_ID.'_attachments';
 
+    /**
+     * @var string
+     */
     public const CSRF_TOKEN_ID = 'mwt_admin_editorjs_upload_api';
 
     public function __construct(
         private AttachmentsAdminApiUrlGenerator $attachmentsAdminApiUrlGenerator,
         private SerializerInterface $serializer,
-        private CsrfTokenManagerInterface $tokenManager,
+        private CsrfTokenManagerInterface $csrfTokenManager,
     ) {
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $formBuilder, array $options): void
     {
-        $builder
+        $formBuilder
             ->addModelTransformer($this)
             ->addViewTransformer($this)
         ;
     }
 
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $formView, FormInterface $form, array $options): void
     {
         // Normalize tool options for EditorJs
-        $view->vars['tools_options'] = [];
+        $formView->vars['tools_options'] = [];
 
         foreach ($options[self::ENABLED_TOOLS] as $enabledTool) {
             if (isset($options[self::TOOLS_OPTIONS][$enabledTool])) {
                 if (Block\Image::class === $enabledTool) {
-                    $view->vars['tools_options'][Block::getTypeByClass(
+                    $formView->vars['tools_options'][Block::getTypeByClass(
                         Block\Image::class,
                     )]['captionPlaceholder'] = $options[self::TOOLS_OPTIONS][Block\Image::class]['captionPlaceholder'];
 
-                    $view->vars['tools_options'][Block::getTypeByClass(
+                    $formView->vars['tools_options'][Block::getTypeByClass(
                         Block\Image::class,
                     )]['buttonContent'] = $options[self::TOOLS_OPTIONS][Block\Image::class]['buttonContent'];
 
-                    $view->vars['tools_options'][Block::getTypeByClass(
+                    $formView->vars['tools_options'][Block::getTypeByClass(
                         Block\Image::class,
-                    )]['api_token'] = $this->tokenManager
+                    )]['api_token'] = $this->csrfTokenManager
                         ->getToken(self::CSRF_TOKEN_ID_IMAGES)
                         ->getValue()
                     ;
 
-                    $view->vars['tools_options'][Block::getTypeByClass(
+                    $formView->vars['tools_options'][Block::getTypeByClass(
                         Block\Image::class,
                     )]['endpoint'] = $this->attachmentsAdminApiUrlGenerator->generate(
                         [
@@ -104,14 +119,14 @@ final class AdminEditorJsType extends AbstractType implements DataTransformerInt
 
                 // TODO: Implement attaches block (EditorJs)
                 if (Block\Attaches::class === $enabledTool) {
-                    $view->vars['tools_options'][Block::getTypeByClass(
+                    $formView->vars['tools_options'][Block::getTypeByClass(
                         Block\Attaches::class,
-                    )]['api_token'] = $this->tokenManager
+                    )]['api_token'] = $this->csrfTokenManager
                         ->getToken(self::CSRF_TOKEN_ID_ATTACHMENTS)
                         ->getValue()
                     ;
 
-                    $view->vars['tools_options'][Block::getTypeByClass(
+                    $formView->vars['tools_options'][Block::getTypeByClass(
                         Block\Attaches::class,
                     )]['endpoint'] = $this->attachmentsAdminApiUrlGenerator->generate(
                         [
@@ -131,33 +146,33 @@ final class AdminEditorJsType extends AbstractType implements DataTransformerInt
                     continue;
                 }
 
-                $view->vars['tools_options'][Block::getTypeByClass(
+                $formView->vars['tools_options'][Block::getTypeByClass(
                     $enabledTool,
                 )] = $options[self::TOOLS_OPTIONS][$enabledTool];
 
                 continue;
             }
 
-            $view->vars['tools_options'][Block::getTypeByClass($enabledTool)] = [];
+            $formView->vars['tools_options'][Block::getTypeByClass($enabledTool)] = [];
         }
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $optionsResolver)
     {
-        parent::configureOptions($resolver);
+        parent::configureOptions($optionsResolver);
 
-        $resolver->setDefaults([
+        $optionsResolver->setDefaults([
             'compound' => false,
             'constraints' => [new Valid()],
             self::TOOLS_OPTIONS => [],
         ]);
 
-        $resolver->setRequired([self::ENABLED_TOOLS]);
+        $optionsResolver->setRequired([self::ENABLED_TOOLS]);
 
-        $resolver->setAllowedTypes(self::TOOLS_OPTIONS, 'array');
-        $resolver->setAllowedTypes(self::ENABLED_TOOLS, ['array']);
+        $optionsResolver->setAllowedTypes(self::TOOLS_OPTIONS, 'array');
+        $optionsResolver->setAllowedTypes(self::ENABLED_TOOLS, ['array']);
 
-        $resolver->addNormalizer(
+        $optionsResolver->addNormalizer(
             'constraints',
             function (Options $options, $value): mixed {
                 if ($options->offsetGet('required')) {

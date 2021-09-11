@@ -48,6 +48,7 @@ use RuntimeException;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -57,8 +58,14 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
  */
 abstract class AbstractCrudController extends OriginalAbstractCrudController
 {
+    /**
+     * @var string
+     */
     public const ACTION_DELETE_TRANSLATION = 'deleteTranslation';
 
+    /**
+     * @var string
+     */
     public const ACTION_ATTACH_FILE = 'attachFile';
 
     public function __construct(
@@ -79,14 +86,14 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
         return $instance;
     }
 
-    public function index(AdminContext $context)
+    public function index(AdminContext $adminContext): KeyValueStore|Response
     {
-        return $this->redirectToSingleInstance($context) ?? parent::index($context);
+        return $this->redirectToSingleInstance($adminContext) ?? parent::index($adminContext);
     }
 
-    public function new(AdminContext $context)
+    public function new(AdminContext $adminContext): KeyValueStore|Response
     {
-        return $this->redirectToSingleInstance($context) ?? parent::new($context);
+        return $this->redirectToSingleInstance($adminContext) ?? parent::new($adminContext);
     }
 
     public function configureCrud(Crud $crud): Crud
@@ -144,9 +151,9 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
         parent::updateEntity($entityManager, $entityInstance);
     }
 
-    public function deleteTranslation(AdminContext $context)
+    public function deleteTranslation(AdminContext $adminContext,): Response|RedirectResponse
     {
-        $event = new BeforeCrudActionEvent($context);
+        $event = new BeforeCrudActionEvent($adminContext);
         $this->get('event_dispatcher')
             ->dispatch($event)
         ;
@@ -156,16 +163,16 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
 
         if (! $this->isGranted(Permission::EA_EXECUTE_ACTION, [
             'action' => self::ACTION_DELETE_TRANSLATION,
-            'entity' => $context->getEntity(),
+            'entity' => $adminContext->getEntity(),
         ])) {
-            throw new ForbiddenActionException($context);
+            throw new ForbiddenActionException($adminContext);
         }
 
-        if (! $context->getEntity()->isAccessible()) {
-            throw new InsufficientEntityPermissionException($context);
+        if (! $adminContext->getEntity()->isAccessible()) {
+            throw new InsufficientEntityPermissionException($adminContext);
         }
 
-        $instance = $context->getEntity()
+        $instance = $adminContext->getEntity()
             ->getInstance()
         ;
 
@@ -175,7 +182,7 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
             $currentTranslation = $translations->get($currentLocale);
 
             if ($translations->count() <= 1) {
-                throw new RuntimeException('Cannot delete a translation if it\'s the only one available.');
+                throw new RuntimeException("Cannot delete a translation if it's the only one available.");
             }
 
             if (null !== $currentTranslation) {
@@ -183,15 +190,15 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
 
                 $this->updateEntity(
                     $this->get('doctrine')
-                        ->getManagerForClass($context->getEntity()->getFqcn()),
+                        ->getManagerForClass($adminContext->getEntity()->getFqcn()),
                     $instance,
                 );
 
-                $responseParameters = $this->configureResponseParameters(KeyValueStore::new([
-                    'entity' => $context->getEntity(),
+                $keyValueStore = $this->configureResponseParameters(KeyValueStore::new([
+                    'entity' => $adminContext->getEntity(),
                 ]));
 
-                $event = new AfterCrudActionEvent($context, $responseParameters);
+                $event = new AfterCrudActionEvent($adminContext, $keyValueStore);
                 $this->get('event_dispatcher')
                     ->dispatch($event)
                 ;
@@ -215,9 +222,9 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
         throw new RuntimeException('Trying to perform "deleteTranslation" action on a non-translatable entity.');
     }
 
-    public function attachFile(AdminContext $context): JsonResponse
+    public function attachFile(AdminContext $adminContext): JsonResponse
     {
-        if (Request::METHOD_POST !== $context->getRequest()->getMethod()) {
+        if (Request::METHOD_POST !== $adminContext->getRequest()->getMethod()) {
             throw new BadRequestException(
                 'A request to "'.self::ACTION_ATTACH_FILE.'" must use "'.Request::METHOD_POST.'" HTTP method.',
             );
@@ -227,10 +234,10 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
             AdminAttachmentUploadApiType::class,
             null,
             // Using EA::ROUTE_PARAMS to have them included in URL signature validation
-            $context->getRequest()
+            $adminContext->getRequest()
                 ->get(EA::ROUTE_PARAMS),
         );
-        $form->handleRequest($context->getRequest());
+        $form->handleRequest($adminContext->getRequest());
 
         if (! $form->isSubmitted()) {
             throw new BadRequestException('Expected form data cannot be found.');
@@ -282,24 +289,24 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
 
     public function createEditFormBuilder(
         EntityDto $entityDto,
-        KeyValueStore $formOptions,
-        AdminContext $context,
+        KeyValueStore $keyValueStore,
+        AdminContext $adminContext,
     ): FormBuilderInterface {
         /** @var TranslatableInterface $instance */
         $instance = $entityDto->getInstance();
 
         $this->overrideDefaultLocaleIfIsTranslatable($instance);
 
-        return parent::createEditFormBuilder($entityDto, $formOptions, $context);
+        return parent::createEditFormBuilder($entityDto, $keyValueStore, $adminContext);
     }
 
     public function createIndexQueryBuilder(
         SearchDto $searchDto,
         EntityDto $entityDto,
-        FieldCollection $fields,
-        FilterCollection $filters,
+        FieldCollection $fieldCollection,
+        FilterCollection $filterCollection,
     ): QueryBuilder {
-        $queryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
+        $queryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fieldCollection, $filterCollection);
 
         if (self::isTranslatableEntity()) {
             $entityRepository = $this->getDoctrine()
@@ -318,12 +325,22 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
         return $queryBuilder;
     }
 
+    private function overrideDefaultLocaleIfIsTranslatable(?object $instance): void
+    {
+        if ($instance instanceof TranslatableInterface) {
+            $instance->setDefaultLocale($this->localeProvider->provideCurrentLocale());
+
+            // Ensure a new translation is ready for the current locale (if needed)
+            $instance->translate(null, false);
+        }
+    }
+
     /**
      * Redirects to:
      * - the NEW action if no instance is found
      * - the EDIT action if an instance is found.
      */
-    private function redirectToSingleInstance(AdminContext $context): ?Response
+    private function redirectToSingleInstance(AdminContext $adminContext): ?Response
     {
         if ($this->isSingleInstance()) {
             $repository = $this->getRepository();
@@ -331,7 +348,7 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
             $singleInstance = $repository->getInstance();
 
             if (null === $singleInstance) {
-                if (Action::NEW === $context->getCrud()->getCurrentAction()) {
+                if (Action::NEW === $adminContext->getCrud()->getCurrentAction()) {
                     // This is already a NEW action, no redirect needed
                     return null;
                 }
@@ -357,27 +374,17 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
         return null;
     }
 
+    private function isSingleInstance(): bool
+    {
+        return $this->getRepository() instanceof AbstractSingleInstanceRepository;
+    }
+
     private function getRepository(): ObjectRepository
     {
         /** @var ManagerRegistry $doctrine */
         $doctrine = $this->get('doctrine');
 
         return $doctrine->getRepository(static::getEntityFqcn());
-    }
-
-    private function isSingleInstance(): bool
-    {
-        return $this->getRepository() instanceof AbstractSingleInstanceRepository;
-    }
-
-    private function overrideDefaultLocaleIfIsTranslatable(?object $instance): void
-    {
-        if ($instance instanceof TranslatableInterface) {
-            $instance->setDefaultLocale($this->localeProvider->provideCurrentLocale());
-
-            // Ensure a new translation is ready for the current locale (if needed)
-            $instance->translate(null, false);
-        }
     }
 
     private static function isTranslatableEntity(): bool

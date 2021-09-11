@@ -29,35 +29,35 @@ final class TypeGuesserConfigurator implements FieldConfiguratorInterface
     ) {
     }
 
-    public function supports(FieldDto $field, EntityDto $entityDto): bool
+    public function supports(FieldDto $fieldDto, EntityDto $entityDto): bool
     {
-        return property_exists($entityDto->getFqcn(), $field->getProperty());
+        return property_exists($entityDto->getFqcn(), $fieldDto->getProperty());
     }
 
-    public function configure(FieldDto $field, EntityDto $entityDto, AdminContext $context): void
+    public function configure(FieldDto $fieldDto, EntityDto $entityDto, AdminContext $adminContext): void
     {
-        $typeGuesser = $this->formRegistry
+        $formTypeGuesser = $this->formRegistry
             ->getTypeGuesser()
         ;
-        $typeGuess = $typeGuesser->guessType($entityDto->getFqcn(), $field->getProperty());
-        $options = $field->getFormTypeOptions();
+        $typeGuess = $formTypeGuesser->guessType($entityDto->getFqcn(), $fieldDto->getProperty());
+        $options = $fieldDto->getFormTypeOptions();
 
         // Merge options with guessed options
-        if (null !== $typeGuess && $typeGuess->getType() === $field->getFormType()) {
-            $options = array_merge($typeGuess->getOptions(), $field->getFormTypeOptions());
+        if (null !== $typeGuess && $typeGuess->getType() === $fieldDto->getFormType()) {
+            $options = array_merge($typeGuess->getOptions(), $fieldDto->getFormTypeOptions());
         }
 
         // Set required based on guessed value
-        if (null === $field->getFormTypeOption('required')) {
-            $requiredGuess = $typeGuesser->guessRequired($entityDto->getFqcn(), $field->getProperty());
+        if (null === $fieldDto->getFormTypeOption('required')) {
+            $valueGuess = $formTypeGuesser->guessRequired($entityDto->getFqcn(), $fieldDto->getProperty());
 
             $options = array_merge([
-                'required' => $requiredGuess?->getValue(),
+                'required' => $valueGuess?->getValue(),
             ], $options);
         }
 
         // Set pattern based on guessed value
-        $patternGuess = $typeGuesser->guessPattern($entityDto->getFqcn(), $field->getProperty());
+        $patternGuess = $formTypeGuesser->guessPattern($entityDto->getFqcn(), $fieldDto->getProperty());
         if (null !== $patternGuess) {
             $options = array_replace_recursive([
                 'attr' => [
@@ -67,7 +67,7 @@ final class TypeGuesserConfigurator implements FieldConfiguratorInterface
         }
 
         // Set maxlength based on guessed value
-        $maxLengthGuess = $typeGuesser->guessMaxLength($entityDto->getFqcn(), $field->getProperty());
+        $maxLengthGuess = $formTypeGuesser->guessMaxLength($entityDto->getFqcn(), $fieldDto->getProperty());
         if (null !== $maxLengthGuess) {
             $options = array_replace_recursive([
                 'attr' => [
@@ -76,6 +76,6 @@ final class TypeGuesserConfigurator implements FieldConfiguratorInterface
             ], $options);
         }
 
-        $field->setFormTypeOptions($options);
+        $fieldDto->setFormTypeOptions($options);
     }
 }

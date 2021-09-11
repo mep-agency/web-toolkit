@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Entity\EditorJs\Block;
 
-use Doctrine\ORM\Mapping as ORM;
+//use Doctrine\ORM\Mapping as ORM;
 use Mep\WebToolkitBundle\Entity\EditorJs\Block;
 
 /**
@@ -29,11 +29,9 @@ use Mep\WebToolkitBundle\Entity\EditorJs\Block;
 //#[ORM\Table(name: 'mwt_editor_js_attaches')]
 class Attaches extends Block
 {
-    public function __construct(string $id,)
-    {
-        parent::__construct($id);
-    }
-
+    /**
+     * @return array<string, mixed>
+     */
     protected function getData(): array
     {
         return [];

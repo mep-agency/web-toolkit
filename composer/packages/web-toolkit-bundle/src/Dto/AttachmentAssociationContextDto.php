@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Dto;
 
+use Stringable;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -20,7 +21,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  *
  * @author Marco Lipparini <developer@liarco.net>
  */
-final class AttachmentAssociationContextDto
+final class AttachmentAssociationContextDto implements Stringable
 {
     public function __construct(
         #[NotBlank]
@@ -44,7 +45,7 @@ final class AttachmentAssociationContextDto
         $matches = [];
 
         if (1 !== preg_match(
-            '/^([a-zA-Z_\x7f-\xff][a-zA-Z0-9\\_\x7f-\xff]*)::\$([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)$/',
+            '#^([a-zA-Z_\x7f-\xff][a-zA-Z0-9\_\x7f-\xff]*)::\$([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)$#',
             $context,
             $matches,
         )) {

@@ -231,7 +231,7 @@ final class EditorJs extends Constraint
         }
     }
 
-    private function resolveOptions()
+    private function resolveOptions(): void
     {
         $optionsResolver = new OptionsResolver();
 
@@ -244,18 +244,18 @@ final class EditorJs extends Constraint
 
         try {
             $this->options = $optionsResolver->resolve($this->options);
-        } catch (UndefinedOptionsException $e) {
+        } catch (UndefinedOptionsException $undefinedOptionsException) {
             throw new InvalidConfigurationException(
-                'Invalid EditorJs configuration: '.$e->getMessage().' Did you forget to enable the tool(s)?',
+                'Invalid EditorJs configuration: '.$undefinedOptionsException->getMessage().' Did you forget to enable the tool(s)?',
             );
         }
 
         foreach ($this->options as $toolName => $toolOptions) {
             try {
                 $this->options[$toolName] = self::$optionsResolvers[$toolName]->resolve($toolOptions);
-            } catch (InvalidOptionsException $e) {
+            } catch (InvalidOptionsException $invalidOptionsException) {
                 throw new InvalidConfigurationException(
-                    'Invalid EditorJs tool configuration ('.$toolName.'): '.$e->getMessage(),
+                    'Invalid EditorJs tool configuration ('.$toolName.'): '.$invalidOptionsException->getMessage(),
                 );
             }
         }

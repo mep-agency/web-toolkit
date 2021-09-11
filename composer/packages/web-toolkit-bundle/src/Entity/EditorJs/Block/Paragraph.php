@@ -40,6 +40,9 @@ class Paragraph extends Block
         return $this->text;
     }
 
+    /**
+     * @return array<string, string>
+     */
     protected function getData(): array
     {
         return [

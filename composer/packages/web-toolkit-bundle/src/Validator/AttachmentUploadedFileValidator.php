@@ -32,7 +32,7 @@ final class AttachmentUploadedFileValidator extends AttachmentFileValidator
      * @param null|string|UploadedFile $file
      * @param AttachmentUploadedFile   $constraint
      */
-    public function validate($file, Constraint $constraint)
+    public function validate($file, Constraint $constraint): void
     {
         if (null === $file || '' === $file) {
             return;
@@ -44,8 +44,8 @@ final class AttachmentUploadedFileValidator extends AttachmentFileValidator
             ;
         }
 
-        $unprocessedAttachment = new UnprocessedAttachmentDto($file, null, $constraint->metadata);
+        $unprocessedAttachmentDto = new UnprocessedAttachmentDto($file, null, $constraint->metadata);
 
-        parent::validate($unprocessedAttachment->createAttachment(), $constraint);
+        parent::validate($unprocessedAttachmentDto->createAttachment(), $constraint);
     }
 }

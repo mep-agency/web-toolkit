@@ -69,6 +69,9 @@ class Image extends Block
         return $this->attachment;
     }
 
+    /**
+     * @return array<string, Attachment|bool|string>
+     */
     protected function getData(): array
     {
         return [

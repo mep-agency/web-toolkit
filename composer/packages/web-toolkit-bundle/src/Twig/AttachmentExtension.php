@@ -34,15 +34,14 @@ final class AttachmentExtension extends AbstractExtension
     /**
      * @return TwigFunction[]
      */
-    public function getFunctions()
+    public function getFunctions(): array
     {
-        return [new TwigFunction('attachment_public_url', [$this, 'getPublicUrl'])];
+        return [new TwigFunction('attachment_public_url', function (Attachment|string $attachment): string {
+            return $this->getPublicUrl($attachment);
+        })];
     }
 
-    /**
-     * @param Attachment|string $attachment
-     */
-    public function getPublicUrl($attachment): string
+    public function getPublicUrl(Attachment|string $attachment): string
     {
         if (! ($attachment instanceof Attachment)) {
             $uuid = $attachment;
@@ -52,7 +51,7 @@ final class AttachmentExtension extends AbstractExtension
             ;
         }
 
-        if (null === $attachment) {
+        if (! $attachment instanceof Attachment) {
             throw new AttachmentNotFoundException($uuid);
         }
 

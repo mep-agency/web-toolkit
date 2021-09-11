@@ -34,31 +34,29 @@ final class AdminEditorJsTypeGuesser implements FormTypeGuesserInterface
             return null;
         }
 
-        /** @var ?EditorJs $editorJsAttribute */
         $editorJsAttribute = ($reflectionProperty->getAttributes(EditorJs::class)[0] ?? null)
             ?->newInstance()
         ;
 
         return new TypeGuess(
             AdminEditorJsType::class,
-            null === $editorJsAttribute ? [] :
-                [
-                    AdminEditorJsType::ENABLED_TOOLS => $editorJsAttribute->enabledTools,
-                    AdminEditorJsType::TOOLS_OPTIONS => $editorJsAttribute->options,
-                ],
+            $editorJsAttribute instanceof EditorJs ? [
+                AdminEditorJsType::ENABLED_TOOLS => $editorJsAttribute->enabledTools,
+                AdminEditorJsType::TOOLS_OPTIONS => $editorJsAttribute->options,
+            ] : [],
             Guess::VERY_HIGH_CONFIDENCE,
         );
     }
 
-    public function guessRequired(string $class, string $property)
+    public function guessRequired(string $class, string $property): void
     {
     }
 
-    public function guessMaxLength(string $class, string $property)
+    public function guessMaxLength(string $class, string $property): void
     {
     }
 
-    public function guessPattern(string $class, string $property)
+    public function guessPattern(string $class, string $property): void
     {
     }
 }

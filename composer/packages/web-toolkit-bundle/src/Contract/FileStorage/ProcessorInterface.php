@@ -24,7 +24,7 @@ interface ProcessorInterface
     /**
      * @throws InvalidProcessorOptionsException
      */
-    public function supports(UnprocessedAttachmentDto $attachment): bool;
+    public function supports(UnprocessedAttachmentDto $unprocessedAttachmentDto): bool;
 
-    public function run(UnprocessedAttachmentDto $attachment): UnprocessedAttachmentDto;
+    public function run(UnprocessedAttachmentDto $unprocessedAttachmentDto): UnprocessedAttachmentDto;
 }

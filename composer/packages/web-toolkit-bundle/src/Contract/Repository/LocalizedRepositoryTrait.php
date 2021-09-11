@@ -35,12 +35,11 @@ trait LocalizedRepositoryTrait
     /**
      * Creates a new QueryBuilder instance that is prepopulated for this entity name.
      *
-     * @param string $alias
      * @param string $indexBy the index for the from
      *
      * @return QueryBuilder
      */
-    abstract public function createQueryBuilder($alias, $indexBy = null);
+    abstract public function createQueryBuilder(string $alias, $indexBy = null);
 
     public function getLocaleProvider(): LocaleProviderInterface
     {

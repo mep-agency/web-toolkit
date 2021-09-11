@@ -16,40 +16,29 @@ namespace Mep\WebToolkitBundle\Field\Configurator;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto;
-use Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface;
 use Mep\WebToolkitBundle\Contract\Field\Configurator\AbstractTranslatableFieldConfigurator;
 use Mep\WebToolkitBundle\Dto\AttachmentAssociationContextDto;
 use Mep\WebToolkitBundle\Field\AttachmentField;
 use Mep\WebToolkitBundle\Form\AdminAttachmentType;
-use Symfony\Component\Form\FormRegistryInterface;
-use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
  */
 final class AttachmentConfigurator extends AbstractTranslatableFieldConfigurator
 {
-    public function __construct(
-        protected LocaleProviderInterface $localeProvider,
-        protected PropertyAccessorInterface $propertyAccessor,
-        protected FormRegistryInterface $formRegistry,
-    ) {
-        parent::__construct($localeProvider, $propertyAccessor, $formRegistry);
+    public function supports(FieldDto $fieldDto, EntityDto $entityDto): bool
+    {
+        return AttachmentField::class === $fieldDto->getFieldFqcn();
     }
 
-    public function supports(FieldDto $field, EntityDto $entityDto): bool
+    public function configure(FieldDto $fieldDto, EntityDto $entityDto, AdminContext $adminContext): void
     {
-        return AttachmentField::class === $field->getFieldFqcn();
-    }
-
-    public function configure(FieldDto $field, EntityDto $entityDto, AdminContext $context): void
-    {
-        $entityFqcn = parent::supports($field, $entityDto) ?
+        $entityFqcn = parent::supports($fieldDto, $entityDto) ?
             $this->getTranslationFqcn($entityDto) : $entityDto->getFqcn();
 
-        $field->setFormTypeOption(
+        $fieldDto->setFormTypeOption(
             AdminAttachmentType::CONTEXT,
-            (string) (new AttachmentAssociationContextDto($entityFqcn, $field->getProperty(),)),
+            (string) (new AttachmentAssociationContextDto($entityFqcn, $fieldDto->getProperty(),)),
         );
     }
 }

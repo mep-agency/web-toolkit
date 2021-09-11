@@ -23,8 +23,6 @@ final class UnsupportedTemplateIdentifierException extends RuntimeException
 {
     public function __construct(TemplateIdentifierInterface $templateIdentifier)
     {
-        parent::__construct('Trying to render an unsupported template: '.get_class(
-            $templateIdentifier,
-        ).' (no provider found)');
+        parent::__construct('Trying to render an unsupported template: '.$templateIdentifier::class.' (no provider found)');
     }
 }

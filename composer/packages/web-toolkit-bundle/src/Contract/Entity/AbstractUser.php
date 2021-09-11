@@ -25,20 +25,23 @@ abstract class AbstractUser implements UserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    protected $id;
+    protected int $id;
 
     #[ORM\Column(type: 'string', length: 255, unique: true)]
-    protected $email;
+    protected string $email;
 
+    /**
+     * @var string[]
+     */
     #[ORM\Column(type: 'json')]
-    protected $roles = [];
+    protected array $roles = [];
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getEmail(): ?string
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -57,7 +60,7 @@ abstract class AbstractUser implements UserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return $this->email;
     }
 
     /**
@@ -65,11 +68,13 @@ abstract class AbstractUser implements UserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->email;
+        return $this->email;
     }
 
     /**
      * @see UserInterface
+     *
+     * @return string[]
      */
     public function getRoles(): array
     {
@@ -80,6 +85,9 @@ abstract class AbstractUser implements UserInterface
         return array_unique($roles);
     }
 
+    /**
+     * @param string[] $roles
+     */
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;

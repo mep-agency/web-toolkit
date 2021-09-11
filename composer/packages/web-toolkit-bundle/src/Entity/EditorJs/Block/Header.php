@@ -47,6 +47,9 @@ class Header extends Block
         return $this->level;
     }
 
+    /**
+     * @return array<string, int|string>
+     */
     protected function getData(): array
     {
         return [

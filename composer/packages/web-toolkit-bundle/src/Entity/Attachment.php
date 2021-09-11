@@ -16,6 +16,7 @@ namespace Mep\WebToolkitBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Mep\WebToolkitBundle\FileStorage\GarbageCollector\AssociationContextGarbageCollector;
 use Mep\WebToolkitBundle\Validator\AssociativeArrayOfScalarValues;
+use Stringable;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -29,7 +30,7 @@ use Symfony\Component\Validator\Constraints\PositiveOrZero;
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'mwt_attachment')]
-class Attachment
+class Attachment implements Stringable
 {
     #[ORM\Id]
     #[ORM\Column(type: 'uuid', unique: true)]
@@ -85,7 +86,7 @@ class Attachment
         return $this->fileName;
     }
 
-    public function getMimeType(): ?string
+    public function getMimeType(): string
     {
         return $this->mimeType;
     }

@@ -78,22 +78,25 @@ class NestedList extends Block
         return $this->items;
     }
 
-    public function addItem(NestedListItem $item): self
+    public function addItem(NestedListItem $nestedListItem): self
     {
-        if (! $this->items->contains($item)) {
-            $this->items[] = $item;
+        if (! $this->items->contains($nestedListItem)) {
+            $this->items[] = $nestedListItem;
         }
 
         return $this;
     }
 
-    public function removeItem(NestedListItem $item): self
+    public function removeItem(NestedListItem $nestedListItem): self
     {
-        $this->items->removeElement($item);
+        $this->items->removeElement($nestedListItem);
 
         return $this;
     }
 
+    /**
+     * @return array<string, NestedListItem[]|string>
+     */
     protected function getData(): array
     {
         return [

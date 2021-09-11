@@ -37,17 +37,17 @@ final class TranslatableBooleanConfigurator extends AbstractTranslatableFieldCon
         parent::__construct($this->localeProvider, $this->propertyAccessor, $this->formRegistry);
     }
 
-    public function supports(FieldDto $field, EntityDto $entityDto): bool
+    public function supports(FieldDto $fieldDto, EntityDto $entityDto): bool
     {
-        return $this->booleanConfigurator->supports($field, $entityDto) && parent::supports($field, $entityDto);
+        return $this->booleanConfigurator->supports($fieldDto, $entityDto) && parent::supports($fieldDto, $entityDto);
     }
 
-    public function configure(FieldDto $field, EntityDto $entityDto, AdminContext $context): void
+    public function configure(FieldDto $fieldDto, EntityDto $entityDto, AdminContext $adminContext): void
     {
-        $property = $field->getProperty();
+        $property = $fieldDto->getProperty();
 
-        $field->setProperty($field->getFormTypeOption('property_path'));
-        $this->booleanConfigurator->configure($field, $entityDto, $context);
-        $field->setProperty($property);
+        $fieldDto->setProperty($fieldDto->getFormTypeOption('property_path'));
+        $this->booleanConfigurator->configure($fieldDto, $entityDto, $adminContext);
+        $fieldDto->setProperty($property);
     }
 }

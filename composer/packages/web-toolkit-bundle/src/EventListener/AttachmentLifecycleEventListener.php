@@ -30,24 +30,24 @@ final class AttachmentLifecycleEventListener
     ) {
     }
 
-    public function validate(Attachment $attachment, LifecycleEventArgs $args): void
+    public function validate(Attachment $attachment, LifecycleEventArgs $lifecycleEventArgs): void
     {
-        $validations = $this->validator->validate($attachment);
+        $constraintViolationList = $this->validator->validate($attachment);
 
-        if ($validations->count() > 0) {
-            throw new ValidationFailedException($attachment, $validations);
+        if ($constraintViolationList->count() > 0) {
+            throw new ValidationFailedException($attachment, $constraintViolationList);
         }
     }
 
-    public function initializeAttachmentProxy(Attachment $attachment, LifecycleEventArgs $args): void
+    public function initializeAttachmentProxy(Attachment $attachment, LifecycleEventArgs $lifecycleEventArgs): void
     {
         // Ensure that the "postRemove" EventListener doesn't receive an uninitialized proxy
-        $args->getObjectManager()
+        $lifecycleEventArgs->getObjectManager()
             ->initializeObject($attachment)
         ;
     }
 
-    public function removeAttachedFile(Attachment $attachment, LifecycleEventArgs $args): void
+    public function removeAttachedFile(Attachment $attachment, LifecycleEventArgs $lifecycleEventArgs): void
     {
         // Attachment objects may be orphan (the associated file doesn't exist)
         if ($this->fileStorageDriver->attachedFileExists($attachment)) {

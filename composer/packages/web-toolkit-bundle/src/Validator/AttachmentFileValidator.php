@@ -28,7 +28,7 @@ class AttachmentFileValidator extends ConstraintValidator
      * @param null|AttachmentEntity|string $attachment
      * @param AttachmentFile               $constraint
      */
-    public function validate($attachment, Constraint $constraint)
+    public function validate($attachment, Constraint $constraint): void
     {
         if (null === $attachment || '' === $attachment) {
             return;

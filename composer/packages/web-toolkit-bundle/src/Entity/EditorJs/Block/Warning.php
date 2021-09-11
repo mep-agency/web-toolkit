@@ -47,6 +47,9 @@ class Warning extends Block
         return $this->message;
     }
 
+    /**
+     * @return array<string, string>
+     */
     protected function getData(): array
     {
         return [

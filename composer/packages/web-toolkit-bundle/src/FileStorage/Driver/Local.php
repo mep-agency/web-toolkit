@@ -63,6 +63,12 @@ final class Local implements DriverInterface
         return $this->getPublicUrlPrefix().$this->publicUrlPathPrefix.'/'.$attachment->getId().'/'.$attachment->getFileName();
     }
 
+    #[Pure]
+    private function buildFilePath(Attachment $attachment): string
+    {
+        return $this->storagePath.'/'.$attachment->getId().'/'.$attachment->getFileName();
+    }
+
     private function getPublicUrlPrefix(): string
     {
         if (null === $this->publicUrlPrefix) {
@@ -71,11 +77,5 @@ final class Local implements DriverInterface
         }
 
         return $this->publicUrlPrefix;
-    }
-
-    #[Pure]
-    private function buildFilePath(Attachment $attachment): string
-    {
-        return $this->storagePath.'/'.$attachment->getId().'/'.$attachment->getFileName();
     }
 }

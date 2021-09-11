@@ -32,18 +32,18 @@ final class TranslatableFieldPreConfigurator extends AbstractTranslatableFieldCo
         protected PropertyAccessorInterface $propertyAccessor,
         protected FormRegistryInterface $formRegistry,
         private EntityFactory $entityFactory,
-        private TypeGuesserConfigurator $typeGuessConfigurator,
+        private TypeGuesserConfigurator $typeGuesserConfigurator,
     ) {
         parent::__construct($localeProvider, $propertyAccessor, $formRegistry);
     }
 
-    public function configure(FieldDto $field, EntityDto $entityDto, AdminContext $context): void
+    public function configure(FieldDto $fieldDto, EntityDto $entityDto, AdminContext $adminContext): void
     {
-        $this->typeGuessConfigurator->configure(
-            $field,
+        $this->typeGuesserConfigurator->configure(
+            $fieldDto,
             $this->entityFactory
                 ->create($this->getTranslationFqcn($entityDto)),
-            $context,
+            $adminContext,
         );
     }
 }

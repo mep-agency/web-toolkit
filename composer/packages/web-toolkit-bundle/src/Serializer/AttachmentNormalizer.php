@@ -34,8 +34,10 @@ final class AttachmentNormalizer implements NormalizerInterface, DenormalizerInt
 
     /**
      * @param Attachment $object
+     *
+     * @return array<string, string>
      */
-    public function normalize($object, string $format = null, array $context = [])
+    public function normalize($object, string $format = null, array $context = []): array
     {
         return [
             'uuid' => $object->getId()
@@ -44,19 +46,19 @@ final class AttachmentNormalizer implements NormalizerInterface, DenormalizerInt
         ];
     }
 
-    public function supportsNormalization($data, string $format = null)
+    public function supportsNormalization($data, string $format = null): bool
     {
         return $data instanceof Attachment && 'json' === $format;
     }
 
-    public function denormalize($data, string $type, string $format = null, array $context = [])
+    public function denormalize($data, string $type, string $format = null, array $context = []): ?Attachment
     {
         return $this->entityManager->getRepository(Attachment::class)
             ->find($data['uuid'])
         ;
     }
 
-    public function supportsDenormalization($data, string $type, string $format = null)
+    public function supportsDenormalization($data, string $type, string $format = null): bool
     {
         return is_array($data) && Attachment::class === $type && 'json' === $format;
     }

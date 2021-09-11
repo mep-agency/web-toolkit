@@ -16,7 +16,7 @@ namespace Mep\WebToolkitBundle\FileStorage\Processor;
 use Mep\WebToolkitBundle\Contract\FileStorage\ProcessorInterface;
 use Mep\WebToolkitBundle\Dto\UnprocessedAttachmentDto;
 use Mep\WebToolkitBundle\Exception\InvalidConfigurationException;
-use function Tinify\fromFile as compressFromFile;
+use function Tinify\fromFile;
 use Tinify\Tinify;
 
 /**
@@ -30,7 +30,14 @@ use Tinify\Tinify;
  */
 final class TinifyProcessor implements ProcessorInterface
 {
+    /**
+     * @var string
+     */
     public const IS_COMPRESSED = 'tinify_compressed';
+
+    /**
+     * @var string
+     */
     public const IS_DUMMY = 'tinify_dummy';
 
     public function __construct(
@@ -46,33 +53,33 @@ final class TinifyProcessor implements ProcessorInterface
         }
     }
 
-    public function supports(UnprocessedAttachmentDto $attachment): bool
+    public function supports(UnprocessedAttachmentDto $unprocessedAttachmentDto): bool
     {
         if (
-            ! isset($attachment->processorsOptions['compress']) ||
-                true !== $attachment->processorsOptions['compress']
+            ! isset($unprocessedAttachmentDto->processorsOptions['compress']) ||
+                true !== $unprocessedAttachmentDto->processorsOptions['compress']
         ) {
             return false;
         }
 
-        return in_array(mb_strtolower($attachment->mimeType), ['image/jpeg', 'image/png'], true);
+        return in_array(mb_strtolower($unprocessedAttachmentDto->mimeType), ['image/jpeg', 'image/png'], true);
     }
 
-    public function run(UnprocessedAttachmentDto $attachment): UnprocessedAttachmentDto
+    public function run(UnprocessedAttachmentDto $unprocessedAttachmentDto): UnprocessedAttachmentDto
     {
         if (! $this->dummyMode) {
-            $tinifyFile = compressFromFile($attachment->file->getRealPath());
-            $tinifyFile->toFile($attachment->file->getRealPath());
+            $tinifyFile = fromFile($unprocessedAttachmentDto->file->getRealPath());
+            $tinifyFile->toFile($unprocessedAttachmentDto->file->getRealPath());
 
-            clearstatcache(true, $attachment->file->getRealPath());
-            $attachment->fileSize = $attachment->file->getSize();
+            clearstatcache(true, $unprocessedAttachmentDto->file->getRealPath());
+            $unprocessedAttachmentDto->fileSize = $unprocessedAttachmentDto->file->getSize();
         } else {
-            $attachment->metadata[self::IS_DUMMY] = true;
+            $unprocessedAttachmentDto->metadata[self::IS_DUMMY] = true;
         }
 
-        $attachment->metadata[self::IS_COMPRESSED] = true;
-        unset($attachment->processorsOptions['compress']);
+        $unprocessedAttachmentDto->metadata[self::IS_COMPRESSED] = true;
+        unset($unprocessedAttachmentDto->processorsOptions['compress']);
 
-        return $attachment;
+        return $unprocessedAttachmentDto;
     }
 }

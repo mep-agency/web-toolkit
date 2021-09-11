@@ -34,7 +34,7 @@ final class TemplateRenderer
     /**
      * @param array<string, mixed> $parameters
      */
-    public function render(TemplateIdentifierInterface $templateIdentifier, array $parameters = []): Email
+    public function render(TemplateIdentifierInterface $templateIdentifier, array $parameters = []): ?Email
     {
         foreach ($this->templateProviders as $templateProvider) {
             if ($templateProvider->supports($templateIdentifier)) {

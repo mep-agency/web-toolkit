@@ -34,9 +34,9 @@ use Symfony\Component\Validator\Validation;
  */
 final class AdminAttachmentUploadApiType extends AdminAttachmentType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $formBuilder, array $options): void
     {
-        $builder
+        $formBuilder
             ->add('file', FileType::class, [
                 'constraints' => [
                     new AttachmentUploadedFile(
@@ -51,38 +51,41 @@ final class AdminAttachmentUploadApiType extends AdminAttachmentType
         ;
     }
 
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $formView, FormInterface $form, array $options): void
     {
         throw new RuntimeException('This FormType is meant for back end processing only.');
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $optionsResolver)
     {
-        parent::configureOptions($resolver);
+        parent::configureOptions($optionsResolver);
 
-        $resolver->setDefault('data_class', AdminAttachmentUploadDto::class);
-        $resolver->setDefault(self::METADATA, '{}');
-        $resolver->setDefault(self::PROCESSORS_OPTIONS, '{}');
+        $optionsResolver->setDefault('data_class', AdminAttachmentUploadDto::class);
+        $optionsResolver->setDefault(self::METADATA, '{}');
+        $optionsResolver->setDefault(self::PROCESSORS_OPTIONS, '{}');
 
-        $resolver->setAllowedTypes(self::METADATA, 'string');
-        $resolver->setAllowedTypes(self::PROCESSORS_OPTIONS, 'string');
+        $optionsResolver->setAllowedTypes(self::METADATA, 'string');
+        $optionsResolver->setAllowedTypes(self::PROCESSORS_OPTIONS, 'string');
 
-        $resolver->setNormalizer(self::METADATA, function (Options $options, $value) {
+        $optionsResolver->setNormalizer(self::METADATA, function (Options $options, $value) {
             return Json::decode($value, Json::FORCE_ARRAY);
         });
-        $resolver->setNormalizer(self::PROCESSORS_OPTIONS, function (Options $options, $value) {
+        $optionsResolver->setNormalizer(self::PROCESSORS_OPTIONS, function (Options $options, $value) {
             return Json::decode($value, Json::FORCE_ARRAY);
         });
 
-        $associativeArrayOfScalarValuesValidator = function ($value) {
+        $associativeArrayOfScalarValuesValidator = function ($value): bool {
             $value = Json::decode($value, Json::FORCE_ARRAY);
 
-            $violations = Validation::createValidator()->validate($value, new AssociativeArrayOfScalarValues());
+            $constraintViolationList = Validation::createValidator()->validate(
+                $value,
+                new AssociativeArrayOfScalarValues(),
+            );
 
-            return 0 === $violations->count();
+            return 0 === $constraintViolationList->count();
         };
-        $resolver->setAllowedValues(self::METADATA, $associativeArrayOfScalarValuesValidator);
-        $resolver->setAllowedValues(self::PROCESSORS_OPTIONS, $associativeArrayOfScalarValuesValidator);
+        $optionsResolver->setAllowedValues(self::METADATA, $associativeArrayOfScalarValuesValidator);
+        $optionsResolver->setAllowedValues(self::PROCESSORS_OPTIONS, $associativeArrayOfScalarValuesValidator);
     }
 
     public function getBlockPrefix(): string
@@ -91,7 +94,7 @@ final class AdminAttachmentUploadApiType extends AdminAttachmentType
         return '';
     }
 
-    public function getParent()
+    public function getParent(): string
     {
         return FormType::class;
     }

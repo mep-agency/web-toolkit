@@ -35,7 +35,7 @@ abstract class AbstractTranslatableFieldConfigurator implements FieldConfigurato
     ) {
     }
 
-    public function supports(FieldDto $field, EntityDto $entityDto): bool
+    public function supports(FieldDto $fieldDto, EntityDto $entityDto): bool
     {
         $entityFqcn = $this->getTranslatableFqcn($entityDto);
 
@@ -44,8 +44,8 @@ abstract class AbstractTranslatableFieldConfigurator implements FieldConfigurato
         }
 
         return
-            ! property_exists($entityFqcn, $field->getProperty())
-            && property_exists($this->getTranslationFqcn($entityDto), $field->getProperty());
+            ! property_exists($entityFqcn, $fieldDto->getProperty())
+            && property_exists($this->getTranslationFqcn($entityDto), $fieldDto->getProperty());
     }
 
     /**
@@ -64,7 +64,7 @@ abstract class AbstractTranslatableFieldConfigurator implements FieldConfigurato
         return $this->getTranslatableFqcn($entityDto)::getTranslationEntityClass();
     }
 
-    protected function getFieldPropertyPath(FieldDto $field, EntityDto $entityDto): string
+    protected function getFieldPropertyPath(FieldDto $fieldDto, EntityDto $entityDto): string
     {
         /** @var TranslatableInterface $instance */
         $instance = $entityDto->getInstance();
@@ -73,6 +73,6 @@ abstract class AbstractTranslatableFieldConfigurator implements FieldConfigurato
         ;
         $currentLocale = $this->localeProvider->provideCurrentLocale();
 
-        return ($isNew ? 'newTranslations[' : 'translations[').$currentLocale.'].'.$field->getProperty();
+        return ($isNew ? 'newTranslations[' : 'translations[').$currentLocale.'].'.$fieldDto->getProperty();
     }
 }

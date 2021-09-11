@@ -29,7 +29,7 @@ final class EditorJsContentNormalizer implements DenormalizerInterface
     ) {
     }
 
-    public function denormalize($data, string $type, string $format = null, array $context = [])
+    public function denormalize($data, string $type, string $format = null, array $context = []): object
     {
         $data['time'] = (string) $data['time'];
 
@@ -44,7 +44,7 @@ final class EditorJsContentNormalizer implements DenormalizerInterface
         return $this->objectNormalizer->denormalize($data, $type, $format, $context);
     }
 
-    public function supportsDenormalization($data, string $type, string $format = null)
+    public function supportsDenormalization($data, string $type, string $format = null): bool
     {
         return is_array($data) && EditorJsContent::class === $type && 'json' === $format;
     }
