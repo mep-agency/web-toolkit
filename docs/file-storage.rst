@@ -8,20 +8,28 @@ To make the system work, you should follow the next steps.
 Controller
 ----------
 
-Autowire ``FileStorageDriverInterface`` and use its methods to store, get public URL and remove the file::
+Autowire ``FileStorageManager`` and use its methods to store, get public URL and remove the file::
 
     // src/Controller/StorageController.php
 
     // ...
-    use Mep\WebToolkitBundle\Contract\FileStorage\FileStorageDriverInterface;
+    use Mep\WebToolkitBundle\Contract\FileStorage\FileStorageManager;
 
     class StorageController extends AbstractController
     {
         #[Route('/storage', name: 'storage')]
-        public function storage(FileStorageDriverInterface $fileStorageDriver): Response
+        public function storage(FileStorageManager $fileStorageManager): Response
         {
-            // Stores file with some optional metadata...
-            $attachment = $fileStorageDriver->store(new File('/path/to/file.extension'), ['metadata' => 'Metadata']);
+            // Stores a file with some optional metadata...
+            $attachment = $fileStorageDriver->store(
+                new File('/path/to/file.extension'),
+                // A custom string that can be used to help garbage collection
+                'my_custom_context',
+                // Custom metadata
+                ['metadata' => 'Metadata'],
+                // Options for file processors
+                [],
+            );
 
             // Gets public URL...
             $attachmentPublicUrl = $fileStorageDriver->getPublicUrl($attachment)
@@ -51,7 +59,7 @@ Change ``type`` to ``attribute`` in ``doctrine.yaml``::
         prefix: 'App\Entity'
         alias: App
 
-Add ``LocalFileStorageDriver`` service in ``services.yaml`` to implement local storage in the ``dev`` environment::
+Add the ``Mep\WebToolkitBundle\FileStorage\Driver\Local`` service in ``services.yaml`` to implement local storage in the ``dev`` environment::
 
     // config/services.yaml
 
@@ -62,7 +70,7 @@ Add ``LocalFileStorageDriver`` service in ``services.yaml`` to implement local s
         # add more service definitions when explicit configuration is needed
         # please note that last definitions always *replace* previous ones
         mep_web_toolkit.file_storage_driver:
-            class: Mep\WebToolkitBundle\FileStorage\Driver\LocalFileStorageDriver
+            class: Mep\WebToolkitBundle\FileStorage\Driver\Local
             arguments:
                 $storagePath: '%kernel.project_dir%/public/storage'
                 $publicUrlPathPrefix: '/storage'
@@ -71,7 +79,7 @@ Add ``LocalFileStorageDriver`` service in ``services.yaml`` to implement local s
 
     // ...
 
-For ``prod`` environment instead add ``S3FileStorageDriver`` service in ``services.yaml``::
+For ``prod`` environment add the ``Mep\WebToolkitBundle\FileStorage\Driver\S3`` service in ``services.yaml``::
 
     // config/prod/services.yaml
 
@@ -82,7 +90,7 @@ For ``prod`` environment instead add ``S3FileStorageDriver`` service in ``servic
         # add more service definitions when explicit configuration is needed
         # please note that last definitions always *replace* previous ones
         mep_web_toolkit.file_storage_driver:
-            class: Mep\WebToolkitBundle\FileStorage\Driver\S3FileStorageDriver
+            class: Mep\WebToolkitBundle\FileStorage\Driver\S3
             arguments:
                 $region: 'region'
                 $endpointUrl: 'endpointUrl'

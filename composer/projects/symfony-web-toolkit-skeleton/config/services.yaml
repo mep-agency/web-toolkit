@@ -26,7 +26,7 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
     mep_web_toolkit.file_storage_driver:
-        class: Mep\WebToolkitBundle\FileStorage\Driver\LocalFileStorageDriver
+        class: Mep\WebToolkitBundle\FileStorage\Driver\Local
         arguments:
             $storagePath: '%kernel.project_dir%/public/storage'
             $publicUrlPathPrefix: '/storage'
