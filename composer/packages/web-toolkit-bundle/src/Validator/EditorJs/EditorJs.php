@@ -108,10 +108,6 @@ final class EditorJs extends Constraint
             $optionsResolver = new OptionsResolver();
 
             switch ($tool) {
-                case Block\Paragraph::class:
-                    // No config params...
-
-                    break;
                 case Block\Header::class:
                     // see https://github.com/editor-js/header#config-params
                     $optionsResolver->define('placeholder')
@@ -128,16 +124,6 @@ final class EditorJs extends Constraint
                         ->default(1)
                         ->allowedTypes('int')
                     ;
-
-                    break;
-                case Block\NestedList::class:
-                    // see https://github.com/editor-js/nested-list#config-params
-                    // No config params...
-
-                    break;
-                case Block\Delimiter::class:
-                    // see https://github.com/editor-js/delimiter#config-params
-                    // No config params...
 
                     break;
                 case Block\Quote::class:
@@ -190,11 +176,6 @@ final class EditorJs extends Constraint
                         ->allowedTypes('array')
                     ;
                     $optionsResolver->setAllowedValues('processorsOptions', $associativeArrayOfScalarValuesValidator);
-
-                    break;
-                case Block\Embed::class:
-                    // see https://github.com/editor-js/embed#available-configuration
-                    // No config params...
 
                     break;
                 case Block\Table::class:

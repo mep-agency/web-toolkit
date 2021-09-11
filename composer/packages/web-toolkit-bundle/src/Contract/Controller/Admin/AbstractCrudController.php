@@ -262,7 +262,7 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
         $metadata = $form->getConfig()
             ->getOption(AdminAttachmentType::METADATA)
         ;
-        /** @var array<string, scalar> $metadata */
+        /** @var array<string, scalar> $processorsOptions */
         $processorsOptions = $form->getConfig()
             ->getOption(AdminAttachmentType::PROCESSORS_OPTIONS)
         ;

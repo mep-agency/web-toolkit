@@ -21,12 +21,18 @@ use Symplify\MonorepoBuilder\Release\Contract\ReleaseWorker\ReleaseWorkerInterfa
  */
 final class TemporaryReleaseWorker implements ReleaseWorkerInterface
 {
-    public function getDescription(Version $version): string
+    /**
+     * @param Version $version
+     */
+    public function getDescription($version): string
     {
         return 'Release command is temporary disabled until full implementation is provided';
     }
 
-    public function work(Version $version): void
+    /**
+     * @param Version $version
+     */
+    public function work($version): void
     {
         // Nothing to do here...
     }
