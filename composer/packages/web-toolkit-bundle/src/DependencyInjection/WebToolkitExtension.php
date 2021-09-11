@@ -16,7 +16,6 @@ namespace Mep\WebToolkitBundle\DependencyInjection;
 use Mep\WebToolkitBundle\Contract\FileStorage\GarbageCollectorInterface;
 use Mep\WebToolkitBundle\Contract\FileStorage\ProcessorInterface;
 use Mep\WebToolkitBundle\Contract\Mail\TemplateProviderInterface;
-use Mep\WebToolkitBundle\Dql\JsonExtract;
 use Mep\WebToolkitBundle\WebToolkitBundle;
 use ReflectionClass;
 use Symfony\Component\Config\FileLocator;
@@ -63,11 +62,6 @@ final class WebToolkitExtension extends Extension implements PrependExtensionInt
             'orm' => [
                 'mappings' => [
                     (new ReflectionClass(WebToolkitBundle::class))->getShortName() => 'attribute',
-                ],
-                'dql' => [
-                    'string_functions' => [
-                        'JSON_EXTRACT' => JsonExtract::class,
-                    ],
                 ],
             ],
         ]);

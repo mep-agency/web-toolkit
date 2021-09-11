@@ -21,8 +21,7 @@
         "symfony/security-bundle": "^5.3",
         "symfony/serializer": "5.3.*",
         "symfony/validator": "^5.3",
-        "tinify/tinify": "^1.5",
-        "scienta/doctrine-json-functions": "^4.3"
+        "tinify/tinify": "^1.5"
     },
     "require-dev": {
         "phpstan/phpstan": "^0.12",
