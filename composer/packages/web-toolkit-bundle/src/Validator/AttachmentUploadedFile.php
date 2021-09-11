@@ -18,7 +18,7 @@ namespace Mep\WebToolkitBundle\Validator;
  *
  * @author Marco Lipparini <developer@liarco.net>
  */
-final class ValidAttachmentFile extends ValidAttachment
+final class AttachmentUploadedFile extends AttachmentFile
 {
     // Nothing to do here...
 }

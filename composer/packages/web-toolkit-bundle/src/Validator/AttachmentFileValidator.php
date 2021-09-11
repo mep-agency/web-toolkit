@@ -22,11 +22,11 @@ use Symfony\Component\Validator\ConstraintValidator;
  *
  * @author Marco Lipparini <developer@liarco.net>
  */
-class ValidAttachmentValidator extends ConstraintValidator
+class AttachmentFileValidator extends ConstraintValidator
 {
     /**
      * @param AttachmentEntity|string|null $attachment
-     * @param ValidAttachment $constraint
+     * @param AttachmentFile $constraint
      */
     public function validate($attachment, Constraint $constraint)
     {

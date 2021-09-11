@@ -26,11 +26,11 @@ use Symfony\Component\Validator\Constraint;
  *
  * @author Marco Lipparini <developer@liarco.net>
  */
-final class ValidAttachmentFileValidator extends ValidAttachmentValidator
+final class AttachmentUploadedFileValidator extends AttachmentFileValidator
 {
     /**
      * @param UploadedFile|string|null $file
-     * @param ValidAttachmentFile $constraint
+     * @param AttachmentUploadedFile $constraint
      */
     public function validate($file, Constraint $constraint)
     {

@@ -22,7 +22,7 @@ use Symfony\Component\Validator\Constraint;
  * @author Marco Lipparini <developer@liarco.net>
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class ValidAttachment extends Constraint
+class AttachmentFile extends Constraint
 {
     /**
      * Please note that processors options can't be validated, but they are used for type-guessing.

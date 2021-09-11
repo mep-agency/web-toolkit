@@ -4,7 +4,7 @@ namespace Mep\WebToolkitBundle\Form\TypeGuesser;
 
 use Mep\WebToolkitBundle\Entity\Attachment;
 use Mep\WebToolkitBundle\Form\AdminAttachmentType;
-use Mep\WebToolkitBundle\Validator\ValidAttachment;
+use Mep\WebToolkitBundle\Validator\AttachmentFile;
 use ReflectionProperty;
 use Symfony\Component\Form\FormTypeGuesserInterface;
 use Symfony\Component\Form\Guess\Guess;
@@ -23,8 +23,8 @@ final class AdminAttachmentTypeGuesser implements FormTypeGuesserInterface
             return null;
         }
 
-        /** @var ?ValidAttachment $validAttachmentAttribute */
-        $validAttachmentAttribute = ($reflectionProperty->getAttributes(ValidAttachment::class)[0] ?? null)
+        /** @var ?AttachmentFile $validAttachmentAttribute */
+        $validAttachmentAttribute = ($reflectionProperty->getAttributes(AttachmentFile::class)[0] ?? null)
             ?->newInstance();
 
         return new TypeGuess(

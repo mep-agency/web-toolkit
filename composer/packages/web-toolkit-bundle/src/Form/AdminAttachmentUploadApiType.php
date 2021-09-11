@@ -15,7 +15,7 @@ namespace Mep\WebToolkitBundle\Form;
 
 use Mep\WebToolkitBundle\Dto\AdminAttachmentUploadDto;
 use Mep\WebToolkitBundle\Validator\AssociativeArrayOfScalarValues;
-use Mep\WebToolkitBundle\Validator\ValidAttachmentFile;
+use Mep\WebToolkitBundle\Validator\AttachmentUploadedFile;
 use Nette\Utils\Json;
 use RuntimeException;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -39,7 +39,7 @@ final class AdminAttachmentUploadApiType extends AdminAttachmentType
         $builder
             ->add('file', FileType::class, [
                 'constraints' => [
-                    new ValidAttachmentFile(
+                    new AttachmentUploadedFile(
                         $options[self::MAX_SIZE],
                         $options[self::ALLOWED_MIME_TYPES],
                         $options[self::ALLOWED_NAME_PATTERN],
