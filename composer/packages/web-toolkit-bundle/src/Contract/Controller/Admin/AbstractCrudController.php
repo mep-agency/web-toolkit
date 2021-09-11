@@ -42,6 +42,7 @@ use Mep\WebToolkitBundle\Contract\Repository\AbstractSingleInstanceRepository;
 use Mep\WebToolkitBundle\Contract\Repository\LocalizedRepositoryInterface;
 use Mep\WebToolkitBundle\Dto\AdminAttachmentUploadDto;
 use Mep\WebToolkitBundle\FileStorage\FileStorageManager;
+use Mep\WebToolkitBundle\Form\AdminAttachmentType;
 use Mep\WebToolkitBundle\Form\AdminAttachmentUploadApiType;
 use RuntimeException;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -281,15 +282,18 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
         /** @var AdminAttachmentUploadDto $formData */
         $formData = $form->getData();
         /** @var array<string, scalar> $metadata */
-        $metadata = $form->getConfig()->getOption(AdminAttachmentUploadApiType::METADATA);
+        $metadata = $form->getConfig()->getOption(AdminAttachmentType::METADATA);
         /** @var array<string, scalar> $metadata */
-        $processorsOptions = $form->getConfig()->getOption(AdminAttachmentUploadApiType::PROCESSORS_OPTIONS);
+        $processorsOptions = $form->getConfig()->getOption(AdminAttachmentType::PROCESSORS_OPTIONS);
 
-        if (! isset($metadata['context'])) {
-            $metadata['context'] = $form->getConfig()->getOption(AdminAttachmentUploadApiType::CONTEXT);
-        }
-
-        $attachment = $this->fileStorageManager->store($formData->file, $metadata, $processorsOptions);
+        $attachment = $this->fileStorageManager
+            ->store(
+                $formData->file,
+                $form->getConfig()
+                    ->getOption(AdminAttachmentType::CONTEXT),
+                $metadata,
+                $processorsOptions,
+            );
 
         return new JsonResponse($this->normalizer->normalize($attachment, 'json'));
     }

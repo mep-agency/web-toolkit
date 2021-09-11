@@ -43,7 +43,7 @@ final class ValidAttachmentFileValidator extends ValidAttachmentValidator
                 ->addViolation();
         }
 
-        $unprocessedAttachment = new UnprocessedAttachmentDto($file, $constraint->metadata);
+        $unprocessedAttachment = new UnprocessedAttachmentDto($file, null, $constraint->metadata);
 
         parent::validate($unprocessedAttachment->createAttachment(), $constraint);
     }

@@ -11,10 +11,10 @@
 
 declare(strict_types=1);
 
-namespace Mep\WebToolkitBundle\Command;
+namespace Mep\WebToolkitBundle\Command\FileStorage;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Mep\WebToolkitBundle\Contract\Attachment\AttachmentsGarbageCollectorInterface;
+use Mep\WebToolkitBundle\Contract\FileStorage\GarbageCollectorInterface;
 use Mep\WebToolkitBundle\FileStorage\FileStorageManager;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -27,13 +27,13 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * @author Marco Lipparini <developer@liarco.net>
  */
 #[AsCommand(
-    name: 'mwt:attachments:garbage-collection',
+    name: 'mwt:storage:garbage-collection',
     description: 'Removes unused attachments',
 )]
-class AttachmentsGarbageCollectionCommand extends Command
+class GarbageCollectionCommand extends Command
 {
     /**
-     * @param iterable<AttachmentsGarbageCollectorInterface> $garbageCollectors
+     * @param iterable<GarbageCollectorInterface> $garbageCollectors
      */
     public function __construct(
         private EntityManagerInterface $entityManager,
@@ -67,7 +67,7 @@ class AttachmentsGarbageCollectionCommand extends Command
                 $garbageAttachmentsLog[] = [
                     $garbageAttachment->getId(),
                     $this->fileStorageManager->getPublicUrl($garbageAttachment),
-                    $garbageAttachment->get('context'),
+                    $garbageAttachment->getContext(),
                 ];
             }
         }

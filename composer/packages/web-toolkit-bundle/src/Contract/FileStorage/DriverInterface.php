@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\File\File;
  *
  * @author Marco Lipparini <developer@liarco.net>
  */
-interface FileStorageDriverInterface
+interface DriverInterface
 {
     public function store(File $file, Attachment $attachment): void;
 

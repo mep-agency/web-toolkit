@@ -13,18 +13,16 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Contract\FileStorage;
 
-use Mep\WebToolkitBundle\Dto\UnprocessedAttachmentDto;
-use Mep\WebToolkitBundle\Exception\FileStorage\InvalidProcessorOptionsException;
+use Doctrine\ORM\EntityManagerInterface;
+use Mep\WebToolkitBundle\Entity\Attachment;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
  */
-interface FileStorageProcessorInterface
+interface GarbageCollectorInterface
 {
     /**
-     * @throws InvalidProcessorOptionsException
+     * @return iterable<Attachment>
      */
-    public function supports(UnprocessedAttachmentDto $attachment): bool;
-
-    public function run(UnprocessedAttachmentDto $attachment): UnprocessedAttachmentDto;
+    public function collect(EntityManagerInterface $entityManager, bool $dryRun): iterable;
 }

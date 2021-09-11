@@ -18,7 +18,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\Configurator\BooleanConfigurator;
 use EasyCorp\Bundle\EasyAdminBundle\Provider\AdminContextProvider;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface;
-use Mep\WebToolkitBundle\Command\AttachmentsGarbageCollectionCommand;
+use Mep\WebToolkitBundle\Command\FileStorage\GarbageCollectionCommand;
 use Mep\WebToolkitBundle\Entity\Attachment;
 use Mep\WebToolkitBundle\EventListener\AttachmentLifecycleEventListener;
 use Mep\WebToolkitBundle\EventListener\ForceSingleInstanceEventListener;
@@ -28,6 +28,7 @@ use Mep\WebToolkitBundle\Field\Configurator\TranslatableBooleanConfigurator;
 use Mep\WebToolkitBundle\Field\Configurator\TranslatableFieldConfigurator;
 use Mep\WebToolkitBundle\Field\Configurator\TranslatableFieldPreConfigurator;
 use Mep\WebToolkitBundle\FileStorage\FileStorageManager;
+use Mep\WebToolkitBundle\FileStorage\GarbageCollector\AssociationContextGarbageCollector;
 use Mep\WebToolkitBundle\FileStorage\Processor\TinifyProcessor;
 use Mep\WebToolkitBundle\Form\AdminAttachmentUploadApiType;
 use Mep\WebToolkitBundle\Form\AdminAttachmentType;
@@ -108,14 +109,14 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->tag(WebToolkitBundle::TAG_MAIL_TEMPLATE_PROVIDER)
     ;
 
-    // Attachments support
+    // File storage support
     $services->set(WebToolkitBundle::SERVICE_FILE_STORAGE_MANAGER, FileStorageManager::class)
         ->arg(0, new Reference(WebToolkitBundle::SERVICE_FILE_STORAGE_DRIVER))
         ->arg(1, new Reference(EntityManagerInterface::class))
         ->arg(2, tagged_iterator(WebToolkitBundle::TAG_FILE_STORAGE_PROCESSOR))
         ->alias(FileStorageManager::class, WebToolkitBundle::SERVICE_FILE_STORAGE_MANAGER)
     ;
-    $services->set(WebToolkitBundle::SERVICE_ATTACHMENTS_GARBAGE_COLLECTION_COMMAND, AttachmentsGarbageCollectionCommand::class)
+    $services->set(WebToolkitBundle::SERVICE_FILE_STORAGE_GARBAGE_COLLECTION_COMMAND, GarbageCollectionCommand::class)
         ->arg(0, new Reference(EntityManagerInterface::class))
         ->arg(1, new Reference(WebToolkitBundle::SERVICE_FILE_STORAGE_MANAGER))
         ->arg(2, tagged_iterator(WebToolkitBundle::TAG_ATTACHMENTS_GARBAGE_COLLECTOR))
@@ -177,11 +178,11 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->tag(EasyAdminExtension::TAG_FIELD_CONFIGURATOR)
     ;
 
-    // Attachment garbage collectors
-    $services->set(WebToolkitBundle::SERVICE_CONTEXT_GARBAGE_COLLECTOR, \Mep\WebToolkitBundle\FileStorage\GarbageCollector\ContextGarbageCollector::class)
+    // File storage garbage collectors
+    $services->set(WebToolkitBundle::SERVICE_CONTEXT_GARBAGE_COLLECTOR, AssociationContextGarbageCollector::class)
         ->tag(WebToolkitBundle::TAG_ATTACHMENTS_GARBAGE_COLLECTOR);
 
-    // FileStorage processors
+    // File storage processors
     $services->set(WebToolkitBundle::SERVICE_TINIFY_PROCESSOR, TinifyProcessor::class)
         ->arg(0, $_ENV['TINIFY_API_KEY'] ?? null)
         ->arg(1, ! isset($_ENV['TINIFY_API_KEY']) && $_ENV['APP_ENV'] === 'dev')

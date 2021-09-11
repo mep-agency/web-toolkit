@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Mep\WebToolkitBundle\FileStorage;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Mep\WebToolkitBundle\Contract\FileStorage\FileStorageDriverInterface;
-use Mep\WebToolkitBundle\Contract\FileStorage\FileStorageProcessorInterface;
+use Mep\WebToolkitBundle\Contract\FileStorage\DriverInterface;
+use Mep\WebToolkitBundle\Contract\FileStorage\ProcessorInterface;
 use Mep\WebToolkitBundle\Dto\UnprocessedAttachmentDto;
 use Mep\WebToolkitBundle\Entity\Attachment;
 use Mep\WebToolkitBundle\Exception\FileStorage\InvalidProcessorOptionsException;
@@ -19,10 +19,10 @@ use Symfony\Component\HttpFoundation\File\File;
 final class FileStorageManager
 {
     /**
-     * @param iterable<FileStorageProcessorInterface> $processors
+     * @param iterable<ProcessorInterface> $processors
      */
     public function __construct(
-        private FileStorageDriverInterface $fileStorageDriver,
+        private DriverInterface $fileStorageDriver,
         private EntityManagerInterface $entityManager,
         private iterable $processors,
     ) {}
@@ -31,8 +31,12 @@ final class FileStorageManager
      * @param array<string, scalar> $metadata
      * @param array<string, scalar> $processorsOptions
      */
-    public function store(File $file, array $metadata = [], array $processorsOptions = []): Attachment
-    {
+    public function store(
+        File $file,
+        ?string $context = null,
+        array $metadata = [],
+        array $processorsOptions = [],
+    ): Attachment {
         if (! $file->getRealPath()) {
             throw new FileNotFoundException(
                 null,
@@ -42,7 +46,7 @@ final class FileStorageManager
             );
         }
 
-        $unprocessedAttachment = new UnprocessedAttachmentDto($file, $metadata, $processorsOptions);
+        $unprocessedAttachment = new UnprocessedAttachmentDto($file, $context, $metadata, $processorsOptions);
 
         // Run processors
         foreach ($this->processors as $processor) {

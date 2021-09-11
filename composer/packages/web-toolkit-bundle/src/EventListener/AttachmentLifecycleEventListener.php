@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Mep\WebToolkitBundle\EventListener;
 
 use Doctrine\Persistence\Event\LifecycleEventArgs;
-use Mep\WebToolkitBundle\Contract\FileStorage\FileStorageDriverInterface;
+use Mep\WebToolkitBundle\Contract\FileStorage\DriverInterface;
 use Mep\WebToolkitBundle\Entity\Attachment;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -25,7 +25,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 final class AttachmentLifecycleEventListener
 {
     public function __construct(
-        private FileStorageDriverInterface $fileStorageDriver,
+        private DriverInterface $fileStorageDriver,
         private ValidatorInterface $validator,
     ) {}
 

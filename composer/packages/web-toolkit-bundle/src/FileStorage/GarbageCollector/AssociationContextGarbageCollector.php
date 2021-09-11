@@ -16,8 +16,8 @@ namespace Mep\WebToolkitBundle\FileStorage\GarbageCollector;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr\Join;
 use Generator;
-use Mep\WebToolkitBundle\Contract\Attachment\AttachmentsGarbageCollectorInterface;
-use Mep\WebToolkitBundle\Dto\AttachmentContextDto;
+use Mep\WebToolkitBundle\Contract\FileStorage\GarbageCollectorInterface;
+use Mep\WebToolkitBundle\Dto\AttachmentAssociationContextDto;
 use Mep\WebToolkitBundle\Entity\Attachment;
 
 /**
@@ -26,7 +26,7 @@ use Mep\WebToolkitBundle\Entity\Attachment;
  *
  * @author Marco Lipparini <developer@liarco.net>
  */
-final class ContextGarbageCollector implements AttachmentsGarbageCollectorInterface
+final class AssociationContextGarbageCollector implements GarbageCollectorInterface
 {
     public function collect(EntityManagerInterface $entityManager, bool $dryRun): Generator
     {
@@ -38,8 +38,8 @@ final class ContextGarbageCollector implements AttachmentsGarbageCollectorInterf
                     $attachmentRepository = $entityManager->getRepository(Attachment::class);
                     $queryBuilder = $attachmentRepository->createQueryBuilder('a')
                         ->leftJoin($entity, 'p', Join::WITH, 'p.attachment = a.id')
-                        ->andWhere('p.' . $mapping['fieldName'] . ' IS NULL AND JSON_EXTRACT(a.metadata, \'$.context\') = :context')
-                        ->setParameter('context', (string) (new AttachmentContextDto($entity, $mapping['fieldName'])))
+                        ->andWhere('p.' . $mapping['fieldName'] . ' IS NULL AND a.context = :context')
+                        ->setParameter('context', (string) (new AttachmentAssociationContextDto($entity, $mapping['fieldName'])))
                     ;
 
                     yield from $queryBuilder->getQuery()->getResult();

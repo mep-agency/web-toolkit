@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Mep\WebToolkitBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Mep\WebToolkitBundle\FileStorage\GarbageCollector\AssociationContextGarbageCollector;
 use Mep\WebToolkitBundle\Validator\AssociativeArrayOfScalarValues;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints\Length;
@@ -55,6 +56,16 @@ class Attachment
         private int $fileSize,
 
         /**
+         * The context can be used to store data in order to help garbage collectors finding
+         * unused attachments.
+         *
+         * @see AssociationContextGarbageCollector
+         */
+        #[ORM\Column(type: 'string', length: 255, nullable: true)]
+        #[Length(max: 255)]
+        private ?string $context = null,
+
+        /**
          * @var array<string, scalar>
          */
         #[ORM\Column(type: 'json')]
@@ -82,6 +93,11 @@ class Attachment
     public function getFileSize(): int
     {
         return $this->fileSize;
+    }
+
+    public function getContext(): ?string
+    {
+        return $this->context;
     }
 
     /**

@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Form;
 
-use Mep\WebToolkitBundle\Dto\AttachmentContextDto;
+use Mep\WebToolkitBundle\Dto\AttachmentAssociationContextDto;
 use Mep\WebToolkitBundle\Entity\EditorJs\Block;
 use Mep\WebToolkitBundle\Entity\EditorJs\EditorJsContent;
 use Mep\WebToolkitBundle\Router\AttachmentsAdminApiUrlGenerator;
@@ -76,7 +76,7 @@ final class AdminEditorJsType extends AbstractType implements DataTransformerInt
 
                     $view->vars['tools_options'][Block::getTypeByClass(Block\Image::class)]['endpoint'] = $this->attachmentsAdminApiUrlGenerator->generate([
                         'csrf_token_id' => self::CSRF_TOKEN_ID_IMAGES,
-                        AdminAttachmentType::CONTEXT => (string) (new AttachmentContextDto(Block\Image::class, 'attachment')),
+                        AdminAttachmentType::CONTEXT => (string) (new AttachmentAssociationContextDto(Block\Image::class, 'attachment')),
                         AdminAttachmentType::MAX_SIZE => $options[self::TOOLS_OPTIONS][Block\Image::class]['maxSize'],
                         AdminAttachmentType::ALLOWED_MIME_TYPES => ['/image\/.+/'],
                         AdminAttachmentType::ALLOWED_NAME_PATTERN => null,
@@ -95,7 +95,7 @@ final class AdminEditorJsType extends AbstractType implements DataTransformerInt
 
                     $view->vars['tools_options'][Block::getTypeByClass(Block\Attaches::class)]['endpoint'] = $this->attachmentsAdminApiUrlGenerator->generate([
                         'csrf_token_id' => self::CSRF_TOKEN_ID_ATTACHMENTS,
-                        AdminAttachmentType::CONTEXT => (string) (new AttachmentContextDto(Block\Attaches::class, 'attachment')),
+                        AdminAttachmentType::CONTEXT => (string) (new AttachmentAssociationContextDto(Block\Attaches::class, 'attachment')),
                         AdminAttachmentType::MAX_SIZE => $options[self::TOOLS_OPTIONS][Block\Attaches::class]['maxSize'],
                         AdminAttachmentType::ALLOWED_MIME_TYPES => [],
                         AdminAttachmentType::ALLOWED_NAME_PATTERN => null,

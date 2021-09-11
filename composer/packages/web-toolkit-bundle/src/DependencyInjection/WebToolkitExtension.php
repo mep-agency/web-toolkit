@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\DependencyInjection;
 
-use Mep\WebToolkitBundle\Contract\Attachment\AttachmentsGarbageCollectorInterface;
-use Mep\WebToolkitBundle\Contract\FileStorage\FileStorageProcessorInterface;
+use Mep\WebToolkitBundle\Contract\FileStorage\GarbageCollectorInterface;
+use Mep\WebToolkitBundle\Contract\FileStorage\ProcessorInterface;
 use Mep\WebToolkitBundle\Contract\Mail\TemplateProviderInterface;
 use Mep\WebToolkitBundle\Dql\JsonExtract;
 use Mep\WebToolkitBundle\WebToolkitBundle;
@@ -32,13 +32,13 @@ final class WebToolkitExtension extends Extension implements PrependExtensionInt
 {
     public function load(array $configs, ContainerBuilder $container)
     {
-        $container->registerForAutoconfiguration(FileStorageProcessorInterface::class)
+        $container->registerForAutoconfiguration(ProcessorInterface::class)
             ->addTag(WebToolkitBundle::TAG_FILE_STORAGE_PROCESSOR);
 
         $container->registerForAutoconfiguration(TemplateProviderInterface::class)
             ->addTag(WebToolkitBundle::TAG_MAIL_TEMPLATE_PROVIDER);
 
-        $container->registerForAutoconfiguration(AttachmentsGarbageCollectorInterface::class)
+        $container->registerForAutoconfiguration(GarbageCollectorInterface::class)
             ->addTag(WebToolkitBundle::TAG_ATTACHMENTS_GARBAGE_COLLECTOR);
 
         $loader = new PhpFileLoader(

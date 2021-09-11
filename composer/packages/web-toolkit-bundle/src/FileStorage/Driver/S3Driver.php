@@ -6,7 +6,7 @@ namespace Mep\WebToolkitBundle\FileStorage\Driver;
 
 use Aws\S3\S3Client;
 use JetBrains\PhpStorm\Pure;
-use Mep\WebToolkitBundle\Contract\FileStorage\FileStorageDriverInterface;
+use Mep\WebToolkitBundle\Contract\FileStorage\DriverInterface;
 use Mep\WebToolkitBundle\Entity\Attachment;
 use Symfony\Component\HttpFoundation\File\File;
 
@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\File\File;
  *
  * @author Marco Lipparini <developer@liarco.net>
  */
-final class S3FileStorageDriver implements FileStorageDriverInterface
+final class S3Driver implements DriverInterface
 {
     private S3Client $s3Client;
 

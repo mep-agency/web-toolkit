@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\FileStorage\Processor;
 
-use Mep\WebToolkitBundle\Contract\FileStorage\FileStorageProcessorInterface;
+use Mep\WebToolkitBundle\Contract\FileStorage\ProcessorInterface;
 use Mep\WebToolkitBundle\Dto\UnprocessedAttachmentDto;
 use Mep\WebToolkitBundle\Exception\InvalidConfigurationException;
 use function Tinify\fromFile as compressFromFile;
@@ -29,7 +29,7 @@ use Tinify\Tinify;
  * @author Marco Lipparini <developer@liarco.net>
  * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
-final class TinifyProcessor implements FileStorageProcessorInterface
+final class TinifyProcessor implements ProcessorInterface
 {
     public const IS_COMPRESSED = 'tinify_compressed';
     public const IS_DUMMY = 'tinify_dummy';

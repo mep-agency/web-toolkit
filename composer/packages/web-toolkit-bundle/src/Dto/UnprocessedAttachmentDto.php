@@ -48,6 +48,8 @@ final class UnprocessedAttachmentDto
         #[NotNull]
         public File $file,
 
+        public ?string $context = null,
+
         #[AssociativeArrayOfScalarValues]
         public array $metadata = [],
 
@@ -69,6 +71,7 @@ final class UnprocessedAttachmentDto
             $this->fileName,
             $this->mimeType,
             $this->fileSize,
+            $this->context,
             $this->metadata,
         );
     }

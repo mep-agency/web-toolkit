@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Mep\WebToolkitBundle\FileStorage\Driver;
 
 use JetBrains\PhpStorm\Pure;
-use Mep\WebToolkitBundle\Contract\FileStorage\FileStorageDriverInterface;
+use Mep\WebToolkitBundle\Contract\FileStorage\DriverInterface;
 use Mep\WebToolkitBundle\Entity\Attachment;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  *
  * @author Marco Lipparini <developer@liarco.net>
  */
-final class LocalFileStorageDriver implements FileStorageDriverInterface
+final class LocalDriver implements DriverInterface
 {
     private Filesystem $filesystem;
 

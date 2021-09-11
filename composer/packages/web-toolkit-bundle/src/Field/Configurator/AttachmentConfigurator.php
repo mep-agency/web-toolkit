@@ -18,7 +18,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto;
 use Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface;
 use Mep\WebToolkitBundle\Contract\Field\Configurator\AbstractTranslatableFieldConfigurator;
-use Mep\WebToolkitBundle\Dto\AttachmentContextDto;
+use Mep\WebToolkitBundle\Dto\AttachmentAssociationContextDto;
 use Mep\WebToolkitBundle\Field\AttachmentField;
 use Mep\WebToolkitBundle\Form\AdminAttachmentType;
 use Symfony\Component\Form\FormRegistryInterface;
@@ -49,7 +49,7 @@ final class AttachmentConfigurator extends AbstractTranslatableFieldConfigurator
 
         $field->setFormTypeOption(
             AdminAttachmentType::CONTEXT,
-            (string) (new AttachmentContextDto(
+            (string) (new AttachmentAssociationContextDto(
                 $entityFqcn,
                 $field->getProperty(),
             )),
