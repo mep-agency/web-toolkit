@@ -64,7 +64,6 @@ interface UploadResponseFormat {
 }
 
 interface CustomImageToolConfig {
-  context: string,
   api_token: string,
   endpoint: string,
   captionPlaceholder: string|null,
@@ -104,7 +103,6 @@ class CustomImageTool extends ImageTool implements BlockTool
         captionPlaceholder: config?.captionPlaceholder,
         additionalRequestData: {
           _token: config?.api_token,
-          context: config?.context,
         },
         additionalRequestHeaders: {},
         buttonContent: config?.buttonContent,

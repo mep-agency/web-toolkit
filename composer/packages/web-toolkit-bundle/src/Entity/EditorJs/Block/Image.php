@@ -28,8 +28,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'mwt_editor_js_image')]
 class Image extends Block
 {
-    public const ATTACHMENTS_CONTEXT = 'editorJsImageBlock';
-
     public function __construct(
         string $id,
 

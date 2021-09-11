@@ -28,8 +28,6 @@ use Doctrine\ORM\Mapping as ORM;
 ##[ORM\Table(name: 'mwt_editor_js_attaches')]
 class Attaches extends Block
 {
-    public const ATTACHMENTS_CONTEXT = 'editorJsAttachesBlock';
-
     public function __construct(
         string $id,
     ) {

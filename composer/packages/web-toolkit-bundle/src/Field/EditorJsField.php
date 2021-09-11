@@ -15,7 +15,6 @@ namespace Mep\WebToolkitBundle\Field;
 
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FieldTrait;
-use Mep\WebToolkitBundle\Form\AdminAttachmentType;
 use Mep\WebToolkitBundle\Form\AdminEditorJsType;
 
 /**
@@ -34,7 +33,6 @@ final class EditorJsField implements FieldInterface
             ->setProperty($propertyName)
             ->setLabel($label)
             ->setFormType(AdminEditorJsType::class)
-            ->setFormTypeOption(AdminAttachmentType::PROPERTY_PATH, $propertyName)
             ->setDefaultColumns('col-md-9 col-xxl-7')
             ->addCssClass('mwt-editorjs-field')
             ->addCssFiles('bundles/webtoolkit/editorjs-field.css')

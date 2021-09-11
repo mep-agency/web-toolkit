@@ -38,7 +38,7 @@ use Symfony\Component\Validator\Validation;
  */
 class AdminAttachmentType extends AbstractType implements DataTransformerInterface
 {
-    public const PROPERTY_PATH = 'attachment_property_path';
+    public const CONTEXT = 'context';
 
     public const MAX_SIZE = 'max_size';
 
@@ -70,7 +70,7 @@ class AdminAttachmentType extends AbstractType implements DataTransformerInterfa
     {
         $view->vars['api_url'] = $this->attachmentsAdminApiUrlGenerator->generate([
             'csrf_token_id' => self::CSRF_TOKEN_ID,
-            self::PROPERTY_PATH => $options[self::PROPERTY_PATH],
+            self::CONTEXT => $options[self::CONTEXT],
             self::MAX_SIZE => $options[self::MAX_SIZE],
             self::ALLOWED_MIME_TYPES => $options[self::ALLOWED_MIME_TYPES],
             self::ALLOWED_NAME_PATTERN => $options[self::ALLOWED_NAME_PATTERN],
@@ -94,10 +94,10 @@ class AdminAttachmentType extends AbstractType implements DataTransformerInterfa
         ]);
 
         $resolver->setRequired([
-            self::PROPERTY_PATH,
+            self::CONTEXT,
         ]);
 
-        $resolver->setAllowedTypes(self::PROPERTY_PATH, 'string');
+        $resolver->setAllowedTypes(self::CONTEXT, 'string');
         $resolver->setAllowedTypes(self::MAX_SIZE, ['int', 'string']);
         $resolver->setAllowedTypes(self::ALLOWED_MIME_TYPES, 'array');
         $resolver->setAllowedTypes(self::ALLOWED_NAME_PATTERN, ['string', 'null']);

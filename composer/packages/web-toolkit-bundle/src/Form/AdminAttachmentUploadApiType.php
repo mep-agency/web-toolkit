@@ -20,7 +20,6 @@ use Nette\Utils\Json;
 use RuntimeException;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
@@ -48,9 +47,6 @@ final class AdminAttachmentUploadApiType extends AdminAttachmentType
                         $options[self::PROCESSORS_OPTIONS],
                     ),
                 ],
-            ])
-            ->add('context', TextType::class, [
-                'required' => false,
             ])
         ;
     }

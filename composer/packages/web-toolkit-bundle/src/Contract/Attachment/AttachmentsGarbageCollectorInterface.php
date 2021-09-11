@@ -22,9 +22,7 @@ use Mep\WebToolkitBundle\Entity\Attachment;
 interface AttachmentsGarbageCollectorInterface
 {
     /**
-     * @param EntityManagerInterface $entityManager
-     *
-     * @return Attachment[]
+     * @return iterable<Attachment>
      */
-    public function collect(EntityManagerInterface $entityManager, bool $dryRun): array;
+    public function collect(EntityManagerInterface $entityManager, bool $dryRun): iterable;
 }

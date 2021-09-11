@@ -52,9 +52,10 @@ final class WebToolkitBundle extends Bundle
     public const SERVICE_ADMIN_ATTACHMENT_UPLOAD_API_TYPE = self::REFERENCE_PREFIX . 'admin_attachment_upload_type';
     public const SERVICE_ADMIN_ATTACHMENT_TYPE_GUESSER = self::REFERENCE_PREFIX . 'admin_attachment_type_guesser';
     public const SERVICE_TWIG_ATTACHMENT_EXTENSION = self::REFERENCE_PREFIX . 'twig_attachment_extension';
+    public const SERVICE_ATTACHMENT_CONFIGURATOR = self::REFERENCE_PREFIX . 'attachment_configurator';
 
     // Attachment garbage collectors
-    public const SERVICE_EDITORJS_IMAGE_GARBAGE_COLLECTOR = self::REFERENCE_PREFIX . 'editorjs_image_garbage_collector';
+    public const SERVICE_CONTEXT_GARBAGE_COLLECTOR = self::REFERENCE_PREFIX . 'context_garbage_collector';
 
     // FileStorage processors
     public const SERVICE_TINIFY_PROCESSOR = self::REFERENCE_PREFIX . 'tinify_processor';

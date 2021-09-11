@@ -280,15 +280,13 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
 
         /** @var AdminAttachmentUploadDto $formData */
         $formData = $form->getData();
-        $propertyPath = $form->getConfig()->getOption(AdminAttachmentUploadApiType::PROPERTY_PATH);
         /** @var array<string, scalar> $metadata */
         $metadata = $form->getConfig()->getOption(AdminAttachmentUploadApiType::METADATA);
         /** @var array<string, scalar> $metadata */
         $processorsOptions = $form->getConfig()->getOption(AdminAttachmentUploadApiType::PROCESSORS_OPTIONS);
-        $frontEndContext = $formData->context !== null ? '#' . $formData->context : '';
 
         if (! isset($metadata['context'])) {
-            $metadata['context'] = static::getEntityFqcn() . '@' . $propertyPath . $frontEndContext;
+            $metadata['context'] = $form->getConfig()->getOption(AdminAttachmentUploadApiType::CONTEXT);
         }
 
         $attachment = $this->fileStorageManager->store($formData->file, $metadata, $processorsOptions);

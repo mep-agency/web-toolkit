@@ -27,6 +27,4 @@ final class AdminAttachmentUploadDto
     #[NotBlank]
     #[NotNull]
     public UploadedFile $file;
-
-    public ?string $context = null;
 }

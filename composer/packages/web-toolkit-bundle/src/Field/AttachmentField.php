@@ -33,7 +33,6 @@ final class AttachmentField implements FieldInterface
             ->setProperty($propertyName)
             ->setLabel($label)
             ->setFormType(AdminAttachmentType::class)
-            ->setFormTypeOption(AdminAttachmentType::PROPERTY_PATH, $propertyName)
             ->setTemplatePath('@WebToolkit/admin/crud/field/attachment.html.twig')
             ->setDefaultColumns('col-md-6 col-xxl-5')
             ->addCssClass('mwt-attachment-field')
