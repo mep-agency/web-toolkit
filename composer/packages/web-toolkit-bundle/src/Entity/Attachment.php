@@ -36,7 +36,13 @@ class Attachment
     private Uuid $id;
 
     /**
-     * @internal Attachment instances should be created by the FileStorageManager only.
+     * The attachment context can be used to store data in order to help garbage collectors finding unused attachments.
+     *
+     * @see AssociationContextGarbageCollector
+     *
+     * @internal attachment instances should be created by the FileStorageManager only
+     *
+     * @param array<string, scalar> $metadata
      */
     public function __construct(
         #[ORM\Column(type: 'string', length: 255)]
@@ -44,35 +50,29 @@ class Attachment
         #[NotBlank]
         #[Length(max: 255)]
         private string $fileName,
-
         #[ORM\Column(type: 'string', length: 255)]
         #[NotNull]
         #[NotBlank]
         #[Length(max: 255)]
         private string $mimeType,
-
         #[ORM\Column(type: 'integer')]
         #[PositiveOrZero]
         private int $fileSize,
-
-        /**
-         * The context can be used to store data in order to help garbage collectors finding
-         * unused attachments.
-         *
-         * @see AssociationContextGarbageCollector
-         */
         #[ORM\Column(type: 'string', length: 255, nullable: true)]
         #[Length(max: 255)]
         private ?string $context = null,
-
-        /**
-         * @var array<string, scalar>
-         */
         #[ORM\Column(type: 'json')]
         #[AssociativeArrayOfScalarValues]
         private array $metadata = [],
     ) {
         $this->id = Uuid::v6();
+    }
+
+    public function __toString(): string
+    {
+        return $this->getId()
+            ->toRfc4122()
+        ;
     }
 
     public function getId(): Uuid
@@ -126,10 +126,5 @@ class Attachment
         $this->metadata[$key] = $value;
 
         return $this;
-    }
-
-    public function __toString(): string
-    {
-        return $this->getId()->toRfc4122();
     }
 }

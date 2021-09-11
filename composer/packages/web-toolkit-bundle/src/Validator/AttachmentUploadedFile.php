@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Mep\WebToolkitBundle\Validator;
 
 /**
- * @internal Do not use this constraint directly.
+ * @internal do not use this constraint directly
  *
  * @author Marco Lipparini <developer@liarco.net>
  */

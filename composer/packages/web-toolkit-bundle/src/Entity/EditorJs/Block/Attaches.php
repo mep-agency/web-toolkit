@@ -13,24 +13,24 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Entity\EditorJs\Block;
 
-use Mep\WebToolkitBundle\Entity\EditorJs\Block;
 use Doctrine\ORM\Mapping as ORM;
+use Mep\WebToolkitBundle\Entity\EditorJs\Block;
 
 /**
- * TODO: Implement attaches block (EditorJs)
+ * TODO: Implement attaches block (EditorJs).
+ *
  * @final You should not extend this class.
  *
  * @see https://github.com/editor-js/attaches
  *
  * @author Marco Lipparini <developer@liarco.net>
  */
-##[ORM\Entity]
-##[ORM\Table(name: 'mwt_editor_js_attaches')]
+//#[ORM\Entity]
+//#[ORM\Table(name: 'mwt_editor_js_attaches')]
 class Attaches extends Block
 {
-    public function __construct(
-        string $id,
-    ) {
+    public function __construct(string $id,)
+    {
         parent::__construct($id);
     }
 

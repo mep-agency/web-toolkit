@@ -27,7 +27,7 @@ class AttachmentFile extends Constraint
     /**
      * Please note that processors options can't be validated, but they are used for type-guessing.
      *
-     * @param string[] $allowedMimeTypes
+     * @param string[]              $allowedMimeTypes
      * @param array<string, scalar> $metadata
      * @param array<string, scalar> $processorsOptions
      */

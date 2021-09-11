@@ -28,10 +28,7 @@ final class TranslatableFieldConfigurator extends AbstractTranslatableFieldConfi
 {
     public function configure(FieldDto $field, EntityDto $entityDto, AdminContext $context): void
     {
-        $field->setFormTypeOption(
-            'property_path',
-            $this->getFieldPropertyPath($field, $entityDto),
-        );
+        $field->setFormTypeOption('property_path', $this->getFieldPropertyPath($field, $entityDto),);
 
         $value = $this->rebuildValueOption($field, $entityDto);
         $field->setValue($value);
@@ -48,10 +45,12 @@ final class TranslatableFieldConfigurator extends AbstractTranslatableFieldConfi
      */
     private function rebuildValueOption(FieldDto $field, EntityDto $entityDto)
     {
-        $entityInstance = $entityDto->getInstance()->translate(null, false);
+        $entityInstance = $entityDto->getInstance()
+            ->translate(null, false)
+        ;
         $propertyName = $field->getProperty();
 
-        if (!$this->propertyAccessor->isReadable($entityInstance, $propertyName)) {
+        if (! $this->propertyAccessor->isReadable($entityInstance, $propertyName)) {
             return null;
         }
 
@@ -63,8 +62,11 @@ final class TranslatableFieldConfigurator extends AbstractTranslatableFieldConfi
      *
      * @see CommonPreConfigurator::buildTemplatePathOption()
      */
-    private function rebuildTemplatePathOption(AdminContext $adminContext, FieldDto $field, EntityDto $entityDto): string
-    {
+    private function rebuildTemplatePathOption(
+        AdminContext $adminContext,
+        FieldDto $field,
+        EntityDto $entityDto,
+    ): string {
         $labelInaccessibleTemplatePath = $adminContext->getTemplatePath('label/inaccessible');
 
         $templatePath = $field->getTemplatePath();
@@ -73,8 +75,12 @@ final class TranslatableFieldConfigurator extends AbstractTranslatableFieldConfi
             return $templatePath;
         }
 
-        $isPropertyReadable = $this->propertyAccessor->isReadable($entityDto->getInstance()->translate(null, false), $field->getProperty());
-        if (!$isPropertyReadable) {
+        $isPropertyReadable = $this->propertyAccessor->isReadable(
+            $entityDto->getInstance()
+                ->translate(null, false),
+            $field->getProperty(),
+        );
+        if (! $isPropertyReadable) {
             return $labelInaccessibleTemplatePath;
         }
 
@@ -83,7 +89,7 @@ final class TranslatableFieldConfigurator extends AbstractTranslatableFieldConfi
         if (null === $templateName) {
             throw new RuntimeException(sprintf(
                 'Fields must define either their templateName or their templatePath. None given for "%s" field.',
-                $field->getProperty()
+                $field->getProperty(),
             ));
         }
 

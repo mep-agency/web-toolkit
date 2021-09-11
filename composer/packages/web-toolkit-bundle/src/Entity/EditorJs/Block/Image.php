@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Entity\EditorJs\Block;
 
+use Doctrine\ORM\Mapping as ORM;
 use Mep\WebToolkitBundle\Entity\Attachment;
 use Mep\WebToolkitBundle\Entity\EditorJs\Block;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @final You should not extend this class.
@@ -30,19 +30,14 @@ class Image extends Block
 {
     public function __construct(
         string $id,
-
         #[ORM\Column(type: 'text')]
         private string $caption,
-
         #[ORM\Column(type: 'boolean')]
         private bool $withBorder,
-
         #[ORM\Column(type: 'boolean')]
         private bool $withBackground,
-
         #[ORM\Column(type: 'boolean')]
         private bool $stretched,
-
         #[ORM\ManyToOne(targetEntity: Attachment::class, cascade: ['persist'], fetch: 'EAGER')]
         private Attachment $attachment,
     ) {

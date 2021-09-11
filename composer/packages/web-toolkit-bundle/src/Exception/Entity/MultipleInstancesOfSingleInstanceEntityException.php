@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Exception\Entity;
 
-use RuntimeException;
 use Mep\WebToolkitBundle\Contract\Repository\AbstractSingleInstanceRepository;
+use RuntimeException;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
@@ -23,6 +23,6 @@ final class MultipleInstancesOfSingleInstanceEntityException extends RuntimeExce
 {
     public function __construct()
     {
-        parent::__construct('Cannot persist multiple instances of an entity managed by a ' . AbstractSingleInstanceRepository::class);
+        parent::__construct('Cannot persist multiple instances of an entity managed by a '.AbstractSingleInstanceRepository::class);
     }
 }

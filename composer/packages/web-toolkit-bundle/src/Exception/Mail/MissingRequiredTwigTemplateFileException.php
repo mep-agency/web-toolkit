@@ -24,6 +24,6 @@ final class MissingRequiredTwigTemplateFileException extends RuntimeException
 {
     public function __construct(TwigTemplate $twigTemplate)
     {
-        parent::__construct('Expected at least one of "' . TwigTemplateProvider::TEXT_TEMPLATE_NAME . '" or "' . TwigTemplateProvider::HTML_TEMPLATE_NAME . '" in: "' . $twigTemplate->getTemplatesFolder() . '"');
+        parent::__construct('Expected at least one of "'.TwigTemplateProvider::TEXT_TEMPLATE_NAME.'" or "'.TwigTemplateProvider::HTML_TEMPLATE_NAME.'" in: "'.$twigTemplate->getTemplatesFolder().'"');
     }
 }

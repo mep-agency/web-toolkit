@@ -22,9 +22,8 @@ use Tinify\Tinify;
 /**
  * This processor compresses images using the service by https://tinypng.com/.
  *
- * The "dummy mode" can be used when you want to support the compression feature, but you don't
- * want to waste money/bandwidth in specific environments (e.g. skip compression in "dev"
- * environment).
+ * The "dummy mode" can be used when you want to support the compression feature, but you don't want to waste
+ * money/bandwidth in specific environments (e.g. skip compression in "dev" environment).
  *
  * @author Marco Lipparini <developer@liarco.net>
  * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
@@ -35,11 +34,11 @@ final class TinifyProcessor implements ProcessorInterface
     public const IS_DUMMY = 'tinify_dummy';
 
     public function __construct(
-        ?string      $apiKey,
+        ?string $apiKey,
         private bool $dummyMode = false,
     ) {
         if (! $this->dummyMode) {
-            if ($apiKey === null) {
+            if (null === $apiKey) {
                 throw new InvalidConfigurationException('Missing Tinify API key.');
             }
 
@@ -51,7 +50,7 @@ final class TinifyProcessor implements ProcessorInterface
     {
         if (
             ! isset($attachment->processorsOptions['compress']) ||
-                $attachment->processorsOptions['compress'] !== true
+                true !== $attachment->processorsOptions['compress']
         ) {
             return false;
         }

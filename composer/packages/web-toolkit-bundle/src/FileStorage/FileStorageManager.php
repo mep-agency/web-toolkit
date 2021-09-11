@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the MEP Web Toolkit package.
+ *
+ * (c) Marco Lipparini <developer@liarco.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\FileStorage;
@@ -25,7 +34,8 @@ final class FileStorageManager
         private DriverInterface $fileStorageDriver,
         private EntityManagerInterface $entityManager,
         private iterable $processors,
-    ) {}
+    ) {
+    }
 
     /**
      * @param array<string, scalar> $metadata
@@ -38,12 +48,7 @@ final class FileStorageManager
         array $processorsOptions = [],
     ): Attachment {
         if (! $file->getRealPath()) {
-            throw new FileNotFoundException(
-                null,
-                0,
-                null,
-                $file->getPathname()
-            );
+            throw new FileNotFoundException(null, 0, null, $file->getPathname());
         }
 
         $unprocessedAttachment = new UnprocessedAttachmentDto($file, $context, $metadata, $processorsOptions);
@@ -57,16 +62,13 @@ final class FileStorageManager
 
         if (! empty($unprocessedAttachment->processorsOptions)) {
             throw new InvalidProcessorOptionsException(
-                'Processors options are not empty, but all processors have been run. Some configuration may be wrong/missing.'
+                'Processors options are not empty, but all processors have been run. Some configuration may be wrong/missing.',
             );
         }
 
         $attachment = $unprocessedAttachment->createAttachment();
 
-        $this->fileStorageDriver->store(
-            $unprocessedAttachment->file,
-            $attachment,
-        );
+        $this->fileStorageDriver->store($unprocessedAttachment->file, $attachment,);
 
         $this->entityManager->persist($attachment);
         $this->entityManager->flush();

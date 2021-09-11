@@ -22,26 +22,28 @@ use Symfony\Component\Validator\ConstraintValidator;
 final class AssociativeArrayOfScalarValuesValidator extends ConstraintValidator
 {
     /**
-     * @param array|string|null $metadata
+     * @param null|array|string              $metadata
      * @param AssociativeArrayOfScalarValues $constraint
      */
     public function validate($metadata, Constraint $constraint)
     {
-        if ($metadata === null || $metadata === '') {
+        if (null === $metadata || '' === $metadata) {
             return;
         }
 
         foreach ($metadata as $key => $value) {
             if (! is_string($key)) {
                 $this->context->buildViolation('Metadata keys must be strings.')
-                    ->addViolation();
+                    ->addViolation()
+                ;
 
                 return;
             }
 
             if (! is_scalar($value)) {
                 $this->context->buildViolation('Metadata values must be scalar.')
-                    ->addViolation();
+                    ->addViolation()
+                ;
 
                 return;
             }

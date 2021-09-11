@@ -33,7 +33,7 @@ abstract class AbstractSingleInstanceRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return T|null
+     * @return null|T
      */
     public function getInstance()
     {

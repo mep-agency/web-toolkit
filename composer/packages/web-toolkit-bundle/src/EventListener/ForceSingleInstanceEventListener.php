@@ -26,9 +26,11 @@ final class ForceSingleInstanceEventListener
     {
         $entity = $args->getObject();
 
-        $repository = $args->getObjectManager()->getRepository(get_class($entity));
+        $repository = $args->getObjectManager()
+            ->getRepository(get_class($entity))
+        ;
 
-        if ($repository instanceof AbstractSingleInstanceRepository && $repository->getInstance() !== null) {
+        if ($repository instanceof AbstractSingleInstanceRepository && null !== $repository->getInstance()) {
             throw new MultipleInstancesOfSingleInstanceEntityException();
         }
     }

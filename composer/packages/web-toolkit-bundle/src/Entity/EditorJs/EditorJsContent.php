@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Entity\EditorJs;
 
-use JsonSerializable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints\Valid;
 
@@ -33,15 +33,19 @@ class EditorJsContent implements JsonSerializable
     #[ORM\Column(type: 'uuid', unique: true)]
     private Uuid $id;
 
-    #[ORM\OneToMany(targetEntity: Block::class, mappedBy: 'parent', orphanRemoval: true, cascade: ['persist', 'remove'], fetch: 'EAGER')]
-    #[ORM\OrderBy(['uuid' => 'ASC'])]
+    #[ORM\OneToMany(targetEntity: Block::class, mappedBy: 'parent', orphanRemoval: true, cascade: [
+        'persist',
+        'remove',
+    ], fetch: 'EAGER')]
+    #[ORM\OrderBy([
+        'uuid' => 'ASC',
+    ])]
     #[Valid]
     private $blocks;
 
     public function __construct(
         #[ORM\Column(type: 'bigint')]
         private string $time,
-
         #[ORM\Column(type: 'string', length: 255)]
         private string $version,
     ) {
@@ -65,7 +69,7 @@ class EditorJsContent implements JsonSerializable
     }
 
     /**
-     * @return Collection|Block[]
+     * @return Block[]|Collection
      */
     public function getBlocks(): Collection
     {
@@ -74,7 +78,7 @@ class EditorJsContent implements JsonSerializable
 
     public function addBlock(Block $block): self
     {
-        if (!$this->blocks->contains($block)) {
+        if (! $this->blocks->contains($block)) {
             $this->blocks[] = $block;
             $block->setParent($this);
         }

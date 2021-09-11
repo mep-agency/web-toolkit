@@ -25,26 +25,27 @@ use Symfony\Component\Validator\ConstraintValidator;
 class AttachmentFileValidator extends ConstraintValidator
 {
     /**
-     * @param AttachmentEntity|string|null $attachment
-     * @param AttachmentFile $constraint
+     * @param null|AttachmentEntity|string $attachment
+     * @param AttachmentFile               $constraint
      */
     public function validate($attachment, Constraint $constraint)
     {
-        if ($attachment === null || $attachment === '') {
+        if (null === $attachment || '' === $attachment) {
             return;
         }
 
         if ($constraint->maxSize > 0 && $attachment->getFileSize() > $constraint->maxSize) {
             $this->context->buildViolation('mep_web_toolkit.validators.admin_attachment_upload_type.max_size_exceeded')
                 ->setParameter('max_size', (string) $constraint->maxSize)
-                ->addViolation();
+                ->addViolation()
+            ;
         }
 
         // No value -> no restriction
         $mimeIsValid = count($constraint->allowedMimeTypes) < 1;
 
         foreach ($constraint->allowedMimeTypes as $allowedMimeType) {
-            if (preg_match($allowedMimeType, $attachment->getMimeType()) === 1) {
+            if (1 === preg_match($allowedMimeType, $attachment->getMimeType())) {
                 $mimeIsValid = true;
             }
         }
@@ -52,23 +53,28 @@ class AttachmentFileValidator extends ConstraintValidator
         if (! $mimeIsValid) {
             $this->context->buildViolation('mep_web_toolkit.validators.admin_attachment_upload_type.invalid_mime_type')
                 ->setParameter('mime_type', $attachment->getMimeType())
-                ->addViolation();
+                ->addViolation()
+            ;
         }
 
         if (
-            $constraint->allowedNamePattern !== null &&
-            preg_match($constraint->allowedNamePattern, $attachment->getFileName()) !== 1
+            null !== $constraint->allowedNamePattern &&
+            1 !== preg_match($constraint->allowedNamePattern, $attachment->getFileName())
         ) {
             $this->context->buildViolation('mep_web_toolkit.validators.admin_attachment_upload_type.invalid_file_name')
-                ->addViolation();
+                ->addViolation()
+            ;
         }
 
         foreach ($constraint->metadata as $key => $value) {
             if ($attachment->get($key) !== $value) {
-                $this->context->buildViolation('mep_web_toolkit.validators.admin_attachment_upload_type.invalid_metadata_value')
+                $this->context->buildViolation(
+                    'mep_web_toolkit.validators.admin_attachment_upload_type.invalid_metadata_value',
+                )
                     ->setParameter('key', $key)
                     ->setParameter('value', (string) $attachment->get($key))
-                    ->addViolation();
+                    ->addViolation()
+                ;
             }
         }
     }

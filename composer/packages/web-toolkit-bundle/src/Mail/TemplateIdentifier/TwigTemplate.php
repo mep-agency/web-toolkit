@@ -22,7 +22,8 @@ final class TwigTemplate implements TemplateIdentifierInterface
 {
     public function __construct(
         private string $templatesFolder,
-    ) {}
+    ) {
+    }
 
     public function getTemplatesFolder(): string
     {

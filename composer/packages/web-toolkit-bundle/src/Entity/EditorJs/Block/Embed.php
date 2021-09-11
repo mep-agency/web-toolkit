@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Entity\EditorJs\Block;
 
-use Mep\WebToolkitBundle\Entity\EditorJs\Block;
 use Doctrine\ORM\Mapping as ORM;
+use Mep\WebToolkitBundle\Entity\EditorJs\Block;
 
 /**
  * @final You should not extend this class.
@@ -29,22 +29,16 @@ class Embed extends Block
 {
     public function __construct(
         string $id,
-
         #[ORM\Column(type: 'string', length: 32)]
         private string $service,
-
         #[ORM\Column(type: 'string', length: 255)]
         private string $source,
-
         #[ORM\Column(type: 'string', length: 255)]
         private string $embed,
-
         #[ORM\Column(type: 'smallint')]
         private int $width,
-
         #[ORM\Column(type: 'smallint')]
         private int $height,
-
         #[ORM\Column(type: 'text')]
         private string $caption,
     ) {

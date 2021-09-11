@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Repository\UserRepository;
@@ -10,8 +12,9 @@ use Symfony\Component\Security\Http\LoginLink\LoginLinkDetails;
 
 class SecurityController extends AbstractSecurityController
 {
-    public function __construct(private UserRepository $userRepository)
-    {
+    public function __construct(
+        private UserRepository $userRepository,
+    ) {
     }
 
     protected function configureLoginTemplateParameters(array $parameters): array
@@ -23,7 +26,9 @@ class SecurityController extends AbstractSecurityController
 
     protected function findUser(string $identifier): ?AbstractUser
     {
-        return $this->userRepository->findOneBy(['email' => $identifier]);
+        return $this->userRepository->findOneBy([
+            'email' => $identifier,
+        ]);
     }
 
     protected function sendUrlToUser(AbstractUser $user, LoginLinkDetails $loginLinkDetails): Response

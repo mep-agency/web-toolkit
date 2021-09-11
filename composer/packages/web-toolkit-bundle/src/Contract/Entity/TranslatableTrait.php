@@ -28,14 +28,15 @@ trait TranslatableTrait
     use OriginalTranslatableTrait;
 
     /**
-     * @var TranslationInterface[]|Collection
+     * @var Collection|TranslationInterface[]
      */
     #[Assert\Valid]
     protected $translations;
 
     /**
      * @see mergeNewTranslations
-     * @var TranslationInterface[]|Collection
+     *
+     * @var Collection|TranslationInterface[]
      */
     #[Assert\Valid]
     protected $newTranslations;
@@ -47,7 +48,7 @@ trait TranslatableTrait
                 ->get($this->currentLocale) ??
             $this->getTranslations()
                 ->first(),
-            $name
+            $name,
         );
     }
 }

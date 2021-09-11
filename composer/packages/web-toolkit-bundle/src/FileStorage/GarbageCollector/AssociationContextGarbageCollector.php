@@ -21,8 +21,8 @@ use Mep\WebToolkitBundle\Dto\AttachmentAssociationContextDto;
 use Mep\WebToolkitBundle\Entity\Attachment;
 
 /**
- * Uses Doctrine metadata to find all associations to Attachment objects and collects unused
- * Attachments thanks to the "context" metadata.
+ * Uses Doctrine metadata to find all associations to Attachment objects and collects unused Attachments thanks to the
+ * "context" metadata.
  *
  * @author Marco Lipparini <developer@liarco.net>
  */
@@ -30,19 +30,27 @@ final class AssociationContextGarbageCollector implements GarbageCollectorInterf
 {
     public function collect(EntityManagerInterface $entityManager, bool $dryRun): Generator
     {
-        $entities = $entityManager->getConfiguration()->getMetadataDriverImpl()->getAllClassNames();
+        $entities = $entityManager->getConfiguration()
+            ->getMetadataDriverImpl()
+            ->getAllClassNames()
+        ;
 
-        foreach($entities as $entity) {
+        foreach ($entities as $entity) {
             foreach ($entityManager->getClassMetadata($entity)->getAssociationMappings() as $mapping) {
-                if ($mapping['targetEntity'] === Attachment::class) {
+                if (Attachment::class === $mapping['targetEntity']) {
                     $attachmentRepository = $entityManager->getRepository(Attachment::class);
                     $queryBuilder = $attachmentRepository->createQueryBuilder('a')
                         ->leftJoin($entity, 'p', Join::WITH, 'p.attachment = a.id')
-                        ->andWhere('p.' . $mapping['fieldName'] . ' IS NULL AND a.context = :context')
-                        ->setParameter('context', (string) (new AttachmentAssociationContextDto($entity, $mapping['fieldName'])))
+                        ->andWhere('p.'.$mapping['fieldName'].' IS NULL AND a.context = :context')
+                        ->setParameter(
+                            'context',
+                            (string) (new AttachmentAssociationContextDto($entity, $mapping['fieldName'])),
+                        )
                     ;
 
-                    yield from $queryBuilder->getQuery()->getResult();
+                    yield from $queryBuilder->getQuery()
+                        ->getResult()
+                    ;
                 }
             }
         }

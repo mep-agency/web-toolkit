@@ -47,12 +47,9 @@ final class UnprocessedAttachmentDto
     public function __construct(
         #[NotNull]
         public File $file,
-
         public ?string $context = null,
-
         #[AssociativeArrayOfScalarValues]
         public array $metadata = [],
-
         #[AssociativeArrayOfScalarValues]
         public array $processorsOptions = [],
     ) {
@@ -67,12 +64,6 @@ final class UnprocessedAttachmentDto
      */
     public function createAttachment(): Attachment
     {
-        return new Attachment(
-            $this->fileName,
-            $this->mimeType,
-            $this->fileSize,
-            $this->context,
-            $this->metadata,
-        );
+        return new Attachment($this->fileName, $this->mimeType, $this->fileSize, $this->context, $this->metadata,);
     }
 }

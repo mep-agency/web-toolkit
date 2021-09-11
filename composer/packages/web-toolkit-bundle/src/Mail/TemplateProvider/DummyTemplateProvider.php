@@ -37,13 +37,13 @@ final class DummyTemplateProvider implements TemplateProviderInterface
 
         foreach ($parameters as $key => $value) {
             if (is_object($value) && ! method_exists($value, '__toString')) {
-                $value = '<pre>' . print_r($value, true) . '</pre>';
+                $value = '<pre>'.print_r($value, true).'</pre>';
             }
 
-            $html .= PHP_EOL . '<li><strong>' . $key . ':</strong> ' . $value . '</li>';
+            $html .= PHP_EOL.'<li><strong>'.$key.':</strong> '.$value.'</li>';
         }
 
-        $html = '<h1>Available parameters:</h1>' . PHP_EOL . '<ul>' . $html . PHP_EOL . '</ul>';
+        $html = '<h1>Available parameters:</h1>'.PHP_EOL.'<ul>'.$html.PHP_EOL.'</ul>';
 
         $email = new Email();
         $email->subject('This is a testing message rendered from a dummy template');

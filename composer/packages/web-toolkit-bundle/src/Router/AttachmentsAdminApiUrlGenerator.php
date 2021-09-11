@@ -26,18 +26,20 @@ final class AttachmentsAdminApiUrlGenerator
     public function __construct(
         private AdminContextProvider $adminContextProvider,
         private AdminUrlGenerator $adminUrlGenerator,
-    ) {}
+    ) {
+    }
 
     /**
      * @param array<string, mixed> $routeParams
      */
     public function generate(array $routeParams, ?string $crudControllerFqcn = null): string
     {
-        if ($crudControllerFqcn === null) {
+        if (null === $crudControllerFqcn) {
             $crudControllerFqcn = $this->adminContextProvider
                 ?->getContext()
                 ?->getCrud()
-                ?->getControllerFqcn();
+                ?->getControllerFqcn()
+            ;
         }
 
         return $this->adminUrlGenerator
@@ -45,6 +47,7 @@ final class AttachmentsAdminApiUrlGenerator
             ->setController($crudControllerFqcn)
             ->setAction(AbstractCrudController::ACTION_ATTACH_FILE)
             ->set(EA::ROUTE_PARAMS, $routeParams)
-            ->generateUrl();
+            ->generateUrl()
+        ;
     }
 }

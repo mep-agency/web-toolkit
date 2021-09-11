@@ -23,15 +23,15 @@ use Mep\WebToolkitBundle\Entity\Attachment;
 use Mep\WebToolkitBundle\EventListener\AttachmentLifecycleEventListener;
 use Mep\WebToolkitBundle\EventListener\ForceSingleInstanceEventListener;
 use Mep\WebToolkitBundle\Field\Configurator\AttachmentConfigurator;
-use Mep\WebToolkitBundle\Field\Configurator\TypeGuesserConfigurator;
 use Mep\WebToolkitBundle\Field\Configurator\TranslatableBooleanConfigurator;
 use Mep\WebToolkitBundle\Field\Configurator\TranslatableFieldConfigurator;
 use Mep\WebToolkitBundle\Field\Configurator\TranslatableFieldPreConfigurator;
+use Mep\WebToolkitBundle\Field\Configurator\TypeGuesserConfigurator;
 use Mep\WebToolkitBundle\FileStorage\FileStorageManager;
 use Mep\WebToolkitBundle\FileStorage\GarbageCollector\AssociationContextGarbageCollector;
 use Mep\WebToolkitBundle\FileStorage\Processor\TinifyProcessor;
-use Mep\WebToolkitBundle\Form\AdminAttachmentUploadApiType;
 use Mep\WebToolkitBundle\Form\AdminAttachmentType;
+use Mep\WebToolkitBundle\Form\AdminAttachmentUploadApiType;
 use Mep\WebToolkitBundle\Form\AdminEditorJsType;
 use Mep\WebToolkitBundle\Form\TypeGuesser\AdminAttachmentTypeGuesser;
 use Mep\WebToolkitBundle\Form\TypeGuesser\AdminEditorJsTypeGuesser;
@@ -44,6 +44,7 @@ use Mep\WebToolkitBundle\Serializer\EditorJsContentNormalizer;
 use Mep\WebToolkitBundle\Twig\AttachmentExtension;
 use Mep\WebToolkitBundle\WebToolkitBundle;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Form\FormRegistryInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
@@ -52,7 +53,6 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Twig\Environment;
-use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
@@ -66,7 +66,10 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     ;
 
     // Single instance support
-    $services->set(WebToolkitBundle::SERVICE_FORCE_SINGLE_INSTANCE_EVENT_LISTENER, ForceSingleInstanceEventListener::class)
+    $services->set(
+        WebToolkitBundle::SERVICE_FORCE_SINGLE_INSTANCE_EVENT_LISTENER,
+        ForceSingleInstanceEventListener::class,
+    )
         ->tag('doctrine.event_listener', [
             'event' => 'prePersist',
             'priority' => 9999,
@@ -74,13 +77,18 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     ;
 
     // Translatable support
-    $services->set(WebToolkitBundle::SERVICE_TRANSLATABLE_FIELD_PRE_CONFIGURATOR, TranslatableFieldPreConfigurator::class)
+    $services->set(
+        WebToolkitBundle::SERVICE_TRANSLATABLE_FIELD_PRE_CONFIGURATOR,
+        TranslatableFieldPreConfigurator::class,
+    )
         ->arg(0, new Reference(LocaleProviderInterface::class))
         ->arg(1, new Reference(PropertyAccessorInterface::class))
         ->arg(2, new Reference(FormRegistryInterface::class))
         ->arg(3, new Reference(EntityFactory::class))
         ->arg(4, new Reference(WebToolkitBundle::SERVICE_TYPE_GUESSER_CONFIGURATOR))
-        ->tag(EasyAdminExtension::TAG_FIELD_CONFIGURATOR, ['priority' => 99999])
+        ->tag(EasyAdminExtension::TAG_FIELD_CONFIGURATOR, [
+            'priority' => 99999,
+        ])
     ;
     $services->set(WebToolkitBundle::SERVICE_TRANSLATABLE_FIELD_CONFIGURATOR, TranslatableFieldConfigurator::class)
         ->arg(0, new Reference(LocaleProviderInterface::class))
@@ -93,7 +101,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->arg(1, new Reference(PropertyAccessorInterface::class))
         ->arg(2, new Reference(FormRegistryInterface::class))
         ->arg(3, new Reference(BooleanConfigurator::class))
-        ->tag(EasyAdminExtension::TAG_FIELD_CONFIGURATOR, ['priority' => -9998])
+        ->tag(EasyAdminExtension::TAG_FIELD_CONFIGURATOR, [
+            'priority' => -9998,
+        ])
     ;
 
     // Mail templates support
@@ -122,12 +132,18 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->arg(2, tagged_iterator(WebToolkitBundle::TAG_ATTACHMENTS_GARBAGE_COLLECTOR))
         ->tag('console.command')
     ;
-    $services->set(WebToolkitBundle::SERVICE_ATTACHMENTS_ADMIN_API_URL_GENERATOR, AttachmentsAdminApiUrlGenerator::class)
+    $services->set(
+        WebToolkitBundle::SERVICE_ATTACHMENTS_ADMIN_API_URL_GENERATOR,
+        AttachmentsAdminApiUrlGenerator::class,
+    )
         ->arg(0, new Reference(AdminContextProvider::class))
         ->arg(1, new Reference(AdminUrlGenerator::class))
         ->alias(AttachmentsAdminApiUrlGenerator::class, WebToolkitBundle::SERVICE_ATTACHMENTS_ADMIN_API_URL_GENERATOR)
     ;
-    $services->set(WebToolkitBundle::SERVICE_ATTACHMENT_LIFECYCLE_EVENT_LISTENER, AttachmentLifecycleEventListener::class)
+    $services->set(
+        WebToolkitBundle::SERVICE_ATTACHMENT_LIFECYCLE_EVENT_LISTENER,
+        AttachmentLifecycleEventListener::class,
+    )
         ->arg(0, new Reference(WebToolkitBundle::SERVICE_FILE_STORAGE_DRIVER))
         ->arg(1, new Reference(ValidatorInterface::class))
         ->tag('doctrine.orm.entity_listener', [
@@ -180,13 +196,15 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     // File storage garbage collectors
     $services->set(WebToolkitBundle::SERVICE_CONTEXT_GARBAGE_COLLECTOR, AssociationContextGarbageCollector::class)
-        ->tag(WebToolkitBundle::TAG_ATTACHMENTS_GARBAGE_COLLECTOR);
+        ->tag(WebToolkitBundle::TAG_ATTACHMENTS_GARBAGE_COLLECTOR)
+    ;
 
     // File storage processors
     $services->set(WebToolkitBundle::SERVICE_TINIFY_PROCESSOR, TinifyProcessor::class)
         ->arg(0, $_ENV['TINIFY_API_KEY'] ?? null)
-        ->arg(1, ! isset($_ENV['TINIFY_API_KEY']) && $_ENV['APP_ENV'] === 'dev')
-        ->tag(WebToolkitBundle::TAG_FILE_STORAGE_PROCESSOR);
+        ->arg(1, ! isset($_ENV['TINIFY_API_KEY']) && 'dev' === $_ENV['APP_ENV'])
+        ->tag(WebToolkitBundle::TAG_FILE_STORAGE_PROCESSOR)
+    ;
 
     // EditorJs support
     $services->set(WebToolkitBundle::SERVICE_EDITORJS_CONTENT_NORMALIZER, EditorJsContentNormalizer::class)
@@ -206,6 +224,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     // EasyAdminBundle enhancements
     $services->set(WebToolkitBundle::SERVICE_TYPE_GUESSER_CONFIGURATOR, TypeGuesserConfigurator::class)
         ->arg(0, new Reference(FormRegistryInterface::class))
-        ->tag(EasyAdminExtension::TAG_FIELD_CONFIGURATOR, ['priority' => 99999])
+        ->tag(EasyAdminExtension::TAG_FIELD_CONFIGURATOR, [
+            'priority' => 99999,
+        ])
     ;
 };

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Admin;
 
 use App\Entity\User;
@@ -28,11 +30,12 @@ class UserCrudController extends AbstractCrudController
                     'Admin' => 'ROLE_ADMIN',
                 ])
                 ->setFormTypeOption('choice_attr', [
-                    'User' => ['disabled' => true],
+                    'User' => [
+                        'disabled' => true,
+                    ],
                 ])
                 ->allowMultipleChoices()
-                ->renderExpanded()
-            ,
+                ->renderExpanded(),
         ];
     }
 }

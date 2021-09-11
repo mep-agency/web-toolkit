@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This file is part of the MEP Web Toolkit package.
+ *
+ * (c) Marco Lipparini <developer@liarco.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
 namespace Mep\WebToolkitBundle\Form\TypeGuesser;
 
 use Mep\WebToolkitBundle\Entity\EditorJs\EditorJsContent;
@@ -19,31 +30,35 @@ final class AdminEditorJsTypeGuesser implements FormTypeGuesserInterface
     {
         $reflectionProperty = new ReflectionProperty($class, $property);
 
-        if ($reflectionProperty->getType()?->getName() !== EditorJsContent::class) {
+        if (EditorJsContent::class !== $reflectionProperty->getType()?->getName()) {
             return null;
         }
 
         /** @var ?EditorJs $editorJsAttribute */
         $editorJsAttribute = ($reflectionProperty->getAttributes(EditorJs::class)[0] ?? null)
-            ?->newInstance();
+            ?->newInstance()
+        ;
 
         return new TypeGuess(
             AdminEditorJsType::class,
-            $editorJsAttribute === null ? [] :
+            null === $editorJsAttribute ? [] :
                 [
                     AdminEditorJsType::ENABLED_TOOLS => $editorJsAttribute->enabledTools,
                     AdminEditorJsType::TOOLS_OPTIONS => $editorJsAttribute->options,
                 ],
-            Guess::VERY_HIGH_CONFIDENCE
+            Guess::VERY_HIGH_CONFIDENCE,
         );
     }
 
     public function guessRequired(string $class, string $property)
-    {}
+    {
+    }
 
     public function guessMaxLength(string $class, string $property)
-    {}
+    {
+    }
 
     public function guessPattern(string $class, string $property)
-    {}
+    {
+    }
 }

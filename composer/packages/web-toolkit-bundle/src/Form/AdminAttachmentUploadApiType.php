@@ -28,7 +28,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Validation;
 
 /**
- * @internal Do not use this type directly, use the public types/fields instead.
+ * @internal do not use this type directly, use the public types/fields instead
  *
  * @author Marco Lipparini <developer@liarco.net>
  */
@@ -79,7 +79,7 @@ final class AdminAttachmentUploadApiType extends AdminAttachmentType
 
             $violations = Validation::createValidator()->validate($value, new AssociativeArrayOfScalarValues());
 
-            return $violations->count() === 0;
+            return 0 === $violations->count();
         };
         $resolver->setAllowedValues(self::METADATA, $associativeArrayOfScalarValuesValidator);
         $resolver->setAllowedValues(self::PROCESSORS_OPTIONS, $associativeArrayOfScalarValuesValidator);

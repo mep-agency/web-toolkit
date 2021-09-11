@@ -38,14 +38,14 @@ abstract class AbstractSecurityController extends AbstractController implements 
 
             $lastUsername = $email;
 
-            if ($user !== null) {
+            if (null !== $user) {
                 $loginLinkDetails = $loginLinkHandler->createLoginLink($user);
 
                 return $this->sendUrlToUser($user, $loginLinkDetails);
-            } else {
-                $error = new UserNotFoundException();
-                $error->setUserIdentifier($email);
             }
+
+            $error = new UserNotFoundException();
+            $error->setUserIdentifier($email);
         }
 
         return $this->render(
@@ -61,13 +61,17 @@ abstract class AbstractSecurityController extends AbstractController implements 
     #[Route('/logout', name: 'logout')]
     public function logout(): void
     {
-        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+        throw new \LogicException(
+            'This method can be blank - it will be intercepted by the logout key on your firewall.',
+        );
     }
 
     #[Route('/login-check', name: 'login_check')]
     public function loginCheck(): void
     {
-        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+        throw new \LogicException(
+            'This method can be blank - it will be intercepted by the logout key on your firewall.',
+        );
     }
 
     public function start(Request $request, AuthenticationException $authException = null)
@@ -77,6 +81,7 @@ abstract class AbstractSecurityController extends AbstractController implements 
 
     /**
      * @param array<string, mixed> $parameters
+     *
      * @return array<string, mixed>
      */
     protected function configureLoginTemplateParameters(array $parameters): array

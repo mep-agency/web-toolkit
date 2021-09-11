@@ -28,7 +28,8 @@ final class TemplateRenderer
      */
     public function __construct(
         private iterable $templateProviders,
-    ) {}
+    ) {
+    }
 
     /**
      * @param array<string, mixed> $parameters

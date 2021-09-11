@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Entity\EditorJs\Block;
 
-use Mep\WebToolkitBundle\Entity\EditorJs\Block;
 use Doctrine\ORM\Mapping as ORM;
+use Mep\WebToolkitBundle\Entity\EditorJs\Block;
 
 /**
  * @final You should not extend this class.
@@ -27,9 +27,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'mwt_editor_js_delimiter')]
 class Delimiter extends Block
 {
-    public function __construct(
-        string $id,
-    ) {
+    public function __construct(string $id)
+    {
         parent::__construct($id);
     }
 

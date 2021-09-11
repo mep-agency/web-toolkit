@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Admin;
 
 use App\Entity\User;
@@ -22,7 +24,8 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('Admin');
+            ->setTitle('Admin')
+        ;
     }
 
     public function configureMenuItems(): iterable

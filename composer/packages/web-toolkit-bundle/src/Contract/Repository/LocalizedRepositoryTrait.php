@@ -25,27 +25,22 @@ use Symfony\Contracts\Service\Attribute\Required;
  */
 trait LocalizedRepositoryTrait
 {
+    private LocaleProviderInterface $localeProvider;
+
     /**
      * @return class-string<TranslatableInterface>
      */
     abstract public function getClassName();
 
     /**
-     * @return ClassMetadata
-     */
-    abstract protected function getClassMetadata();
-
-    /**
      * Creates a new QueryBuilder instance that is prepopulated for this entity name.
      *
      * @param string $alias
-     * @param string $indexBy The index for the from.
+     * @param string $indexBy the index for the from
      *
      * @return QueryBuilder
      */
     abstract public function createQueryBuilder($alias, $indexBy = null);
-
-    private LocaleProviderInterface $localeProvider;
 
     public function getLocaleProvider(): LocaleProviderInterface
     {
@@ -53,7 +48,8 @@ trait LocalizedRepositoryTrait
     }
 
     #[Required]
-    public function setLocaleProvider(LocaleProviderInterface $localeProvider): void {
+    public function setLocaleProvider(LocaleProviderInterface $localeProvider): void
+    {
         $this->localeProvider = $localeProvider;
     }
 
@@ -71,8 +67,14 @@ trait LocalizedRepositoryTrait
                 $this->getClassName()::getTranslationEntityClass(),
                 'translation',
                 Join::WITH,
-                $rootAlias . '.' . $this->getClassMetadata()->getSingleIdentifierFieldName() . ' = translation.translatable AND translation.locale = :locale'
+                $rootAlias.'.'.$this->getClassMetadata()->getSingleIdentifierFieldName().' = translation.translatable AND translation.locale = :locale',
             )
-            ->setParameter('locale', $this->getLocaleProvider()->provideCurrentLocale());
+            ->setParameter('locale', $this->getLocaleProvider()->provideCurrentLocale())
+        ;
     }
+
+    /**
+     * @return ClassMetadata
+     */
+    abstract protected function getClassMetadata();
 }

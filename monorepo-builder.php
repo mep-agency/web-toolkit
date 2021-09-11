@@ -21,11 +21,7 @@ use Symplify\MonorepoBuilder\ValueObject\Option;
 return static function (ContainerConfigurator $containerConfigurator): void {
     global $argv;
 
-    $isMergeCommand = array_reduce(
-        $argv,
-        fn ($result, $value) => $result + ($value === 'merge'),
-        false
-    );
+    $isMergeCommand = array_reduce($argv, fn ($result, $value) => $result + ('merge' === $value), false);
     $parameters = $containerConfigurator->parameters();
     $services = $containerConfigurator->services();
 
@@ -39,15 +35,12 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             'symplify/easy-coding-standard' => '^9.4',
         ],
     ]);
-    $parameters->set(Option::PACKAGE_DIRECTORIES, [
-        __DIR__ . '/composer/packages',
-        __DIR__ . '/composer/projects',
-    ]);
+
+    $parameters->set(Option::PACKAGE_DIRECTORIES, [__DIR__.'/composer/packages', __DIR__.'/composer/projects']);
+
     // Disable "mep-agency/symfony-website-skeleton" when merging
     if ($isMergeCommand) {
-        $parameters->set(Option::PACKAGE_DIRECTORIES_EXCLUDES, [
-            'symfony-web-toolkit-skeleton',
-        ]);
+        $parameters->set(Option::PACKAGE_DIRECTORIES_EXCLUDES, ['symfony-web-toolkit-skeleton']);
     }
 
     $parameters->set(Option::DEFAULT_BRANCH_NAME, 'main');

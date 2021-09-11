@@ -30,16 +30,16 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 final class AttachmentConfigurator extends AbstractTranslatableFieldConfigurator
 {
     public function __construct(
-        protected LocaleProviderInterface   $localeProvider,
+        protected LocaleProviderInterface $localeProvider,
         protected PropertyAccessorInterface $propertyAccessor,
-        protected FormRegistryInterface     $formRegistry,
+        protected FormRegistryInterface $formRegistry,
     ) {
         parent::__construct($localeProvider, $propertyAccessor, $formRegistry);
     }
 
     public function supports(FieldDto $field, EntityDto $entityDto): bool
     {
-        return $field->getFieldFqcn() === AttachmentField::class;
+        return AttachmentField::class === $field->getFieldFqcn();
     }
 
     public function configure(FieldDto $field, EntityDto $entityDto, AdminContext $context): void
@@ -49,10 +49,7 @@ final class AttachmentConfigurator extends AbstractTranslatableFieldConfigurator
 
         $field->setFormTypeOption(
             AdminAttachmentType::CONTEXT,
-            (string) (new AttachmentAssociationContextDto(
-                $entityFqcn,
-                $field->getProperty(),
-            )),
+            (string) (new AttachmentAssociationContextDto($entityFqcn, $field->getProperty(),)),
         );
     }
 }

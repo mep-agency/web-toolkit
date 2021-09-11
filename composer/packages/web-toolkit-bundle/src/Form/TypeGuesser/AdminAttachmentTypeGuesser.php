@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This file is part of the MEP Web Toolkit package.
+ *
+ * (c) Marco Lipparini <developer@liarco.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
 namespace Mep\WebToolkitBundle\Form\TypeGuesser;
 
 use Mep\WebToolkitBundle\Entity\Attachment;
@@ -19,17 +30,18 @@ final class AdminAttachmentTypeGuesser implements FormTypeGuesserInterface
     {
         $reflectionProperty = new ReflectionProperty($class, $property);
 
-        if ($reflectionProperty->getType()?->getName() !== Attachment::class) {
+        if (Attachment::class !== $reflectionProperty->getType()?->getName()) {
             return null;
         }
 
         /** @var ?AttachmentFile $validAttachmentAttribute */
         $validAttachmentAttribute = ($reflectionProperty->getAttributes(AttachmentFile::class)[0] ?? null)
-            ?->newInstance();
+            ?->newInstance()
+        ;
 
         return new TypeGuess(
             AdminAttachmentType::class,
-            $validAttachmentAttribute === null ? [] :
+            null === $validAttachmentAttribute ? [] :
                 [
                     AdminAttachmentType::MAX_SIZE => $validAttachmentAttribute->maxSize,
                     AdminAttachmentType::ALLOWED_MIME_TYPES => $validAttachmentAttribute->allowedMimeTypes,
@@ -37,16 +49,19 @@ final class AdminAttachmentTypeGuesser implements FormTypeGuesserInterface
                     AdminAttachmentType::METADATA => $validAttachmentAttribute->metadata,
                     AdminAttachmentType::PROCESSORS_OPTIONS => $validAttachmentAttribute->processorsOptions,
                 ],
-            Guess::VERY_HIGH_CONFIDENCE
+            Guess::VERY_HIGH_CONFIDENCE,
         );
     }
 
     public function guessRequired(string $class, string $property)
-    {}
+    {
+    }
 
     public function guessMaxLength(string $class, string $property)
-    {}
+    {
+    }
 
     public function guessPattern(string $class, string $property)
-    {}
+    {
+    }
 }

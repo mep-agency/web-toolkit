@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Entity\EditorJs\Block;
 
-use Mep\WebToolkitBundle\Entity\EditorJs\Block;
 use Doctrine\ORM\Mapping as ORM;
+use Mep\WebToolkitBundle\Entity\EditorJs\Block;
 
 /**
  * @final You should not extend this class.
@@ -29,13 +29,10 @@ class Quote extends Block
 {
     public function __construct(
         string $id,
-
         #[ORM\Column(type: 'text')]
         private string $text,
-
         #[ORM\Column(type: 'text')]
         private string $caption,
-
         #[ORM\Column(type: 'string', length: 10)]
         private string $alignment,
     ) {

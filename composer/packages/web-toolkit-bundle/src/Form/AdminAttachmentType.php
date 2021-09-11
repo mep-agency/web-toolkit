@@ -56,7 +56,8 @@ class AdminAttachmentType extends AbstractType implements DataTransformerInterfa
         private EntityManagerInterface $entityManager,
         private AttachmentsAdminApiUrlGenerator $attachmentsAdminApiUrlGenerator,
         private CsrfTokenManagerInterface $tokenManager,
-    ) {}
+    ) {
+    }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -80,7 +81,8 @@ class AdminAttachmentType extends AbstractType implements DataTransformerInterfa
 
         $view->vars['api_token'] = $this->tokenManager
             ->getToken(self::CSRF_TOKEN_ID)
-            ->getValue();
+            ->getValue()
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -93,9 +95,7 @@ class AdminAttachmentType extends AbstractType implements DataTransformerInterfa
             self::PROCESSORS_OPTIONS => [],
         ]);
 
-        $resolver->setRequired([
-            self::CONTEXT,
-        ]);
+        $resolver->setRequired([self::CONTEXT]);
 
         $resolver->setAllowedTypes(self::CONTEXT, 'string');
         $resolver->setAllowedTypes(self::MAX_SIZE, ['int', 'string']);
@@ -112,9 +112,7 @@ class AdminAttachmentType extends AbstractType implements DataTransformerInterfa
             return $value;
         });
 
-        $resolver->setAllowedValues(self::MAX_SIZE, Validation::createIsValidCallable(
-            new PositiveOrZero()
-        ));
+        $resolver->setAllowedValues(self::MAX_SIZE, Validation::createIsValidCallable(new PositiveOrZero()));
         $associativeArrayOfScalarValuesValidator = Validation::createIsValidCallable(
             new AssociativeArrayOfScalarValues(),
         );
@@ -138,8 +136,9 @@ class AdminAttachmentType extends AbstractType implements DataTransformerInterfa
         return $data;
     }
 
-    public function reverseTransform($data) {
-        if ($data === null || $data instanceof Attachment) {
+    public function reverseTransform($data)
+    {
+        if (null === $data || $data instanceof Attachment) {
             return $data;
         }
 
@@ -157,8 +156,8 @@ class AdminAttachmentType extends AbstractType implements DataTransformerInterfa
             ->getRepository(Attachment::class)
             ->find($data) : null;
 
-        if ($result === null) {
-            throw new TransformationFailedException('Attachment not found: "' . $data . '".');
+        if (null === $result) {
+            throw new TransformationFailedException('Attachment not found: "'.$data.'".');
         }
 
         return $result;

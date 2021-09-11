@@ -25,6 +25,6 @@ final class AttachmentNotFoundException extends RuntimeException
      */
     public function __construct($uuid)
     {
-        parent::__construct('No attachment found for the given UUID: ' . $uuid);
+        parent::__construct('No attachment found for the given UUID: '.$uuid);
     }
 }

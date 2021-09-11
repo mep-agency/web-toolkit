@@ -27,7 +27,8 @@ final class AttachmentLifecycleEventListener
     public function __construct(
         private DriverInterface $fileStorageDriver,
         private ValidatorInterface $validator,
-    ) {}
+    ) {
+    }
 
     public function validate(Attachment $attachment, LifecycleEventArgs $args): void
     {
@@ -41,7 +42,9 @@ final class AttachmentLifecycleEventListener
     public function initializeAttachmentProxy(Attachment $attachment, LifecycleEventArgs $args): void
     {
         // Ensure that the "postRemove" EventListener doesn't receive an uninitialized proxy
-        $args->getObjectManager()->initializeObject($attachment);
+        $args->getObjectManager()
+            ->initializeObject($attachment)
+        ;
     }
 
     public function removeAttachedFile(Attachment $attachment, LifecycleEventArgs $args): void

@@ -33,7 +33,8 @@ final class TwigTemplateProvider implements TemplateProviderInterface
 
     public function __construct(
         private Environment $twig,
-    ) {}
+    ) {
+    }
 
     public function supports(TemplateIdentifierInterface $templateIdentifier): bool
     {
@@ -41,37 +42,37 @@ final class TwigTemplateProvider implements TemplateProviderInterface
     }
 
     /**
+     * @param TwigTemplate         $templateIdentifier
      * @param array<string, mixed> $parameters
      */
     public function render(TemplateIdentifierInterface $templateIdentifier, array $parameters = []): Email
     {
-        /** @var TwigTemplate $templateIdentifier */
         $this->validateTemplateIndentifier($templateIdentifier);
 
         $email = new Email();
         $subject = $this->templateFileExists($templateIdentifier, self::SUBJECT_TEMPLATE_NAME) ?
             $this->twig->render(
                 $this->getTemplatePath($templateIdentifier, self::SUBJECT_TEMPLATE_NAME),
-                $parameters
+                $parameters,
             ) : null;
         $text = $this->templateFileExists($templateIdentifier, self::TEXT_TEMPLATE_NAME) ?
             $this->twig->render(
                 $this->getTemplatePath($templateIdentifier, self::TEXT_TEMPLATE_NAME),
-                $parameters
+                $parameters,
             ) : null;
         $html = $this->templateFileExists($templateIdentifier, self::HTML_TEMPLATE_NAME) ?
             $this->twig->render(
                 $this->getTemplatePath($templateIdentifier, self::HTML_TEMPLATE_NAME),
-                $parameters
+                $parameters,
             ) : null;
 
-        if ($subject !== null) {
+        if (null !== $subject) {
             $email->subject(trim($subject));
         }
 
         $email->text($text ?? html_entity_decode(strip_tags($html)));
 
-        if ($html !== null) {
+        if (null !== $html) {
             $email->html($html);
         }
 
@@ -81,8 +82,8 @@ final class TwigTemplateProvider implements TemplateProviderInterface
     private function validateTemplateIndentifier(TwigTemplate $twigTemplate): bool
     {
         if (
-            ! $this->templateFileExists($twigTemplate, TwigTemplateProvider::TEXT_TEMPLATE_NAME)
-            && ! $this->templateFileExists($twigTemplate, TwigTemplateProvider::HTML_TEMPLATE_NAME)
+            ! $this->templateFileExists($twigTemplate, self::TEXT_TEMPLATE_NAME)
+            && ! $this->templateFileExists($twigTemplate, self::HTML_TEMPLATE_NAME)
         ) {
             throw new MissingRequiredTwigTemplateFileException($twigTemplate);
         }
@@ -92,11 +93,13 @@ final class TwigTemplateProvider implements TemplateProviderInterface
 
     private function getTemplatePath(TwigTemplate $twigTemplate, string $file): string
     {
-        return $twigTemplate->getTemplatesFolder() . '/' . $file;
+        return $twigTemplate->getTemplatesFolder().'/'.$file;
     }
 
     private function templateFileExists(TwigTemplate $twigTemplate, string $file): bool
     {
-        return $this->twig->getLoader()->exists($this->getTemplatePath($twigTemplate, $file));
+        return $this->twig->getLoader()
+            ->exists($this->getTemplatePath($twigTemplate, $file))
+        ;
     }
 }

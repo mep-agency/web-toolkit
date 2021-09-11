@@ -18,7 +18,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 
 /**
- * @internal Do not use this class directly.
+ * @internal do not use this class directly
  *
  * @author Marco Lipparini <developer@liarco.net>
  */

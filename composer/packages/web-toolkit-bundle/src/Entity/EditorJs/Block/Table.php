@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Entity\EditorJs\Block;
 
-use Mep\WebToolkitBundle\Entity\EditorJs\Block;
 use Doctrine\ORM\Mapping as ORM;
+use Mep\WebToolkitBundle\Entity\EditorJs\Block;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -30,7 +30,6 @@ class Table extends Block
 {
     public function __construct(
         string $id,
-
         #[ORM\Column(type: 'boolean')]
         private bool $withHeadings,
 

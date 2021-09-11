@@ -32,18 +32,18 @@ final class WebToolkitExtension extends Extension implements PrependExtensionInt
     public function load(array $configs, ContainerBuilder $container)
     {
         $container->registerForAutoconfiguration(ProcessorInterface::class)
-            ->addTag(WebToolkitBundle::TAG_FILE_STORAGE_PROCESSOR);
+            ->addTag(WebToolkitBundle::TAG_FILE_STORAGE_PROCESSOR)
+        ;
 
         $container->registerForAutoconfiguration(TemplateProviderInterface::class)
-            ->addTag(WebToolkitBundle::TAG_MAIL_TEMPLATE_PROVIDER);
+            ->addTag(WebToolkitBundle::TAG_MAIL_TEMPLATE_PROVIDER)
+        ;
 
         $container->registerForAutoconfiguration(GarbageCollectorInterface::class)
-            ->addTag(WebToolkitBundle::TAG_ATTACHMENTS_GARBAGE_COLLECTOR);
+            ->addTag(WebToolkitBundle::TAG_ATTACHMENTS_GARBAGE_COLLECTOR)
+        ;
 
-        $loader = new PhpFileLoader(
-            $container,
-            new FileLocator(__DIR__ . '/../Resources/config')
-        );
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
 
         $loader->load('services.php');
     }
@@ -53,7 +53,7 @@ final class WebToolkitExtension extends Extension implements PrependExtensionInt
         $container->loadFromExtension('twig', [
             'paths' => [
                 // '%kernel.project_dir%/vendor/mep-agency/web-toolkit-bundle/src/Resources/views/bundles/EasyAdminBundle' => 'EasyAdmin',
-                realpath(__DIR__ . '/..') . '/Resources/views/bundles/EasyAdminBundle' => 'EasyAdmin',
+                realpath(__DIR__.'/..').'/Resources/views/bundles/EasyAdminBundle' => 'EasyAdmin',
             ],
         ]);
 

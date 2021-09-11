@@ -15,8 +15,8 @@ namespace Mep\WebToolkitBundle\Entity\EditorJs\Block;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Mep\WebToolkitBundle\Entity\EditorJs\Block;
 use Doctrine\ORM\Mapping as ORM;
+use Mep\WebToolkitBundle\Entity\EditorJs\Block;
 use Mep\WebToolkitBundle\Entity\EditorJs\Block\OutputComponent\NestedListItem;
 use Symfony\Component\Validator\Constraints\Valid;
 
@@ -34,11 +34,16 @@ class NestedList extends Block
     /**
      * @var Collection<NestedListItem>|NestedListItem[]
      */
-    #[ORM\ManyToMany(targetEntity: NestedListItem::class, orphanRemoval: true, cascade: ['persist', 'remove'], fetch: 'EAGER')]
+    #[ORM\ManyToMany(targetEntity: NestedListItem::class, orphanRemoval: true, cascade: [
+        'persist',
+        'remove',
+    ], fetch: 'EAGER')]
     #[ORM\JoinTable(name: 'mwt_editor_js_nested_list_nested_list_item')]
     #[ORM\JoinColumn(name: 'nested_list_id', referencedColumnName: 'uuid')]
     #[ORM\InverseJoinColumn(name: 'nested_list_item_id', referencedColumnName: 'uuid', unique: true)]
-    #[ORM\OrderBy(['uuid' => 'ASC'])]
+    #[ORM\OrderBy([
+        'uuid' => 'ASC',
+    ])]
     #[Valid]
     private Collection $items;
 
@@ -47,10 +52,8 @@ class NestedList extends Block
      */
     public function __construct(
         string $id,
-
         #[ORM\Column(type: 'string')]
         private string $style,
-
         array $items,
     ) {
         parent::__construct($id);
@@ -77,7 +80,7 @@ class NestedList extends Block
 
     public function addItem(NestedListItem $item): self
     {
-        if (!$this->items->contains($item)) {
+        if (! $this->items->contains($item)) {
             $this->items[] = $item;
         }
 

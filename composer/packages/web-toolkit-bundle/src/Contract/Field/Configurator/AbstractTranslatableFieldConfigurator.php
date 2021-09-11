@@ -32,7 +32,8 @@ abstract class AbstractTranslatableFieldConfigurator implements FieldConfigurato
         protected LocaleProviderInterface $localeProvider,
         protected PropertyAccessorInterface $propertyAccessor,
         protected FormRegistryInterface $formRegistry,
-    ) {}
+    ) {
+    }
 
     public function supports(FieldDto $field, EntityDto $entityDto): bool
     {
@@ -67,9 +68,11 @@ abstract class AbstractTranslatableFieldConfigurator implements FieldConfigurato
     {
         /** @var TranslatableInterface $instance */
         $instance = $entityDto->getInstance();
-        $isNew = ! $instance->getTranslations()->containsKey($this->localeProvider->provideCurrentLocale());
+        $isNew = ! $instance->getTranslations()
+            ->containsKey($this->localeProvider->provideCurrentLocale())
+        ;
         $currentLocale = $this->localeProvider->provideCurrentLocale();
 
-        return ($isNew ? 'newTranslations[' : 'translations[') . $currentLocale . '].' . $field->getProperty();
+        return ($isNew ? 'newTranslations[' : 'translations[').$currentLocale.'].'.$field->getProperty();
     }
 }

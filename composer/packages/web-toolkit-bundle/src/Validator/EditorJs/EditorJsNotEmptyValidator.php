@@ -23,18 +23,19 @@ use Symfony\Component\Validator\ConstraintValidator;
 final class EditorJsNotEmptyValidator extends ConstraintValidator
 {
     /**
-     * @param EditorJsContent|string|null $editorJsContent
-     * @param EditorJsNotEmpty $constraint
+     * @param null|EditorJsContent|string $editorJsContent
+     * @param EditorJsNotEmpty            $constraint
      */
     public function validate($editorJsContent, Constraint $constraint)
     {
-        if ($editorJsContent === null || $editorJsContent === '') {
+        if (null === $editorJsContent || '' === $editorJsContent) {
             return;
         }
 
-        if ($editorJsContent->getBlocks()->count() === 0) {
+        if (0 === $editorJsContent->getBlocks()->count()) {
             $this->context->buildViolation('This value cannot be empty.')
-                ->addViolation();
+                ->addViolation()
+            ;
         }
     }
 }
