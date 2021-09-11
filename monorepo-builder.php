@@ -32,9 +32,11 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     // For "merge" command
     $parameters->set(Option::DATA_TO_APPEND, [
         ComposerJsonSection::REQUIRE_DEV => [
-            'phpstan/phpstan' => '^0.12',
             'phpunit/phpunit' => '^9.5',
-            'symplify/monorepo-builder' => '^9.3',
+            'phpstan/phpstan' => '^0.12',
+            'rector/rector' => '^0.11',
+            'symplify/monorepo-builder' => '^9.4',
+            'symplify/easy-coding-standard' => '^9.4',
         ],
     ]);
     $parameters->set(Option::PACKAGE_DIRECTORIES, [
