@@ -67,11 +67,9 @@ final class TranslatableFieldConfigurator extends AbstractTranslatableFieldConfi
     {
         $labelInaccessibleTemplatePath = $adminContext->getTemplatePath('label/inaccessible');
 
-        if (! in_array(
-            $templatePath = $field->getTemplatePath(),
-            [null, $labelInaccessibleTemplatePath],
-            true
-        )) {
+        $templatePath = $field->getTemplatePath();
+
+        if (! in_array($templatePath, [null, $labelInaccessibleTemplatePath], true)) {
             return $templatePath;
         }
 
@@ -80,8 +78,13 @@ final class TranslatableFieldConfigurator extends AbstractTranslatableFieldConfi
             return $labelInaccessibleTemplatePath;
         }
 
-        if (null === $templateName = $field->getTemplateName()) {
-            throw new RuntimeException(sprintf('Fields must define either their templateName or their templatePath. None given for "%s" field.', $field->getProperty()));
+        $templateName = $field->getTemplateName();
+
+        if (null === $templateName) {
+            throw new RuntimeException(sprintf(
+                'Fields must define either their templateName or their templatePath. None given for "%s" field.',
+                $field->getProperty()
+            ));
         }
 
         return $adminContext->getTemplatePath($templateName);

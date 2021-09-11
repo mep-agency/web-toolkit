@@ -82,8 +82,10 @@ class GarbageCollectionCommand extends Command
             $io->info('No unused attachment found.');
         }
 
-        if ($deletedAttachments = count($garbageAttachmentsLog)) {
-            $io->success($deletedAttachments . ' unused attachments ' . ($dryRun ? 'found' : 'deleted') . '!');
+        $deletedAttachments = count($garbageAttachmentsLog);
+
+        if ($deletedAttachments > 0) {
+            $io->success($deletedAttachments.' unused attachments '.($dryRun ? 'found' : 'deleted').'!');
         }
 
         return Command::SUCCESS;

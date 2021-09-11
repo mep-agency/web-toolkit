@@ -39,9 +39,14 @@ final class EditorJsValidator extends ConstraintValidator
         }
 
         foreach ($value->getBlocks() as $block) {
-            if (! in_array($type = get_class($block), $constraint->enabledTools, true)) {
-                $this->context->buildViolation('Block type "' . Block::getTypeByClass($type) . '" is not allowed in this content.')
-                    ->addViolation();
+            $type = get_class($block);
+
+            if (! in_array($type, $constraint->enabledTools, true)) {
+                $this->context->buildViolation(
+                    'Block type "'.Block::getTypeByClass($type).'" is not allowed in this content.'
+                )
+                    ->addViolation()
+                ;
             }
         }
     }

@@ -36,11 +36,9 @@ abstract class AbstractTranslatableFieldConfigurator implements FieldConfigurato
 
     public function supports(FieldDto $field, EntityDto $entityDto): bool
     {
-        if (! in_array(
-            TranslatableInterface::class,
-            class_implements($entityFqcn = $this->getTranslatableFqcn($entityDto)),
-            true
-        )) {
+        $entityFqcn = $this->getTranslatableFqcn($entityDto);
+
+        if (! in_array(TranslatableInterface::class, class_implements($entityFqcn), true)) {
             return false;
         }
 

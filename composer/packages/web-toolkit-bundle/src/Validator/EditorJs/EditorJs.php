@@ -56,22 +56,30 @@ final class EditorJs extends Constraint
         if (empty($this->enabledTools)) {
             $this->enabledTools = Block::getSupportedClasses();
         } else {
-            if (! empty($unknownTools = array_diff($this->enabledTools, Block::getSupportedClasses()))) {
-                throw new InvalidConfigurationException(
-                    'Invalid EditorJs configuration: unknown tool(s): "' . implode('", "', $unknownTools) . '" (enabled).'
-                );
+            $unknownTools = array_diff($this->enabledTools, Block::getSupportedClasses());
+
+            if (! empty($unknownTools)) {
+                throw new InvalidConfigurationException('Invalid EditorJs configuration: unknown tool(s): "'.implode(
+                    '", "',
+                    $unknownTools
+                ).'" (enabled).');
             }
         }
 
-        if (! empty($unknownTools = array_diff($this->disabledTools, Block::getSupportedClasses()))) {
-            throw new InvalidConfigurationException(
-                'Invalid EditorJs configuration: unknown tool(s): "' . implode('", "', $unknownTools) . '" (disabled).'
-            );
+        $unknownTools = array_diff($this->disabledTools, Block::getSupportedClasses());
+
+        if (! empty($unknownTools)) {
+            throw new InvalidConfigurationException('Invalid EditorJs configuration: unknown tool(s): "'.implode(
+                '", "',
+                $unknownTools
+            ).'" (disabled).');
         }
 
         // Remove disabled tools (if any)
         foreach ($this->disabledTools as $disabledTool) {
-            if (($key = array_search($disabledTool, $this->enabledTools, true)) !== false) {
+            $key = array_search($disabledTool, $this->enabledTools, true);
+
+            if (false !== $key) {
                 unset($this->enabledTools[$key]);
             }
         }
