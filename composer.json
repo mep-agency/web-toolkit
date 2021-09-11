@@ -39,5 +39,9 @@
     "replace": {
         "mep-agency/monorepo-utils": "self.version",
         "mep-agency/web-toolkit-bundle": "self.version"
+    },
+    "scripts": {
+        "ecs": "php vendor/bin/ecs check",
+        "ecs-fix": "php vendor/bin/ecs check --fix"
     }
 }
