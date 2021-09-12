@@ -24,9 +24,11 @@
         "tinify/tinify": "^1.5"
     },
     "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^3.4",
         "phpstan/phpstan": "^0.12",
         "phpunit/phpunit": "^9.5",
         "rector/rector": "^0.11",
+        "sensio/framework-extra-bundle": "^6.1",
         "symplify/easy-coding-standard": "^9.4",
         "symplify/monorepo-builder": "^9.4"
     },
@@ -43,11 +45,13 @@
     "scripts": {
         "check": [
             "@rector",
-            "@ecs"
+            "@ecs",
+            "@phpstan"
         ],
         "ecs": "php vendor/bin/ecs check",
         "ecs-fix": "php vendor/bin/ecs check --fix",
         "rector": "php vendor/bin/rector process --dry-run",
-        "rector-fix": "php vendor/bin/rector process"
+        "rector-fix": "php vendor/bin/rector process",
+        "phpstan": "php vendor/bin/phpstan analyse"
     }
 }

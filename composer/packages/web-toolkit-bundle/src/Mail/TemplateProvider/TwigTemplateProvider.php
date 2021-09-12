@@ -79,7 +79,7 @@ final class TwigTemplateProvider implements TemplateProviderInterface
             $email->subject(trim($subject));
         }
 
-        $email->text($text ?? html_entity_decode(strip_tags($html)));
+        $email->text($text ?? html_entity_decode(strip_tags($html ?? '')));
 
         if (null !== $html) {
             $email->html($html);

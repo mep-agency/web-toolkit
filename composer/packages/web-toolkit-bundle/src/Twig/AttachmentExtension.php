@@ -43,7 +43,9 @@ final class AttachmentExtension extends AbstractExtension
 
     public function getPublicUrl(Attachment|string $attachment): string
     {
-        if (! ($attachment instanceof Attachment)) {
+        if ($attachment instanceof Attachment) {
+            $uuid = $attachment->getId();
+        } else {
             $uuid = $attachment;
             $attachment = $this->entityManager
                 ->getRepository(Attachment::class)

@@ -35,7 +35,7 @@ abstract class AbstractSecurityController extends AbstractController implements 
     {
         if ($request->isMethod('POST')) {
             $email = $request->request->get('email');
-            $user = $this->findUser($email);
+            $user = $this->findUser((string) $email);
 
             $lastUsername = $email;
 
@@ -46,7 +46,7 @@ abstract class AbstractSecurityController extends AbstractController implements 
             }
 
             $userNotFoundException = new UserNotFoundException();
-            $userNotFoundException->setUserIdentifier($email);
+            $userNotFoundException->setUserIdentifier((string) $email);
         }
 
         return $this->render(

@@ -51,12 +51,15 @@ final class AdminAttachmentUploadApiType extends AdminAttachmentType
         ;
     }
 
+    /**
+     * @param FormInterface<FormInterface> $form
+     */
     public function buildView(FormView $formView, FormInterface $form, array $options): void
     {
         throw new RuntimeException('This FormType is meant for back end processing only.');
     }
 
-    public function configureOptions(OptionsResolver $optionsResolver)
+    public function configureOptions(OptionsResolver $optionsResolver): void
     {
         parent::configureOptions($optionsResolver);
 

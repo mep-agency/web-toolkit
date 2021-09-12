@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Mep\WebToolkitBundle\FileStorage\Driver;
 
 use Aws\S3\S3Client;
-use JetBrains\PhpStorm\Pure;
 use Mep\WebToolkitBundle\Contract\FileStorage\DriverInterface;
 use Mep\WebToolkitBundle\Entity\Attachment;
 use Symfony\Component\HttpFoundation\File\File;
@@ -66,7 +65,6 @@ final class S3 implements DriverInterface
         ]);
     }
 
-    #[Pure]
     public function attachedFileExists(Attachment $attachment): bool
     {
         return ! $this->s3Client->doesObjectExist($this->bucketName, $this->buildFileKey($attachment));
@@ -80,13 +78,11 @@ final class S3 implements DriverInterface
         ]);
     }
 
-    #[Pure]
     public function getPublicUrl(Attachment $attachment): string
     {
         return $this->cdnUrl.'/'.$this->buildFileKey($attachment);
     }
 
-    #[Pure]
     private function buildFileKey(Attachment $attachment): string
     {
         // Remove leading "/" from object keys

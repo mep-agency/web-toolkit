@@ -74,6 +74,9 @@ final class AdminEditorJsType extends AbstractType implements DataTransformerInt
         ;
     }
 
+    /**
+     * @param FormInterface<FormInterface> $form
+     */
     public function buildView(FormView $formView, FormInterface $form, array $options): void
     {
         // Normalize tool options for EditorJs
@@ -157,7 +160,7 @@ final class AdminEditorJsType extends AbstractType implements DataTransformerInt
         }
     }
 
-    public function configureOptions(OptionsResolver $optionsResolver)
+    public function configureOptions(OptionsResolver $optionsResolver): void
     {
         parent::configureOptions($optionsResolver);
 

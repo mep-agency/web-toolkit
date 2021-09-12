@@ -25,7 +25,7 @@ final class EditorJsValidator extends ConstraintValidator
 {
     /**
      * @param null|EditorJsContent|string $value
-     * @param EditorJS                    $constraint
+     * @param EditorJs                    $constraint
      */
     public function validate($value, Constraint $constraint): void
     {
@@ -34,13 +34,15 @@ final class EditorJsValidator extends ConstraintValidator
         }
 
         if (! $value instanceof EditorJsContent) {
-            $this->context->buildViolation('Invalid data. EditorJs values must be arrays.')
+            $this->context->buildViolation('Invalid EditorJs value.')
                 ->addViolation()
             ;
+
+            return;
         }
 
-        foreach ($value->getBlocks() as $arrayCollection) {
-            $type = $arrayCollection::class;
+        foreach ($value->getBlocks() as $block) {
+            $type = $block::class;
 
             if (! in_array($type, $constraint->enabledTools, true)) {
                 $this->context->buildViolation(

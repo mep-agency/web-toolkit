@@ -32,6 +32,14 @@ final class EditorJsNotEmptyValidator extends ConstraintValidator
             return;
         }
 
+        if (! $editorJsContent instanceof EditorJsContent) {
+            $this->context->buildViolation('Invalid EditorJs value.')
+                ->addViolation()
+            ;
+
+            return;
+        }
+
         if (0 === $editorJsContent->getBlocks()->count()) {
             $this->context->buildViolation('This value cannot be empty.')
                 ->addViolation()

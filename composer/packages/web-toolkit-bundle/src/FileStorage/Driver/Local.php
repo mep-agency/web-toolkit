@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\FileStorage\Driver;
 
-use JetBrains\PhpStorm\Pure;
 use Mep\WebToolkitBundle\Contract\FileStorage\DriverInterface;
 use Mep\WebToolkitBundle\Entity\Attachment;
+use RuntimeException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -40,11 +40,16 @@ final class Local implements DriverInterface
 
     public function store(File $file, Attachment $attachment): void
     {
+        $fileRealPath = $file->getRealPath();
+
+        if (! $fileRealPath) {
+            throw new RuntimeException('Cannot store file: invalid path.');
+        }
+
         // Copy new file to storage
-        $this->filesystem->copy($file->getRealPath(), $this->buildFilePath($attachment));
+        $this->filesystem->copy($fileRealPath, $this->buildFilePath($attachment));
     }
 
-    #[Pure]
     public function attachedFileExists(Attachment $attachment): bool
     {
         return is_file($this->buildFilePath($attachment));
@@ -63,7 +68,6 @@ final class Local implements DriverInterface
         return $this->getPublicUrlPrefix().$this->publicUrlPathPrefix.'/'.$attachment->getId().'/'.$attachment->getFileName();
     }
 
-    #[Pure]
     private function buildFilePath(Attachment $attachment): string
     {
         return $this->storagePath.'/'.$attachment->getId().'/'.$attachment->getFileName();

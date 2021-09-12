@@ -36,7 +36,7 @@ class NestedListItem implements JsonSerializable
     private Uuid $uuid;
 
     /**
-     * @var Collection<NestedListItem>|NestedListItem[]
+     * @var Collection<int, NestedListItem>
      */
     #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'parent', orphanRemoval: true, cascade: [
         'persist',
@@ -79,7 +79,7 @@ class NestedListItem implements JsonSerializable
     }
 
     /**
-     * @return Collection<NestedListItem>|NestedListItem[]
+     * @return Collection<int, NestedListItem>
      */
     public function getItems(): Collection
     {
@@ -112,7 +112,7 @@ class NestedListItem implements JsonSerializable
     }
 
     /**
-     * @param null|\Mep\WebToolkitBundle\Entity\EditorJs\Block\OutputComponent\NestedListItem $parent
+     * @param null|NestedListItem $parent
      */
     public function setParent(?self $parent): self
     {
@@ -122,7 +122,7 @@ class NestedListItem implements JsonSerializable
     }
 
     /**
-     * @return array<string, mixed[]>|array<string, string>
+     * @return array<string, NestedListItem[]|string>
      */
     public function jsonSerialize(): array
     {

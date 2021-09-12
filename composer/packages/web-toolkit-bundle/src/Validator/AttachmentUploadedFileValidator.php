@@ -42,6 +42,8 @@ final class AttachmentUploadedFileValidator extends AttachmentFileValidator
             $this->context->buildViolation('mep_web_toolkit.validators.admin_attachment_upload_type.invalid_value_type')
                 ->addViolation()
             ;
+
+            return;
         }
 
         $unprocessedAttachmentDto = new UnprocessedAttachmentDto($file, null, $constraint->metadata);

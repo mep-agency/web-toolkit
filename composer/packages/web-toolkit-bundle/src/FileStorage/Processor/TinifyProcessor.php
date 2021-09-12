@@ -16,6 +16,7 @@ namespace Mep\WebToolkitBundle\FileStorage\Processor;
 use Mep\WebToolkitBundle\Contract\FileStorage\ProcessorInterface;
 use Mep\WebToolkitBundle\Dto\UnprocessedAttachmentDto;
 use Mep\WebToolkitBundle\Exception\InvalidConfigurationException;
+use RuntimeException;
 use function Tinify\fromFile;
 use Tinify\Tinify;
 
@@ -67,11 +68,17 @@ final class TinifyProcessor implements ProcessorInterface
 
     public function run(UnprocessedAttachmentDto $unprocessedAttachmentDto): UnprocessedAttachmentDto
     {
-        if (! $this->dummyMode) {
-            $tinifyFile = fromFile($unprocessedAttachmentDto->file->getRealPath());
-            $tinifyFile->toFile($unprocessedAttachmentDto->file->getRealPath());
+        $fileRealPath = $unprocessedAttachmentDto->file->getRealPath();
 
-            clearstatcache(true, $unprocessedAttachmentDto->file->getRealPath());
+        if (! $fileRealPath) {
+            throw new RuntimeException('Cannot compress image: invalid file path.');
+        }
+
+        if (! $this->dummyMode) {
+            $tinifyFile = fromFile($fileRealPath);
+            $tinifyFile->toFile($fileRealPath);
+
+            clearstatcache(true, $fileRealPath);
             $unprocessedAttachmentDto->fileSize = $unprocessedAttachmentDto->file->getSize();
         } else {
             $unprocessedAttachmentDto->metadata[self::IS_DUMMY] = true;

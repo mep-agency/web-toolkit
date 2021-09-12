@@ -22,12 +22,20 @@ use Symfony\Component\Validator\ConstraintValidator;
 final class AssociativeArrayOfScalarValuesValidator extends ConstraintValidator
 {
     /**
-     * @param null|array|string              $metadata
+     * @param null|mixed[]|string            $metadata
      * @param AssociativeArrayOfScalarValues $constraint
      */
     public function validate($metadata, Constraint $constraint): void
     {
         if (null === $metadata || '' === $metadata) {
+            return;
+        }
+
+        if (! is_array($metadata)) {
+            $this->context->buildViolation('Invalid metadata value.')
+                ->addViolation()
+            ;
+
             return;
         }
 

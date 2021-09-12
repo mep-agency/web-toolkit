@@ -132,18 +132,21 @@ abstract class Block implements JsonSerializable
         return $this->id;
     }
 
-    public function getParent(): ?EditorJsContent
+    public function getParent(): EditorJsContent
     {
         return $this->parent;
     }
 
-    public function setParent(?EditorJsContent $editorJsContent): self
+    public function setParent(EditorJsContent $editorJsContent): self
     {
         $this->parent = $editorJsContent;
 
         return $this;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function jsonSerialize(): array
     {
         return [

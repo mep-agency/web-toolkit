@@ -1,0 +1,13 @@
+parameters:
+  level: max
+  paths:
+    - composer
+  ignoreErrors:
+    - message: '#Unable to resolve the template type T in call to method Doctrine\\Persistence\\ObjectManager::getRepository\(\)#'
+      path: composer/packages/web-toolkit-bundle/src/EventListener/ForceSingleInstanceEventListener.php
+  bootstrapFiles:
+    # Fix class not found error for Symplify\MonorepoBuilder\Release\Contract\ReleaseWorker\ReleaseWorkerInterface
+    - vendor/symplify/monorepo-builder/vendor/autoload.php
+
+includes:
+  - vendor/knplabs/doctrine-behaviors/phpstan-extension.neon

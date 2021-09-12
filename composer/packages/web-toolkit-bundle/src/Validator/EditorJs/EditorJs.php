@@ -252,7 +252,7 @@ final class EditorJs extends Constraint
 
         foreach ($this->options as $toolName => $toolOptions) {
             try {
-                $this->options[$toolName] = self::$optionsResolvers[$toolName]->resolve($toolOptions);
+                $this->options[(string) $toolName] = self::$optionsResolvers[$toolName]->resolve($toolOptions);
             } catch (InvalidOptionsException $invalidOptionsException) {
                 throw new InvalidConfigurationException(
                     'Invalid EditorJs tool configuration ('.$toolName.'): '.$invalidOptionsException->getMessage(),

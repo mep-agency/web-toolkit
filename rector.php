@@ -14,6 +14,7 @@ declare(strict_types=1);
 use Rector\Core\Configuration\Option;
 use Rector\Core\ValueObject\PhpVersion;
 use Rector\Set\ValueObject\SetList;
+use Rector\TypeDeclaration\Rector\ClassMethod\AddArrayReturnDocTypeRector;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 // Fix class not found error for Symplify\MonorepoBuilder\Release\Contract\ReleaseWorker\ReleaseWorkerInterface
@@ -34,7 +35,14 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     ]);
 
     // Skip some stuff
-    $parameters->set(Option::SKIP, [__DIR__.'/composer/projects/symfony-web-toolkit-skeleton/*']);
+    $parameters->set(Option::SKIP, [
+        AddArrayReturnDocTypeRector::class => [
+            // Avoid "@return null“ comments
+            __DIR__.'/composer/packages/web-toolkit-bundle/src/Form/TypeGuesser/AdminAttachmentTypeGuesser.php',
+            __DIR__.'/composer/packages/web-toolkit-bundle/src/Form/TypeGuesser/AdminEditorJsTypeGuesser.php',
+        ],
+        __DIR__.'/composer/projects/symfony-web-toolkit-skeleton/*',
+    ]);
 
     // Define what rule sets will be applied
     $containerConfigurator->import(SetList::PHP_80);

@@ -33,7 +33,8 @@ final class AttachmentNormalizer implements NormalizerInterface, DenormalizerInt
     }
 
     /**
-     * @param Attachment $object
+     * @param Attachment           $object
+     * @param array<string, mixed> $context
      *
      * @return array<string, string>
      */
@@ -51,6 +52,10 @@ final class AttachmentNormalizer implements NormalizerInterface, DenormalizerInt
         return $data instanceof Attachment && 'json' === $format;
     }
 
+    /**
+     * @param array<string, mixed> $context
+     * @param mixed                $data
+     */
     public function denormalize($data, string $type, string $format = null, array $context = []): ?Attachment
     {
         return $this->entityManager->getRepository(Attachment::class)

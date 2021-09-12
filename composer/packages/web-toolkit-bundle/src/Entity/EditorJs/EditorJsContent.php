@@ -34,7 +34,7 @@ class EditorJsContent implements JsonSerializable
     private Uuid $id;
 
     /**
-     * @var Block[]|Collection<Block>
+     * @var Collection<int, Block>
      */
     #[ORM\OneToMany(targetEntity: Block::class, mappedBy: 'parent', orphanRemoval: true, cascade: [
         'persist',
@@ -72,7 +72,7 @@ class EditorJsContent implements JsonSerializable
     }
 
     /**
-     * @return Block[]|Collection<Block>
+     * @return Collection<int, Block>
      */
     public function getBlocks(): Collection
     {
@@ -91,10 +91,7 @@ class EditorJsContent implements JsonSerializable
 
     public function removeBlock(Block $block): self
     {
-        // set the owning side to null (unless already changed)
-        if ($this->blocks->removeElement($block) && $block->getParent() === $this) {
-            $block->setParent(null);
-        }
+        $this->blocks->removeElement($block);
 
         return $this;
     }

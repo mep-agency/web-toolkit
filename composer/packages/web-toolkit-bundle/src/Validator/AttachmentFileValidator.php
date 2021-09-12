@@ -34,6 +34,14 @@ class AttachmentFileValidator extends ConstraintValidator
             return;
         }
 
+        if (! $attachment instanceof AttachmentEntity) {
+            $this->context->buildViolation('Invalid attachment value.')
+                ->addViolation()
+            ;
+
+            return;
+        }
+
         if ($constraint->maxSize > 0 && $attachment->getFileSize() > $constraint->maxSize) {
             $this->context->buildViolation('mep_web_toolkit.validators.admin_attachment_upload_type.max_size_exceeded')
                 ->setParameter('max_size', (string) $constraint->maxSize)

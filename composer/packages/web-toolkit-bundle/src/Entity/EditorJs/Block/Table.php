@@ -15,6 +15,7 @@ namespace Mep\WebToolkitBundle\Entity\EditorJs\Block;
 
 use Doctrine\ORM\Mapping as ORM;
 use Mep\WebToolkitBundle\Entity\EditorJs\Block;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @final You should not extend this class.

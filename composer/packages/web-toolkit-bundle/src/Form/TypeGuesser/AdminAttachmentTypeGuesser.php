@@ -16,7 +16,10 @@ namespace Mep\WebToolkitBundle\Form\TypeGuesser;
 use Mep\WebToolkitBundle\Entity\Attachment;
 use Mep\WebToolkitBundle\Form\AdminAttachmentType;
 use Mep\WebToolkitBundle\Validator\AttachmentFile;
+use ReflectionNamedType;
 use ReflectionProperty;
+use ReflectionType;
+use ReflectionUnionType;
 use Symfony\Component\Form\FormTypeGuesserInterface;
 use Symfony\Component\Form\Guess\Guess;
 use Symfony\Component\Form\Guess\TypeGuess;
@@ -29,9 +32,30 @@ final class AdminAttachmentTypeGuesser implements FormTypeGuesserInterface
     public function guessType(string $class, string $property): ?TypeGuess
     {
         $reflectionProperty = new ReflectionProperty($class, $property);
+        $reflectionType = $reflectionProperty->getType();
 
-        if (Attachment::class !== $reflectionProperty->getType()?->getName()) {
+        if (! $reflectionType instanceof ReflectionType) {
             return null;
+        }
+
+        if ($reflectionType instanceof ReflectionNamedType && Attachment::class !== $reflectionType->getName()) {
+            return null;
+        }
+
+        if ($reflectionType instanceof ReflectionUnionType) {
+            $isValid = false;
+
+            foreach ($reflectionType->getTypes() as $type) {
+                if (Attachment::class === $type->getName()) {
+                    $isValid = true;
+
+                    break;
+                }
+            }
+
+            if (! $isValid) {
+                return null;
+            }
         }
 
         $validAttachmentAttribute = ($reflectionProperty->getAttributes(AttachmentFile::class)[0] ?? null)
@@ -51,15 +75,18 @@ final class AdminAttachmentTypeGuesser implements FormTypeGuesserInterface
         );
     }
 
-    public function guessRequired(string $class, string $property): void
+    public function guessRequired(string $class, string $property)
     {
+        return null;
     }
 
-    public function guessMaxLength(string $class, string $property): void
+    public function guessMaxLength(string $class, string $property)
     {
+        return null;
     }
 
-    public function guessPattern(string $class, string $property): void
+    public function guessPattern(string $class, string $property)
     {
+        return null;
     }
 }

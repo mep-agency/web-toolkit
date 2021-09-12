@@ -16,7 +16,10 @@ namespace Mep\WebToolkitBundle\Form\TypeGuesser;
 use Mep\WebToolkitBundle\Entity\EditorJs\EditorJsContent;
 use Mep\WebToolkitBundle\Form\AdminEditorJsType;
 use Mep\WebToolkitBundle\Validator\EditorJs\EditorJs;
+use ReflectionNamedType;
 use ReflectionProperty;
+use ReflectionType;
+use ReflectionUnionType;
 use Symfony\Component\Form\FormTypeGuesserInterface;
 use Symfony\Component\Form\Guess\Guess;
 use Symfony\Component\Form\Guess\TypeGuess;
@@ -29,9 +32,30 @@ final class AdminEditorJsTypeGuesser implements FormTypeGuesserInterface
     public function guessType(string $class, string $property): ?TypeGuess
     {
         $reflectionProperty = new ReflectionProperty($class, $property);
+        $reflectionType = $reflectionProperty->getType();
 
-        if (EditorJsContent::class !== $reflectionProperty->getType()?->getName()) {
+        if (! $reflectionType instanceof ReflectionType) {
             return null;
+        }
+
+        if ($reflectionType instanceof ReflectionNamedType && EditorJsContent::class !== $reflectionType->getName()) {
+            return null;
+        }
+
+        if ($reflectionType instanceof ReflectionUnionType) {
+            $isValid = false;
+
+            foreach ($reflectionType->getTypes() as $type) {
+                if (EditorJsContent::class === $type->getName()) {
+                    $isValid = true;
+
+                    break;
+                }
+            }
+
+            if (! $isValid) {
+                return null;
+            }
         }
 
         $editorJsAttribute = ($reflectionProperty->getAttributes(EditorJs::class)[0] ?? null)
@@ -48,15 +72,18 @@ final class AdminEditorJsTypeGuesser implements FormTypeGuesserInterface
         );
     }
 
-    public function guessRequired(string $class, string $property): void
+    public function guessRequired(string $class, string $property)
     {
+        return null;
     }
 
-    public function guessMaxLength(string $class, string $property): void
+    public function guessMaxLength(string $class, string $property)
     {
+        return null;
     }
 
-    public function guessPattern(string $class, string $property): void
+    public function guessPattern(string $class, string $property)
     {
+        return null;
     }
 }

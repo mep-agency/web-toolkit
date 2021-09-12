@@ -29,6 +29,10 @@ final class EditorJsContentNormalizer implements DenormalizerInterface
     ) {
     }
 
+    /**
+     * @param array<string, mixed> $context
+     * @param mixed                $data
+     */
     public function denormalize($data, string $type, string $format = null, array $context = []): object
     {
         $data['time'] = (string) $data['time'];

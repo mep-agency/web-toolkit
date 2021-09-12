@@ -18,6 +18,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldConfiguratorInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto;
 use Symfony\Component\Form\FormRegistryInterface;
+use Symfony\Component\Form\FormTypeGuesserInterface;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
@@ -39,6 +40,11 @@ final class TypeGuesserConfigurator implements FieldConfiguratorInterface
         $formTypeGuesser = $this->formRegistry
             ->getTypeGuesser()
         ;
+
+        if (! $formTypeGuesser instanceof FormTypeGuesserInterface) {
+            return;
+        }
+
         $typeGuess = $formTypeGuesser->guessType($entityDto->getFqcn(), $fieldDto->getProperty());
         $options = $fieldDto->getFormTypeOptions();
 

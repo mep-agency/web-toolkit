@@ -28,11 +28,14 @@ use Mep\WebToolkitBundle\Entity\Attachment;
  */
 final class AssociationContextGarbageCollector implements GarbageCollectorInterface
 {
+    /**
+     * @return Generator<Attachment>
+     */
     public function collect(EntityManagerInterface $entityManager, bool $dryRun): Generator
     {
         $entities = $entityManager->getConfiguration()
             ->getMetadataDriverImpl()
-            ->getAllClassNames()
+            ?->getAllClassNames() ?? []
         ;
 
         foreach ($entities as $entity) {

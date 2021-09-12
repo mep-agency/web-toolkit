@@ -32,7 +32,7 @@ use Symfony\Component\Validator\Constraints\Valid;
 class NestedList extends Block
 {
     /**
-     * @var Collection<NestedListItem>|NestedListItem[]
+     * @var Collection<int, NestedListItem>
      */
     #[ORM\ManyToMany(targetEntity: NestedListItem::class, orphanRemoval: true, cascade: [
         'persist',
@@ -71,7 +71,7 @@ class NestedList extends Block
     }
 
     /**
-     * @return Collection<NestedListItem>|NestedListItem[]
+     * @return Collection<int, NestedListItem>
      */
     public function getItems(): Collection
     {

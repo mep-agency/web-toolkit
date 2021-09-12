@@ -88,6 +88,9 @@ class AdminAttachmentType extends AbstractType implements DataTransformerInterfa
         ;
     }
 
+    /**
+     * @param FormInterface<FormInterface> $form
+     */
     public function buildView(FormView $formView, FormInterface $form, array $options): void
     {
         $formView->vars['api_url'] = $this->attachmentsAdminApiUrlGenerator->generate([
@@ -106,7 +109,7 @@ class AdminAttachmentType extends AbstractType implements DataTransformerInterfa
         ;
     }
 
-    public function configureOptions(OptionsResolver $optionsResolver)
+    public function configureOptions(OptionsResolver $optionsResolver): void
     {
         $optionsResolver->setDefaults([
             self::MAX_SIZE => 0,
@@ -174,14 +177,15 @@ class AdminAttachmentType extends AbstractType implements DataTransformerInterfa
             throw new TransformationFailedException('Invalid attachment value.');
         }
 
-        $result = $data ? $this->entityManager
+        $attachment = $this->entityManager
             ->getRepository(Attachment::class)
-            ->find($data) : null;
+            ->find($data)
+        ;
 
-        if (! $result instanceof Attachment) {
+        if (! $attachment instanceof Attachment) {
             throw new TransformationFailedException('Attachment not found: "'.$data.'".');
         }
 
-        return $result;
+        return $attachment;
     }
 }

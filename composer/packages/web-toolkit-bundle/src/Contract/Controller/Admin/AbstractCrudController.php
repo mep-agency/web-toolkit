@@ -15,7 +15,7 @@ namespace Mep\WebToolkitBundle\Contract\Controller\Admin;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
@@ -45,7 +45,9 @@ use Mep\WebToolkitBundle\FileStorage\FileStorageManager;
 use Mep\WebToolkitBundle\Form\AdminAttachmentType;
 use Mep\WebToolkitBundle\Form\AdminAttachmentUploadApiType;
 use RuntimeException;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -54,6 +56,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
+ * @template T of object
+ *
  * @author Marco Lipparini <developer@liarco.net>
  */
 abstract class AbstractCrudController extends OriginalAbstractCrudController
@@ -74,10 +78,14 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
         protected AdminUrlGenerator $adminUrlGenerator,
         protected FileStorageManager $fileStorageManager,
         protected NormalizerInterface $normalizer,
+        protected EventDispatcherInterface $eventDispatcher,
     ) {
     }
 
-    public function createEntity(string $entityFqcn)
+    /**
+     * @return T
+     */
+    public function createEntity(string $entityFqcn): object
     {
         $instance = parent::createEntity($entityFqcn);
 
@@ -137,6 +145,9 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
         return $actionsConfiguration;
     }
 
+    /**
+     * @param T $entityInstance
+     */
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
         static::mergeNewTranslationsIfIsTranslatable($entityInstance);
@@ -144,6 +155,9 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
         parent::persistEntity($entityManager, $entityInstance);
     }
 
+    /**
+     * @param T $entityInstance
+     */
     public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
         static::mergeNewTranslationsIfIsTranslatable($entityInstance);
@@ -151,12 +165,11 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
         parent::updateEntity($entityManager, $entityInstance);
     }
 
-    public function deleteTranslation(AdminContext $adminContext,): Response|RedirectResponse
+    public function deleteTranslation(AdminContext $adminContext): Response|RedirectResponse
     {
         $event = new BeforeCrudActionEvent($adminContext);
-        $this->get('event_dispatcher')
-            ->dispatch($event)
-        ;
+        $this->eventDispatcher->dispatch($event);
+
         if ($event->isPropagationStopped()) {
             return $event->getResponse();
         }
@@ -172,12 +185,18 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
             throw new InsufficientEntityPermissionException($adminContext);
         }
 
+        /** @var T $instance */
         $instance = $adminContext->getEntity()
             ->getInstance()
         ;
 
         if ($instance instanceof TranslatableInterface) {
             $currentLocale = $this->localeProvider->provideCurrentLocale();
+
+            if (null === $currentLocale) {
+                throw new RuntimeException('Cannot get current locale.');
+            }
+
             $translations = $instance->getTranslations();
             $currentTranslation = $translations->get($currentLocale);
 
@@ -187,20 +206,24 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
 
             if (null !== $currentTranslation) {
                 $instance->removeTranslation($currentTranslation);
+                $objectManager = $this->getDoctrine()
+                    ->getManagerForClass($adminContext->getEntity()->getFqcn())
+                ;
 
-                $this->updateEntity(
-                    $this->get('doctrine')
-                        ->getManagerForClass($adminContext->getEntity()->getFqcn()),
-                    $instance,
-                );
+                if (! $objectManager instanceof EntityManagerInterface) {
+                    $invalidFqcn = ($objectManager instanceof ObjectManager) ? $objectManager::class : 'null';
+
+                    throw new RuntimeException('Expected '.EntityManagerInterface::class.', '.$invalidFqcn.' given.');
+                }
+
+                $this->updateEntity($objectManager, $instance);
 
                 $keyValueStore = $this->configureResponseParameters(KeyValueStore::new([
                     'entity' => $adminContext->getEntity(),
                 ]));
 
                 $event = new AfterCrudActionEvent($adminContext, $keyValueStore);
-                $this->get('event_dispatcher')
-                    ->dispatch($event)
+                $this->eventDispatcher->dispatch($event)
                 ;
                 if ($event->isPropagationStopped()) {
                     return $event->getResponse();
@@ -247,11 +270,13 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
             $errors = [];
 
             foreach ($form->getErrors(true) as $error) {
-                $errors[] = [
-                    'property' => (string) $error->getOrigin()
-                        ->getPropertyPath(),
-                    'message' => $error->getMessage(),
-                ];
+                if ($error instanceof FormError) {
+                    $errors[] = [
+                        'property' => (string) $error->getOrigin()
+                            ?->getPropertyPath(),
+                        'message' => $error->getMessage(),
+                    ];
+                }
             }
 
             return new JsonResponse(
@@ -292,7 +317,7 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
         KeyValueStore $keyValueStore,
         AdminContext $adminContext,
     ): FormBuilderInterface {
-        /** @var TranslatableInterface $instance */
+        /** @var T $instance */
         $instance = $entityDto->getInstance();
 
         $this->overrideDefaultLocaleIfIsTranslatable($instance);
@@ -309,8 +334,11 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
         $queryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fieldCollection, $filterCollection);
 
         if (self::isTranslatableEntity()) {
+            /** @var class-string<TranslatableInterface> $entityFqcn */
+            $entityFqcn = $entityDto->getFqcn();
+
             $entityRepository = $this->getDoctrine()
-                ->getRepository($entityDto->getFqcn())
+                ->getRepository($entityFqcn)
             ;
 
             if (! $entityRepository instanceof LocalizedRepositoryInterface) {
@@ -325,10 +353,24 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
         return $queryBuilder;
     }
 
+    /**
+     * @return class-string<T>
+     */
+    abstract public static function getEntityFqcn(): string;
+
+    /**
+     * @param null|T $instance
+     */
     private function overrideDefaultLocaleIfIsTranslatable(?object $instance): void
     {
         if ($instance instanceof TranslatableInterface) {
-            $instance->setDefaultLocale($this->localeProvider->provideCurrentLocale());
+            $currentLocale = $this->localeProvider->provideCurrentLocale();
+
+            if (null === $currentLocale) {
+                throw new RuntimeException('Cannot get current locale.');
+            }
+
+            $instance->setDefaultLocale($currentLocale);
 
             // Ensure a new translation is ready for the current locale (if needed)
             $instance->translate(null, false);
@@ -343,29 +385,25 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
     private function redirectToSingleInstance(AdminContext $adminContext): ?Response
     {
         if ($this->isSingleInstance()) {
+            /** @var AbstractSingleInstanceRepository<T> $repository */
             $repository = $this->getRepository();
 
             $singleInstance = $repository->getInstance();
 
             if (null === $singleInstance) {
-                if (Action::NEW === $adminContext->getCrud()->getCurrentAction()) {
+                if (Action::NEW === $adminContext->getCrud()?->getCurrentAction()) {
                     // This is already a NEW action, no redirect needed
                     return null;
                 }
 
-                return $this->redirect(
-                    $this->get(AdminUrlGenerator::class)
-                        ->setAction(Action::NEW)
-                        ->generateUrl(),
-                );
+                return $this->redirect($this->adminUrlGenerator->setAction(Action::NEW)->generateUrl(),);
             }
 
             /** @var EntityFactory $entityFactory */
             $entityFactory = $this->get(EntityFactory::class);
 
             return $this->redirect(
-                $this->get(AdminUrlGenerator::class)
-                    ->setAction(Action::EDIT)
+                $this->adminUrlGenerator->setAction(Action::EDIT)
                     ->setEntityId($entityFactory->createForEntityInstance($singleInstance)->getPrimaryKeyValue())
                     ->generateUrl(),
             );
@@ -379,19 +417,24 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
         return $this->getRepository() instanceof AbstractSingleInstanceRepository;
     }
 
+    /**
+     * @return ObjectRepository<T>
+     */
     private function getRepository(): ObjectRepository
     {
-        /** @var ManagerRegistry $doctrine */
-        $doctrine = $this->get('doctrine');
+        $doctrine = $this->getDoctrine();
 
         return $doctrine->getRepository(static::getEntityFqcn());
     }
 
     private static function isTranslatableEntity(): bool
     {
-        return in_array(TranslatableInterface::class, class_implements(static::getEntityFqcn()), true);
+        return is_a(static::getEntityFqcn(), TranslatableInterface::class, true);
     }
 
+    /**
+     * @param null|T $instance
+     */
     private static function mergeNewTranslationsIfIsTranslatable(?object $instance): void
     {
         if ($instance instanceof TranslatableInterface) {
