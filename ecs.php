@@ -22,6 +22,20 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services = $containerConfigurator->services();
     $parameters = $containerConfigurator->parameters();
 
+    // Sources
+    $parameters->set(Option::PATHS, [
+        __DIR__.'/composer',
+        __DIR__.'/ecs.php',
+        __DIR__.'/monorepo-builder.php',
+        __DIR__.'/rector.php',
+    ]);
+
+    // Skip some stuff
+    $parameters->set(Option::SKIP, [
+        HeaderCommentFixer::class => [__DIR__.'/composer/projects/symfony-web-toolkit-skeleton/*'],
+    ]);
+
+    // Define what rule sets will be applied
     $containerConfigurator->import(SetList::CLEAN_CODE);
     $containerConfigurator->import(SetList::COMMON);
     $containerConfigurator->import(SetList::PSR_12);
@@ -29,6 +43,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $containerConfigurator->import(SetList::PHP_CS_FIXER);
     $containerConfigurator->import(SetList::SYMPLIFY);
 
+    // Custom configuration
     $services->set(HeaderCommentFixer::class)
         ->call('configure', [[
             'header' => 'This file is part of the MEP Web Toolkit package.
@@ -52,10 +67,4 @@ file that was distributed with this source code.',
             'elements' => ['arrays', 'arguments', 'parameters'],
         ]])
     ;
-
-    $parameters->set(Option::PATHS, [__DIR__.'/composer', __DIR__.'/ecs.php', __DIR__.'/monorepo-builder.php']);
-
-    $parameters->set(Option::SKIP, [
-        HeaderCommentFixer::class => [__DIR__.'/composer/projects/symfony-web-toolkit-skeleton/*'],
-    ]);
 };

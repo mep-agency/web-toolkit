@@ -41,7 +41,13 @@
         "mep-agency/web-toolkit-bundle": "self.version"
     },
     "scripts": {
+        "check": [
+            "@rector",
+            "@ecs"
+        ],
         "ecs": "php vendor/bin/ecs check",
-        "ecs-fix": "php vendor/bin/ecs check --fix"
+        "ecs-fix": "php vendor/bin/ecs check --fix",
+        "rector": "php vendor/bin/rector process --dry-run",
+        "rector-fix": "php vendor/bin/rector process"
     }
 }
