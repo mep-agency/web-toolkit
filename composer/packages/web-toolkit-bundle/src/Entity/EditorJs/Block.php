@@ -15,6 +15,16 @@ namespace Mep\WebToolkitBundle\Entity\EditorJs;
 
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
+use Mep\WebToolkitBundle\Entity\EditorJs\Block\Delimiter;
+use Mep\WebToolkitBundle\Entity\EditorJs\Block\Embed;
+use Mep\WebToolkitBundle\Entity\EditorJs\Block\Header;
+use Mep\WebToolkitBundle\Entity\EditorJs\Block\Image;
+use Mep\WebToolkitBundle\Entity\EditorJs\Block\NestedList;
+use Mep\WebToolkitBundle\Entity\EditorJs\Block\Paragraph;
+use Mep\WebToolkitBundle\Entity\EditorJs\Block\Quote;
+use Mep\WebToolkitBundle\Entity\EditorJs\Block\Raw;
+use Mep\WebToolkitBundle\Entity\EditorJs\Block\Table;
+use Mep\WebToolkitBundle\Entity\EditorJs\Block\Warning;
 use Symfony\Component\Serializer\Annotation\DiscriminatorMap;
 use Symfony\Component\Serializer\Annotation\Ignore;
 use Symfony\Component\Uid\Uuid;
@@ -39,18 +49,18 @@ abstract class Block implements JsonSerializable
      * @var array<string, class-string<Block>>
      */
     public const BLOCKS_MAPPING = [
-        'paragraph' => Block\Paragraph::class,
-        'header' => Block\Header::class,
-        'list' => Block\NestedList::class,
-        'delimiter' => Block\Delimiter::class,
-        'quote' => Block\Quote::class,
-        'warning' => Block\Warning::class,
-        'image' => Block\Image::class,
-        'embed' => Block\Embed::class,
-        'table' => Block\Table::class,
+        'paragraph' => Paragraph::class,
+        'header' => Header::class,
+        'list' => NestedList::class,
+        'delimiter' => Delimiter::class,
+        'quote' => Quote::class,
+        'warning' => Warning::class,
+        'image' => Image::class,
+        'embed' => Embed::class,
+        'table' => Table::class,
         // TODO: Implement attaches block (EditorJs)
         //'attaches' => Block\Attaches::class,
-        'raw' => Block\Raw::class,
+        'raw' => Raw::class,
     ];
 
     /**

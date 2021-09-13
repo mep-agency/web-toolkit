@@ -15,6 +15,8 @@ namespace Mep\WebToolkitBundle\Form;
 
 use Mep\WebToolkitBundle\Dto\AttachmentAssociationContextDto;
 use Mep\WebToolkitBundle\Entity\EditorJs\Block;
+use Mep\WebToolkitBundle\Entity\EditorJs\Block\Attaches;
+use Mep\WebToolkitBundle\Entity\EditorJs\Block\Image;
 use Mep\WebToolkitBundle\Entity\EditorJs\EditorJsContent;
 use Mep\WebToolkitBundle\Router\AttachmentsAdminApiUrlGenerator;
 use Mep\WebToolkitBundle\Validator\EditorJs\EditorJsNotEmpty;
@@ -84,36 +86,36 @@ final class AdminEditorJsType extends AbstractType implements DataTransformerInt
 
         foreach ($options[self::ENABLED_TOOLS] as $enabledTool) {
             if (isset($options[self::TOOLS_OPTIONS][$enabledTool])) {
-                if (Block\Image::class === $enabledTool) {
+                if (Image::class === $enabledTool) {
                     $formView->vars['tools_options'][Block::getTypeByClass(
-                        Block\Image::class,
-                    )]['captionPlaceholder'] = $options[self::TOOLS_OPTIONS][Block\Image::class]['captionPlaceholder'];
+                        Image::class,
+                    )]['captionPlaceholder'] = $options[self::TOOLS_OPTIONS][Image::class]['captionPlaceholder'];
 
                     $formView->vars['tools_options'][Block::getTypeByClass(
-                        Block\Image::class,
-                    )]['buttonContent'] = $options[self::TOOLS_OPTIONS][Block\Image::class]['buttonContent'];
+                        Image::class,
+                    )]['buttonContent'] = $options[self::TOOLS_OPTIONS][Image::class]['buttonContent'];
 
                     $formView->vars['tools_options'][Block::getTypeByClass(
-                        Block\Image::class,
+                        Image::class,
                     )]['api_token'] = $this->csrfTokenManager
                         ->getToken(self::CSRF_TOKEN_ID_IMAGES)
                         ->getValue()
                     ;
 
                     $formView->vars['tools_options'][Block::getTypeByClass(
-                        Block\Image::class,
+                        Image::class,
                     )]['endpoint'] = $this->attachmentsAdminApiUrlGenerator->generate(
                         [
                             'csrf_token_id' => self::CSRF_TOKEN_ID_IMAGES,
                             AdminAttachmentType::CONTEXT => (string) (new AttachmentAssociationContextDto(
-                                Block\Image::class,
+                                Image::class,
                                 'attachment',
                             )),
-                            AdminAttachmentType::MAX_SIZE => $options[self::TOOLS_OPTIONS][Block\Image::class]['maxSize'],
+                            AdminAttachmentType::MAX_SIZE => $options[self::TOOLS_OPTIONS][Image::class]['maxSize'],
                             AdminAttachmentType::ALLOWED_MIME_TYPES => ['/image\/.+/'],
                             AdminAttachmentType::ALLOWED_NAME_PATTERN => null,
                             AdminAttachmentType::METADATA => [],
-                            AdminAttachmentType::PROCESSORS_OPTIONS => $options[self::TOOLS_OPTIONS][Block\Image::class]['processorsOptions'],
+                            AdminAttachmentType::PROCESSORS_OPTIONS => $options[self::TOOLS_OPTIONS][Image::class]['processorsOptions'],
                         ],
                     );
 
@@ -121,28 +123,28 @@ final class AdminEditorJsType extends AbstractType implements DataTransformerInt
                 }
 
                 // TODO: Implement attaches block (EditorJs)
-                if (Block\Attaches::class === $enabledTool) {
+                if (Attaches::class === $enabledTool) {
                     $formView->vars['tools_options'][Block::getTypeByClass(
-                        Block\Attaches::class,
+                        Attaches::class,
                     )]['api_token'] = $this->csrfTokenManager
                         ->getToken(self::CSRF_TOKEN_ID_ATTACHMENTS)
                         ->getValue()
                     ;
 
                     $formView->vars['tools_options'][Block::getTypeByClass(
-                        Block\Attaches::class,
+                        Attaches::class,
                     )]['endpoint'] = $this->attachmentsAdminApiUrlGenerator->generate(
                         [
                             'csrf_token_id' => self::CSRF_TOKEN_ID_ATTACHMENTS,
                             AdminAttachmentType::CONTEXT => (string) (new AttachmentAssociationContextDto(
-                                Block\Attaches::class,
+                                Attaches::class,
                                 'attachment',
                             )),
-                            AdminAttachmentType::MAX_SIZE => $options[self::TOOLS_OPTIONS][Block\Attaches::class]['maxSize'],
+                            AdminAttachmentType::MAX_SIZE => $options[self::TOOLS_OPTIONS][Attaches::class]['maxSize'],
                             AdminAttachmentType::ALLOWED_MIME_TYPES => [],
                             AdminAttachmentType::ALLOWED_NAME_PATTERN => null,
                             AdminAttachmentType::METADATA => [],
-                            AdminAttachmentType::PROCESSORS_OPTIONS => $options[self::TOOLS_OPTIONS][Block\Attaches::class]['processorsOptions'],
+                            AdminAttachmentType::PROCESSORS_OPTIONS => $options[self::TOOLS_OPTIONS][Attaches::class]['processorsOptions'],
                         ],
                     );
 

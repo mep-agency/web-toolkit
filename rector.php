@@ -52,4 +52,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $containerConfigurator->import(SetList::NAMING);
     $containerConfigurator->import(SetList::ORDER);
     $containerConfigurator->import(SetList::TYPE_DECLARATION);
+
+    // Custom configuration
+    $parameters->set(Option::AUTO_IMPORT_NAMES, true);
 };

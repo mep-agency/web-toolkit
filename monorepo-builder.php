@@ -11,6 +11,7 @@
 
 declare(strict_types=1);
 
+use Mep\MonorepoUtils\ReleaseWorker\TemporaryReleaseWorker;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symplify\ComposerJsonManipulator\ValueObject\ComposerJsonSection;
 use Symplify\MonorepoBuilder\ValueObject\Option;
@@ -49,7 +50,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $parameters->set(Option::DEFAULT_BRANCH_NAME, 'main');
 
     // Release workers - in order of execution
-    $services->set(Mep\MonorepoUtils\ReleaseWorker\TemporaryReleaseWorker::class);
+    $services->set(TemporaryReleaseWorker::class);
     //$services->set(Symplify\MonorepoBuilder\Release\ReleaseWorker\UpdateReplaceReleaseWorker::class);
     //$services->set(Symplify\MonorepoBuilder\Release\ReleaseWorker\SetCurrentMutualConflictsReleaseWorker::class);
     //$services->set(Symplify\MonorepoBuilder\Release\ReleaseWorker\SetCurrentMutualDependenciesReleaseWorker::class);

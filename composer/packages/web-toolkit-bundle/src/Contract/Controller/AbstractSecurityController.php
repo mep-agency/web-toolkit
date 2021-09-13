@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Contract\Controller;
 
+use LogicException;
 use Mep\WebToolkitBundle\Contract\Entity\AbstractUser;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -62,7 +63,7 @@ abstract class AbstractSecurityController extends AbstractController implements 
     #[Route('/logout', name: 'logout')]
     public function logout(): void
     {
-        throw new \LogicException(
+        throw new LogicException(
             'This method can be blank - it will be intercepted by the logout key on your firewall.',
         );
     }
@@ -70,7 +71,7 @@ abstract class AbstractSecurityController extends AbstractController implements 
     #[Route('/login-check', name: 'login_check')]
     public function loginCheck(): void
     {
-        throw new \LogicException(
+        throw new LogicException(
             'This method can be blank - it will be intercepted by the logout key on your firewall.',
         );
     }

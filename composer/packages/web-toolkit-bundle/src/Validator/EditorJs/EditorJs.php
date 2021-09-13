@@ -15,6 +15,14 @@ namespace Mep\WebToolkitBundle\Validator\EditorJs;
 
 use Attribute;
 use Mep\WebToolkitBundle\Entity\EditorJs\Block;
+use Mep\WebToolkitBundle\Entity\EditorJs\Block\Attaches;
+use Mep\WebToolkitBundle\Entity\EditorJs\Block\Header;
+use Mep\WebToolkitBundle\Entity\EditorJs\Block\Image;
+use Mep\WebToolkitBundle\Entity\EditorJs\Block\Paragraph;
+use Mep\WebToolkitBundle\Entity\EditorJs\Block\Quote;
+use Mep\WebToolkitBundle\Entity\EditorJs\Block\Raw;
+use Mep\WebToolkitBundle\Entity\EditorJs\Block\Table;
+use Mep\WebToolkitBundle\Entity\EditorJs\Block\Warning;
 use Mep\WebToolkitBundle\Exception\InvalidConfigurationException;
 use Mep\WebToolkitBundle\Validator\AssociativeArrayOfScalarValues;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
@@ -84,7 +92,7 @@ final class EditorJs extends Constraint
             }
         }
 
-        if (! in_array(Block\Paragraph::class, $this->enabledTools, true)) {
+        if (! in_array(Paragraph::class, $this->enabledTools, true)) {
             throw new InvalidConfigurationException(
                 'Invalid EditorJs configuration: the "paragraph" tool is mandatory.',
             );
@@ -108,7 +116,7 @@ final class EditorJs extends Constraint
             $optionsResolver = new OptionsResolver();
 
             switch ($tool) {
-                case Block\Header::class:
+                case Header::class:
                     // see https://github.com/editor-js/header#config-params
                     $optionsResolver->define('placeholder')
                         ->default(null)
@@ -126,7 +134,7 @@ final class EditorJs extends Constraint
                     ;
 
                     break;
-                case Block\Quote::class:
+                case Quote::class:
                     // see https://github.com/editor-js/quote#config-params
                     $optionsResolver->define('quotePlaceholder')
                         ->default(null)
@@ -139,7 +147,7 @@ final class EditorJs extends Constraint
                     ;
 
                     break;
-                case Block\Warning::class:
+                case Warning::class:
                     // see https://github.com/editor-js/warning#config-params
                     $optionsResolver->define('titlePlaceholder')
                         ->default(null)
@@ -152,7 +160,7 @@ final class EditorJs extends Constraint
                     ;
 
                     break;
-                case Block\Image::class:
+                case Image::class:
                     // see https://github.com/editor-js/image#config-params
                     $optionsResolver->define('captionPlaceholder')
                         ->default(null)
@@ -178,7 +186,7 @@ final class EditorJs extends Constraint
                     $optionsResolver->setAllowedValues('processorsOptions', $associativeArrayOfScalarValuesValidator);
 
                     break;
-                case Block\Table::class:
+                case Table::class:
                     // see https://github.com/editor-js/table#config-params
                     $optionsResolver->define('rows')
                         ->default(2)
@@ -191,7 +199,7 @@ final class EditorJs extends Constraint
                     ;
 
                     break;
-                case Block\Attaches::class:
+                case Attaches::class:
                     // see https://github.com/editor-js/attaches#config-params
                     $optionsResolver->define('buttonText')
                         ->default(null)
@@ -217,7 +225,7 @@ final class EditorJs extends Constraint
                     $optionsResolver->setAllowedValues('processorsOptions', $associativeArrayOfScalarValuesValidator);
 
                     break;
-                case Block\Raw::class:
+                case Raw::class:
                     // see https://github.com/editor-js/raw#config-params
                     $optionsResolver->define('placeholder')
                         ->default(null)
