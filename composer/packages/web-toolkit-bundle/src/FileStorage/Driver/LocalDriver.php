@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  *
  * @author Marco Lipparini <developer@liarco.net>
  */
-final class Local implements DriverInterface
+final class LocalDriver implements DriverInterface
 {
     private Filesystem $filesystem;
 

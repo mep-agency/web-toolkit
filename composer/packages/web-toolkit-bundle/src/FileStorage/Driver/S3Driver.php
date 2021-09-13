@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\File\File;
  *
  * @author Marco Lipparini <developer@liarco.net>
  */
-final class S3 implements DriverInterface
+final class S3Driver implements DriverInterface
 {
     private S3Client $s3Client;
 

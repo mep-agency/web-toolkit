@@ -70,7 +70,7 @@ Add the ``Mep\WebToolkitBundle\FileStorage\Driver\Local`` service in ``services.
         # add more service definitions when explicit configuration is needed
         # please note that last definitions always *replace* previous ones
         mep_web_toolkit.file_storage_driver:
-            class: Mep\WebToolkitBundle\FileStorage\Driver\Local
+            class: Mep\WebToolkitBundle\FileStorage\Driver\LocalDriver
             arguments:
                 $storagePath: '%kernel.project_dir%/public/storage'
                 $publicUrlPathPrefix: '/storage'
@@ -90,7 +90,7 @@ For ``prod`` environment add the ``Mep\WebToolkitBundle\FileStorage\Driver\S3`` 
         # add more service definitions when explicit configuration is needed
         # please note that last definitions always *replace* previous ones
         mep_web_toolkit.file_storage_driver:
-            class: Mep\WebToolkitBundle\FileStorage\Driver\S3
+            class: Mep\WebToolkitBundle\FileStorage\Driver\S3Driver
             arguments:
                 $region: 'region'
                 $endpointUrl: 'endpointUrl'
