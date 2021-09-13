@@ -14,11 +14,11 @@ import {
 } from '@editorjs/editorjs';
 
 interface OriginalImageTool extends BlockTool {
-  get data(): ImageToolData|CustomImageToolData;
+  get data(): ImageToolData | CustomImageToolData;
 
-  set data(data: ImageToolData|CustomImageToolData);
+  set data(data: ImageToolData | CustomImageToolData);
 
-  onUpload(response: UploadResponseFormat|CustomUploadResponseFormat): void;
+  onUpload(response: UploadResponseFormat | CustomUploadResponseFormat): void;
 }
 
 interface OriginalImageToolConstructable {
@@ -66,8 +66,8 @@ interface UploadResponseFormat {
 interface CustomImageToolConfig {
   api_token: string,
   endpoint: string,
-  captionPlaceholder: string|null,
-  buttonContent: string|null,
+  captionPlaceholder: string | null,
+  buttonContent: string | null,
 }
 
 interface CustomImageToolData {
@@ -83,15 +83,13 @@ interface CustomUploadResponseFormat {
   publicUrl: string,
 }
 
-class CustomImageTool extends ImageTool implements BlockTool
-{
+class CustomImageTool extends ImageTool implements BlockTool {
   constructor({
     data,
     config,
     api,
     readOnly,
-  }: BlockToolConstructorOptions<CustomImageToolData, CustomImageToolConfig>)
-  {
+  }: BlockToolConstructorOptions<CustomImageToolData, CustomImageToolConfig>) {
     super({
       data,
       config: {
@@ -141,8 +139,7 @@ class CustomImageTool extends ImageTool implements BlockTool
     } as CustomImageToolData;
   }
 
-  onUpload(response: CustomUploadResponseFormat)
-  {
+  onUpload(response: CustomUploadResponseFormat) {
     const validResponse: UploadResponseFormat = {
       success: 1,
       file: {

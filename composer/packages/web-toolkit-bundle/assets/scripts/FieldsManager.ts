@@ -18,15 +18,13 @@ export interface Field {
 }
 
 class FieldsManager {
-  private readonly fieldClasses: {[inputCssClass: string]: FieldConstructor} = {};
+  private readonly fieldClasses: { [inputCssClass: string]: FieldConstructor } = {};
 
-  public registerField(inputCssClass: string, fieldClass: FieldConstructor)
-  {
+  public registerField(inputCssClass: string, fieldClass: FieldConstructor) {
     this.fieldClasses[`input.${inputCssClass}:not([${INITIALIZED_FIELD_DATA_ATTRIBUTE}])`] = fieldClass;
   }
 
-  public initFields()
-  {
+  public initFields() {
     for (const selector of Object.keys(this.fieldClasses)) {
       for (const input of document.querySelectorAll<HTMLInputElement>(selector)) {
         const field = new this.fieldClasses[selector](input);
@@ -39,7 +37,7 @@ class FieldsManager {
   }
 }
 
-const FieldsManagerInstance = new FieldsManager()
+const FieldsManagerInstance = new FieldsManager();
 
 document.addEventListener('DOMContentLoaded', () => FieldsManagerInstance.initFields());
 document.addEventListener('ea.collection.item-added', () => FieldsManagerInstance.initFields());

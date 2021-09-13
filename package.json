@@ -2,5 +2,24 @@
   "private": true,
   "workspaces": [
     "composer/packages/web-toolkit-bundle"
-  ]
+  ],
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.31.0",
+    "@typescript-eslint/parser": "^4.31.0",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-airbnb-typescript": "^14.0.0",
+    "eslint-plugin-import": "^2.24.2",
+    "stylelint": "^13.13.1",
+    "stylelint-order": "^4.1.0",
+    "stylelint-webpack-plugin": "^3.0.1"
+  },
+  "scripts": {
+    "eslint": "eslint \"composer/**/*.ts\" --cache",
+    "eslint-fix": "eslint \"composer/**/*.ts\" --fix --cache",
+    "stylelint": "stylelint \"composer/**/*.scss\" --cache",
+    "stylelint-fix": "stylelint \"composer/**/*.scss\" --fix --cache",
+    "lint": "yarn run eslint && yarn run stylelint",
+    "cs-fix": "eslint \"composer/**/*.ts\" --fix --cache && stylelint \"composer/**/*.scss\" --fix --cache"
+  }
 }

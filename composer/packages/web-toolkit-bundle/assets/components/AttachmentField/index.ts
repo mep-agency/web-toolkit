@@ -9,28 +9,36 @@
 
 import './attachment-field.scss';
 
-import FieldsManager, { Field } from "../../scripts/FieldsManager";
+import FieldsManager, { Field } from '../../scripts/FieldsManager';
 
 // TODO: This is a temporary implementation...
 
 class AttachmentField implements Field {
   private readonly input: HTMLInputElement;
+
   private readonly fileInput: HTMLInputElement;
+
   private readonly uploadButton: HTMLInputElement;
+
   private readonly deleteButton: HTMLButtonElement;
+
   private readonly apiUrl: string;
+
   private readonly csrfToken: string;
+
   private readonly errorButton: HTMLElement;
+
   private readonly errorList: HTMLElement;
+
   private readonly widget: HTMLElement;
+
   private fileData = {
     fileURL: '',
     fileType: '',
-    fileSize: ''
+    fileSize: '',
   };
 
-  public constructor(input: HTMLInputElement)
-  {
+  public constructor(input: HTMLInputElement) {
     this.input = input;
     this.widget = document.getElementById(`${input.id}__mwt-upload-widget`) as HTMLElement;
     this.fileInput = document.getElementById(`${input.id}__file`) as HTMLInputElement;
@@ -43,9 +51,8 @@ class AttachmentField implements Field {
     this.fileData.fileURL = this.input.getAttribute('data-public-url')!;
   }
 
-  public init()
-  {
-    if(this.fileData.fileURL !== '') {
+  public init() {
+    if (this.fileData.fileURL !== '') {
       this.getFileData(this.fileData);
     } else {
       this.passFileData();
@@ -58,7 +65,7 @@ class AttachmentField implements Field {
       formData.append('file', this.fileInput.files![0]);
       formData.append('_token', this.csrfToken);
 
-      this.uploadFile(formData, this.apiUrl).then(result => {
+      this.uploadFile(formData, this.apiUrl).then((result) => {
         this.errorDisplay(false);
 
         console.log(`Success: ${result.publicUrl}`);
@@ -67,13 +74,13 @@ class AttachmentField implements Field {
         this.fileData.fileURL = result.publicUrl;
 
         this.getFileData(this.fileData);
-      }).catch(error => {
+      }).catch((error) => {
         this.errorDisplay(true);
 
         console.error(`ERROR: ${error.message}`);
 
         for (const err of error.errors) {
-          let entry = document.createElement('li');
+          const entry = document.createElement('li');
           entry.appendChild(document.createTextNode(err.message));
 
           this.errorList.appendChild(entry);
@@ -81,61 +88,60 @@ class AttachmentField implements Field {
           console.error(`Validation message: ${err.message}`);
         }
       });
-    })
+    });
 
     this.deleteButton.addEventListener('click', (e) => {
       e.preventDefault();
 
-      this.fileInput.value = "";
+      this.fileInput.value = '';
 
-      if(this.input.value !== "") this.input.value = "";
+      if (this.input.value !== '') this.input.value = '';
 
       this.errorDisplay(false);
 
       this.passFileData();
-    })
+    });
   }
 
   // === ASYNC FETCH FUNCTIONS
-  async uploadFile(formData:FormData ,apiUrl: string) {
-      const response:any = await fetch(apiUrl, {
-        method: 'POST',
-        body: formData,
-      });
+  async uploadFile(formData:FormData, apiUrl: string) {
+    const response:any = await fetch(apiUrl, {
+      method: 'POST',
+      body: formData,
+    });
 
-      if (!response.ok) {
-        throw await response.json();
-      }
-
-      return await response.json();
+    if (!response.ok) {
+      throw await response.json();
     }
+
+    return await response.json();
+  }
 
   async fetchFileData(fileData:any) {
-      const response = await fetch(fileData.fileURL, {
-        method: 'HEAD',
-      });
+    const response = await fetch(fileData.fileURL, {
+      method: 'HEAD',
+    });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status Code: ${response.status}`);
-      }
-
-      fileData.fileSize=AttachmentField.fileSizeFormatter(response.headers.get('content-length')!);
-      fileData.fileType=response.headers.get('content-type');
-      fileData.fileName=fileData.fileURL.split('/')[5];
-
-      this.passFileData(fileData);
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status Code: ${response.status}`);
     }
+
+    fileData.fileSize = AttachmentField.fileSizeFormatter(response.headers.get('content-length')!);
+    fileData.fileType = response.headers.get('content-type');
+    fileData.fileName = fileData.fileURL.split('/')[5];
+
+    this.passFileData(fileData);
+  }
 
   // === AUX FUNCTIONS
   private getFileData(fileData:any) {
-    this.fetchFileData(fileData).catch(error => {
-      console.log('Error: ' + error.message);
-    })
+    this.fetchFileData(fileData).catch((error) => {
+      console.log(`Error: ${error.message}`);
+    });
   }
 
   private errorDisplay(isError:boolean) {
-    if(isError)
-    {
+    if (isError) {
       this.widget.classList.add('is-invalid');
       this.errorButton.classList.remove('visually-hidden');
       this.errorList.innerHTML = '';
@@ -155,8 +161,8 @@ class AttachmentField implements Field {
         fileSize: 'Empty',
         fileType: 'Empty',
         fileName: 'Empty',
-        fileURL: ''
-      }
+        fileURL: '',
+      };
     } else {
       fileVariables = fileData;
     }
@@ -170,7 +176,7 @@ class AttachmentField implements Field {
   private static createDisplayElement(parent:HTMLElement, type:string, url:string) {
     parent.innerHTML = '';
 
-    let container = document.createElement('a');
+    const container = document.createElement('a');
     container.href = url;
     container.target = '_blank';
     let displayElement;
@@ -188,7 +194,7 @@ class AttachmentField implements Field {
       }
       parent.appendChild(container);
     } else {
-      let emptyElement = document.createElement('i');
+      const emptyElement = document.createElement('i');
       emptyElement.classList.add('fas');
       emptyElement.classList.add('fa-ban');
       parent.appendChild(emptyElement);
@@ -197,13 +203,12 @@ class AttachmentField implements Field {
 
   private static fileSizeFormatter(size:string) {
     const bytes = parseFloat(size);
-    const kiloBytes = Math.round((bytes/1024) * 100) / 100;
+    const kiloBytes = Math.round((bytes / 1024) * 100) / 100;
 
-    if(kiloBytes > 1000) {
-      return (Math.round((kiloBytes/1024) * 100) / 100) + ' MB';
-    } else {
-      return kiloBytes + ' kB';
+    if (kiloBytes > 1000) {
+      return `${Math.round((kiloBytes / 1024) * 100) / 100} MB`;
     }
+    return `${kiloBytes} kB`;
   }
 }
 

@@ -9,9 +9,9 @@
 
 import './editorjs-field.scss';
 
-import FieldsManager, {Field} from '../../scripts/FieldsManager';
-import CustomImageTool from './Tool/CustomImageTool';
 import EditorJS, { ToolConstructable, ToolSettings, LogLevels } from '@editorjs/editorjs';
+import FieldsManager, { Field } from '../../scripts/FieldsManager';
+import CustomImageTool from './Tool/CustomImageTool';
 
 const HeaderTool = require('@editorjs/header');
 const NestedListTool = require('@editorjs/nested-list');
@@ -23,30 +23,30 @@ const RawTool = require('@editorjs/raw');
 const TableTool = require('@editorjs/table');
 const WarningTool = require('@editorjs/warning');
 
-const TOOLS_CONFIG_NORMALIZERS: {[toolName: string]: {(config: ToolSettings): ToolConstructable|ToolSettings}} = {
-  paragraph: (config) => ({
+const TOOLS_CONFIG_NORMALIZERS: { [toolName: string]: { (config: ToolSettings): ToolConstructable | ToolSettings } } = {
+  paragraph: () => ({
     inlineToolbar: true,
   }),
   header: (config) => ({
     class: HeaderTool,
     inlineToolbar: true,
-    config: config,
+    config,
   }),
   list: (config) => ({
     class: NestedListTool,
     inlineToolbar: true,
-    config: config,
+    config,
   }),
   quote: (config) => ({
     class: QuoteTool,
-    config: config,
+    config,
   }),
-  delimiter: (config) => DelimiterTool,
+  delimiter: () => DelimiterTool,
   image: (config) => ({
     class: CustomImageTool,
-    config: config,
+    config,
   }),
-  embed: (config) => ({
+  embed: () => ({
     class: EmbedTool,
     config: {
       services: {
@@ -61,7 +61,7 @@ const TOOLS_CONFIG_NORMALIZERS: {[toolName: string]: {(config: ToolSettings): To
               return id;
             }
 
-            const paramsMap: {[key: string]: string|undefined} = {
+            const paramsMap: { [key: string]: string | undefined } = {
               start: 'start',
               end: 'end',
               t: 'start',
@@ -99,42 +99,43 @@ const TOOLS_CONFIG_NORMALIZERS: {[toolName: string]: {(config: ToolSettings): To
   attaches: (config) => ({
     // TODO: This is a temporary implementation...
     class: AttachesTool,
-    config: config,
+    config,
   }),
   raw: (config) => ({
     class: RawTool,
-    config: config,
+    config,
   }),
   table: (config) => ({
     class: TableTool,
     inlineToolbar: true,
-    config: config,
+    config,
   }),
   warning: (config) => ({
     class: WarningTool,
     inlineToolbar: true,
-    config: config,
+    config,
   }),
-}
+};
 
 class EditorJsField implements Field {
   private readonly input: HTMLInputElement;
+
   private readonly editor: HTMLDivElement;
 
-  public constructor(input: HTMLInputElement)
-  {
+  public constructor(input: HTMLInputElement) {
     this.input = input;
     this.editor = document.getElementById(`${input.id}__editor`) as HTMLDivElement;
   }
 
-  public init()
-  {
-    const toolsOptions = JSON.parse(this.input.getAttribute('data-tools-options')!) as {[toolName: string]: ToolConstructable|ToolSettings};
+  public init() {
+    const toolsOptions = JSON.parse(this.input.getAttribute('data-tools-options')!) as { [toolName: string]: ToolConstructable | ToolSettings };
 
     // Normalize tools options
     Object.keys(toolsOptions).map((toolName) => {
       toolsOptions[toolName] = TOOLS_CONFIG_NORMALIZERS[toolName](toolsOptions[toolName] as ToolSettings);
     });
+
+    let editor: EditorJS;
 
     const onChange = async () => {
       const content = await editor.save();
@@ -142,11 +143,11 @@ class EditorJsField implements Field {
       this.input.value = JSON.stringify(content);
     };
 
-    const editor = new EditorJS({
+    editor = new EditorJS({
       holder: this.editor,
       tools: toolsOptions,
       data: JSON.parse(this.input.value ? this.input.value : '{}'),
-      onChange,
+      onChange: onChange,
       // Ensure that the initial empty value is always valid
       onReady: onChange,
       // see https://github.com/codex-team/editor.js/issues/1576
