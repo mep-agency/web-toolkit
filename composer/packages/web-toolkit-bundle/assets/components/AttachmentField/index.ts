@@ -113,7 +113,7 @@ class AttachmentField implements Field {
     if (!response.ok) {
       throw await response.json();
     }
-
+    // TODO: return Promise.resolve(response.json());
     return await response.json();
   }
 
