@@ -22,5 +22,5 @@ interface TemplateProviderInterface
     /**
      * @param array<string, mixed> $parameters
      */
-    public function render(TemplateIdentifierInterface $templateIdentifier, array $parameters = []): ?Email;
+    public function render(TemplateIdentifierInterface $templateIdentifier, array $parameters = []): Email;
 }
