@@ -202,7 +202,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     // File storage processors
     $services->set(WebToolkitBundle::SERVICE_TINIFY_PROCESSOR, TinifyProcessor::class)
         ->arg(0, $_ENV['TINIFY_API_KEY'] ?? null)
-        ->arg(1, ! isset($_ENV['TINIFY_API_KEY']) && 'dev' === ($_ENV['APP_ENV'] ?? 'dev'))
+        ->arg(1, ! isset($_ENV['TINIFY_API_KEY']) && in_array($_ENV['APP_ENV'] ?? 'dev', ['dev', 'test'], true))
         ->tag(WebToolkitBundle::TAG_FILE_STORAGE_PROCESSOR)
     ;
 
