@@ -13,6 +13,8 @@ import {
   BlockToolConstructorOptions,
 } from '@editorjs/editorjs';
 
+const ImageTool: OriginalImageToolConstructable = require('@editorjs/image');
+
 interface OriginalImageTool extends BlockTool {
   get data(): ImageToolData | CustomImageToolData;
 
@@ -24,8 +26,6 @@ interface OriginalImageTool extends BlockTool {
 interface OriginalImageToolConstructable {
   new(config: BlockToolConstructorOptions<CustomImageToolData, ImageToolConfig>): OriginalImageTool;
 }
-
-const ImageTool = require('@editorjs/image') as OriginalImageToolConstructable;
 
 interface ImageToolData {
   caption: string,

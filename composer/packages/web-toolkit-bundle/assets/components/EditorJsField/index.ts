@@ -23,7 +23,9 @@ const RawTool = require('@editorjs/raw');
 const TableTool = require('@editorjs/table');
 const WarningTool = require('@editorjs/warning');
 
-const TOOLS_CONFIG_NORMALIZERS: { [toolName: string]: { (config: ToolSettings): ToolConstructable | ToolSettings } } = {
+const TOOLS_CONFIG_NORMALIZERS: {
+  [toolName: string]: { (config: ToolSettings): ToolConstructable | ToolSettings }
+} = {
   paragraph: () => ({
     inlineToolbar: true,
   }),
@@ -131,8 +133,10 @@ class EditorJsField implements Field {
     const toolsOptions = JSON.parse(this.input.getAttribute('data-tools-options')!) as { [toolName: string]: ToolConstructable | ToolSettings };
 
     // Normalize tools options
-    Object.keys(toolsOptions).map((toolName) => {
-      toolsOptions[toolName] = TOOLS_CONFIG_NORMALIZERS[toolName](toolsOptions[toolName] as ToolSettings);
+    Object.keys(toolsOptions).forEach((toolName) => {
+      toolsOptions[toolName] = TOOLS_CONFIG_NORMALIZERS[toolName](
+        toolsOptions[toolName] as ToolSettings,
+      );
     });
 
     let editor: EditorJS;
@@ -147,7 +151,7 @@ class EditorJsField implements Field {
       holder: this.editor,
       tools: toolsOptions,
       data: JSON.parse(this.input.value ? this.input.value : '{}'),
-      onChange: onChange,
+      onChange,
       // Ensure that the initial empty value is always valid
       onReady: onChange,
       // see https://github.com/codex-team/editor.js/issues/1576

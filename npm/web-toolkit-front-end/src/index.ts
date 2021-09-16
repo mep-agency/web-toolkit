@@ -1,2 +1,3 @@
 // TODO: this is just a placeholder...
+// eslint-disable-next-line no-console
 console.log('Hello world.');

@@ -6,6 +6,7 @@ plugins:
   - import
 
 extends:
+  - airbnb-base
   - airbnb-typescript/base
 
 parserOptions:
