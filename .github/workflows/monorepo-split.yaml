@@ -29,8 +29,8 @@ jobs:
 
           # NPM
           -
-            local_path: npm/web-toolkit-js
-            split_repository: web-toolkit-js
+            local_path: npm/web-toolkit-front-end
+            split_repository: web-toolkit-front-end
 
     steps:
       -   uses: actions/checkout@v2

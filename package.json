@@ -2,7 +2,7 @@
   "private": true,
   "workspaces": [
     "composer/packages/web-toolkit-bundle",
-    "npm/web-toolkit-js"
+    "npm/web-toolkit-front-end"
   ],
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.31.0",

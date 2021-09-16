@@ -1,5 +1,5 @@
 {
-  "name": "@mep-agency/web-toolkit-js",
+  "name": "@mep-agency/web-toolkit-front-end",
   "version": "0.0.1",
   "description": "A set of tools to create new websites easily",
   "main": "src/index.ts",
