@@ -133,11 +133,11 @@ class EditorJsField implements Field {
     const toolsOptions = JSON.parse(this.input.getAttribute('data-tools-options')!) as { [toolName: string]: ToolConstructable | ToolSettings };
 
     // Normalize tools options
-    Object.keys(toolsOptions).forEach((toolName) => {
+    for (const toolName of Object.keys(toolsOptions)) {
       toolsOptions[toolName] = TOOLS_CONFIG_NORMALIZERS[toolName](
         toolsOptions[toolName] as ToolSettings,
       );
-    });
+    }
 
     let editor: EditorJS;
 
