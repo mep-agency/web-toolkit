@@ -29,7 +29,7 @@ jobs:
 
           # NPM
           -
-            local_path: 'npm/web-toolkit'
+            local_path: 'npm/web-toolkit-js'
             split_repository: 'web-toolkit-js'
 
     steps:
