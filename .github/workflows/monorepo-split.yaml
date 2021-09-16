@@ -21,10 +21,10 @@ jobs:
         package:
           # Composer
           -
-            local_path: 'packages/web-toolkit-bundle'
+            local_path: 'composer/packages/web-toolkit-bundle'
             split_repository: 'web-toolkit-bundle'
           -
-            local_path: 'projects/symfony-web-toolkit-skeleton'
+            local_path: 'composer/projects/symfony-web-toolkit-skeleton'
             split_repository: 'symfony-web-toolkit-skeleton'
 
           # NPM
@@ -40,7 +40,7 @@ jobs:
         if: "!startsWith(github.ref, 'refs/tags/')"
         uses: "symplify/monorepo-split-github-action@2.0"
         with:
-          package-directory: 'composer/${{ matrix.package.local_path }}'
+          package-directory: '${{ matrix.package.local_path }}'
           split-repository-organization: 'mep-agency'
           split-repository-name: '${{ matrix.package.split_repository }}'
 
@@ -54,7 +54,7 @@ jobs:
         with:
           tag: ${GITHUB_REF#refs/tags/}
 
-          package-directory: 'composer/${{ matrix.package.local_path }}'
+          package-directory: '${{ matrix.package.local_path }}'
           split-repository-organization: 'mep-agency'
           split-repository-name: '${{ matrix.package.split_repository }}'
 
