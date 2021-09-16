@@ -1,0 +1,9 @@
+{
+  "name": "@mep-agency/web-toolkit-js",
+  "version": "0.0.1",
+  "description": "A set of tools to create new websites easily",
+  "main": "src/index.ts",
+  "repository": "git@github.com:mep-agency/web-toolkit-package.git",
+  "author": "Marco Lipparini <developer@liarco.net>",
+  "license": "MIT"
+}
