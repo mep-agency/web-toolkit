@@ -19,12 +19,18 @@ jobs:
       matrix:
         # define package to repository map
         package:
+          # Composer
           -
             local_path: 'packages/web-toolkit-bundle'
             split_repository: 'web-toolkit-bundle'
           -
             local_path: 'projects/symfony-web-toolkit-skeleton'
             split_repository: 'symfony-web-toolkit-skeleton'
+
+          # NPM
+          -
+            local_path: 'npm/web-toolkit'
+            split_repository: 'web-toolkit-js'
 
     steps:
       -   uses: actions/checkout@v2
