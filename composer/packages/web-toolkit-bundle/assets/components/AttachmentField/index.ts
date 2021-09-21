@@ -53,7 +53,7 @@ class AttachmentField implements Field {
 
   public init() {
     if (this.fileData.fileURL !== '') {
-      this.getFileData(this.fileData);
+      this.fetchFileData(this.fileData);
     } else {
       this.passFileData();
     }
@@ -65,27 +65,21 @@ class AttachmentField implements Field {
       formData.append('file', this.fileInput.files![0]);
       formData.append('_token', this.csrfToken);
 
-      this.uploadFile(formData, this.apiUrl).then((result) => {
+      AttachmentField.uploadFile(formData, this.apiUrl).then((result) => {
         this.errorDisplay(false);
-
-        console.log(`Success: ${result.publicUrl}`);
 
         this.input.value = result.uuid;
         this.fileData.fileURL = result.publicUrl;
 
-        this.getFileData(this.fileData);
+        this.fetchFileData(this.fileData);
       }).catch((error) => {
         this.errorDisplay(true);
-
-        console.error(`ERROR: ${error.message}`);
 
         for (const err of error.errors) {
           const entry = document.createElement('li');
           entry.appendChild(document.createTextNode(err.message));
 
           this.errorList.appendChild(entry);
-
-          console.error(`Validation message: ${err.message}`);
         }
       });
     });
@@ -104,7 +98,7 @@ class AttachmentField implements Field {
   }
 
   // === ASYNC FETCH FUNCTIONS
-  async uploadFile(formData:FormData, apiUrl: string) {
+  static async uploadFile(formData:FormData, apiUrl: string) {
     const response:any = await fetch(apiUrl, {
       method: 'POST',
       body: formData,
@@ -113,8 +107,7 @@ class AttachmentField implements Field {
     if (!response.ok) {
       throw await response.json();
     }
-    // TODO: return Promise.resolve(response.json());
-    return await response.json();
+    return Promise.resolve(response.json());
   }
 
   async fetchFileData(fileData:any) {
@@ -126,17 +119,11 @@ class AttachmentField implements Field {
       throw new Error(`HTTP error! Status Code: ${response.status}`);
     }
 
-    fileData.fileSize = AttachmentField.fileSizeFormatter(response.headers.get('content-length')!);
-    fileData.fileType = response.headers.get('content-type');
-    fileData.fileName = fileData.fileURL.split('/')[5];
-
-    this.passFileData(fileData);
-  }
-
-  // === AUX FUNCTIONS
-  private getFileData(fileData:any) {
-    this.fetchFileData(fileData).catch((error) => {
-      console.log(`Error: ${error.message}`);
+    this.passFileData({
+      fileSize: AttachmentField.fileSizeFormatter(response.headers.get('content-length')!),
+      fileType: response.headers.get('content-type'),
+      fileName: fileData.fileURL.split('/')[5],
+      fileURL: fileData.fileURL,
     });
   }
 
@@ -174,7 +161,8 @@ class AttachmentField implements Field {
   }
 
   private static createDisplayElement(parent:HTMLElement, type:string, url:string) {
-    parent.innerHTML = '';
+    const parentElement = parent;
+    parentElement.innerHTML = '';
 
     const container = document.createElement('a');
     container.href = url;
@@ -192,12 +180,12 @@ class AttachmentField implements Field {
         displayElement.classList.add('fa-file');
         container.appendChild(displayElement);
       }
-      parent.appendChild(container);
+      parentElement.appendChild(container);
     } else {
       const emptyElement = document.createElement('i');
       emptyElement.classList.add('fas');
       emptyElement.classList.add('fa-ban');
-      parent.appendChild(emptyElement);
+      parentElement.appendChild(emptyElement);
     }
   }
 
