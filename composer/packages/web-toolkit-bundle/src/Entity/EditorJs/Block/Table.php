@@ -15,7 +15,7 @@ namespace Mep\WebToolkitBundle\Entity\EditorJs\Block;
 
 use Doctrine\ORM\Mapping as ORM;
 use Mep\WebToolkitBundle\Entity\EditorJs\Block;
-use Symfony\Component\Validator\Constraints as Assert;
+use Mep\WebToolkitBundle\Validator\EditorJs\TableContent;
 
 /**
  * @final You should not extend this class.
@@ -35,16 +35,7 @@ class Table extends Block
         string $id,
         #[ORM\Column(type: 'boolean')]
         private bool $withHeadings,
-
-        /**
-         * TODO: Converto this to attributes in Symfony 5.4
-         *
-         * @Assert\All({
-         *     @Assert\All({
-         *         @Assert\Type(type="string", message="Table cells must contain string values."),
-         *     }),
-         * })
-         */
+        #[TableContent]
         #[ORM\Column(type: 'json')]
         private array $content,
     ) {
