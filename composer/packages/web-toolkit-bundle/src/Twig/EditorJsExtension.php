@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This file is part of the MEP Web Toolkit package.
+ *
+ * (c) Marco Lipparini <developer@liarco.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
 namespace Mep\WebToolkitBundle\Twig;
 
 use Mep\WebToolkitBundle\Entity\EditorJs\Block;
@@ -11,8 +22,9 @@ use Twig\TwigFunction;
 
 class EditorJsExtension extends AbstractExtension
 {
-    public function __construct(private Environment $environment)
-    {
+    public function __construct(
+        private Environment $environment,
+    ) {
     }
 
     /**
@@ -21,7 +33,11 @@ class EditorJsExtension extends AbstractExtension
     public function getFilters(): array
     {
         return [
-            new TwigFilter('editorjs', [$this, 'toHtml'], ['is_safe' => ['html']]),
+            new TwigFilter('editorjs', function (EditorJsContent $editorJsContent, int $startingHeadingLevel): string {
+                return $this->toHtml($editorJsContent, $startingHeadingLevel);
+            }, [
+                'is_safe' => ['html'],
+            ]),
         ];
     }
 
@@ -31,7 +47,14 @@ class EditorJsExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('editorjs', [$this, 'toHtml'], ['is_safe' => ['html']]),
+            new TwigFunction('editorjs', function (
+                EditorJsContent $editorJsContent,
+                int $startingHeadingLevel,
+            ): string {
+                return $this->toHtml($editorJsContent, $startingHeadingLevel);
+            }, [
+                'is_safe' => ['html'],
+            ]),
         ];
     }
 
