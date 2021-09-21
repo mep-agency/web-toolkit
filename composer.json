@@ -50,6 +50,10 @@
             "@ecs",
             "@phpstan"
         ],
+        "full-check": [
+            "@check",
+            "yarn lint"
+        ],
         "ecs": "php vendor/bin/ecs check",
         "ecs-fix": "php vendor/bin/ecs check --fix",
         "rector": "php vendor/bin/rector process --dry-run",
