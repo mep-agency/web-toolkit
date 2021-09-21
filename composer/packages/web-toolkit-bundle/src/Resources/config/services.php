@@ -42,6 +42,7 @@ use Mep\WebToolkitBundle\Router\AttachmentsAdminApiUrlGenerator;
 use Mep\WebToolkitBundle\Serializer\AttachmentNormalizer;
 use Mep\WebToolkitBundle\Serializer\EditorJsContentNormalizer;
 use Mep\WebToolkitBundle\Twig\AttachmentExtension;
+use Mep\WebToolkitBundle\Twig\EditorJsExtension;
 use Mep\WebToolkitBundle\WebToolkitBundle;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
@@ -219,6 +220,10 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     ;
     $services->set(WebToolkitBundle::SERVICE_ADMIN_EDITORJS_TYPE_GUESSER, AdminEditorJsTypeGuesser::class)
         ->tag('form.type_guesser')
+    ;
+    $services->set(WebToolkitBundle::SERVICE_EDITORJS_EXTENSION, EditorJsExtension::class)
+        ->arg(0, new Reference(Environment::class))
+        ->tag('twig.extension')
     ;
 
     // EasyAdminBundle enhancements

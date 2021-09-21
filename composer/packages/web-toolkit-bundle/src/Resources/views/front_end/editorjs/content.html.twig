@@ -1,0 +1,7 @@
+<div class="editorjs-content" data-update-at="{{ content.time }}" data-version="{{ content.version }}">
+    {% for block in blocks %}
+        {{ include("@WebToolkit/front_end/editorjs/blocks/#{_key}.html.twig", {
+            block: block,
+        }) }}
+    {% endfor %}
+</div>

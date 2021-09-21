@@ -1,0 +1,11 @@
+{# @var \Mep\WebToolkitBundle\Entity\EditorJs\Block\Image block #}
+
+{% if block.withBackground %}
+    <div class="editorjs-image-container">
+{% endif %}
+    <img class="editorjs-image {% if block.withBorder %}withBorder{% endif %} {% if block.stretched %}stretched{% endif %}"
+         src="{{ attachment_public_url(block.attachment) }}"
+         alt="{{ block.caption }}">
+{% if block.withBackground %}
+    </div>
+{% endif %}

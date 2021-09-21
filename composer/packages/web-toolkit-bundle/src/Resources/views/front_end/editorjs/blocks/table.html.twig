@@ -1,0 +1,13 @@
+{# @var \Mep\WebToolkitBundle\Entity\EditorJs\Block\Table block #}
+
+<table class="editorjs-table">
+    {% for row in block.content %}
+        <tr>
+            {% set rowType = loop.first ? 'th' : 'td' %}
+
+            {% for col in row %}
+                <{{ rowType }}>{{ col }}</{{ rowType }}>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+</table>

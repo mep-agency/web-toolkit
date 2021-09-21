@@ -1,0 +1,24 @@
+{# @var \Mep\WebToolkitBundle\Entity\EditorJs\Block\List block #}
+
+{% if block.style == 'ordered' %}
+    {% set tagType = 'ol' %}
+{% else %}
+    {% set tagType = 'ul' %}
+{% endif %}
+
+{% macro recursiveItemList(items, listStyle) %}
+    {% for item in items %}
+        {% if item.items.getValues is not empty %}
+            <li>{{ item.content }}</li>
+            <{{ listStyle }}>
+                {{ _self.recursiveItemList(item.items, listStyle) }}
+            </{{ listStyle }}>
+        {% else %}
+            <li>{{ item.content }}</li>
+        {% endif %}
+    {% endfor %}
+{% endmacro %}
+
+<{{ tagType }} class="editorjs-list">
+    {{ _self.recursiveItemList(block.items, tagType) }}
+</{{ tagType }}>
