@@ -1,22 +1,30 @@
-import browserUiUtil from '../Usercentrics/BrowserUiUtil';
+import privacyManager from '../../Privacy/PrivacyManager';
 
 export default class HCaptcha {
   private isInitialized = false;
 
   public init(serviceName: string = 'hCaptcha', reloadOnDisable: boolean = true) {
-    browserUiUtil.addConsentListener((e) => {
-      if (e[serviceName] === true) {
-        this.isInitialized = true;
+    privacyManager.addConsentStatusListener(
+      serviceName,
+      (newValue, isInit) => {
+        if (newValue) {
+          if (this.isInitialized) {
+            throw new Error('Cannot initialize multiple times!');
+          }
 
-        const hCaptchaScript = document.createElement('script');
-        hCaptchaScript.src = 'https://hcaptcha.com/1/api.js';
+          this.isInitialized = true;
 
-        document.body.append(hCaptchaScript);
+          const hCaptchaScript = document.createElement('script');
+          hCaptchaScript.src = 'https://hcaptcha.com/1/api.js';
 
-        return false;
-      }
+          document.body.append(hCaptchaScript);
 
-      return this.isInitialized && reloadOnDisable;
-    });
+          return;
+        }
+
+        if (!isInit && reloadOnDisable) {
+          document.location.reload();
+        }
+      });
   }
 }
