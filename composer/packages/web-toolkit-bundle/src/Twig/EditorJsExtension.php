@@ -33,11 +33,15 @@ class EditorJsExtension extends AbstractExtension
     public function getFilters(): array
     {
         return [
-            new TwigFilter('editorjs', function (EditorJsContent $editorJsContent, int $startingHeadingLevel): string {
-                return $this->toHtml($editorJsContent, $startingHeadingLevel);
-            }, [
-                'is_safe' => ['html'],
-            ]),
+            new TwigFilter(
+                'editorjs',
+                function (EditorJsContent $editorJsContent, int $startingHeadingLevel = 2, string $wrapperTag = 'div'): string {
+                    return $this->toHtml($editorJsContent, $startingHeadingLevel, $wrapperTag);
+                },
+                [
+                    'is_safe' => ['html'],
+                ],
+            ),
         ];
     }
 
@@ -47,26 +51,32 @@ class EditorJsExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('editorjs', function (
-                EditorJsContent $editorJsContent,
-                int $startingHeadingLevel,
-            ): string {
-                return $this->toHtml($editorJsContent, $startingHeadingLevel);
-            }, [
-                'is_safe' => ['html'],
-            ]),
+            new TwigFunction(
+                'editorjs',
+                function (EditorJsContent $editorJsContent, int $startingHeadingLevel = 2, string $wrapperTag = 'div'): string {
+                    return $this->toHtml($editorJsContent, $startingHeadingLevel, $wrapperTag);
+                },
+                [
+                    'is_safe' => ['html'],
+                ],
+            ),
         ];
     }
 
-    public function toHtml(EditorJsContent $editorJsContent, int $startingHeadingLevel = 2): string
+    public function toHtml(EditorJsContent $editorJsContent, int $startingHeadingLevel = 2, string $wrapperTag = 'div'): string
     {
         $blocks = [];
 
         foreach ($editorJsContent->getBlocks() as $block) {
-            $blocks[Block::getTypeByClass($block::class)] = $block;
+            $blocks[] = [
+                'type' => Block::getTypeByClass($block::class),
+                'block' => $block,
+            ];
         }
 
         return $this->environment->render('@WebToolkit/front_end/editorjs/content.html.twig', [
+            'starting_heading_level' => $startingHeadingLevel,
+            'wrapper_tag' => $wrapperTag,
             'content' => $editorJsContent,
             'blocks' => $blocks,
         ]);

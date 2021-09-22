@@ -1,6 +1,8 @@
 {# @var \Mep\WebToolkitBundle\Entity\EditorJs\Block\Warning block #}
 
-<div class="editorjs-warning">
-    <h2>{{ block.title }}</h2>
+<div class="warning">
+    <h{{ starting_heading_level }}>
+        {{ block.title }}
+    </h{{ starting_heading_level }}>
     <p>{{ block.message }}</p>
 </div>

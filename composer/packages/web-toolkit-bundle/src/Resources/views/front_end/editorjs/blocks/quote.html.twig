@@ -1,6 +1,10 @@
 {# @var \Mep\WebToolkitBundle\Entity\EditorJs\Block\Quote block #}
 
-<blockquote class="editorjs-quote alignment-{{ block.alignment }}">
-    <p>{{ block.text|raw }}</p>
-    <cite>{{ block.caption }}</cite>
-</blockquote>
+<figure class="quote alignment-{{ block.alignment }}">
+    <blockquote>
+        <p>{{ block.text|raw }}</p>
+    </blockquote>
+    <figcaption>
+        <cite>{{ block.caption }}</cite>
+    </figcaption>
+</figure>

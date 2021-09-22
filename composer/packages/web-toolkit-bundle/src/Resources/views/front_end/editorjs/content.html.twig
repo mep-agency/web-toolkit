@@ -1,7 +1,8 @@
-<div class="editorjs-content" data-update-at="{{ content.time }}" data-version="{{ content.version }}">
-    {% for block in blocks %}
-        {{ include("@WebToolkit/front_end/editorjs/blocks/#{_key}.html.twig", {
-            block: block,
-        }) }}
+<{{ wrapper_tag }} class="editorjs-content" data-update-at="{{ content.time }}" data-version="{{ content.version }}">
+    {% for blockData in blocks %}
+        {% include "@WebToolkit/front_end/editorjs/blocks/#{blockData.type}.html.twig" with {
+            starting_heading_level: starting_heading_level,
+            block: blockData.block,
+        } %}
     {% endfor %}
-</div>
+</{{ wrapper_tag }}>

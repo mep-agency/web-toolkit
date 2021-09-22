@@ -890,10 +890,10 @@
   resolved "https://registry.yarnpkg.com/@editorjs/delimiter/-/delimiter-1.2.0.tgz#5075f1a3e68765cfb6aec8694b316d81e2b41607"
   integrity sha512-GKsCFPk85vH5FuCuVQ48NTLc9hk0T3DsBH9zABaicTYIJayFcUa8N4/Y+L3i4tduzDqqyvoxkv+5n43GmC5gEA==
 
-"@editorjs/editorjs@^2.22.2":
-  version "2.22.2"
-  resolved "https://registry.yarnpkg.com/@editorjs/editorjs/-/editorjs-2.22.2.tgz#bf1d10c9fa9dd1dc574c18d8f4b77fef43d8e7f6"
-  integrity sha512-rPCv7Z5LZebreQaaL4DZuWzoVGEqwB+P7BF1dsefGQNBmLyeLF412topeW2b6e+g4l1oQ7t75kCOACNTEyYYIA==
+"@editorjs/editorjs@^2.22.3":
+  version "2.22.3"
+  resolved "https://registry.yarnpkg.com/@editorjs/editorjs/-/editorjs-2.22.3.tgz#75c2902528941a4e28770cdf38542df6c031839d"
+  integrity sha512-CbWu/fiv7Y8EQPNFqNxNsYMtAVFoVIvPt7KZjSUrDC/Mc+pmItcKTujQuuxjGLo4gFMFwO9FkhDJ4eNksEgxwg==
   dependencies:
     codex-notifier "^1.1.2"
     codex-tooltip "^1.0.2"

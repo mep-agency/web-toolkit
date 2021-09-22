@@ -1,5 +1,3 @@
 {# @var \Mep\WebToolkitBundle\Entity\EditorJs\Block\Raw block #}
 
-<div class="editor-js-raw">
-    {{ block.html }}
-</div>
+<div class="raw-html" data-html="{{ block.html|raw|e('html_attr') }}"></div>

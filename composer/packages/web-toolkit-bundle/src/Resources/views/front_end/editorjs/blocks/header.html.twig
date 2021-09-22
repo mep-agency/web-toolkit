@@ -1,5 +1,5 @@
 {# @var \Mep\WebToolkitBundle\Entity\EditorJs\Block\Header block #}
 
-<h{{ block.level }} class="editorjs-header">
+<h{{ block.level + starting_heading_level - 1 }}>
     {{ block.text }}
-</h{{ block.level }}>
+</h{{ block.level + starting_heading_level - 1 }}>
