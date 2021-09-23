@@ -2,7 +2,7 @@
 
 <div class="warning">
     <h{{ starting_heading_level }}>
-        {{ block.title }}
+        {{ block.title|raw }}
     </h{{ starting_heading_level }}>
-    <p>{{ block.message }}</p>
+    <p>{{ block.message|raw }}</p>
 </div>

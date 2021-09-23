@@ -5,7 +5,7 @@
         <thead>
             <tr>
                 {% for cellValue in block.content[0] %}
-                    <th>{{ cellValue }}</th>
+                    <th>{{ cellValue|raw }}</th>
                 {% endfor %}
             </tr>
         </thead>
@@ -17,7 +17,7 @@
             {% if not block.withHeadings or not loop.first %}
                 <tr>
                     {% for cellValue in row %}
-                        <td>{{ cellValue }}</td>
+                        <td>{{ cellValue|raw }}</td>
                     {% endfor %}
                 </tr>
             {% endif %}

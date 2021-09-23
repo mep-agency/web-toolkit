@@ -10,14 +10,14 @@
     {% for item in items %}
         {% if item.items.getValues is not empty %}
             <li>
-                {{ item.content }}
+                {{ item.content|raw }}
 
                 <{{ tagName }}>
-                    {{ _self.recursiveItemList(item.items, tagName) }}
+                    {{ _self.printListItems(item.items, tagName) }}
                 </{{ tagName }}>
             </li>
         {% else %}
-            <li>{{ item.content }}</li>
+            <li>{{ item.content|raw }}</li>
         {% endif %}
     {% endfor %}
 {% endmacro %}

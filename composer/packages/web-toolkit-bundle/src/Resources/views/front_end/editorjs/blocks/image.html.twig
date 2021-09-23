@@ -17,6 +17,6 @@
 <figure class="{{ classes|join(' ') }}">
     <img
          src="{{ attachment_public_url(block.attachment) }}"
-         alt="{{ block.caption }}">
-    <figcaption>{{ block.caption }}</figcaption>
+         alt="{{ block.caption|raw }}">
+    <figcaption>{{ block.caption|raw }}</figcaption>
 </figure>
