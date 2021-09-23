@@ -35,7 +35,11 @@ class EditorJsExtension extends AbstractExtension
         return [
             new TwigFilter(
                 'editorjs',
-                function (EditorJsContent $editorJsContent, int $startingHeadingLevel = 2, string $wrapperTag = 'div'): string {
+                function (
+                    EditorJsContent $editorJsContent,
+                    int $startingHeadingLevel = 2,
+                    string $wrapperTag = 'div',
+                ): string {
                     return $this->toHtml($editorJsContent, $startingHeadingLevel, $wrapperTag);
                 },
                 [
@@ -53,7 +57,11 @@ class EditorJsExtension extends AbstractExtension
         return [
             new TwigFunction(
                 'editorjs',
-                function (EditorJsContent $editorJsContent, int $startingHeadingLevel = 2, string $wrapperTag = 'div'): string {
+                function (
+                    EditorJsContent $editorJsContent,
+                    int $startingHeadingLevel = 2,
+                    string $wrapperTag = 'div',
+                ): string {
                     return $this->toHtml($editorJsContent, $startingHeadingLevel, $wrapperTag);
                 },
                 [
@@ -63,8 +71,11 @@ class EditorJsExtension extends AbstractExtension
         ];
     }
 
-    public function toHtml(EditorJsContent $editorJsContent, int $startingHeadingLevel = 2, string $wrapperTag = 'div'): string
-    {
+    public function toHtml(
+        EditorJsContent $editorJsContent,
+        int $startingHeadingLevel = 2,
+        string $wrapperTag = 'div',
+    ): string {
         $blocks = [];
 
         foreach ($editorJsContent->getBlocks() as $block) {
