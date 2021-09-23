@@ -7,8 +7,14 @@
  * file that was distributed with this source code.
  */
 
-export default interface UcConsentStatusEventInterface {
-  event: 'consent_status';
-  type: 'explicit' | 'implicit';
-  [key: string]: string | boolean;
+export default interface ConsentManagementDriverInterface {
+  readonly STATUS_UPDATE_EVENT_NAME: string;
+
+  readonly events: EventTarget;
+
+  init(): void;
+
+  openPreferencesPanel(): Promise<void>;
+
+  closePreferencesPanel(): Promise<void>;
 }

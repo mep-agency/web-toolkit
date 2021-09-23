@@ -7,8 +7,6 @@
  * file that was distributed with this source code.
  */
 
-export default interface UcConsentStatusEventInterface {
-  event: 'consent_status';
-  type: 'explicit' | 'implicit';
-  [key: string]: string | boolean;
-}
+type ConsentStatusChangedCallbackType = (value: boolean, isInit: boolean) => void;
+
+export default ConsentStatusChangedCallbackType;

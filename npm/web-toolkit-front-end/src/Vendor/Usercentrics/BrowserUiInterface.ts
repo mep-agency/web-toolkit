@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-export default interface UcConsentStatusEventInterface {
-  event: 'consent_status';
-  type: 'explicit' | 'implicit';
-  [key: string]: string | boolean;
+export default interface BrowserUiInterface {
+  showSecondLayer(): void;
+
+  closeCMP(): void;
 }
