@@ -3,15 +3,15 @@
 {% set classes = ['image'] %}
 
 {% if block.withBackground %}
-    {% set classes = classes|merge['with-background'] %}
+    {% set classes = classes|merge(['with-background']) %}
 {% endif %}
 
 {% if block.withBorder %}
-    {% set classes = classes|merge['with-border'] %}
+    {% set classes = classes|merge(['with-border']) %}
 {% endif %}
 
 {% if block.stretched %}
-    {% set classes = classes|merge['stretched'] %}
+    {% set classes = classes|merge(['stretched']) %}
 {% endif %}
 
 <figure class="{{ classes|join(' ') }}">
