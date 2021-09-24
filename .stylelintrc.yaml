@@ -2,8 +2,16 @@ defaultSeverity: error
 
 plugins:
   - stylelint-order
+  - stylelint-plugin-license-header
+
+# No checks inside the skeleton
+ignoreFiles: [./composer/projects/symfony-web-toolkit-skeleton/**]
 
 rules:
+  plugin/license-header:
+    - true
+    - license: ./license-header-template.txt
+
   order/order:
     - - dollar-variables
       - custom-properties

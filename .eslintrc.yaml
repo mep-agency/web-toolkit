@@ -4,6 +4,7 @@ env:
 
 plugins:
   - import
+  - header
 
 extends:
   - airbnb-base
@@ -23,6 +24,10 @@ rules:
   # to enforce strange line breaks in TypeScript generics
   function-paren-newline: off
 
+  header/header:
+    - error
+    - license-header-template.txt
+
   no-restricted-syntax:
     - error
 
@@ -39,3 +44,9 @@ rules:
 
     - selector: WithStatement
       message: '`with` is disallowed in strict mode because it makes code impossible to predict and optimize.'
+
+overrides:
+  # No headers files inside the skeleton
+  - files: [./composer/projects/symfony-web-toolkit-skeleton/**]
+    rules:
+      header/header: off

@@ -46,12 +46,15 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     // Custom configuration
     $services->set(HeaderCommentFixer::class)
         ->call('configure', [[
-            'header' => 'This file is part of the MEP Web Toolkit package.
-
-(c) Marco Lipparini <developer@liarco.net>
-
-For the full copyright and license information, please view the LICENSE
-file that was distributed with this source code.',
+            'header' => trim(
+                implode(
+                    "\n",
+                    array_map(
+                        fn ($line) => trim($line, '/* '),
+                        explode("\n", file_get_contents(__DIR__.'/license-header-template.txt')),
+                    ),
+                ),
+            ),
             'location' => 'after_open',
         ]])
     ;
