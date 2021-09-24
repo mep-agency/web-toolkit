@@ -17,6 +17,9 @@ class SecurityController extends AbstractSecurityController
     ) {
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     protected function configureLoginTemplateParameters(array $parameters): array
     {
         $parameters['page_title'] = 'Login';

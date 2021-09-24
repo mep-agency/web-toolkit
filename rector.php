@@ -41,7 +41,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             __DIR__.'/composer/packages/web-toolkit-bundle/src/Form/TypeGuesser/AdminAttachmentTypeGuesser.php',
             __DIR__.'/composer/packages/web-toolkit-bundle/src/Form/TypeGuesser/AdminEditorJsTypeGuesser.php',
         ],
-        __DIR__.'/composer/projects/symfony-web-toolkit-skeleton/*',
     ]);
 
     // Define what rule sets will be applied

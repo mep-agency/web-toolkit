@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Admin;
 
 use App\Entity\User;
+use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
@@ -19,6 +20,9 @@ class UserCrudController extends AbstractCrudController
         return User::class;
     }
 
+    /**
+     * @return FieldInterface[]
+     */
     public function configureFields(string $pageName): iterable
     {
         return [

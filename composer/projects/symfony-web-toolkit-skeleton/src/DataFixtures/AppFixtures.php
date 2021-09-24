@@ -10,15 +10,15 @@ use Doctrine\Persistence\ObjectManager;
 
 class AppFixtures extends Fixture
 {
-    public function load(ObjectManager $manager): void
+    public function load(ObjectManager $objectManager): void
     {
         $user = new User();
 
         $user->setEmail('dev@example.com');
         $user->setRoles(['ROLE_ADMIN']);
 
-        $manager->persist($user);
+        $objectManager->persist($user);
 
-        $manager->flush();
+        $objectManager->flush();
     }
 }
