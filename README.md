@@ -12,5 +12,5 @@ registries until we reach a minimum level of stability.
 
 In the meantime, you can create a new project running:
 ```shell
-composer create-project mep-agency/symfony-web-toolkit-skeleton PROJECT_PATH --repository="{\"type\": \"vcs\", \"url\": \"git@github.com:mep-agency/symfony-web-toolkit-skeleton.git\"}" --stability dev
+composer create-project mep-agency/symfony-web-toolkit-skeleton PROJECT_PATH -n --repository="{\"type\": \"vcs\", \"url\": \"git@github.com:mep-agency/symfony-web-toolkit-skeleton.git\"}" --stability dev
 ```

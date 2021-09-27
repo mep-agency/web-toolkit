@@ -1,0 +1,42 @@
+name: PHP CI
+
+on:
+  push:
+    paths:
+      - .github/workflows/php-ci.yml
+      - '**.php'
+      - phpstan.neon
+      - composer.lock
+  pull_request:
+    paths:
+    - .github/workflows/php-ci.yml
+    - '**.php'
+    - phpstan.neon
+    - composer.lock
+
+jobs:
+  php-ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: setup-php
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.0
+        env:
+          COMPOSER_TOKEN: ${{ secrets.GH_PRIVATE_TOKEN }}
+
+      - uses: ramsey/composer-install@v1
+        with:
+          composer-options: --prefer-dist
+
+      - name: Run code-style checks (Rector)
+        run: composer rector
+
+      - name: Run code-style checks (ECS)
+        run: composer ecs
+
+      - name: Run PHPStan checks
+        run: composer phpstan

@@ -1,0 +1,46 @@
+name: PHPUnit CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  phpunit-ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: setup-php
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.0
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite
+        env:
+          COMPOSER_TOKEN: ${{ secrets.GH_PRIVATE_TOKEN }}
+
+      - uses: ramsey/composer-install@v1
+        with:
+          composer-options: --prefer-dist
+
+      - uses: actions/setup-node@v2
+        with:
+          cache: yarn
+          registry-url: https://npm.pkg.github.com
+          always-auth: true
+          scope: '@mep-agency'
+
+      - run: yarn install
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GH_PRIVATE_TOKEN }}
+
+      - name: Build assets
+        run: yarn build
+
+      - name: Initialize test DB
+        run: php bin/console doctrine:schema:create && php bin/console doctrine:fixtures:load -n
+        env:
+          APP_ENV: test
+
+      - name: Run PHPUnit tests
+        run: php bin/phpunit

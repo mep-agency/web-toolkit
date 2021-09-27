@@ -1,0 +1,12 @@
+parameters:
+  level: max
+  paths:
+    - src
+    - tests
+  excludes_analyse:
+    - src/Kernel.php
+  scanFiles:
+    - vendor/twig/twig/src/Extension/EscaperExtension.php
+
+includes:
+  - vendor/knplabs/doctrine-behaviors/phpstan-extension.neon

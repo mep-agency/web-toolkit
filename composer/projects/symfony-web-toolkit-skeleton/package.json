@@ -1,0 +1,42 @@
+{
+    "dependencies": {
+        "@mep-agency/web-toolkit-front-end": "mep-agency/web-toolkit-front-end"
+    },
+    "devDependencies": {
+        "@symfony/stimulus-bridge": "^2.0.0",
+        "@symfony/webpack-encore": "^1.0.0",
+        "@typescript-eslint/eslint-plugin": "^4.31.2",
+        "@typescript-eslint/parser": "^4.31.2",
+        "core-js": "^3.0.0",
+        "eslint": "^7.32.0",
+        "eslint-config-airbnb-base": "^14.2.1",
+        "eslint-config-airbnb-typescript": "^14.0.0",
+        "eslint-plugin-import": "^2.24.2",
+        "file-loader": "^6.0.0",
+        "postcss-loader": "^6.0.0",
+        "regenerator-runtime": "^0.13.2",
+        "sass": "^1.42.1",
+        "sass-loader": "^12.0.0",
+        "stimulus": "^2.0.0",
+        "stylelint": "^13.13.1",
+        "stylelint-order": "^4.1.0",
+        "ts-loader": "^9.0.0",
+        "typescript": "^4.4.3",
+        "webpack-notifier": "^1.6.0"
+    },
+    "license": "UNLICENSED",
+    "private": true,
+    "scripts": {
+        "dev-server": "encore dev-server",
+        "dev": "encore dev",
+        "watch": "encore dev --watch",
+        "build": "encore production --progress",
+        "eslint": "eslint \"assets/**/*.ts\" --cache",
+        "eslint-fix": "eslint \"assets/**/*.ts\" --fix --cache",
+        "stylelint": "stylelint \"assets/**/*.scss\" --cache",
+        "stylelint-fix": "stylelint \"assets/**/*.scss\" --fix --cache",
+        "twiglint": "php bin/console cache:clear && php bin/console lint:twig templates",
+        "lint": "yarn run eslint && yarn run stylelint && yarn run twiglint",
+        "cs-fix": "eslint \"assets/**/*.ts\" --fix --cache && stylelint \"assets/**/*.scss\" --fix --cache"
+    }
+}

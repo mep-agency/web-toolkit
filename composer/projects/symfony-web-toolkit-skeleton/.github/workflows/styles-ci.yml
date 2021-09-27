@@ -1,0 +1,40 @@
+name: Styles CI
+
+on:
+  push:
+    paths:
+      - .github/workflows/styles-ci.yml
+      - 'assets/**/*.scss'
+  pull_request:
+    paths:
+      - .github/workflows/styles-ci.yml
+      - 'assets/**/*.scss'
+
+jobs:
+  styles-ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v2
+        with:
+          cache: yarn
+          registry-url: https://npm.pkg.github.com
+          always-auth: true
+          scope: '@mep-agency'
+
+      - run: yarn install
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GH_PRIVATE_TOKEN }}
+
+      - uses: actions/cache@v2
+        id: stylelint-cache # use this to check for `cache-hit` (`steps.stylelint-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: .stylelintcache
+          key: ${{ runner.os }}-stylelint-${{ hashFiles('.stylelintrc.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-stylelint-
+
+      - name: Run Stylelint
+        run: yarn run stylelint

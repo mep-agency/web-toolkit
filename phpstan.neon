@@ -8,6 +8,8 @@ parameters:
   bootstrapFiles:
     # Fix class not found error for Symplify\MonorepoBuilder\Release\Contract\ReleaseWorker\ReleaseWorkerInterface
     - vendor/symplify/monorepo-builder/vendor/autoload.php
+    # Fix class not found errors for PhpCsFixer
+    - vendor/symplify/easy-coding-standard/vendor/autoload.php
 
 includes:
   - vendor/knplabs/doctrine-behaviors/phpstan-extension.neon

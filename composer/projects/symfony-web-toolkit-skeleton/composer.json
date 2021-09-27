@@ -36,16 +36,20 @@
         "symfony/twig-pack": "*",
         "symfony/validator": "*",
         "symfony/web-link": "*",
+        "symfony/webpack-encore-bundle": "^1.12",
         "symfony/yaml": "*"
     },
     "require-dev": {
     },
     "flex-require-dev": {
         "doctrine/doctrine-fixtures-bundle": "*",
+        "phpstan/phpstan": "^0.12.99",
+        "rector/rector": "^0.11.53",
         "symfony/debug-pack": "*",
         "symfony/maker-bundle": "^1.0",
         "symfony/profiler-pack": "*",
-        "symfony/test-pack": "*"
+        "symfony/test-pack": "*",
+        "symplify/easy-coding-standard": "^9.4"
     },
     "config": {
         "optimize-autoloader": true,
@@ -70,6 +74,33 @@
         "symfony/polyfill-php72": "*"
     },
     "scripts": {
+        "check": [
+            "@rector",
+            "@ecs",
+            "@phpstan"
+        ],
+        "full-check": [
+            "@check",
+            "yarn lint",
+            "@test"
+        ],
+        "ecs": "php vendor/bin/ecs check",
+        "ecs-fix": "php vendor/bin/ecs check --fix",
+        "rector": "php vendor/bin/rector process --dry-run",
+        "rector-fix": "php vendor/bin/rector process",
+        "phpstan": "php vendor/bin/phpstan analyse",
+        "test": [
+            "php bin/console cache:clear --env test",
+            "php bin/console doctrine:database:drop --force --env test",
+            "php bin/console doctrine:schema:create --env test",
+            "php bin/console doctrine:fixtures:load -n --env test",
+            "php bin/phpunit"
+        ],
+        "reset-db": [
+            "php bin/console doctrine:database:drop --force",
+            "php bin/console doctrine:schema:create",
+            "php bin/console doctrine:fixtures:load -n"
+        ],
         "auto-scripts": [
         ],
         "post-install-cmd": [
@@ -79,8 +110,10 @@
             "@auto-scripts"
         ],
         "post-create-project-cmd": [
+            "php ./init.php",
             "php bin/console doctrine:schema:create",
-            "php bin/console doctrine:fixtures:load -n"
+            "php bin/console doctrine:fixtures:load -n",
+            "yarn && yarn build"
         ]
     },
     "conflict": {
