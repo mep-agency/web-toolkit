@@ -37,6 +37,11 @@ class Header extends Block
         parent::__construct($id);
     }
 
+    public function __toString(): string
+    {
+        return $this->text;
+    }
+
     public function getText(): string
     {
         return $this->text;

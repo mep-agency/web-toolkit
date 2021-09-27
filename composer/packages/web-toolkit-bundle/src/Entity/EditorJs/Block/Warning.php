@@ -37,6 +37,21 @@ class Warning extends Block
         parent::__construct($id);
     }
 
+    public function __toString(): string
+    {
+        $plainTextTokens = [];
+
+        if (! empty($this->title)) {
+            $plainTextTokens[] = $this->title;
+        }
+
+        if (! empty($this->message)) {
+            $plainTextTokens[] = $this->message;
+        }
+
+        return implode(PHP_EOL, $plainTextTokens);
+    }
+
     public function getTitle(): string
     {
         return $this->title;

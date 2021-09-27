@@ -39,6 +39,21 @@ class Quote extends Block
         parent::__construct($id);
     }
 
+    public function __toString(): string
+    {
+        $plainTextTokens = [];
+
+        if (! empty($this->text)) {
+            $plainTextTokens[] = $this->text;
+        }
+
+        if (! empty($this->caption)) {
+            $plainTextTokens[] = $this->caption;
+        }
+
+        return implode(PHP_EOL, $plainTextTokens);
+    }
+
     public function getText(): string
     {
         return $this->text;

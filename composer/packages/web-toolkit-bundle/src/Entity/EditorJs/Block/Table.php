@@ -42,6 +42,19 @@ class Table extends Block
         parent::__construct($id);
     }
 
+    public function __toString(): string
+    {
+        $plainTextTokens = [];
+
+        foreach ($this->content as $singleContent) {
+            if (! empty($singleContent)) {
+                $plainTextTokens[] = implode("\t", $singleContent);
+            }
+        }
+
+        return strip_tags(implode(PHP_EOL, $plainTextTokens));
+    }
+
     public function getWithHeadings(): bool
     {
         return $this->withHeadings;

@@ -25,6 +25,7 @@ use Mep\WebToolkitBundle\Entity\EditorJs\Block\Quote;
 use Mep\WebToolkitBundle\Entity\EditorJs\Block\Raw;
 use Mep\WebToolkitBundle\Entity\EditorJs\Block\Table;
 use Mep\WebToolkitBundle\Entity\EditorJs\Block\Warning;
+use Stringable;
 use Symfony\Component\Serializer\Annotation\DiscriminatorMap;
 use Symfony\Component\Serializer\Annotation\Ignore;
 use Symfony\Component\Uid\Uuid;
@@ -43,7 +44,7 @@ use Symfony\Component\Uid\Uuid;
     typeProperty: 'type',
     mapping: Block::BLOCKS_MAPPING,
 )]
-abstract class Block implements JsonSerializable
+abstract class Block implements JsonSerializable, Stringable
 {
     /**
      * @var array<string, class-string<Block>>
@@ -92,6 +93,11 @@ abstract class Block implements JsonSerializable
         private string $id,
     ) {
         $this->uuid = Uuid::v6();
+    }
+
+    public function __toString(): string
+    {
+        return '';
     }
 
     /**

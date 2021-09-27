@@ -44,6 +44,11 @@ class Image extends Block
         parent::__construct($id);
     }
 
+    public function __toString(): string
+    {
+        return $this->caption;
+    }
+
     public function getCaption(): string
     {
         return $this->caption;

@@ -17,6 +17,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
+use Stringable;
 use Symfony\Component\Serializer\Annotation\Ignore;
 use Symfony\Component\Uid\Uuid;
 
@@ -29,7 +30,7 @@ use Symfony\Component\Uid\Uuid;
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'mwt_editor_js_nested_list_item')]
-class NestedListItem implements JsonSerializable
+class NestedListItem implements JsonSerializable, Stringable
 {
     #[ORM\Id]
     #[ORM\Column(type: 'uuid', unique: true)]
@@ -66,6 +67,25 @@ class NestedListItem implements JsonSerializable
         foreach ($items as $item) {
             $this->addItem($item);
         }
+    }
+
+    public function __toString(): string
+    {
+        $plainTextTokens = [];
+
+        if (! empty($this->content)) {
+            $plainTextTokens[] = $this->content;
+        }
+
+        foreach ($this->items as $item) {
+            $blockAsPlainText = (string) $item;
+
+            if (! empty($blockAsPlainText)) {
+                $plainTextTokens[] = $blockAsPlainText;
+            }
+        }
+
+        return strip_tags(implode(PHP_EOL, $plainTextTokens));
     }
 
     public function getUuid(): Uuid

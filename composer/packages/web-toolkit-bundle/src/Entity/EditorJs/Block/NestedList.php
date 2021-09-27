@@ -65,6 +65,21 @@ class NestedList extends Block
         }
     }
 
+    public function __toString(): string
+    {
+        $plainTextTokens = [];
+
+        foreach ($this->items as $item) {
+            $blockAsPlainText = (string) $item;
+
+            if (! empty($blockAsPlainText)) {
+                $plainTextTokens[] = $blockAsPlainText;
+            }
+        }
+
+        return strip_tags(implode(PHP_EOL, $plainTextTokens));
+    }
+
     public function getStyle(): string
     {
         return $this->style;
