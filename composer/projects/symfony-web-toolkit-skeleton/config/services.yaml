@@ -6,6 +6,7 @@
 parameters:
     app.default_locale: 'en'
     app.locales: ['en']
+    #app.app.usercentrics_settings_id: '%env(USERCENTRICS_SETTINGS_ID)%'
 
 services:
     # default configuration for services in *this* file

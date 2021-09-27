@@ -3,6 +3,10 @@ twig:
 
     globals:
         locales: '%app.locales%'
+        #usercentrics_settings_id: '%app.usercentrics_settings_id%'
+
+    form_themes:
+        - '@WebToolkit/form/form_theme.html.twig'
 
 when@test:
     twig:
