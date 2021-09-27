@@ -20,10 +20,10 @@
         "knplabs/doctrine-behaviors": "^2.2",
         "meteo-concept/hcaptcha-bundle": "^3.0",
         "nyholm/psr7": "^1.4",
-        "symfony/mailer": "^5.3",
-        "symfony/security-bundle": "^5.3",
+        "symfony/mailer": "5.3.*",
+        "symfony/security-bundle": "5.3.*",
         "symfony/serializer": "5.3.*",
-        "symfony/validator": "^5.3",
+        "symfony/validator": "5.3.*",
         "tinify/tinify": "^1.5"
     },
     "autoload": {
