@@ -179,4 +179,10 @@ final class WebToolkitBundle extends Bundle
      * @var string
      */
     public const SERVICE_TYPE_GUESSER_CONFIGURATOR = self::REFERENCE_PREFIX.'type_guesser_configurator';
+
+    // Extra Twig functions
+    /**
+     * @var string
+     */
+    public const SERVICE_TWIG_FUNCTIONS_EXTENSION = self::REFERENCE_PREFIX.'twig_functions_extension';
 }

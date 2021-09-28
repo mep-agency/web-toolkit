@@ -43,11 +43,15 @@ use Mep\WebToolkitBundle\Serializer\AttachmentNormalizer;
 use Mep\WebToolkitBundle\Serializer\EditorJsContentNormalizer;
 use Mep\WebToolkitBundle\Twig\AttachmentExtension;
 use Mep\WebToolkitBundle\Twig\EditorJsExtension;
+use Mep\WebToolkitBundle\Twig\TwigFunctionsExtension;
 use Mep\WebToolkitBundle\WebToolkitBundle;
+use Symfony\Component\Asset\Packages;
+use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Form\FormRegistryInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
@@ -232,5 +236,13 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->tag(EasyAdminExtension::TAG_FIELD_CONFIGURATOR, [
             'priority' => 99999,
         ])
+    ;
+
+    // Extra Twig functions
+    $services->set(WebToolkitBundle::SERVICE_TWIG_FUNCTIONS_EXTENSION, TwigFunctionsExtension::class)
+        ->arg(0, new Reference(AdapterInterface::class))
+        ->arg(1, new Reference(Packages::class))
+        ->arg(2, new Reference(KernelInterface::class))
+        ->tag('twig.extension')
     ;
 };
