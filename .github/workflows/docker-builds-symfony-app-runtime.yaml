@@ -41,12 +41,14 @@ jobs:
           tags: |
             mepagency/symfony-app-runtime:8.0-apache
             ghcr.io/mep-agency/symfony-app-runtime:8.0-apache
+          cache-from: type=registry,ref=ghcr.io/mep-agency/symfony-app-runtime:8.0-apache
+          cache-to: type=inline
 
       - name: Untagged images cleanup
         uses: actions/github-script@v3
         timeout-minutes: 5
         with:
-          github-token: ${{ secrets.WRITE_ACCESS_TOKEN }}
+          github-token: ${{ secrets.ACCESS_TOKEN }}
           script: |
             const response = await github.request('GET /${{ env.OWNER }}/packages/container/${{ env.PACKAGE_NAME }}/versions',
               { per_page: ${{ env.PER_PAGE }}
