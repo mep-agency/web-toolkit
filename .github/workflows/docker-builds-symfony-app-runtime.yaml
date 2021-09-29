@@ -29,7 +29,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.ACCESS_TOKEN }}
 
       - name: Build and push
         id: docker_build
@@ -48,7 +48,7 @@ jobs:
         uses: actions/github-script@v3
         timeout-minutes: 5
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.ACCESS_TOKEN }}
           script: |
             const response = await github.request('GET /${{ env.OWNER }}/packages/container/${{ env.PACKAGE_NAME }}/versions',
               { per_page: ${{ env.PER_PAGE }}
