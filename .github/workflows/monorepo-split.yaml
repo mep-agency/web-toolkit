@@ -6,6 +6,9 @@ on:
       - main
     tags:
       - '*'
+    paths:
+      - composer/**
+      - npm/**
 
 env:
   GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
