@@ -1,7 +1,7 @@
 {# @var \Mep\WebToolkitBundle\Entity\EditorJs\Block\Embed block #}
 
 {% if block.service == 'youtube' %}
-    <div class="embed service-{{ block.service }}">
+    <figure class="embed service-{{ block.service }}">
         <iframe
             title="YouTube video"
             width="560"
@@ -12,5 +12,6 @@
             data-external-url="{{ block.source }}"
             src="{{ block.embed }}?enablejsapi=1"
         ></iframe>
-    </div>
+        <figcaption>{{ block.caption|raw }}</figcaption>
+    </figure>
 {% endif %}
