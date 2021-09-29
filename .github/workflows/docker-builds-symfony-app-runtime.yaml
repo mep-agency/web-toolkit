@@ -24,6 +24,13 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.ACCESS_TOKEN }}
+
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v2
@@ -31,4 +38,29 @@ jobs:
           context: ./docker/symfony-app-runtime
           file: ./docker/symfony-app-runtime/8.0-apache/Dockerfile
           push: true
-          tags: mepagency/symfony-app-runtime:8.0-apache
+          tags: |
+            mepagency/symfony-app-runtime:8.0-apache
+            ghcr.io/mep-agency/symfony-app-runtime:8.0-apache
+
+      - name: Untagged images cleanup
+        uses: actions/github-script@v3
+        timeout-minutes: 5
+        with:
+          github-token: ${{ secrets.WRITE_ACCESS_TOKEN }}
+          script: |
+            const response = await github.request('GET /${{ env.OWNER }}/packages/container/${{ env.PACKAGE_NAME }}/versions',
+              { per_page: ${{ env.PER_PAGE }}
+            });
+            for (version of response.data) {
+                if (version.metadata.container.tags.length == 0) {
+                    console.log('Deleting untagged version: ' + version.id);
+                    const deleteResponse = await github.request('DELETE /${{ env.OWNER }}/packages/container/${{ env.PACKAGE_NAME }}/versions/' + version.id, { });
+                    console.log('Status: ' + deleteResponse.status);
+                } else {
+                  console.log('Skipping tagged version: ' + version.metadata.container.tags[0] + ' (' + version.id + ')');
+                }
+            }
+        env:
+          OWNER: orgs/${{ github.repository_owner }} # "user" or "orgs/<org name>"
+          PACKAGE_NAME: symfony-app-runtime
+          PER_PAGE: 100
