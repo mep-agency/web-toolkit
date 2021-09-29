@@ -6133,6 +6133,11 @@ type@^2.5.0:
   resolved "https://registry.yarnpkg.com/type/-/type-2.5.0.tgz#0a2e78c2e77907b252abe5f298c1b01c63f0db3d"
   integrity sha512-180WMDQaIMm3+7hGXWf12GtdniDEy7nYcyFMKJn/eZz/6tSLXrUN9V0wKSbMjej0I1WHWbpREDEKHtqPQa9NNw==
 
+typebase@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/typebase/-/typebase-1.0.1.tgz#14695d74057cd2bf9c242617cc3cf663ac0dea2c"
+  integrity sha1-FGlddAV80r+cJCYXzDz2Y6wN6iw=
+
 typedarray-to-buffer@^3.1.5:
   version "3.1.5"
   resolved "https://registry.yarnpkg.com/typedarray-to-buffer/-/typedarray-to-buffer-3.1.5.tgz#a97ee7a9ff42691b9f783ff1bc5112fe3fca9080"
