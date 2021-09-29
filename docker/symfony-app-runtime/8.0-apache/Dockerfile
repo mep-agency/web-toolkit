@@ -33,7 +33,6 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-av
 RUN rm -rf /var/www/html/*
 # Copy initialization script
 COPY ../files/init-and-run.sh /var/www/html
-COPY ../html/ /var/www/html/
 
 # Set some default values that can be overridden if needed
 ENV APACHE_START_SERVERS=5
