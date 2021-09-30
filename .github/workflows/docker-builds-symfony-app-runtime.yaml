@@ -40,8 +40,8 @@ jobs:
           push: true
           tags: |
             mepagency/symfony-app-runtime:8.0-apache
-            ghcr.io/mep-agency/symfony-app-runtime:8.0-apache
-          cache-from: type=registry,ref=ghcr.io/mep-agency/symfony-app-runtime:8.0-apache
+            ghcr.io/${{ github.repository_owner }}/symfony-app-runtime:8.0-apache
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/symfony-app-runtime:8.0-apache
           cache-to: type=inline
 
       - name: Untagged images cleanup
