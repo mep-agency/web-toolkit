@@ -26,7 +26,7 @@ jobs:
 
       - run: yarn install
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GH_PRIVATE_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/cache@v2
         id: stylelint-cache # use this to check for `cache-hit` (`steps.stylelint-cache.outputs.cache-hit != 'true'`)

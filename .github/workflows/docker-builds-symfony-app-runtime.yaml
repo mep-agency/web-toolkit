@@ -44,7 +44,8 @@ jobs:
           cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/symfony-app-runtime:8.0-apache
           cache-to: type=inline
 
-      - name: Untagged images cleanup
+      # The following step needs an access token with permission to delete packages
+      - name: Untagged versions cleanup
         uses: actions/github-script@v3
         timeout-minutes: 5
         with:
