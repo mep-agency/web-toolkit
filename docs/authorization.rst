@@ -61,7 +61,7 @@ Implement a controller that extends ``AbstractSecurityController`` and the two a
         }
     }
 
-The abstract controller implements come routes (login and logout).
+The abstract controller implements some routes (login and logout).
 
 Configuration
 -------------
