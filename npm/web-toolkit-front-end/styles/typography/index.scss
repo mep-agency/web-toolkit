@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-@import "~typebase";
+@import "~typebase.css/src/typebase";
 
 @mixin typography() {
   --main-background: #FFF;
@@ -174,16 +174,17 @@
       max-width: 100%;
     }
 
+    &.stretched,
+    &.stretched img{
+      width: 100%;
+    }
+
     &.with-border img {
       border: 5px solid var(--secondary-background);
     }
 
     &.with-background img {
       background-color: var(--secondary-background);
-    }
-
-    &.stretched {
-      width: 100%;
     }
   }
 }
