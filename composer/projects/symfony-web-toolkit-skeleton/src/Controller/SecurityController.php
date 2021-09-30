@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Repository\UserRepository;
+use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 use Mep\WebToolkitBundle\Contract\Controller\AbstractSecurityController;
 use Mep\WebToolkitBundle\Contract\Entity\AbstractUser;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,7 +14,7 @@ use Symfony\Component\Security\Http\LoginLink\LoginLinkDetails;
 class SecurityController extends AbstractSecurityController
 {
     public function __construct(
-        private UserRepository $userRepository,
+        private EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -29,7 +30,7 @@ class SecurityController extends AbstractSecurityController
 
     protected function findUser(string $identifier): ?AbstractUser
     {
-        return $this->userRepository->findOneBy([
+        return $this->entityManager->getRepository(User::class)->findOneBy([
             'email' => $identifier,
         ]);
     }
