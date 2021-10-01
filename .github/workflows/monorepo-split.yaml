@@ -7,6 +7,7 @@ on:
     tags:
       - '*'
     paths:
+      - .github/workflows/monorepo-split.yaml
       - composer/**
       - npm/**
 
@@ -41,25 +42,25 @@ jobs:
       # no tag
       -
         if: '!startsWith(github.ref, ''refs/tags/'')'
-        uses: symplify/monorepo-split-github-action@2.0
+        uses: symplify/monorepo-split-github-action@main
         with:
-          package-directory: ${{ matrix.package.local_path }}
-          split-repository-organization: 'mep-agency'
-          split-repository-name: ${{ matrix.package.split_repository }}
+          package_directory: ${{ matrix.package.local_path }}
+          repository_organization: 'mep-agency'
+          repository_name: ${{ matrix.package.split_repository }}
 
-          user-name: GitHub Action
-          user-email: action@github.com
+          user_name: GitHub Action
+          user_email: action@github.com
 
       # with tag
       -
         if: startsWith(github.ref, 'refs/tags/')
-        uses: symplify/monorepo-split-github-action@2.0
+        uses: symplify/monorepo-split-github-action@main
         with:
           tag: ${GITHUB_REF#refs/tags/}
 
-          package-directory: ${{ matrix.package.local_path }}
-          split-repository-organization: 'mep-agency'
-          split-repository-name: ${{ matrix.package.split_repository }}
+          package_directory: ${{ matrix.package.local_path }}
+          repository_organization: 'mep-agency'
+          repository_name: ${{ matrix.package.split_repository }}
 
-          user-name: GitHub Action
-          user-email: action@github.com
+          user_name: GitHub Action
+          user_email: action@github.com
