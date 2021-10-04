@@ -30,7 +30,19 @@ function webpackEncore_removeUnusedFiles(SymfonyStyle $io): void
     $filesystem->remove(__DIR__.'/assets/styles/app.css');
 }
 
-function init_removeThisInitFile(SymfonyStyle $io): void
+function init_removeUnusedFiles(SymfonyStyle $io): void
+{
+    $filesystem = new Filesystem();
+    $unusedFiles = [
+        __DIR__.'/README.md',
+    ];
+
+    $io->note('Removing some unused files...');
+
+    $filesystem->remove($unusedFiles);
+}
+
+function init_removeInitFile(SymfonyStyle $io): void
 {
     $filesystem = new Filesystem();
 
@@ -46,7 +58,7 @@ function init_removeThisInitFile(SymfonyStyle $io): void
         throw new RuntimeException('Unable to read composer.json');
     }
 
-    $composerArrayContent = json_decode($composerFileContent);
+    $composerArrayContent = json_decode($composerFileContent, true);
 
     unset($composerArrayContent['scripts']['post-create-project-cmd']);
 
@@ -82,12 +94,15 @@ $application = (new SingleCommandApplication())
             'Installing front end dependencies and building assets...',
             'yarn && yarn build',
         );
+        init_removeUnusedFiles($io);
+        init_removeInitFile($io);
+
+        // Create Git repository
         runCommandWithMessageOrFail(
             $io,
             'Creating Git repository...',
             'git init && git add --all && git commit -m "Initial commit"',
         );
-        init_removeThisInitFile($io);
 
         $io->success('Your new project is ready!');
     })
