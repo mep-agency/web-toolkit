@@ -2,6 +2,7 @@
   "private": true,
   "workspaces": [
     "composer/packages/web-toolkit-bundle",
+    "composer/projects/symfony-web-toolkit-skeleton",
     "npm/web-toolkit-front-end"
   ],
   "devDependencies": {
