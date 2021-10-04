@@ -61,14 +61,12 @@ final class FileStorageManager
         }
 
         if (! empty($unprocessedAttachment->processorsOptions)) {
-            throw new InvalidProcessorOptionsException(
-                'Processors options are not empty, but all processors have been run. Some configuration may be wrong/missing.',
-            );
+            throw new InvalidProcessorOptionsException('Processors options are not empty, but all processors have been run. Some configuration may be wrong/missing.');
         }
 
         $attachment = $unprocessedAttachment->createAttachment();
 
-        $this->fileStorageDriver->store($unprocessedAttachment->file, $attachment,);
+        $this->fileStorageDriver->store($unprocessedAttachment->file, $attachment);
 
         $this->entityManager->persist($attachment);
         $this->entityManager->flush();

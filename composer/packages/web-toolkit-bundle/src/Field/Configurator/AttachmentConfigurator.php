@@ -38,7 +38,7 @@ final class AttachmentConfigurator extends AbstractTranslatableFieldConfigurator
 
         $fieldDto->setFormTypeOption(
             AdminAttachmentType::CONTEXT,
-            (string) (new AttachmentAssociationContextDto($entityFqcn, $fieldDto->getProperty(),)),
+            (string) (new AttachmentAssociationContextDto($entityFqcn, $fieldDto->getProperty())),
         );
     }
 }

@@ -64,6 +64,6 @@ final class UnprocessedAttachmentDto
      */
     public function createAttachment(): Attachment
     {
-        return new Attachment($this->fileName, $this->mimeType, $this->fileSize, $this->context, $this->metadata,);
+        return new Attachment($this->fileName, $this->mimeType, $this->fileSize, $this->context, $this->metadata);
     }
 }

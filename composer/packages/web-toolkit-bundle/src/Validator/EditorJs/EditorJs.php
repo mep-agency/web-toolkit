@@ -55,9 +55,7 @@ final class EditorJs extends Constraint
         parent::__construct();
 
         if (! empty($this->enabledTools) && ! empty($this->disabledTools)) {
-            throw new InvalidConfigurationException(
-                'EditorJs values cannot define both "enabledTools" and "disabledTools", please use one of them.',
-            );
+            throw new InvalidConfigurationException('EditorJs values cannot define both "enabledTools" and "disabledTools", please use one of them.');
         }
 
         // Enable all tools by default
@@ -67,20 +65,14 @@ final class EditorJs extends Constraint
             $unknownTools = array_diff($this->enabledTools, Block::getSupportedClasses());
 
             if (! empty($unknownTools)) {
-                throw new InvalidConfigurationException('Invalid EditorJs configuration: unknown tool(s): "'.implode(
-                    '", "',
-                    $unknownTools,
-                ).'" (enabled).');
+                throw new InvalidConfigurationException('Invalid EditorJs configuration: unknown tool(s): "'.implode('", "', $unknownTools).'" (enabled).');
             }
         }
 
         $unknownTools = array_diff($this->disabledTools, Block::getSupportedClasses());
 
         if (! empty($unknownTools)) {
-            throw new InvalidConfigurationException('Invalid EditorJs configuration: unknown tool(s): "'.implode(
-                '", "',
-                $unknownTools,
-            ).'" (disabled).');
+            throw new InvalidConfigurationException('Invalid EditorJs configuration: unknown tool(s): "'.implode('", "', $unknownTools).'" (disabled).');
         }
 
         // Remove disabled tools (if any)
@@ -93,9 +85,7 @@ final class EditorJs extends Constraint
         }
 
         if (! in_array(Paragraph::class, $this->enabledTools, true)) {
-            throw new InvalidConfigurationException(
-                'Invalid EditorJs configuration: the "paragraph" tool is mandatory.',
-            );
+            throw new InvalidConfigurationException('Invalid EditorJs configuration: the "paragraph" tool is mandatory.');
         }
 
         $this->buildOptionResolvers();
@@ -253,18 +243,14 @@ final class EditorJs extends Constraint
         try {
             $this->options = $optionsResolver->resolve($this->options);
         } catch (UndefinedOptionsException $undefinedOptionsException) {
-            throw new InvalidConfigurationException(
-                'Invalid EditorJs configuration: '.$undefinedOptionsException->getMessage().' Did you forget to enable the tool(s)?',
-            );
+            throw new InvalidConfigurationException('Invalid EditorJs configuration: '.$undefinedOptionsException->getMessage().' Did you forget to enable the tool(s)?');
         }
 
         foreach ($this->options as $toolName => $toolOptions) {
             try {
                 $this->options[(string) $toolName] = self::$optionsResolvers[$toolName]->resolve($toolOptions);
             } catch (InvalidOptionsException $invalidOptionsException) {
-                throw new InvalidConfigurationException(
-                    'Invalid EditorJs tool configuration ('.$toolName.'): '.$invalidOptionsException->getMessage(),
-                );
+                throw new InvalidConfigurationException('Invalid EditorJs tool configuration ('.$toolName.'): '.$invalidOptionsException->getMessage());
             }
         }
     }

@@ -234,12 +234,7 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
                 );
             }
 
-            throw new RuntimeException(
-                'Trying to delete "'.$currentLocale.'" translation but only the following were available: '.implode(
-                ', ',
-                $instance->getTranslations()->getKeys(),
-            ),
-            );
+            throw new RuntimeException('Trying to delete "'.$currentLocale.'" translation but only the following were available: '.implode(', ', $instance->getTranslations()->getKeys()));
         }
 
         throw new RuntimeException('Trying to perform "deleteTranslation" action on a non-translatable entity.');
@@ -248,9 +243,7 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
     public function attachFile(AdminContext $adminContext): JsonResponse
     {
         if (Request::METHOD_POST !== $adminContext->getRequest()->getMethod()) {
-            throw new BadRequestException(
-                'A request to "'.self::ACTION_ATTACH_FILE.'" must use "'.Request::METHOD_POST.'" HTTP method.',
-            );
+            throw new BadRequestException('A request to "'.self::ACTION_ATTACH_FILE.'" must use "'.Request::METHOD_POST.'" HTTP method.');
         }
 
         $form = $this->createForm(
@@ -342,9 +335,7 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
             ;
 
             if (! $entityRepository instanceof LocalizedRepositoryInterface) {
-                throw new RuntimeException(
-                    'Repositories of Translatable entities must implement the LocalizedRepositoryInterface',
-                );
+                throw new RuntimeException('Repositories of Translatable entities must implement the LocalizedRepositoryInterface');
             }
 
             $entityRepository->localizeQueryBuilder($queryBuilder);
@@ -396,7 +387,7 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
                     return null;
                 }
 
-                return $this->redirect($this->adminUrlGenerator->setAction(Action::NEW)->generateUrl(),);
+                return $this->redirect($this->adminUrlGenerator->setAction(Action::NEW)->generateUrl());
             }
 
             /** @var EntityFactory $entityFactory */

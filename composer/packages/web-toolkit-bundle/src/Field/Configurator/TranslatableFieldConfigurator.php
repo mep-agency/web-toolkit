@@ -28,7 +28,7 @@ final class TranslatableFieldConfigurator extends AbstractTranslatableFieldConfi
 {
     public function configure(FieldDto $fieldDto, EntityDto $entityDto, AdminContext $adminContext): void
     {
-        $fieldDto->setFormTypeOption('property_path', $this->getFieldPropertyPath($fieldDto, $entityDto),);
+        $fieldDto->setFormTypeOption('property_path', $this->getFieldPropertyPath($fieldDto, $entityDto));
 
         $value = $this->rebuildValueOption($fieldDto, $entityDto);
         $fieldDto->setValue($value);
@@ -89,10 +89,7 @@ final class TranslatableFieldConfigurator extends AbstractTranslatableFieldConfi
         $templateName = $fieldDto->getTemplateName();
 
         if (null === $templateName) {
-            throw new RuntimeException(sprintf(
-                'Fields must define either their templateName or their templatePath. None given for "%s" field.',
-                $fieldDto->getProperty(),
-            ));
+            throw new RuntimeException(sprintf('Fields must define either their templateName or their templatePath. None given for "%s" field.', $fieldDto->getProperty()));
         }
 
         return $adminContext->getTemplatePath($templateName);
