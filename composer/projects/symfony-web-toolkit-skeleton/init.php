@@ -40,11 +40,23 @@ function init_removeThisInitFile(SymfonyStyle $io): void
 
     $io->note('Removing the init script from composer.json...');
 
-    $composerJsonContent = json_decode(file_get_contents(__DIR__.'/composer.json') ?? '', true);
+    $composerFileContent = file_get_contents(__DIR__.'/composer.json');
 
-    unset($composerJsonContent['scripts']['post-create-project-cmd']);
+    if (false === $composerFileContent) {
+        throw new RuntimeException('Unable to read composer.json');
+    }
 
-    file_put_contents(__DIR__.'/composer.json', json_encode($composerJsonContent, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+    $composerArrayContent = json_decode($composerFileContent);
+
+    unset($composerArrayContent['scripts']['post-create-project-cmd']);
+
+    $composerJsonContent = json_encode($composerArrayContent, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+
+    if (false === $composerJsonContent) {
+        throw new RuntimeException('Unable to read composer.json');
+    }
+
+    file_put_contents(__DIR__.'/composer.json', $composerJsonContent);
 }
 
 $application = (new SingleCommandApplication())
