@@ -110,10 +110,7 @@
             "@auto-scripts"
         ],
         "post-create-project-cmd": [
-            "php ./init.php",
-            "php bin/console doctrine:schema:create",
-            "php bin/console doctrine:fixtures:load -n",
-            "yarn && yarn build"
+            "php ./init.php"
         ]
     },
     "conflict": {
