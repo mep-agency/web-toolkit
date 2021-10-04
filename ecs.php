@@ -41,7 +41,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $containerConfigurator->import(SetList::PSR_12);
     $containerConfigurator->import(SetList::SYMFONY);
     $containerConfigurator->import(SetList::PHP_CS_FIXER);
-    $containerConfigurator->import(SetList::SYMPLIFY);
 
     // Custom configuration
     $services->set(HeaderCommentFixer::class)
