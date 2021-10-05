@@ -7,6 +7,6 @@
   "author": "Marco Lipparini <developer@liarco.net>",
   "license": "MIT",
   "dependencies": {
-    "typebase.css": "^0.5.0"
+    "typebase.css": "^0.5.1"
   }
 }

@@ -6622,10 +6622,10 @@ type@^2.5.0:
   resolved "https://registry.yarnpkg.com/type/-/type-2.5.0.tgz#0a2e78c2e77907b252abe5f298c1b01c63f0db3d"
   integrity sha512-180WMDQaIMm3+7hGXWf12GtdniDEy7nYcyFMKJn/eZz/6tSLXrUN9V0wKSbMjej0I1WHWbpREDEKHtqPQa9NNw==
 
-typebase.css@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/typebase.css/-/typebase.css-0.5.0.tgz#9f047bf8df09d1ea3931c03fe42034b897a98f90"
-  integrity sha1-nwR7+N8J0eo5McA/5CA0uJepj5A=
+typebase.css@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/typebase.css/-/typebase.css-0.5.1.tgz#9000aa66a2cf0a200682bc27c466b9a5cb80e506"
+  integrity sha512-aLnqT6kLB9BnxzQ5lKFtYZJ/TDFj4j0G6iNQ5BA4Z91PN5wtgZFr2sqUMRJt0nfEM3wZkZEitUidlTfr7Q/8+g==
 
 typebase@^1.0.1:
   version "1.0.1"
