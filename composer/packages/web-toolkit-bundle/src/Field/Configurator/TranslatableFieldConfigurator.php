@@ -89,7 +89,10 @@ final class TranslatableFieldConfigurator extends AbstractTranslatableFieldConfi
         $templateName = $fieldDto->getTemplateName();
 
         if (null === $templateName) {
-            throw new RuntimeException(sprintf('Fields must define either their templateName or their templatePath. None given for "%s" field.', $fieldDto->getProperty()));
+            throw new RuntimeException(sprintf(
+                'Fields must define either their templateName or their templatePath. None given for "%s" field.',
+                $fieldDto->getProperty(),
+            ));
         }
 
         return $adminContext->getTemplatePath($templateName);

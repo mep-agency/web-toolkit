@@ -15,6 +15,8 @@ use PhpCsFixer\Fixer\Comment\HeaderCommentFixer;
 use PhpCsFixer\Fixer\ControlStructure\TrailingCommaInMultilineFixer;
 use PhpCsFixer\Fixer\Phpdoc\PhpdocToCommentFixer;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symplify\CodingStandard\Fixer\LineLength\DocBlockLineLengthFixer;
+use Symplify\CodingStandard\Fixer\LineLength\LineLengthFixer;
 use Symplify\EasyCodingStandard\ValueObject\Option;
 use Symplify\EasyCodingStandard\ValueObject\Set\SetList;
 
@@ -43,6 +45,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $containerConfigurator->import(SetList::PHP_CS_FIXER);
 
     // Custom configuration
+    $services->set(LineLengthFixer::class);
+    $services->set(DocBlockLineLengthFixer::class);
+
     $services->set(HeaderCommentFixer::class)
         ->call('configure', [[
             'header' => trim(

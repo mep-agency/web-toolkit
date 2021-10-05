@@ -43,7 +43,9 @@ final class AttachmentsAdminApiUrlGenerator
             ;
 
             if (null === $crudControllerFqcn) {
-                throw new RuntimeException('Error generating attachments admin API URL: unable to detect CRUD controller FQCN.');
+                throw new RuntimeException(
+                    'Error generating attachments admin API URL: unable to detect CRUD controller FQCN.',
+                );
             }
         }
 

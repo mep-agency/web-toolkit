@@ -63,13 +63,17 @@ abstract class AbstractSecurityController extends AbstractController implements 
     #[Route('/logout', name: 'logout')]
     public function logout(): void
     {
-        throw new LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+        throw new LogicException(
+            'This method can be blank - it will be intercepted by the logout key on your firewall.',
+        );
     }
 
     #[Route('/login-check', name: 'login_check')]
     public function loginCheck(): void
     {
-        throw new LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+        throw new LogicException(
+            'This method can be blank - it will be intercepted by the logout key on your firewall.',
+        );
     }
 
     public function start(

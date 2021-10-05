@@ -61,7 +61,9 @@ final class FileStorageManager
         }
 
         if (! empty($unprocessedAttachment->processorsOptions)) {
-            throw new InvalidProcessorOptionsException('Processors options are not empty, but all processors have been run. Some configuration may be wrong/missing.');
+            throw new InvalidProcessorOptionsException(
+                'Processors options are not empty, but all processors have been run. Some configuration may be wrong/missing.',
+            );
         }
 
         $attachment = $unprocessedAttachment->createAttachment();

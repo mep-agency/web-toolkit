@@ -33,9 +33,7 @@ function webpackEncore_removeUnusedFiles(SymfonyStyle $io): void
 function init_removeUnusedFiles(SymfonyStyle $io): void
 {
     $filesystem = new Filesystem();
-    $unusedFiles = [
-        __DIR__.'/README.md',
-    ];
+    $unusedFiles = [__DIR__.'/README.md'];
 
     $io->note('Removing some unused files...');
 
@@ -84,11 +82,7 @@ $application = (new SingleCommandApplication())
             'Creating development SQLite DB...',
             'php bin/console doctrine:schema:create -n',
         );
-        runCommandWithMessageOrFail(
-            $io,
-            'Loading fixtures...',
-            'php bin/console doctrine:fixtures:load -n',
-        );
+        runCommandWithMessageOrFail($io, 'Loading fixtures...', 'php bin/console doctrine:fixtures:load -n',);
         runCommandWithMessageOrFail(
             $io,
             'Installing front end dependencies and building assets...',
