@@ -17,11 +17,11 @@
     "stylelint-webpack-plugin": "^3.0.1"
   },
   "scripts": {
-    "eslint": "eslint \"{composer,npm}/**/*.ts\" --cache",
-    "eslint-fix": "eslint \"{composer,npm}/**/*.ts\" --fix --cache",
+    "eslint": "eslint \"{composer,npm}/**/*.ts\" --no-eslintrc --config ./.eslintrc.yaml --cache",
+    "eslint-fix": "eslint \"{composer,npm}/**/*.ts\" --fix --no-eslintrc --config ./.eslintrc.yaml --cache",
     "stylelint": "stylelint \"{composer,npm}/**/*.scss\" --cache",
     "stylelint-fix": "stylelint \"{composer,npm}/**/*.scss\" --fix --cache",
     "lint": "yarn run eslint && yarn run stylelint",
-    "cs-fix": "eslint \"{composer,npm}/**/*.ts\" --fix --cache && stylelint \"{composer,npm}/**/*.scss\" --fix --cache"
+    "cs-fix": "yarn run eslint-fix && yarn run stylelint-fix"
   }
 }

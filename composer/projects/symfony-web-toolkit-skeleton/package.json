@@ -40,6 +40,6 @@
         "stylelint-fix": "stylelint \"assets/**/*.scss\" --fix --cache",
         "twiglint": "php bin/console cache:clear && php bin/console lint:twig templates",
         "lint": "yarn run eslint && yarn run stylelint && yarn run twiglint",
-        "cs-fix": "eslint \"assets/**/*.ts\" --fix --cache && stylelint \"assets/**/*.scss\" --fix --cache"
+        "cs-fix": "yarn run eslint-fix && yarn run stylelint-fix"
     }
 }
