@@ -1,4 +1,4 @@
-name: Docker builds (dev)
+name: Docker builds (staging)
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  docker-build-dev:
+  docker-build-staging:
     runs-on: ubuntu-latest
     steps:
       - name: Setup repository name
@@ -34,10 +34,10 @@ jobs:
         with:
           push: true
           build-args: |
-            BUILD_TYPE=dev
+            BUILD_TYPE=staging
             COMMIT_HASH=${{ github.sha }}
           tags: |
-            ghcr.io/${{ github.repository_owner }}/${{ env.MWT_REPOSITORY_NAME }}:dev
-          #  YOUR_DOCKERHUB_USER/${{ env.MWT_REPOSITORY_NAME }}:dev
-          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/${{ env.MWT_REPOSITORY_NAME }}:dev
+            ghcr.io/${{ github.repository_owner }}/${{ env.MWT_REPOSITORY_NAME }}:staging
+          #  YOUR_DOCKERHUB_USER/${{ env.MWT_REPOSITORY_NAME }}:staging
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/${{ env.MWT_REPOSITORY_NAME }}:staging
           cache-to: type=inline
