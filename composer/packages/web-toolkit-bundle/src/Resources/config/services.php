@@ -19,6 +19,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Provider\AdminContextProvider;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface;
 use Mep\WebToolkitBundle\Command\FileStorage\GarbageCollectionCommand;
+use Mep\WebToolkitBundle\Command\FileStorage\SessionsCreateTableCommand;
 use Mep\WebToolkitBundle\Entity\Attachment;
 use Mep\WebToolkitBundle\EventListener\AttachmentLifecycleEventListener;
 use Mep\WebToolkitBundle\EventListener\ForceSingleInstanceEventListener;
@@ -48,6 +49,7 @@ use Mep\WebToolkitBundle\WebToolkitBundle;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Form\FormRegistryInterface;
@@ -68,6 +70,12 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services->defaults()
         ->private()
+    ;
+
+    // General
+    $services->set(WebToolkitBundle::SERVICE_SESSIONS_CREATE_TABLE_COMMAND, SessionsCreateTableCommand::class)
+        ->arg(0, new Reference(PdoSessionHandler::class))
+        ->tag('console.command')
     ;
 
     // Single instance support

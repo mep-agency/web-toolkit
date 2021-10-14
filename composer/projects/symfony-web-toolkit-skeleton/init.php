@@ -82,6 +82,11 @@ $application = (new SingleCommandApplication())
             'Creating development SQLite DB...',
             'php bin/console doctrine:schema:create -n',
         );
+        runCommandWithMessageOrFail(
+            $io,
+            'Creating sessions table...',
+            'php bin/console mwt:sessions:create-table -n',
+        );
         runCommandWithMessageOrFail($io, 'Loading fixtures...', 'php bin/console doctrine:fixtures:load -n',);
         runCommandWithMessageOrFail(
             $io,

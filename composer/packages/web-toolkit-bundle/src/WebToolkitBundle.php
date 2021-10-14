@@ -42,6 +42,12 @@ final class WebToolkitBundle extends Bundle
      */
     public const TAG_ATTACHMENTS_GARBAGE_COLLECTOR = self::REFERENCE_PREFIX.'attachments_garbage_collector';
 
+    // General
+    /**
+     * @var string
+     */
+    public const SERVICE_SESSIONS_CREATE_TABLE_COMMAND = self::REFERENCE_PREFIX.'sessions_create_table_command';
+
     // Single instance support
     /**
      * @var string

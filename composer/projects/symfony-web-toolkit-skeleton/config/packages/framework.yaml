@@ -7,11 +7,13 @@ framework:
     # Enables session support. Note that the session will ONLY be started if you read or write from it.
     # Remove or comment this section to explicitly disable session support.
     session:
-        handler_id: session.handler.native_file
+        # The PdoSessionHandler is used instead of the default one in order to allow sharing sessions between multiple
+        # instances of the app (e.g. many replicas can be deployed on a k8s cluster)
+        # see https://symfony.com/doc/current/session/database.html#store-sessions-in-a-relational-database-mariadb-mysql-postgresql
+        handler_id: Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
         cookie_secure: auto
         cookie_samesite: lax
         storage_factory_id: session.storage.factory.native
-        save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
 
     #esi: true
     #fragments: true
