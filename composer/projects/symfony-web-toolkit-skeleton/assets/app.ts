@@ -11,5 +11,5 @@ import './styles/app.scss';
 // start the Stimulus application
 import './bootstrap';
 
-// The following line import some useful tools with a default configuration
+// The following line imports some useful tools with a default configuration
 import '@mep-agency/web-toolkit-front-end';
