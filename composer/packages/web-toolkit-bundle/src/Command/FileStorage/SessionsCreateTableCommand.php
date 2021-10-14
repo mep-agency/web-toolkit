@@ -39,8 +39,10 @@ class SessionsCreateTableCommand extends Command
     {
         $symfonyStyle = new SymfonyStyle($input, $output);
 
-        if ($this->pdoSessionHandler === null) {
-            $symfonyStyle->error('The PDO session handler is not available as service, did you change the default configuration?');
+        if (null === $this->pdoSessionHandler) {
+            $symfonyStyle->error(
+                'The PDO session handler is not available as service, did you change the default configuration?',
+            );
 
             return Command::INVALID;
         }
