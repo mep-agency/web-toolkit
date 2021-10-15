@@ -66,8 +66,8 @@ class NamespaceDeleteCommand extends AbstractK8sCommand
             $namespace->delete();
 
             $symfonyStyle->success('Namespace "'.$namespaceName.'" deleted successfully!');
-        } catch (KubernetesAPIException $e) {
-            $symfonyStyle->error('Failed deleting namespace "'.$namespaceName.'": '.$e->getPayload()['message'].'.');
+        } catch (KubernetesAPIException $kubernetesapiException) {
+            $symfonyStyle->error('Failed deleting namespace "'.$namespaceName.'": '.$kubernetesapiException->getPayload()['message'].'.');
 
             return Command::FAILURE;
         }

@@ -68,8 +68,8 @@ abstract class AbstractK8sCommand extends Command
             $namespace = $this->kubernetesCluster
                 ->getNamespaceByName($namespaceName)
             ;
-        } catch (KubernetesAPIException $e) {
-            $symfonyStyle->error('Failed checking namespace "'.$namespaceName.'": '.$e->getPayload()['message'].'.');
+        } catch (KubernetesAPIException $kubernetesapiException) {
+            $symfonyStyle->error('Failed checking namespace "'.$namespaceName.'": '.$kubernetesapiException->getPayload()['message'].'.');
 
             return false;
         }
@@ -83,8 +83,8 @@ abstract class AbstractK8sCommand extends Command
         return true;
     }
 
-    protected function isCreatedByThisTool(K8sResource $resource): bool
+    protected function isCreatedByThisTool(K8sResource $k8sResource): bool
     {
-        return $resource->getLabel(K8sCli::K8S_CREATED_BY_LABEL_NAME) === K8sCli::K8S_CREATED_BY_LABEL_VALUE;
+        return $k8sResource->getLabel(K8sCli::K8S_CREATED_BY_LABEL_NAME) === K8sCli::K8S_CREATED_BY_LABEL_VALUE;
     }
 }

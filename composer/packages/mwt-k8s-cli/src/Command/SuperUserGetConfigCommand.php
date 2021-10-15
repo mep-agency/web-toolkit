@@ -76,8 +76,8 @@ class SuperUserGetConfigCommand extends AbstractK8sCommand
                 $secretData['token'],
                 $secretData['namespace'],
             );
-        } catch (KubernetesAPIException $e) {
-            $symfonyStyle->error('Failed creating configuration for service account "'.$serviceAccountName.'": '.$e->getPayload()['message'].'.');
+        } catch (KubernetesAPIException $kubernetesapiException) {
+            $symfonyStyle->error('Failed creating configuration for service account "'.$serviceAccountName.'": '.$kubernetesapiException->getPayload()['message'].'.');
 
             return Command::FAILURE;
         }

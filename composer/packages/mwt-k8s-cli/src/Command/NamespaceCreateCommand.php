@@ -49,8 +49,8 @@ class NamespaceCreateCommand extends AbstractK8sCommand
                 ->setName($namespaceName)
                 ->setLabels(K8sCli::K8S_MINIMUM_NEW_RESOURCE_LABELS)
                 ->create();
-        } catch (KubernetesAPIException $e) {
-            $symfonyStyle->error('Failed creating namespace "'.$namespaceName.'": '.$e->getPayload()['message'].'.');
+        } catch (KubernetesAPIException $kubernetesapiException) {
+            $symfonyStyle->error('Failed creating namespace "'.$namespaceName.'": '.$kubernetesapiException->getPayload()['message'].'.');
 
             return Command::FAILURE;
         }

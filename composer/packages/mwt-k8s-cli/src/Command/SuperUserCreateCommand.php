@@ -87,8 +87,8 @@ class SuperUserCreateCommand extends AbstractK8sCommand
                 ])
                 ->create()
             ;
-        } catch (KubernetesAPIException $e) {
-            $symfonyStyle->error('Failed creating service account "'.$serviceAccountName.'": '.$e->getPayload()['message'].'.');
+        } catch (KubernetesAPIException $kubernetesapiException) {
+            $symfonyStyle->error('Failed creating service account "'.$serviceAccountName.'": '.$kubernetesapiException->getPayload()['message'].'.');
 
             return Command::FAILURE;
         }
