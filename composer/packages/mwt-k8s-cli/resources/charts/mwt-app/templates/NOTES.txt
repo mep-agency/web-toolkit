@@ -1,0 +1,3 @@
+The app "{{ include "app.projectName" . }}" is running at: https://{{- if .Values.ingress.forceWww -}}www.{{- end -}}{{ .Values.project.domain }}
+
+Use the "{{ printf "mwt-%s-restarter" (include "app.projectName" .) }}" service account to restart this deployment.

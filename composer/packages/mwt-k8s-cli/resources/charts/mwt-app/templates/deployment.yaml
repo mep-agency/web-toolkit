@@ -1,0 +1,46 @@
+{{- $name := include "app.projectName" . -}}
+{{- $imageName := required "The image name is required" .Values.image.name -}}
+{{- $appEnv := required "The APP_ENV value is required" .Values.image.appEnv -}}
+{{- $trustedProxies := required "The TRUSTED_PROXIES value is required" .Values.image.trustedProxies -}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  revisionHistoryLimit: 1
+  replicas: {{ .Values.project.replicas }}
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 1
+  selector:
+    matchLabels: {{ include "app.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels: {{ include "app.labels" . | nindent 8 }}
+    spec:
+      {{- if .Values.project.spreadEvenly }}
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels: {{ include "app.selectorLabels" . | nindent 16 }}
+            topologyKey: kubernetes.io/hostname
+      {{- end }}
+      containers:
+        - name: {{ $name }}
+          image: {{ $imageName }}
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 80
+          env:
+          - name: APP_ENV
+            value: {{ $appEnv }}
+          - name: TRUSTED_PROXIES
+            value: {{ $trustedProxies }}
+          {{- toYaml .Values.image.env | nindent 10 }}
+      {{- if .Values.image.pullSecrets }}
+      imagePullSecrets: {{ toYaml .Values.image.pullSecrets | nindent 6 }}
+      {{- end }}
+...

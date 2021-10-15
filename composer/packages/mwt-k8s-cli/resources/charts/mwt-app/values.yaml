@@ -1,0 +1,28 @@
+# Default values for a deployment.
+project:
+  domain:
+  replicas: 3
+  # Forces one replica per node (at most)
+  spreadEvenly: true
+
+ingress:
+  clusterIssuer:
+  # Increase this to allow bigger uploads
+  maxBodySize: 10m
+  forceWww: true
+  basicAuth:
+    # If set, this secret is used to enable HTTP BasicAuth
+    secret:
+    realm:
+
+image:
+  # Container image name including tag (e.g. "ghcr.io/my-org/my-image:latest")
+  name:
+  # Change this only if you are using custom envs
+  appEnv: prod
+  # Ensure to trust connections from inside the cluster or from the load balancer(s)
+  trustedProxies: 10.0.0.0/8
+  env: []
+  # Leave empty to use the default pull secret
+  pullSecrets:
+  #- name: ghcrio-auth

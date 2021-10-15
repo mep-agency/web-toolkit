@@ -6,6 +6,7 @@
       <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/composer/packages/monorepo-utils/src" isTestSource="false" packagePrefix="Mep\MonorepoUtils\" />
       <sourceFolder url="file://$MODULE_DIR$/composer/packages/web-toolkit-bundle/src" isTestSource="false" packagePrefix="Mep\WebToolkitBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/composer/packages/mwt-k8s-cli/src" isTestSource="false" packagePrefix="Mep\MwtK8sCli\" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/psr/cache" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/aws/aws-sdk-php" />

@@ -14,12 +14,18 @@
     "require": {
         "aws/aws-sdk-php": "^3.185",
         "easycorp/easyadmin-bundle": "dev-master",
+        "ext-yaml": "*",
         "knplabs/doctrine-behaviors": "^2.2",
         "meteo-concept/hcaptcha-bundle": "^3.0",
         "nette/utils": "^3.2",
         "nyholm/psr7": "^1.4",
         "php": "^8.0",
+        "renoki-co/php-k8s": "^3.1",
+        "symfony/config": "5.3.*",
+        "symfony/console": "5.3.*",
+        "symfony/dependency-injection": "5.3.*",
         "symfony/mailer": "5.3.*",
+        "symfony/process": "5.3.*",
         "symfony/security-bundle": "5.3.*",
         "symfony/serializer": "5.3.*",
         "symfony/validator": "5.3.*",
@@ -31,19 +37,19 @@
         "phpunit/phpunit": "^9.5",
         "rector/rector": "^0.11.53",
         "sensio/framework-extra-bundle": "^6.1",
-        "symfony/console": "5.3.*",
-        "symfony/process": "5.3.*",
         "symplify/easy-coding-standard": "^9.4",
         "symplify/monorepo-builder": "^9.4"
     },
     "autoload": {
         "psr-4": {
             "Mep\\MonorepoUtils\\": "composer/packages/monorepo-utils/src",
+            "Mep\\MwtK8sCli\\": "composer/packages/mwt-k8s-cli/src",
             "Mep\\WebToolkitBundle\\": "composer/packages/web-toolkit-bundle/src"
         }
     },
     "replace": {
         "mep-agency/monorepo-utils": "self.version",
+        "mep-agency/mwt-k8s-cli": "self.version",
         "mep-agency/web-toolkit-bundle": "self.version"
     },
     "scripts": {

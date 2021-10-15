@@ -1,0 +1,15 @@
+{{- $name := include "app.projectName" . -}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $name }}
+  namespace: {{ .Release.Namespace }}
+  labels: {{ include "app.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 80
+  selector: {{ include "app.selectorLabels" . | nindent 4 }}
+...
