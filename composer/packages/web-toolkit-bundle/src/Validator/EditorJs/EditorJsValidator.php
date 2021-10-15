@@ -41,7 +41,7 @@ final class EditorJsValidator extends ConstraintValidator
             return;
         }
 
-        foreach ($value->getBlocks() as $block) {
+        foreach ($value->getBlocks()->getValues() as $block) {
             $type = $block::class;
 
             if (! in_array($type, $constraint->enabledTools, true)) {

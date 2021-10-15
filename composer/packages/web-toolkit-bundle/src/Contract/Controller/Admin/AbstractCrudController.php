@@ -83,9 +83,9 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
     }
 
     /**
-     * @return T
+     * @psalm-return T
      */
-    public function createEntity(string $entityFqcn): object
+    public function createEntity(string $entityFqcn)
     {
         $instance = parent::createEntity($entityFqcn);
 

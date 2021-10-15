@@ -23,16 +23,24 @@ use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
  */
 class K8sCli
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     public const K8S_DEFAULT_NAMESPACE = 'mwt-apps';
 
-    /** @var string */
+    /**
+     * @var string
+     */
     public const K8S_CREATED_BY_LABEL_NAME = 'app.kubernetes.io/created-by';
 
-    /** @var string */
+    /**
+     * @var string
+     */
     public const K8S_CREATED_BY_LABEL_VALUE = 'mwt-k8s-cli';
 
-    /** @var array<string, string> */
+    /**
+     * @var array<string, string>
+     */
     public const K8S_MINIMUM_NEW_RESOURCE_LABELS = [
         self::K8S_CREATED_BY_LABEL_NAME => self::K8S_CREATED_BY_LABEL_VALUE,
     ];

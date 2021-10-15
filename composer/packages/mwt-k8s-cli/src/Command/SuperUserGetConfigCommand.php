@@ -48,7 +48,13 @@ class SuperUserGetConfigCommand extends AbstractK8sCommand
         $this->addArgument('service-account', InputArgument::REQUIRED, 'The service account name');
 
         $this->addOption('output', 'o', InputOption::VALUE_REQUIRED, 'An output file', $this->defaultOutputPath);
-        $this->addOption('namespace', null, InputOption::VALUE_REQUIRED, 'The namespace to associate with the new service account', K8sCli::K8S_DEFAULT_NAMESPACE);
+        $this->addOption(
+            'namespace',
+            null,
+            InputOption::VALUE_REQUIRED,
+            'The namespace to associate with the new service account',
+            K8sCli::K8S_DEFAULT_NAMESPACE,
+        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -58,13 +64,11 @@ class SuperUserGetConfigCommand extends AbstractK8sCommand
         $namespace = $input->getOption('namespace');
 
         try {
-            $serviceAccount = $this->kubernetesCluster->getServiceAccountByName($serviceAccountName, $namespace);
+            $k8sServiceAccount = $this->kubernetesCluster->getServiceAccountByName($serviceAccountName, $namespace);
             $secretData = $this->kubernetesCluster
-                ->getSecretByName(
-                    $serviceAccount->getSecrets()[0]['name'],
-                    $namespace,
-                )
-                ->getData(true);
+                ->getSecretByName($k8sServiceAccount->getSecrets()[0]['name'], $namespace,)
+                ->getData(true)
+            ;
 
             // The library doesn't return the clean API url, so we generate one with no path nor query parameters
             $url = trim($this->kubernetesCluster->getCallableUrl('', []), '?');
@@ -77,7 +81,9 @@ class SuperUserGetConfigCommand extends AbstractK8sCommand
                 $secretData['namespace'],
             );
         } catch (KubernetesAPIException $kubernetesapiException) {
-            $symfonyStyle->error('Failed creating configuration for service account "'.$serviceAccountName.'": '.$kubernetesapiException->getPayload()['message'].'.');
+            $symfonyStyle->error(
+                'Failed creating configuration for service account "'.$serviceAccountName.'": '.$kubernetesapiException->getPayload()['message'].'.',
+            );
 
             return Command::FAILURE;
         }

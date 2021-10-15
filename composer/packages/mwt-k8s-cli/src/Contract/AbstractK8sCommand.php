@@ -28,8 +28,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 abstract class AbstractK8sCommand extends Command
 {
-    public function __construct(protected KubernetesCluster $kubernetesCluster)
-    {
+    public function __construct(
+        protected KubernetesCluster $kubernetesCluster,
+    ) {
         parent::__construct();
     }
 
@@ -40,16 +41,26 @@ abstract class AbstractK8sCommand extends Command
             if (! KubernetesClusterFactory::isConfiguredLocally()) {
                 $symfonyStyle = new SymfonyStyle($input, $output);
 
-                $symfonyStyle->error("This tool has loaded the kubectl configuration automatically, this may be invalid or risky.\n\nPlease create a local configuration file instead:\n> php bin/mwt-k8s config:create --help");
+                $symfonyStyle->error(
+                    "This tool has loaded the kubectl configuration automatically, this may be invalid or risky.\n\nPlease create a local configuration file instead:\n> php bin/mwt-k8s config:create --help",
+                );
 
                 return Command::INVALID;
             }
 
-            if ($input->hasArgument('namespace') && ! $this->checkNamespace($input->getArgument('namespace'), $input, $output)) {
+            if ($input->hasArgument('namespace') && ! $this->checkNamespace(
+                $input->getArgument('namespace'),
+                $input,
+                $output,
+            )) {
                 return Command::INVALID;
             }
 
-            if ($input->hasOption('namespace') && ! $this->checkNamespace($input->getOption('namespace'), $input, $output)) {
+            if ($input->hasOption('namespace') && ! $this->checkNamespace(
+                $input->getOption('namespace'),
+                $input,
+                $output,
+            )) {
                 return Command::INVALID;
             }
 
@@ -65,17 +76,22 @@ abstract class AbstractK8sCommand extends Command
         $force = $input->hasOption('force') ? $input->getOption('force') : false;
 
         try {
-            $namespace = $this->kubernetesCluster
+            $k8sNamespace = $this->kubernetesCluster
                 ->getNamespaceByName($namespaceName)
             ;
         } catch (KubernetesAPIException $kubernetesapiException) {
-            $symfonyStyle->error('Failed checking namespace "'.$namespaceName.'": '.$kubernetesapiException->getPayload()['message'].'.');
+            $symfonyStyle->error(
+                'Failed checking namespace "'.$namespaceName.'": '.$kubernetesapiException->getPayload()['message'].'.',
+            );
 
             return false;
         }
 
-        if (! $force && ! $this->isCreatedByThisTool($namespace)) {
-            $symfonyStyle->error('The given namespace ("'.$namespaceName.'") was not created by this CLI'.($input->hasOption('force') ? ', use "--force" to skip this check.' : ''));
+        if (! $force && ! $this->isCreatedByThisTool($k8sNamespace)) {
+            $symfonyStyle->error(
+                'The given namespace ("'.$namespaceName.'") was not created by this CLI'.
+                ($input->hasOption('force') ? ', use "--force" to skip this check.' : ''),
+            );
 
             return false;
         }
@@ -85,6 +101,6 @@ abstract class AbstractK8sCommand extends Command
 
     protected function isCreatedByThisTool(K8sResource $k8sResource): bool
     {
-        return $k8sResource->getLabel(K8sCli::K8S_CREATED_BY_LABEL_NAME) === K8sCli::K8S_CREATED_BY_LABEL_VALUE;
+        return K8sCli::K8S_CREATED_BY_LABEL_VALUE === $k8sResource->getLabel(K8sCli::K8S_CREATED_BY_LABEL_NAME);
     }
 }

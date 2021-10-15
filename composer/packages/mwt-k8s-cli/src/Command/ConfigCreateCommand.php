@@ -56,14 +56,16 @@ class ConfigCreateCommand extends Command
             return Command::INVALID;
         }
 
-        if (!$force && is_file($this->configFilePath)) {
+        if (! $force && is_file($this->configFilePath)) {
             $symfonyStyle->error('A configuration file already exists, please use "--force" to overwrite it.');
 
             return Command::INVALID;
         }
 
         if (! is_file($certificatePath)) {
-            $symfonyStyle->error('No certificate found at "'.$certificatePath.'", please use "--certificate" to specify a custom path.');
+            $symfonyStyle->error(
+                'No certificate found at "'.$certificatePath.'", please use "--certificate" to specify a custom path.',
+            );
 
             return Command::INVALID;
         }

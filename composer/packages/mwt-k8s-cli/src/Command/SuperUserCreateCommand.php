@@ -17,7 +17,6 @@ use Mep\MwtK8sCli\Contract\AbstractK8sCommand;
 use Mep\MwtK8sCli\K8sCli;
 use RenokiCo\PhpK8s\Exceptions\KubernetesAPIException;
 use RenokiCo\PhpK8s\K8s;
-use RenokiCo\PhpK8s\KubernetesCluster;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -39,9 +38,17 @@ class SuperUserCreateCommand extends AbstractK8sCommand
     {
         $this->addArgument('service-account', InputArgument::REQUIRED, 'The service account name');
 
-        $this->addOption('namespace', null, InputOption::VALUE_REQUIRED, 'The namespace to associate with the new service account', K8sCli::K8S_DEFAULT_NAMESPACE);
+        $this->addOption(
+            'namespace',
+            null,
+            InputOption::VALUE_REQUIRED,
+            'The namespace to associate with the new service account',
+            K8sCli::K8S_DEFAULT_NAMESPACE,
+        );
 
-        $this->setHelp("!!!!!!!!!!!!!!!\n!!! WARNING !!!\n!!!!!!!!!!!!!!!\n\nThis is just a shortcut to create access tokens with full access to the cluster, please consider managing accounts and permissions manually for improved security.");
+        $this->setHelp(
+            "!!!!!!!!!!!!!!!\n!!! WARNING !!!\n!!!!!!!!!!!!!!!\n\nThis is just a shortcut to create access tokens with full access to the cluster, please consider managing accounts and permissions manually for improved security.",
+        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -64,12 +71,7 @@ class SuperUserCreateCommand extends AbstractK8sCommand
                 ->setName($serviceAccountName.'-role')
                 ->setNamespace($namespace)
                 ->setLabels(K8sCli::K8S_MINIMUM_NEW_RESOURCE_LABELS)
-                ->addRule(
-                    K8s::rule()
-                        ->addApiGroup('*')
-                        ->addResource('*')
-                        ->addVerb('*'),
-                )
+                ->addRule(K8s::rule()->addApiGroup('*')->addResource('*')->addVerb('*'))
                 ->create()
             ;
 
@@ -83,12 +85,14 @@ class SuperUserCreateCommand extends AbstractK8sCommand
                     K8s::subject()
                         ->setKind('ServiceAccount')
                         ->setName($serviceAccountName)
-                        ->setNamespace($namespace)
+                        ->setNamespace($namespace),
                 ])
                 ->create()
             ;
         } catch (KubernetesAPIException $kubernetesapiException) {
-            $symfonyStyle->error('Failed creating service account "'.$serviceAccountName.'": '.$kubernetesapiException->getPayload()['message'].'.');
+            $symfonyStyle->error(
+                'Failed creating service account "'.$serviceAccountName.'": '.$kubernetesapiException->getPayload()['message'].'.',
+            );
 
             return Command::FAILURE;
         }

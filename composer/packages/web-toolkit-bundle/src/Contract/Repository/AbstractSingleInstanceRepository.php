@@ -25,7 +25,7 @@ use Doctrine\Persistence\ManagerRegistry;
 abstract class AbstractSingleInstanceRepository extends ServiceEntityRepository
 {
     /**
-     * @psalm-param class-string<T> $entityClass
+     * @param class-string<T> $entityClass
      */
     public function __construct(ManagerRegistry $managerRegistry, string $entityClass)
     {
@@ -33,7 +33,9 @@ abstract class AbstractSingleInstanceRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return null|T
+     * @psalm-return T|null
+     *
+     * @return null|mixed
      */
     public function getInstance()
     {

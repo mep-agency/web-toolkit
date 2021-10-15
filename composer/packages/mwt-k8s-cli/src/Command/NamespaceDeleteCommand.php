@@ -14,9 +14,7 @@ declare(strict_types=1);
 namespace Mep\MwtK8sCli\Command;
 
 use Mep\MwtK8sCli\Contract\AbstractK8sCommand;
-use Mep\MwtK8sCli\K8sCli;
 use RenokiCo\PhpK8s\Exceptions\KubernetesAPIException;
-use RenokiCo\PhpK8s\KubernetesCluster;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -38,7 +36,12 @@ class NamespaceDeleteCommand extends AbstractK8sCommand
     {
         $this->addArgument('namespace', InputArgument::REQUIRED, 'Name of the new namespace');
 
-        $this->addOption('force', null, InputOption::VALUE_NONE, 'Delete the namespace even if it was not created by this CLI');
+        $this->addOption(
+            'force',
+            null,
+            InputOption::VALUE_NONE,
+            'Delete the namespace even if it was not created by this CLI',
+        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -47,27 +50,34 @@ class NamespaceDeleteCommand extends AbstractK8sCommand
         $namespaceName = $input->getArgument('namespace');
 
         try {
-            $namespace = $this->kubernetesCluster
+            $k8sNamespace = $this->kubernetesCluster
                 ->getNamespaceByName($namespaceName)
             ;
 
-            if (! $namespace->isActive()) {
-                $symfonyStyle->warning('Namespace "'.$namespaceName.'" is not in "Active" state, please try again later...');
+            if (! $k8sNamespace->isActive()) {
+                $symfonyStyle->warning(
+                    'Namespace "'.$namespaceName.'" is not in "Active" state, please try again later...',
+                );
 
                 return Command::INVALID;
             }
 
-            if ($input->isInteractive() && ! $symfonyStyle->confirm('Deleting the namespace "'.$namespaceName.'" will delete all the associated resources and can\'t be undone. Are you sure?', false)) {
+            if ($input->isInteractive() && ! $symfonyStyle->confirm(
+                'Deleting the namespace "'.$namespaceName.'" will delete all the associated resources and can\'t be undone. Are you sure?',
+                false,
+            )) {
                 $symfonyStyle->info('Stopping execution...');
 
                 return Command::SUCCESS;
             }
 
-            $namespace->delete();
+            $k8sNamespace->delete();
 
             $symfonyStyle->success('Namespace "'.$namespaceName.'" deleted successfully!');
         } catch (KubernetesAPIException $kubernetesapiException) {
-            $symfonyStyle->error('Failed deleting namespace "'.$namespaceName.'": '.$kubernetesapiException->getPayload()['message'].'.');
+            $symfonyStyle->error(
+                'Failed deleting namespace "'.$namespaceName.'": '.$kubernetesapiException->getPayload()['message'].'.',
+            );
 
             return Command::FAILURE;
         }

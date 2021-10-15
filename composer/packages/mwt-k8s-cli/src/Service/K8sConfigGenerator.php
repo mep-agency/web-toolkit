@@ -18,16 +18,25 @@ namespace Mep\MwtK8sCli\Service;
  */
 class K8sConfigGenerator
 {
-    public function generateConfigFile(string $path, string $certificate, string $url, string $token, ?string $namespace = null): void
-    {
+    public function generateConfigFile(
+        string $path,
+        string $certificate,
+        string $url,
+        string $token,
+        ?string $namespace = null,
+    ): void {
         yaml_emit_file($path, $this->generateConfigArray($certificate, $url, $token, $namespace));
     }
 
     /**
      * @return array<string, mixed>
      */
-    private function generateConfigArray(string $certificate, string $url, string $token, ?string $namespace = null): array
-    {
+    private function generateConfigArray(
+        string $certificate,
+        string $url,
+        string $token,
+        ?string $namespace = null,
+    ): array {
         $config = [
             'apiVersion' => 'v1',
             'kind' => 'Config',
