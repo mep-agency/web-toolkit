@@ -17,6 +17,7 @@ use Mep\MwtK8sCli\Contract\AbstractK8sCommand;
 use Mep\MwtK8sCli\K8sCli;
 use RenokiCo\PhpK8s\Exceptions\KubernetesAPIException;
 use RenokiCo\PhpK8s\K8s;
+use RenokiCo\PhpK8s\Kinds\K8sRole;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -66,6 +67,7 @@ class SuperUserCreateCommand extends AbstractK8sCommand
                 ->create()
             ;
 
+            /** @var K8sRole $role */
             $role = $this->kubernetesCluster
                 ->role()
                 ->setName($serviceAccountName.'-role')
@@ -82,6 +84,7 @@ class SuperUserCreateCommand extends AbstractK8sCommand
                 ->setLabels(K8sCli::K8S_MINIMUM_NEW_RESOURCE_LABELS)
                 ->setRole($role, 'rbac.authorization.k8s.io')
                 ->setSubjects([
+                    /** @phpstan-ignore-next-line The vendor lib uses magic calls for undocumented resources */
                     K8s::subject()
                         ->setKind('ServiceAccount')
                         ->setName($serviceAccountName)
@@ -91,7 +94,7 @@ class SuperUserCreateCommand extends AbstractK8sCommand
             ;
         } catch (KubernetesAPIException $kubernetesapiException) {
             $symfonyStyle->error(
-                'Failed creating service account "'.$serviceAccountName.'": '.$kubernetesapiException->getPayload()['message'].'.',
+                'Failed creating service account "'.$serviceAccountName.'": '.($kubernetesapiException->getPayload()['message'] ?? 'no error message').'.',
             );
 
             return Command::FAILURE;

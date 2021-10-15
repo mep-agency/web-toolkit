@@ -79,7 +79,7 @@ class SuperUserDeleteCommand extends AbstractK8sCommand
             ++$deletedResourcesCounter;
         } catch (KubernetesAPIException $kubernetesapiException) {
             $symfonyStyle->error(
-                'Failed deleting the role binding: '.$kubernetesapiException->getPayload()['message'].'.',
+                'Failed deleting the role binding: '.($kubernetesapiException->getPayload()['message'] ?? 'no error message').'.',
             );
         }
 
@@ -101,7 +101,9 @@ class SuperUserDeleteCommand extends AbstractK8sCommand
 
             ++$deletedResourcesCounter;
         } catch (KubernetesAPIException $kubernetesapiException) {
-            $symfonyStyle->error('Failed deletig the role: '.$kubernetesapiException->getPayload()['message'].'.');
+            $symfonyStyle->error(
+                'Failed deletig the role: '.($kubernetesapiException->getPayload()['message'] ?? 'no error message').'.',
+            );
         }
 
         // Delete service account...
@@ -123,7 +125,7 @@ class SuperUserDeleteCommand extends AbstractK8sCommand
             ++$deletedResourcesCounter;
         } catch (KubernetesAPIException $kubernetesapiException) {
             $symfonyStyle->error(
-                'Failed deleting the service account: '.$kubernetesapiException->getPayload()['message'].'.',
+                'Failed deleting the service account: '.($kubernetesapiException->getPayload()['message'] ?? 'no error message').'.',
             );
         }
 

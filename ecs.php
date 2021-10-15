@@ -65,7 +65,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services->get(PhpdocToCommentFixer::class)
         ->call('configure', [[
-            'ignored_tags' => ['author', 'var'],
+            'ignored_tags' => ['author', 'var', 'phpstan-ignore-next-line'],
         ]])
     ;
 

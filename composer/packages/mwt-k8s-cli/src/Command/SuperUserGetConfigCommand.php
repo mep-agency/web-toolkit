@@ -64,9 +64,13 @@ class SuperUserGetConfigCommand extends AbstractK8sCommand
         $namespace = $input->getOption('namespace');
 
         try {
-            $k8sServiceAccount = $this->kubernetesCluster->getServiceAccountByName($serviceAccountName, $namespace);
+            /** @phpstan-ignore-next-line The vendor lib uses magic calls for undocumented resources */
+            $secretName = $this->kubernetesCluster
+                ->getServiceAccountByName($serviceAccountName, $namespace)
+                ->getSecrets()[0]['name']
+            ;
             $secretData = $this->kubernetesCluster
-                ->getSecretByName($k8sServiceAccount->getSecrets()[0]['name'], $namespace,)
+                ->getSecretByName($secretName, $namespace)
                 ->getData(true)
             ;
 
@@ -82,7 +86,7 @@ class SuperUserGetConfigCommand extends AbstractK8sCommand
             );
         } catch (KubernetesAPIException $kubernetesapiException) {
             $symfonyStyle->error(
-                'Failed creating configuration for service account "'.$serviceAccountName.'": '.$kubernetesapiException->getPayload()['message'].'.',
+                'Failed creating configuration for service account "'.$serviceAccountName.'": '.($kubernetesapiException->getPayload()['message'] ?? 'no error message').'.',
             );
 
             return Command::FAILURE;

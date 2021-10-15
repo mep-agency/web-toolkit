@@ -70,7 +70,7 @@ abstract class AbstractK8sCommand extends Command
         return parent::run($input, $output);
     }
 
-    protected function checkNamespace(string $namespaceName, $input, $output): bool
+    protected function checkNamespace(string $namespaceName, InputInterface $input, OutputInterface $output): bool
     {
         $symfonyStyle = new SymfonyStyle($input, $output);
         $force = $input->hasOption('force') ? $input->getOption('force') : false;
@@ -81,7 +81,7 @@ abstract class AbstractK8sCommand extends Command
             ;
         } catch (KubernetesAPIException $kubernetesapiException) {
             $symfonyStyle->error(
-                'Failed checking namespace "'.$namespaceName.'": '.$kubernetesapiException->getPayload()['message'].'.',
+                'Failed checking namespace "'.$namespaceName.'": '.($kubernetesapiException->getPayload()['message'] ?? 'no error message').'.',
             );
 
             return false;

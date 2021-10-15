@@ -39,9 +39,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services->set('k8s_cluster', KubernetesCluster::class)
         ->arg(0, '%working_dir%/kube-config.yaml')
-        ->factory(function (string $configFilePath): KubernetesCluster {
-            return KubernetesClusterFactory::createOrGet($configFilePath);
-        })
+        ->factory([KubernetesClusterFactory::class, 'createOrGet'])
         ->alias(KubernetesCluster::class, 'k8s_cluster')
     ;
 

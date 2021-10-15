@@ -73,7 +73,7 @@ class ConfigCreateCommand extends Command
         // Create a basic configuration file...
         $this->k8sConfigGenerator->generateConfigFile(
             $this->configFilePath,
-            base64_encode(file_get_contents($certificatePath)),
+            base64_encode(file_get_contents($certificatePath) ?: ''),
             $symfonyStyle->ask('Cluster URL'),
             $symfonyStyle->ask('Access token'),
         );

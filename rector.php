@@ -11,6 +11,7 @@
 
 declare(strict_types=1);
 
+use Rector\CodeQuality\Rector\Array_\CallableThisArrayToAnonymousFunctionRector;
 use Rector\Core\Configuration\Option;
 use Rector\Core\ValueObject\PhpVersion;
 use Rector\Set\ValueObject\SetList;
@@ -40,6 +41,10 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             // Avoid "@return null“ comments
             __DIR__.'/composer/packages/web-toolkit-bundle/src/Form/TypeGuesser/AdminAttachmentTypeGuesser.php',
             __DIR__.'/composer/packages/web-toolkit-bundle/src/Form/TypeGuesser/AdminEditorJsTypeGuesser.php',
+        ],
+        CallableThisArrayToAnonymousFunctionRector::class => [
+            // Cannot use values of type "Closure" in service configuration files.
+            __DIR__.'/composer/packages/mwt-k8s-cli/config/services.php',
         ],
     ]);
 

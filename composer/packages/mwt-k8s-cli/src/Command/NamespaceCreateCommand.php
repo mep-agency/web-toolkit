@@ -51,7 +51,7 @@ class NamespaceCreateCommand extends AbstractK8sCommand
             ;
         } catch (KubernetesAPIException $kubernetesapiException) {
             $symfonyStyle->error(
-                'Failed creating namespace "'.$namespaceName.'": '.$kubernetesapiException->getPayload()['message'].'.',
+                'Failed creating namespace "'.$namespaceName.'": '.($kubernetesapiException->getPayload()['message'] ?? 'no error message').'.',
             );
 
             return Command::FAILURE;
