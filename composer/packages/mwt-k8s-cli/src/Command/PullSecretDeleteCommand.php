@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Mep\MwtK8sCli\Command;
 
 use Mep\MwtK8sCli\Contract\AbstractK8sCommand;
+use Mep\MwtK8sCli\K8sCli;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -26,43 +27,43 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * @author Marco Lipparini <developer@liarco.net>
  */
 #[AsCommand(
-    name: 'namespace:delete',
-    description: 'Deletes a the given namespace',
+    name: 'pull-secret:delete',
+    description: 'Deletes a Docker pull secret associated to the given namespace.',
 )]
-class NamespaceDeleteCommand extends AbstractK8sCommand
+class PullSecretDeleteCommand extends AbstractK8sCommand
 {
     protected function configure(): void
     {
-        $this->addArgument('namespace', InputArgument::REQUIRED, 'Name of the new namespace');
+        $this->addArgument('name', InputArgument::REQUIRED, 'A name of the pull secret');
 
+        $this->addOption(
+            'namespace',
+            null,
+            InputOption::VALUE_REQUIRED,
+            'The namespace associated the pull secret',
+            K8sCli::K8S_DEFAULT_NAMESPACE,
+        );
         $this->addOption(
             'force',
             null,
             InputOption::VALUE_NONE,
-            'Delete the namespace even if it was not created by this CLI',
+            'Deletes the pull secret even if it was not created by this CLI',
         );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $symfonyStyle = new SymfonyStyle($input, $output);
-        $namespaceName = $input->getArgument('namespace');
+        $pullSecretName = $input->getArgument('name');
+        $namespace = $input->getOption('namespace');
 
-        $k8sNamespace = $this->kubernetesCluster
-            ->getNamespaceByName($namespaceName)
-        ;
+        $this->deleteOrStop(
+            $this->kubernetesCluster->getSecretByName($pullSecretName, $namespace),
+            $input,
+            $output
+        );
 
-        if (! $k8sNamespace->isActive()) {
-            $symfonyStyle->warning(
-                'Namespace "'.$namespaceName.'" is not in "Active" state, please try again later...',
-            );
-
-            return Command::INVALID;
-        }
-
-        $this->deleteOrStop($k8sNamespace, $input, $output);
-
-        $symfonyStyle->success('Namespace "'.$namespaceName.'" deleted successfully!');
+        $symfonyStyle->success('Pull secret  "'.$pullSecretName.'" deleted successfully!');
 
         return Command::SUCCESS;
     }

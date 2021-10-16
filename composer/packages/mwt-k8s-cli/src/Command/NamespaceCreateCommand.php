@@ -15,7 +15,6 @@ namespace Mep\MwtK8sCli\Command;
 
 use Mep\MwtK8sCli\Contract\AbstractK8sCommand;
 use Mep\MwtK8sCli\K8sCli;
-use RenokiCo\PhpK8s\Exceptions\KubernetesAPIException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -42,20 +41,12 @@ class NamespaceCreateCommand extends AbstractK8sCommand
         $symfonyStyle = new SymfonyStyle($input, $output);
         $namespaceName = $input->getArgument('name');
 
-        try {
-            $this->kubernetesCluster
-                ->namespace()
-                ->setName($namespaceName)
-                ->setLabels(K8sCli::K8S_MINIMUM_NEW_RESOURCE_LABELS)
-                ->create()
-            ;
-        } catch (KubernetesAPIException $kubernetesapiException) {
-            $symfonyStyle->error(
-                'Failed creating namespace "'.$namespaceName.'": '.($kubernetesapiException->getPayload()['message'] ?? 'no error message').'.',
-            );
-
-            return Command::FAILURE;
-        }
+        $this->kubernetesCluster
+            ->namespace()
+            ->setName($namespaceName)
+            ->setLabels(K8sCli::K8S_MINIMUM_NEW_RESOURCE_LABELS)
+            ->create()
+        ;
 
         $symfonyStyle->success('Namespace "'.$namespaceName.'" created successfully!');
 

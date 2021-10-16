@@ -16,7 +16,6 @@ namespace Mep\MwtK8sCli\Command;
 use Mep\MwtK8sCli\Contract\AbstractK8sCommand;
 use Mep\MwtK8sCli\K8sCli;
 use Mep\MwtK8sCli\Service\K8sConfigGenerator;
-use RenokiCo\PhpK8s\Exceptions\KubernetesAPIException;
 use RenokiCo\PhpK8s\KubernetesCluster;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -63,34 +62,26 @@ class SuperUserGetConfigCommand extends AbstractK8sCommand
         $serviceAccountName = $input->getArgument('service-account');
         $namespace = $input->getOption('namespace');
 
-        try {
-            /** @phpstan-ignore-next-line The vendor lib uses magic calls for undocumented resources */
-            $secretName = $this->kubernetesCluster
-                ->getServiceAccountByName($serviceAccountName, $namespace)
-                ->getSecrets()[0]['name']
-            ;
-            $secretData = $this->kubernetesCluster
-                ->getSecretByName($secretName, $namespace)
-                ->getData(true)
-            ;
+        /** @phpstan-ignore-next-line The vendor lib uses magic calls for undocumented resources */
+        $secretName = $this->kubernetesCluster
+            ->getServiceAccountByName($serviceAccountName, $namespace)
+            ->getSecrets()[0]['name']
+        ;
+        $secretData = $this->kubernetesCluster
+            ->getSecretByName($secretName, $namespace)
+            ->getData(true)
+        ;
 
-            // The library doesn't return the clean API url, so we generate one with no path nor query parameters
-            $url = trim($this->kubernetesCluster->getCallableUrl('', []), '?');
+        // The library doesn't return the clean API url, so we generate one with no path nor query parameters
+        $url = trim($this->kubernetesCluster->getCallableUrl('', []), '?');
 
-            $this->k8sConfigGenerator->generateConfigFile(
-                $this->defaultOutputPath,
-                base64_encode($secretData['ca.crt']),
-                $url,
-                $secretData['token'],
-                $secretData['namespace'],
-            );
-        } catch (KubernetesAPIException $kubernetesapiException) {
-            $symfonyStyle->error(
-                'Failed creating configuration for service account "'.$serviceAccountName.'": '.($kubernetesapiException->getPayload()['message'] ?? 'no error message').'.',
-            );
-
-            return Command::FAILURE;
-        }
+        $this->k8sConfigGenerator->generateConfigFile(
+            $this->defaultOutputPath,
+            base64_encode($secretData['ca.crt']),
+            $url,
+            $secretData['token'],
+            $secretData['namespace'],
+        );
 
         $symfonyStyle->success('Super-user configuration file created successfully!');
 

@@ -13,11 +13,13 @@ declare(strict_types=1);
 
 namespace Mep\MwtK8sCli\Contract;
 
+use Mep\MwtK8sCli\Exception\StopExecutionException;
 use Mep\MwtK8sCli\Factory\KubernetesClusterFactory;
 use Mep\MwtK8sCli\K8sCli;
 use RenokiCo\PhpK8s\Exceptions\KubernetesAPIException;
 use RenokiCo\PhpK8s\Kinds\K8sResource;
 use RenokiCo\PhpK8s\KubernetesCluster;
+use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -48,58 +50,102 @@ abstract class AbstractK8sCommand extends Command
                 return Command::INVALID;
             }
 
-            if ($input->hasArgument('namespace') && ! $this->checkNamespace(
-                $input->getArgument('namespace'),
-                $input,
-                $output,
-            )) {
-                return Command::INVALID;
-            }
+            try {
+                // Check given namespace names
+                $namespaceNames = [];
 
-            if ($input->hasOption('namespace') && ! $this->checkNamespace(
-                $input->getOption('namespace'),
-                $input,
-                $output,
-            )) {
-                return Command::INVALID;
-            }
+                if ($input->hasArgument('namespace')) {
+                    $namespaceNames[] = $input->getArgument('namespace');
+                }
 
-            return $this->execute($input, $output);
+                if ($input->hasOption('namespace')) {
+                    $namespaceNames[] = $input->getOption('namespace');
+                }
+
+                foreach ($namespaceNames as $namespaceName) {
+                    $this->isCreatedByThisToolOrStop(
+                        $this->kubernetesCluster->getNamespaceByName($namespaceName),
+                        $input,
+                        $output,
+                    );
+                }
+
+                return $this->execute($input, $output);
+            } catch (StopExecutionException $stopExecutionException) {
+                $symfonyStyle = new SymfonyStyle($input, $output);
+
+                if (! empty($stopExecutionException->getMessage())) {
+                    $symfonyStyle->info($stopExecutionException->getMessage());
+                }
+
+                return $stopExecutionException->getCode();
+            } catch (KubernetesAPIException $kubernetesapiException) {
+                $symfonyStyle = new SymfonyStyle($input, $output);
+
+                $symfonyStyle->error(
+                    'K8s API error: '.($kubernetesapiException->getPayload()['message'] ?? 'no error message').'.',
+                );
+
+                return Command::FAILURE;
+            }
         });
 
         return parent::run($input, $output);
     }
 
-    protected function checkNamespace(string $namespaceName, InputInterface $input, OutputInterface $output): bool
+    /**
+     * A simple callback for input validation.
+     */
+    public function notNull(mixed $value): mixed
     {
-        $symfonyStyle = new SymfonyStyle($input, $output);
-        $force = $input->hasOption('force') ? $input->getOption('force') : false;
-
-        try {
-            $k8sNamespace = $this->kubernetesCluster
-                ->getNamespaceByName($namespaceName)
-            ;
-        } catch (KubernetesAPIException $kubernetesapiException) {
-            $symfonyStyle->error(
-                'Failed checking namespace "'.$namespaceName.'": '.($kubernetesapiException->getPayload()['message'] ?? 'no error message').'.',
-            );
-
-            return false;
+        if (null === $value) {
+            throw new RuntimeException('Value cannot be empty.');
         }
 
-        if (! $force && ! $this->isCreatedByThisTool($k8sNamespace)) {
-            $symfonyStyle->error(
-                'The given namespace ("'.$namespaceName.'") was not created by this CLI'.
-                ($input->hasOption('force') ? ', use "--force" to skip this check.' : ''),
-            );
-
-            return false;
-        }
-
-        return true;
+        return $value;
     }
 
-    protected function isCreatedByThisTool(K8sResource $k8sResource): bool
+    protected function isCreatedByThisToolOrStop(
+        K8sResource $k8sResource,
+        InputInterface $input,
+        OutputInterface $output,
+    ): void {
+        $symfonyStyle = new SymfonyStyle($input, $output);
+        $hasForce = $input->hasOption('force');
+        $forceValue = $hasForce && $input->getOption('force');
+
+        if ($forceValue || $this->isCreatedByThisTool($k8sResource)) {
+            return;
+        }
+
+        $symfonyStyle->error(
+            'The given '.$k8sResource->getKind().' ("'.$k8sResource->getName().'") was not created by this CLI'.
+            ($hasForce ? ', use "--force" to skip this check.' : ''),
+        );
+
+        throw new StopExecutionException('', Command::FAILURE);
+    }
+
+    /**
+     * @throws KubernetesAPIException
+     */
+    protected function deleteOrStop(K8sResource $k8sResource, InputInterface $input, OutputInterface $output): void
+    {
+        $this->isCreatedByThisToolOrStop($k8sResource, $input, $output);
+
+        $symfonyStyle = new SymfonyStyle($input, $output);
+
+        if ($input->isInteractive() && ! $symfonyStyle->confirm(
+            'You are about to delete the '.$k8sResource->getKind().' "'.$k8sResource->getName().'", this can\'t be undone. Are you sure?',
+            false,
+        )) {
+            throw new StopExecutionException();
+        }
+
+        $k8sResource->delete();
+    }
+
+    private function isCreatedByThisTool(K8sResource $k8sResource): bool
     {
         return K8sCli::K8S_CREATED_BY_LABEL_VALUE === $k8sResource->getLabel(K8sCli::K8S_CREATED_BY_LABEL_NAME);
     }

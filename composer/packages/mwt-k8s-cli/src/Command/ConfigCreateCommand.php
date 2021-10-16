@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Mep\MwtK8sCli\Command;
 
 use Mep\MwtK8sCli\Service\K8sConfigGenerator;
+use RuntimeException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -74,8 +75,20 @@ class ConfigCreateCommand extends Command
         $this->k8sConfigGenerator->generateConfigFile(
             $this->configFilePath,
             base64_encode(file_get_contents($certificatePath) ?: ''),
-            $symfonyStyle->ask('Cluster URL'),
-            $symfonyStyle->ask('Access token'),
+            $symfonyStyle->ask('Cluster URL', null, function ($value) {
+                if (null === $value) {
+                    throw new RuntimeException('Cluster URL cannot be empty.');
+                }
+
+                return $value;
+            }),
+            $symfonyStyle->ask('Access token', null, function ($value) {
+                if (null === $value) {
+                    throw new RuntimeException('Access token cannot be empty.');
+                }
+
+                return $value;
+            }),
         );
 
         $symfonyStyle->success('New configuration file created successfully!');

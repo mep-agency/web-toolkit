@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Mep\MwtK8sCli\Command;
 
 use Mep\MwtK8sCli\Contract\AbstractK8sCommand;
+use Mep\MwtK8sCli\Exception\StopExecutionException;
 use Mep\MwtK8sCli\K8sCli;
 use RenokiCo\PhpK8s\Exceptions\KubernetesAPIException;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -48,7 +49,7 @@ class SuperUserDeleteCommand extends AbstractK8sCommand
             'force',
             null,
             InputOption::VALUE_NONE,
-            'Delete the service account even if it was not created by this CLI',
+            'Deletes the service account even if it was not created by this CLI',
         );
     }
 
@@ -57,88 +58,72 @@ class SuperUserDeleteCommand extends AbstractK8sCommand
         $symfonyStyle = new SymfonyStyle($input, $output);
         $serviceAccountName = $input->getArgument('service-account');
         $namespace = $input->getOption('namespace');
-        $force = $input->getOption('force');
         $deletedResourcesCounter = 0;
 
         // Delete role binding...
         try {
-            $k8sRoleBinding = $this->kubernetesCluster
-                ->getRoleBindingByName($serviceAccountName.'-role-binding', $namespace)
-            ;
-
-            if (! $force && ! $this->isCreatedByThisTool($k8sRoleBinding)) {
-                $symfonyStyle->error(
-                    'The role binding was not created by this tool. Please use "--force" to delete it anyway.',
-                );
-
-                return Command::INVALID;
-            }
-
-            $k8sRoleBinding->delete();
+            $this->deleteOrStop(
+                $this->kubernetesCluster
+                    ->getRoleBindingByName($serviceAccountName.'-role-binding', $namespace),
+                $input,
+                $output,
+            );
 
             ++$deletedResourcesCounter;
+        } catch (StopExecutionException $stopExecutionException) {
+            // Just skip this...
         } catch (KubernetesAPIException $kubernetesapiException) {
-            $symfonyStyle->error(
+            $symfonyStyle->warning(
                 'Failed deleting the role binding: '.($kubernetesapiException->getPayload()['message'] ?? 'no error message').'.',
             );
         }
 
         // Delete role...
         try {
-            $k8sRole = $this->kubernetesCluster
-                ->getRoleByName($serviceAccountName.'-role', $namespace)
-            ;
-
-            if (! $force && ! $this->isCreatedByThisTool($k8sRole)) {
-                $symfonyStyle->error(
-                    'The role was not created by this tool. Please use "--force" to delete it anyway.',
-                );
-
-                return Command::INVALID;
-            }
-
-            $k8sRole->delete();
+            $this->deleteOrStop(
+                $this->kubernetesCluster
+                    ->getRoleByName($serviceAccountName.'-role', $namespace),
+                $input,
+                $output,
+            );
 
             ++$deletedResourcesCounter;
-        } catch (KubernetesAPIException $kubernetesapiException) {
-            $symfonyStyle->error(
-                'Failed deletig the role: '.($kubernetesapiException->getPayload()['message'] ?? 'no error message').'.',
+        } catch (StopExecutionException $stopExecutionException) {
+            // Just skip this...
+        } catch (KubernetesAPIException $stopExecutionException) {
+            $symfonyStyle->warning(
+                'Failed deletig the role: '.($stopExecutionException->getPayload()['message'] ?? 'no error message').'.',
             );
         }
 
         // Delete service account...
         try {
-            $k8sServiceAccount = $this->kubernetesCluster
-                ->getServiceAccountByName($serviceAccountName, $namespace)
-            ;
-
-            if (! $force && ! $this->isCreatedByThisTool($k8sServiceAccount)) {
-                $symfonyStyle->error(
-                    'The service account was not created by this tool. Please use "--force" to delete it anyway.',
-                );
-
-                return Command::INVALID;
-            }
-
-            $k8sServiceAccount->delete();
+            $this->deleteOrStop(
+                $this->kubernetesCluster
+                    ->getServiceAccountByName($serviceAccountName, $namespace),
+                $input,
+                $output,
+            );
 
             ++$deletedResourcesCounter;
-        } catch (KubernetesAPIException $kubernetesapiException) {
-            $symfonyStyle->error(
-                'Failed deleting the service account: '.($kubernetesapiException->getPayload()['message'] ?? 'no error message').'.',
+        } catch (StopExecutionException $stopExecutionException) {
+            // Just skip this...
+        } catch (KubernetesAPIException $stopExecutionException) {
+            $symfonyStyle->warning(
+                'Failed deleting the service account: '.($stopExecutionException->getPayload()['message'] ?? 'no error message').'.',
             );
         }
 
         // Check result...
         if ($deletedResourcesCounter < 1) {
-            $symfonyStyle->error('No resource has been deleted properly.');
+            $symfonyStyle->warning('No resource has been deleted.');
 
-            return Command::FAILURE;
+            return Command::INVALID;
         }
 
         if ($deletedResourcesCounter < 3) {
             $symfonyStyle->error(
-                'There were some errors, but '.$deletedResourcesCounter.' resources (out of 3) '.(1 === $deletedResourcesCounter ? 'has' : 'have').' been deleted.',
+                'Only '.$deletedResourcesCounter.' resource'.(1 === $deletedResourcesCounter ? '' : 's').' (out of 3) '.(1 === $deletedResourcesCounter ? 'has' : 'have').' been deleted successfully.',
             );
 
             return Command::INVALID;

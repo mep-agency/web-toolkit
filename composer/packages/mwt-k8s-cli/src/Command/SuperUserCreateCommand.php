@@ -15,7 +15,6 @@ namespace Mep\MwtK8sCli\Command;
 
 use Mep\MwtK8sCli\Contract\AbstractK8sCommand;
 use Mep\MwtK8sCli\K8sCli;
-use RenokiCo\PhpK8s\Exceptions\KubernetesAPIException;
 use RenokiCo\PhpK8s\K8s;
 use RenokiCo\PhpK8s\Kinds\K8sRole;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -58,47 +57,39 @@ class SuperUserCreateCommand extends AbstractK8sCommand
         $serviceAccountName = $input->getArgument('service-account');
         $namespace = $input->getOption('namespace');
 
-        try {
-            $this->kubernetesCluster
-                ->serviceAccount()
-                ->setName($serviceAccountName)
-                ->setNamespace($namespace)
-                ->setLabels(K8sCli::K8S_MINIMUM_NEW_RESOURCE_LABELS)
-                ->create()
-            ;
+        $this->kubernetesCluster
+            ->serviceAccount()
+            ->setName($serviceAccountName)
+            ->setNamespace($namespace)
+            ->setLabels(K8sCli::K8S_MINIMUM_NEW_RESOURCE_LABELS)
+            ->create()
+        ;
 
-            /** @var K8sRole $role */
-            $role = $this->kubernetesCluster
-                ->role()
-                ->setName($serviceAccountName.'-role')
-                ->setNamespace($namespace)
-                ->setLabels(K8sCli::K8S_MINIMUM_NEW_RESOURCE_LABELS)
-                ->addRule(K8s::rule()->addApiGroup('*')->addResource('*')->addVerb('*'))
-                ->create()
-            ;
+        /** @var K8sRole $role */
+        $role = $this->kubernetesCluster
+            ->role()
+            ->setName($serviceAccountName.'-role')
+            ->setNamespace($namespace)
+            ->setLabels(K8sCli::K8S_MINIMUM_NEW_RESOURCE_LABELS)
+            ->addRule(K8s::rule()->addApiGroup('*')->addResource('*')->addVerb('*'))
+            ->create()
+        ;
 
-            $this->kubernetesCluster
-                ->roleBinding()
-                ->setName($serviceAccountName.'-role-binding')
-                ->setNamespace($namespace)
-                ->setLabels(K8sCli::K8S_MINIMUM_NEW_RESOURCE_LABELS)
-                ->setRole($role, 'rbac.authorization.k8s.io')
-                ->setSubjects([
-                    /** @phpstan-ignore-next-line The vendor lib uses magic calls for undocumented resources */
-                    K8s::subject()
-                        ->setKind('ServiceAccount')
-                        ->setName($serviceAccountName)
-                        ->setNamespace($namespace),
-                ])
-                ->create()
-            ;
-        } catch (KubernetesAPIException $kubernetesapiException) {
-            $symfonyStyle->error(
-                'Failed creating service account "'.$serviceAccountName.'": '.($kubernetesapiException->getPayload()['message'] ?? 'no error message').'.',
-            );
-
-            return Command::FAILURE;
-        }
+        $this->kubernetesCluster
+            ->roleBinding()
+            ->setName($serviceAccountName.'-role-binding')
+            ->setNamespace($namespace)
+            ->setLabels(K8sCli::K8S_MINIMUM_NEW_RESOURCE_LABELS)
+            ->setRole($role, 'rbac.authorization.k8s.io')
+            ->setSubjects([
+                /** @phpstan-ignore-next-line The vendor lib uses magic calls for undocumented resources */
+                K8s::subject()
+                    ->setKind('ServiceAccount')
+                    ->setName($serviceAccountName)
+                    ->setNamespace($namespace),
+            ])
+            ->create()
+        ;
 
         $symfonyStyle->success('Service account "'.$serviceAccountName.'" created successfully!');
 
