@@ -60,7 +60,7 @@ class PullSecretDeleteCommand extends AbstractK8sCommand
         $this->deleteOrStop(
             $this->kubernetesCluster->getSecretByName($pullSecretName, $namespace),
             $input,
-            $output
+            $output,
         );
 
         $symfonyStyle->success('Pull secret  "'.$pullSecretName.'" deleted successfully!');
