@@ -23,47 +23,32 @@ use Symfony\Component\Console\Command\Command;
 /**
  * @author Marco Lipparini <developer@liarco.net>
  */
-class K8sPullSecretGenerator
+class K8sBasicAuthSecretGenerator
 {
     /**
      * @var string
      */
-    public const PULL_SECRET_TYPE = 'kubernetes.io/dockerconfigjson';
+    private const BASIC_AUTH_SECRET_TYPE = 'Opaque';
 
     /**
      * @var string[]
      */
-    public const PULL_SECRET_DATA_KEYS = ['.dockerconfigjson'];
+    private const BASIC_AUTH_SECRET_DATA_KEYS = ['auth'];
 
     public function __construct(
         private KubernetesCluster $kubernetesCluster,
     ) {
     }
 
-    public function generate(
-        string $name,
-        string $registry,
-        string $username,
-        string $password,
-        string $namespace,
-    ): K8sSecret {
-        /** @phpstan-ignore-next-line The vendor lib uses magic calls for undocumented resources */
+    public function generate(string $name, string $username, string $password, string $namespace,): K8sSecret
+    {
         return $this->kubernetesCluster
             ->secret()
-            ->setType(self::PULL_SECRET_TYPE)
             ->setName($name)
             ->setNamespace($namespace)
             ->setLabels(K8sCli::K8S_MINIMUM_NEW_RESOURCE_LABELS)
             ->setData([
-                '.dockerconfigjson' => json_encode([
-                    'auths' => [
-                        $registry => [
-                            'username' => $username,
-                            'password' => $password,
-                            'auth' => base64_encode($username.':'.$password),
-                        ],
-                    ],
-                ]),
+                'auth' => $username.':'.password_hash($password, PASSWORD_BCRYPT),
             ])
         ;
     }
@@ -72,9 +57,9 @@ class K8sPullSecretGenerator
     {
         $isNotSecret = 'Secret' !== $k8sResource->getKind();
         /** @phpstan-ignore-next-line The vendor lib uses magic calls for undocumented resources */
-        $isNotOpaque = self::PULL_SECRET_TYPE !== $k8sResource->getType();
+        $isNotOpaque = self::BASIC_AUTH_SECRET_TYPE !== $k8sResource->getType();
         /** @phpstan-ignore-next-line The vendor lib uses magic calls for undocumented resources */
-        $isNotValidFormat = self::PULL_SECRET_DATA_KEYS !== array_keys($k8sResource->getData(false));
+        $isNotValidFormat = self::BASIC_AUTH_SECRET_DATA_KEYS !== array_keys($k8sResource->getData(false));
 
         if ($isNotSecret || $isNotOpaque || $isNotValidFormat) {
             throw new StopExecutionException('Unexpected secret type, aborting...', Command::INVALID);

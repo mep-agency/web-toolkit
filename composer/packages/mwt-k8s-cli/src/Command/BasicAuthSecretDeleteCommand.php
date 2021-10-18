@@ -15,7 +15,7 @@ namespace Mep\MwtK8sCli\Command;
 
 use Mep\MwtK8sCli\Contract\AbstractK8sCommand;
 use Mep\MwtK8sCli\K8sCli;
-use Mep\MwtK8sCli\Service\K8sPullSecretGenerator;
+use Mep\MwtK8sCli\Service\K8sBasicAuthSecretGenerator;
 use RenokiCo\PhpK8s\KubernetesCluster;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -29,49 +29,49 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * @author Marco Lipparini <developer@liarco.net>
  */
 #[AsCommand(
-    name: 'pull-secret:delete',
-    description: 'Deletes a Docker pull secret associated to the given namespace.',
+    name: 'basic-auth-secret:delete',
+    description: 'Deletes a n HTTP Basic Auth secret associated to the given namespace.',
 )]
-class PullSecretDeleteCommand extends AbstractK8sCommand
+class BasicAuthSecretDeleteCommand extends AbstractK8sCommand
 {
     public function __construct(
         KubernetesCluster $kubernetesCluster,
-        private K8sPullSecretGenerator $k8sPullSecretGenerator,
+        private K8sBasicAuthSecretGenerator $k8sBasicAuthSecretGenerator,
     ) {
         parent::__construct($kubernetesCluster);
     }
 
     protected function configure(): void
     {
-        $this->addArgument('name', InputArgument::REQUIRED, 'A name of the pull secret');
+        $this->addArgument('name', InputArgument::REQUIRED, 'A name of the HTTP Basic Auth secret');
 
         $this->addOption(
             'namespace',
             null,
             InputOption::VALUE_REQUIRED,
-            'The namespace associated the pull secret',
+            'The namespace associated the HTTP Basic Auth secret',
             K8sCli::K8S_DEFAULT_NAMESPACE,
         );
         $this->addOption(
             'force',
             null,
             InputOption::VALUE_NONE,
-            'Deletes the pull secret even if it was not created by this CLI',
+            'Deletes the HTTP Basic Auth secret even if it was not created by this CLI',
         );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $symfonyStyle = new SymfonyStyle($input, $output);
-        $pullSecretName = $input->getArgument('name');
+        $basicAuthSecretName = $input->getArgument('name');
         $namespace = $input->getOption('namespace');
 
-        $k8sSecret = $this->kubernetesCluster->getSecretByName($pullSecretName, $namespace);
+        $k8sSecret = $this->kubernetesCluster->getSecretByName($basicAuthSecretName, $namespace);
 
-        $this->k8sPullSecretGenerator->isValidSecretOrStop($k8sSecret);
+        $this->k8sBasicAuthSecretGenerator->isValidSecretOrStop($k8sSecret);
         $this->deleteOrStop($k8sSecret, $input, $output);
 
-        $symfonyStyle->success('Pull secret  "'.$pullSecretName.'" deleted successfully!');
+        $symfonyStyle->success('HTTP Basic Auth secret  "'.$basicAuthSecretName.'" deleted successfully!');
 
         return Command::SUCCESS;
     }

@@ -75,7 +75,20 @@ abstract class AbstractK8sCommand extends Command
                 $symfonyStyle = new SymfonyStyle($input, $output);
 
                 if (! empty($stopExecutionException->getMessage())) {
-                    $symfonyStyle->info($stopExecutionException->getMessage());
+                    switch ($stopExecutionException->getCode()) {
+                        case Command::SUCCESS:
+                            $symfonyStyle->info($stopExecutionException->getMessage());
+
+                            break;
+                        case Command::INVALID:
+                            $symfonyStyle->warning($stopExecutionException->getMessage());
+
+                            break;
+                        default:
+                            $symfonyStyle->error($stopExecutionException->getMessage());
+
+                            break;
+                    }
                 }
 
                 return $stopExecutionException->getCode();
