@@ -47,7 +47,7 @@ rules:
 
 ignorePatterns:
   # This file imports "bootstrap.js" which is added by a Flex recipe on project creation, skip to avoid errors
-  - /composer/projects/symfony-web-toolkit-skeleton/assets/app.ts
+  - /composer/projects/symfony-web-toolkit-skeleton/assets/scripts/main.ts
 
 overrides:
   - files: [./composer/projects/symfony-web-toolkit-skeleton/**]

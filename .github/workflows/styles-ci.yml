@@ -4,12 +4,12 @@ on:
   push:
     paths:
       - .github/workflows/styles-ci.yml
-      - 'assets/**/*.scss'
+      - '**.scss'
       - .stylelintrc.yaml
   pull_request:
     paths:
       - .github/workflows/styles-ci.yml
-      - 'assets/**/*.scss'
+      - '**.scss'
       - .stylelintrc.yaml
 
 jobs:
