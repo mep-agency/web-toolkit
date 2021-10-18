@@ -34,7 +34,7 @@ class ConfigCreateCommand extends Command
 {
     public function __construct(
         private K8sConfigGenerator $k8sConfigGenerator,
-        private string $configFilePath,
+        private string $kubeConfigPath,
     ) {
         parent::__construct();
     }
@@ -57,7 +57,7 @@ class ConfigCreateCommand extends Command
             return Command::INVALID;
         }
 
-        if (! $force && is_file($this->configFilePath)) {
+        if (! $force && is_file($this->kubeConfigPath)) {
             $symfonyStyle->error('A configuration file already exists, please use "--force" to overwrite it.');
 
             return Command::INVALID;
@@ -73,7 +73,7 @@ class ConfigCreateCommand extends Command
 
         // Create a basic configuration file...
         $this->k8sConfigGenerator->generateConfigFile(
-            $this->configFilePath,
+            $this->kubeConfigPath,
             base64_encode(file_get_contents($certificatePath) ?: ''),
             $symfonyStyle->ask('Cluster URL', null, function ($value) {
                 if (null === $value) {

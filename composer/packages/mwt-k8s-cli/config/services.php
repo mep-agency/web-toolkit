@@ -12,7 +12,6 @@
 declare(strict_types=1);
 
 use Mep\MwtK8sCli\Application;
-use Mep\MwtK8sCli\Command\ConfigCreateCommand;
 use Mep\MwtK8sCli\Command\SuperUserGetConfigCommand;
 use Mep\MwtK8sCli\Factory\KubernetesClusterFactory;
 use RenokiCo\PhpK8s\KubernetesCluster;
@@ -29,6 +28,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->autoconfigure()
         ->autowire()
         ->private()
+        ->bind('$cwdPath', '%working_dir%')
+        ->bind('$kubeConfigPath', '%working_dir%/kube-config.yaml')
     ;
 
     $services
@@ -45,11 +46,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services->load('Mep\\MwtK8sCli\\Service\\', '../src/Service/*');
 
+    // Commands
     $services->load('Mep\\MwtK8sCli\\Command\\', '../src/Command/*');
-
-    $services->get(ConfigCreateCommand::class)
-        ->arg('$configFilePath', '%working_dir%/kube-config.yaml')
-    ;
 
     $services->get(SuperUserGetConfigCommand::class)
         ->arg('$defaultOutputPath', '%working_dir%/su-config.yaml')

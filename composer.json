@@ -20,6 +20,7 @@
         "nette/utils": "^3.2",
         "nyholm/psr7": "^1.4",
         "php": "^8.0",
+        "renoki-co/php-helm": "^1.6",
         "renoki-co/php-k8s": "^3.1",
         "symfony/config": "5.3.*",
         "symfony/console": "5.3.*",

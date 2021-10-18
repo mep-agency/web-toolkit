@@ -44,7 +44,7 @@ abstract class AbstractK8sCommand extends Command
                 $symfonyStyle = new SymfonyStyle($input, $output);
 
                 $symfonyStyle->error(
-                    "This tool has loaded the kubectl configuration automatically, this may be invalid or risky.\n\nPlease create a local configuration file instead:\n> php bin/mwt-k8s config:create --help",
+                    'This tool has loaded the kubectl configuration automatically, this may be invalid or risky.'.PHP_EOL.PHP_EOL.'Please create a local configuration file instead:'.PHP_EOL.'> php bin/mwt-k8s config:create --help',
                 );
 
                 return Command::INVALID;

@@ -47,7 +47,7 @@ class SuperUserCreateCommand extends AbstractK8sCommand
         );
 
         $this->setHelp(
-            "!!!!!!!!!!!!!!!\n!!! WARNING !!!\n!!!!!!!!!!!!!!!\n\nThis is just a shortcut to create access tokens with full access to the cluster, please consider managing accounts and permissions manually for improved security.",
+            '!!!!!!!!!!!!!!!'.PHP_EOL.'!!! WARNING !!!'.PHP_EOL.'!!!!!!!!!!!!!!!'.PHP_EOL.PHP_EOL.'This is just a shortcut to create access tokens with full access to the cluster, please consider managing accounts and permissions manually for improved security.',
         );
     }
 

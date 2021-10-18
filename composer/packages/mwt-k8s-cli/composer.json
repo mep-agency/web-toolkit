@@ -20,7 +20,9 @@
         "symfony/config": "5.3.*",
         "symfony/console": "5.3.*",
         "symfony/dependency-injection": "5.3.*",
-        "symfony/process": "5.3.*"
+        "symfony/process": "5.3.*",
+        "renoki-co/php-helm": "^1.6",
+        "symfony/finder": "^5.3"
     },
     "autoload": {
         "psr-4": {

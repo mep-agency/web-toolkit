@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1ec0823bf7588008fdb71dfc6e0a7430",
+    "content-hash": "87a62f1045d91404446e85464fb14d11",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -58,16 +58,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.198.5",
+            "version": "3.198.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "ec63e1ad1b30689e530089e4c9cb18f2ef5c290b"
+                "reference": "821b8db50dd39be8ec94f286050a500b5f8a0142"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/ec63e1ad1b30689e530089e4c9cb18f2ef5c290b",
-                "reference": "ec63e1ad1b30689e530089e4c9cb18f2ef5c290b",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/821b8db50dd39be8ec94f286050a500b5f8a0142",
+                "reference": "821b8db50dd39be8ec94f286050a500b5f8a0142",
                 "shasum": ""
             },
             "require": {
@@ -143,9 +143,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.198.5"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.198.6"
             },
-            "time": "2021-10-14T18:15:37+00:00"
+            "time": "2021-10-15T18:38:53+00:00"
         },
         {
             "name": "brick/math",
@@ -1462,12 +1462,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/EasyCorp/EasyAdminBundle.git",
-                "reference": "0555f1bc5d87830ff1c6b7d6bec76aa45d2653b1"
+                "reference": "50a163e7ca165398647dd443d4ea29efd0aac963"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/EasyCorp/EasyAdminBundle/zipball/0555f1bc5d87830ff1c6b7d6bec76aa45d2653b1",
-                "reference": "0555f1bc5d87830ff1c6b7d6bec76aa45d2653b1",
+                "url": "https://api.github.com/repos/EasyCorp/EasyAdminBundle/zipball/50a163e7ca165398647dd443d4ea29efd0aac963",
+                "reference": "50a163e7ca165398647dd443d4ea29efd0aac963",
                 "shasum": ""
             },
             "require": {
@@ -1547,7 +1547,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-10-07T18:00:25+00:00"
+            "time": "2021-10-16T10:27:09+00:00"
         },
         {
             "name": "egulias/email-validator",
@@ -4025,6 +4025,83 @@
                 }
             ],
             "time": "2021-07-11T12:37:55+00:00"
+        },
+        {
+            "name": "renoki-co/php-helm",
+            "version": "1.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/renoki-co/php-helm.git",
+                "reference": "162746db3e7e2b007ff3b91edbc1b8f3c5b4f0dd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/renoki-co/php-helm/zipball/162746db3e7e2b007ff3b91edbc1b8f3c5b4f0dd",
+                "reference": "162746db3e7e2b007ff3b91edbc1b8f3c5b4f0dd",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/macroable": "^7.40|^8.40",
+                "illuminate/support": "^7.40|^8.40",
+                "php": "^7.4|^8.0",
+                "symfony/process": "^5.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.4",
+                "orchestra/testbench": "^5.0|^6.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "RenokiCo\\PhpHelm\\PhpHelmServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "RenokiCo\\PhpHelm\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Alex Renoki",
+                    "homepage": "https://github.com/rennokki",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHP Helm Processor is a process wrapper for Kubernetes' Helm v3 CLI. You can run programmatically Helm v3 commands, directly from PHP, with a simple syntax.",
+            "homepage": "https://github.com/renoki-co/php-helm",
+            "keywords": [
+                "api",
+                "charts",
+                "cli",
+                "helm",
+                "k0s",
+                "k3s",
+                "k8s",
+                "kubeadm",
+                "kubeapi",
+                "kubernetes",
+                "laravel",
+                "php",
+                "wrapper"
+            ],
+            "support": {
+                "issues": "https://github.com/renoki-co/php-helm/issues",
+                "source": "https://github.com/renoki-co/php-helm/tree/1.6.0"
+            },
+            "funding": [
+                {
+                    "url": "https://www.patreon.com/rennokki",
+                    "type": "patreon"
+                }
+            ],
+            "time": "2021-10-12T18:07:56+00:00"
         },
         {
             "name": "renoki-co/php-k8s",
@@ -10903,6 +10980,7 @@
                     "type": "github"
                 }
             ],
+            "abandoned": true,
             "time": "2020-09-28T06:45:17+00:00"
         },
         {

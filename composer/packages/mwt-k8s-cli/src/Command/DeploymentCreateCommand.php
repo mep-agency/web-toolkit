@@ -13,7 +13,8 @@ declare(strict_types=1);
 
 namespace Mep\MwtK8sCli\Command;
 
-use Mep\MwtK8sCli\Contract\AbstractK8sCommand;
+use Mep\MwtK8sCli\Contract\AbstractHelmCommand;
+use Mep\MwtK8sCli\K8sCli;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -26,43 +27,40 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * @author Marco Lipparini <developer@liarco.net>
  */
 #[AsCommand(
-    name: 'namespace:delete',
-    description: 'Deletes a the given namespace',
+    name: 'deployment:create',
+    description: 'Creates an app deployment',
 )]
-class NamespaceDeleteCommand extends AbstractK8sCommand
+class DeploymentCreateCommand extends AbstractHelmCommand
 {
     protected function configure(): void
     {
-        $this->addArgument('namespace', InputArgument::REQUIRED, 'The namespace name');
+        $this->addArgument('name', InputArgument::REQUIRED, 'The deployment name');
 
         $this->addOption(
-            'force',
+            'app-env',
             null,
-            InputOption::VALUE_NONE,
-            'Delete the namespace even if it was not created by this CLI',
+            InputOption::VALUE_REQUIRED,
+            'Runs this command just on a specific env deployment (e.g. "staging")',
+        );
+        $this->addOption(
+            'namespace',
+            null,
+            InputOption::VALUE_REQUIRED,
+            'The namespace to associate with the new deployment',
+            K8sCli::K8S_DEFAULT_NAMESPACE,
         );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $symfonyStyle = new SymfonyStyle($input, $output);
-        $namespaceName = $input->getArgument('namespace');
+        $deploymentName = $input->getArgument('name');
+        $namespace = $input->getOption('namespace');
+        $appEnv = $input->getOption('app-env');
 
-        $k8sNamespace = $this->kubernetesCluster
-            ->getNamespaceByName($namespaceName)
-        ;
-
-        if (! $k8sNamespace->isActive()) {
-            $symfonyStyle->warning(
-                'Namespace "'.$namespaceName.'" is not in "Active" state, please try again later...',
-            );
-
-            return Command::INVALID;
+        if (! $this->helmDeploymentsManager->install($deploymentName, $appEnv, $namespace, $symfonyStyle)) {
+            return Command::FAILURE;
         }
-
-        $this->deleteOrStop($k8sNamespace, $input, $output);
-
-        $symfonyStyle->success('Namespace "'.$namespaceName.'" deleted successfully!');
 
         return Command::SUCCESS;
     }
