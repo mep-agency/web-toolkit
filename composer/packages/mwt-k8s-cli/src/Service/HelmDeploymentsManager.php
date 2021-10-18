@@ -152,16 +152,21 @@ class HelmDeploymentsManager
                 throw new RuntimeException('Unexpected value: chart values path should not be "false".');
             }
 
-            $this->replacePlaceholders($params, $flags, $envs, $chartName, $chartValuesPath);
+            // Keep original values intact
+            $currentParams = $params;
+            $currentFlags = $flags;
+            $currentEnvs = $envs;
+
+            $this->replacePlaceholders($currentParams, $currentFlags, $currentEnvs, $chartName, $chartValuesPath);
 
             $helm = Helm::call(
                 $action,
-                $params,
+                $currentParams,
                 array_merge([
                     '--namespace' => $namespace,
                     '--kubeconfig' => $this->kubeConfigPath,
-                ], $flags),
-                $envs,
+                ], $currentFlags),
+                $currentEnvs,
             );
 
             $symfonyStyle?->section('Running "'.$action.'" action for configuration "'.$chartName.'"');

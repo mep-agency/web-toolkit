@@ -20,14 +20,12 @@ spec:
     metadata:
       labels: {{ include "app.labels" . | nindent 8 }}
     spec:
-      {{- if .Values.project.spreadEvenly }}
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
               matchLabels: {{ include "app.selectorLabels" . | nindent 16 }}
             topologyKey: kubernetes.io/hostname
-      {{- end }}
       containers:
         - name: {{ $name }}
           image: {{ $imageName }}

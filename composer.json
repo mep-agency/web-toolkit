@@ -25,6 +25,7 @@
         "symfony/config": "5.3.*",
         "symfony/console": "5.3.*",
         "symfony/dependency-injection": "5.3.*",
+        "symfony/finder": "^5.3",
         "symfony/mailer": "5.3.*",
         "symfony/process": "5.3.*",
         "symfony/security-bundle": "5.3.*",

@@ -26,6 +26,8 @@ class Application extends SymfonyApplication
     {
         parent::__construct('MEP Web Toolkit - K8s CLI');
 
-        $this->addCommands(iterator_to_array($commandsTraversable));
+        $commandsArray = iterator_to_array($commandsTraversable);
+
+        $this->addCommands($commandsArray);
     }
 }

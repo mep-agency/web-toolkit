@@ -27,10 +27,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * @author Marco Lipparini <developer@liarco.net>
  */
 #[AsCommand(
-    name: 'deployment:delete',
-    description: 'Deletes an app deployment',
+    name: 'deployment:uninstall',
+    description: 'Uninstalls an app deployment using Helm',
 )]
-class DeploymentDeleteCommand extends AbstractHelmCommand
+class DeploymentUninstallCommand extends AbstractHelmCommand
 {
     protected function configure(): void
     {
@@ -62,7 +62,7 @@ class DeploymentDeleteCommand extends AbstractHelmCommand
             return Command::FAILURE;
         }
 
-        $symfonyStyle->success('Deployment "'.$deploymentName.'" deleted successfully!');
+        $symfonyStyle->success('Deployment "'.$deploymentName.'" uninstalled successfully!');
 
         return Command::SUCCESS;
     }

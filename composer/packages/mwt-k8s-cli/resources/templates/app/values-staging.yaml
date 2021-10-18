@@ -1,26 +1,27 @@
-# Default values for an app.
 project:
-  domain:
-  replicas: 3
+  domain: %app_staging_domain%
+  replicas: 1
 
 ingress:
-  clusterIssuer:
+  clusterIssuer: letsencrypt-prod
   # Increase this to allow bigger uploads
-  maxBodySize: 10m
-  forceWww: true
+  #maxBodySize: 10m
+  forceWww: false
   basicAuth:
     # If set, this secret is used to enable HTTP BasicAuth
-    secret:
-    realm:
+    secret: %app_name%-basic-auth
+    realm: %app_name% - Staging
 
 image:
   # Container image name including tag (e.g. "ghcr.io/my-org/my-image:latest")
-  name:
+  name: %image_name%:staging
   # Change this only if you are using custom envs
-  appEnv: prod
+  #appEnv: prod
   # Ensure to trust connections from inside the cluster or from the load balancer(s)
-  trustedProxies: 10.0.0.0/8
-  env: []
+  #trustedProxies: 10.0.0.0/8
+  env:
+    - name: APP_DEBUG
+      value: "1"
   # Leave empty to use the default pull secret
   pullSecrets:
-  #  - name: ghcrio-auth
+  #  - name: docker-auth

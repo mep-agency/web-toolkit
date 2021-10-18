@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\FileStorage\GarbageCollector;
 
+use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr\Join;
 use Generator;
@@ -28,12 +29,17 @@ use Mep\WebToolkitBundle\Entity\Attachment;
  */
 final class AssociationContextGarbageCollector implements GarbageCollectorInterface
 {
+    public function __construct(
+        private Configuration $configuration,
+    ) {
+    }
+
     /**
      * @return Generator<Attachment>
      */
     public function collect(EntityManagerInterface $entityManager, bool $dryRun): Generator
     {
-        $entities = $entityManager->getConfiguration()
+        $entities = $this->configuration
             ->getMetadataDriverImpl()
             ?->getAllClassNames() ?? []
         ;

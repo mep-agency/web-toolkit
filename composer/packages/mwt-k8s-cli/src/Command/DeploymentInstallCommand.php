@@ -27,10 +27,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * @author Marco Lipparini <developer@liarco.net>
  */
 #[AsCommand(
-    name: 'deployment:upgrade',
-    description: 'Upgrades an app deployment using Helm',
+    name: 'deployment:install',
+    description: 'Installs an app deployment using Helm',
 )]
-class DeploymentUpgradeCommand extends AbstractHelmCommand
+class DeploymentInstallCommand extends AbstractHelmCommand
 {
     protected function configure(): void
     {
@@ -46,7 +46,7 @@ class DeploymentUpgradeCommand extends AbstractHelmCommand
             'namespace',
             null,
             InputOption::VALUE_REQUIRED,
-            'The namespace associated to the deployment',
+            'The namespace to associate with the new deployment',
             K8sCli::K8S_DEFAULT_NAMESPACE,
         );
     }
@@ -58,11 +58,11 @@ class DeploymentUpgradeCommand extends AbstractHelmCommand
         $namespace = $input->getOption('namespace');
         $appEnv = $input->getOption('app-env');
 
-        if (! $this->helmDeploymentsManager->upgrade($deploymentName, $appEnv, $namespace, $symfonyStyle)) {
+        if (! $this->helmDeploymentsManager->install($deploymentName, $appEnv, $namespace, $symfonyStyle)) {
             return Command::FAILURE;
         }
 
-        $symfonyStyle->success('Deployment "'.$deploymentName.'" upgraded successfully!');
+        $symfonyStyle->success('Deployment "'.$deploymentName.'" installed successfully!');
 
         return Command::SUCCESS;
     }
