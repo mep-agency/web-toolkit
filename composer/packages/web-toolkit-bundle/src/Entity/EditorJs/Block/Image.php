@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Entity\EditorJs\Block;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Mep\WebToolkitBundle\Entity\Attachment;
 use Mep\WebToolkitBundle\Entity\EditorJs\Block;
@@ -30,13 +31,13 @@ class Image extends Block
 {
     public function __construct(
         string $id,
-        #[ORM\Column(type: 'text')]
+        #[ORM\Column(type: Types::TEXT)]
         private string $caption,
-        #[ORM\Column(type: 'boolean')]
+        #[ORM\Column(type: Types::BOOLEAN)]
         private bool $withBorder,
-        #[ORM\Column(type: 'boolean')]
+        #[ORM\Column(type: Types::BOOLEAN)]
         private bool $withBackground,
-        #[ORM\Column(type: 'boolean')]
+        #[ORM\Column(type: Types::BOOLEAN)]
         private bool $stretched,
         #[ORM\ManyToOne(targetEntity: Attachment::class, cascade: ['persist'], fetch: 'EAGER')]
         private Attachment $attachment,

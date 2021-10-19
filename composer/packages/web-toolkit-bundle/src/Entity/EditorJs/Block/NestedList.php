@@ -15,6 +15,7 @@ namespace Mep\WebToolkitBundle\Entity\EditorJs\Block;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Mep\WebToolkitBundle\Entity\EditorJs\Block;
 use Mep\WebToolkitBundle\Entity\EditorJs\Block\OutputComponent\NestedListItem;
@@ -52,7 +53,7 @@ class NestedList extends Block
      */
     public function __construct(
         string $id,
-        #[ORM\Column(type: 'string')]
+        #[ORM\Column(type: Types::STRING)]
         private string $style,
         array $items,
     ) {

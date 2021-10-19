@@ -13,9 +13,11 @@ declare(strict_types=1);
 
 namespace Mep\MwtK8sCli\Command;
 
+use Mep\MwtK8sCli\Argument;
 use Mep\MwtK8sCli\Contract\AbstractK8sCommand;
 use Mep\MwtK8sCli\Exception\StopExecutionException;
 use Mep\MwtK8sCli\K8sCli;
+use Mep\MwtK8sCli\Option;
 use RenokiCo\PhpK8s\Exceptions\KubernetesAPIException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -36,17 +38,17 @@ class SuperUserDeleteCommand extends AbstractK8sCommand
 {
     protected function configure(): void
     {
-        $this->addArgument('service-account', InputArgument::REQUIRED, 'The service account name');
+        $this->addArgument(Argument::SERVICE_ACCOUNT, InputArgument::REQUIRED, 'The service account name');
 
         $this->addOption(
-            'namespace',
+            Option::NAMESPACE,
             null,
             InputOption::VALUE_REQUIRED,
             'The namespace associated to the service account',
             K8sCli::K8S_DEFAULT_NAMESPACE,
         );
         $this->addOption(
-            'force',
+            Option::FORCE,
             null,
             InputOption::VALUE_NONE,
             'Deletes the service account even if it was not created by this CLI',
@@ -56,8 +58,8 @@ class SuperUserDeleteCommand extends AbstractK8sCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $symfonyStyle = new SymfonyStyle($input, $output);
-        $serviceAccountName = $input->getArgument('service-account');
-        $namespace = $input->getOption('namespace');
+        $serviceAccountName = $input->getArgument(Argument::SERVICE_ACCOUNT);
+        $namespace = $input->getOption(Option::NAMESPACE);
         $deletedResourcesCounter = 0;
 
         // Delete role binding...

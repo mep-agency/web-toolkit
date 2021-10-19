@@ -13,8 +13,10 @@ declare(strict_types=1);
 
 namespace Mep\MwtK8sCli\Command;
 
+use Mep\MwtK8sCli\Argument;
 use Mep\MwtK8sCli\Contract\AbstractHelmCommand;
 use Mep\MwtK8sCli\K8sCli;
+use Mep\MwtK8sCli\Option;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -34,16 +36,16 @@ class DeploymentUpgradeCommand extends AbstractHelmCommand
 {
     protected function configure(): void
     {
-        $this->addArgument('name', InputArgument::REQUIRED, 'The deployment name');
+        $this->addArgument(Argument::GENERIC_NAME, InputArgument::REQUIRED, 'The deployment name');
 
         $this->addOption(
-            'app-env',
+            Option::ENV,
             null,
             InputOption::VALUE_REQUIRED,
             'Runs this command just on a specific env deployment (e.g. "staging")',
         );
         $this->addOption(
-            'namespace',
+            Option::NAMESPACE,
             null,
             InputOption::VALUE_REQUIRED,
             'The namespace associated to the deployment',
@@ -54,9 +56,9 @@ class DeploymentUpgradeCommand extends AbstractHelmCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $symfonyStyle = new SymfonyStyle($input, $output);
-        $deploymentName = $input->getArgument('name');
-        $namespace = $input->getOption('namespace');
-        $appEnv = $input->getOption('app-env');
+        $deploymentName = $input->getArgument(Argument::GENERIC_NAME);
+        $namespace = $input->getOption(Option::NAMESPACE);
+        $appEnv = $input->getOption(Option::ENV);
 
         if (! $this->helmDeploymentsManager->upgrade($deploymentName, $appEnv, $namespace, $symfonyStyle)) {
             return Command::FAILURE;

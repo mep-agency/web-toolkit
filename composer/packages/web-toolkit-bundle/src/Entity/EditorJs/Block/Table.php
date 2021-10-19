@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Entity\EditorJs\Block;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Mep\WebToolkitBundle\Entity\EditorJs\Block;
 use Mep\WebToolkitBundle\Validator\EditorJs\TableContent;
@@ -33,10 +34,10 @@ class Table extends Block
      */
     public function __construct(
         string $id,
-        #[ORM\Column(type: 'boolean')]
+        #[ORM\Column(type: Types::BOOLEAN)]
         private bool $withHeadings,
         #[TableContent]
-        #[ORM\Column(type: 'json')]
+        #[ORM\Column(type: Types::JSON)]
         private array $content,
     ) {
         parent::__construct($id);

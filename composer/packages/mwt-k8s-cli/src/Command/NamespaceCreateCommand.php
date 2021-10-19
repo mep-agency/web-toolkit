@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Mep\MwtK8sCli\Command;
 
+use Mep\MwtK8sCli\Argument;
 use Mep\MwtK8sCli\Contract\AbstractK8sCommand;
 use Mep\MwtK8sCli\K8sCli;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -33,13 +34,18 @@ class NamespaceCreateCommand extends AbstractK8sCommand
 {
     protected function configure(): void
     {
-        $this->addArgument('name', InputArgument::OPTIONAL, 'The namespace name', K8sCli::K8S_DEFAULT_NAMESPACE);
+        $this->addArgument(
+            Argument::GENERIC_NAME,
+            InputArgument::OPTIONAL,
+            'The namespace name',
+            K8sCli::K8S_DEFAULT_NAMESPACE,
+        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $symfonyStyle = new SymfonyStyle($input, $output);
-        $namespaceName = $input->getArgument('name');
+        $namespaceName = $input->getArgument(Argument::GENERIC_NAME);
 
         $this->kubernetesCluster
             ->namespace()

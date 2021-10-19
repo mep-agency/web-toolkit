@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Mep\MwtK8sCli\Command;
 
+use Mep\MwtK8sCli\Option;
 use Mep\MwtK8sCli\Service\K8sConfigGenerator;
 use RuntimeException;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -41,15 +42,21 @@ class ConfigCreateCommand extends Command
 
     protected function configure(): void
     {
-        $this->addOption('certificate', 'c', InputArgument::OPTIONAL, 'Path to the CA certificate file', './ca.crt');
-        $this->addOption('force', null, InputOption::VALUE_NONE, 'Overwrite existing config');
+        $this->addOption(
+            Option::CERTIFICATE,
+            'c',
+            InputArgument::OPTIONAL,
+            'Path to the CA certificate file',
+            './ca.crt',
+        );
+        $this->addOption(Option::FORCE, null, InputOption::VALUE_NONE, 'Overwrite existing config');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $symfonyStyle = new SymfonyStyle($input, $output);
-        $force = $input->getOption('force') ?? false;
-        $certificatePath = $input->getOption('certificate');
+        $force = $input->getOption(Option::FORCE) ?? false;
+        $certificatePath = $input->getOption(Option::CERTIFICATE);
 
         if (! $input->isInteractive()) {
             $symfonyStyle->error('This command cannot run in "--no-interaction" mode.');

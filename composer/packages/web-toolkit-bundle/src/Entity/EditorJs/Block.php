@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Entity\EditorJs;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 use Mep\WebToolkitBundle\Entity\EditorJs\Block\Delimiter;
@@ -89,7 +90,7 @@ abstract class Block implements JsonSerializable, Stringable
     private EditorJsContent $parent;
 
     public function __construct(
-        #[ORM\Column(type: 'string', length: 255)]
+        #[ORM\Column(type: Types::STRING, length: 255)]
         private string $id,
     ) {
         $this->uuid = Uuid::v6();

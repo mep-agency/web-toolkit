@@ -13,8 +13,10 @@ declare(strict_types=1);
 
 namespace Mep\MwtK8sCli\Command;
 
+use Mep\MwtK8sCli\Argument;
 use Mep\MwtK8sCli\Contract\AbstractK8sCommand;
 use Mep\MwtK8sCli\K8sCli;
+use Mep\MwtK8sCli\Option;
 use Mep\MwtK8sCli\Service\K8sConfigGenerator;
 use RenokiCo\PhpK8s\KubernetesCluster;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -44,11 +46,11 @@ class SuperUserGetConfigCommand extends AbstractK8sCommand
 
     protected function configure(): void
     {
-        $this->addArgument('service-account', InputArgument::REQUIRED, 'The service account name');
+        $this->addArgument(Argument::SERVICE_ACCOUNT, InputArgument::REQUIRED, 'The service account name');
 
-        $this->addOption('output', 'o', InputOption::VALUE_REQUIRED, 'An output file', $this->defaultOutputPath);
+        $this->addOption(Option::OUTPUT, 'o', InputOption::VALUE_REQUIRED, 'An output file', $this->defaultOutputPath);
         $this->addOption(
-            'namespace',
+            Option::NAMESPACE,
             null,
             InputOption::VALUE_REQUIRED,
             'The namespace to associate with the new service account',
@@ -59,8 +61,9 @@ class SuperUserGetConfigCommand extends AbstractK8sCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $symfonyStyle = new SymfonyStyle($input, $output);
-        $serviceAccountName = $input->getArgument('service-account');
-        $namespace = $input->getOption('namespace');
+        $serviceAccountName = $input->getArgument(Argument::SERVICE_ACCOUNT);
+        $namespace = $input->getOption(Option::NAMESPACE);
+        $outputPath = $input->getOption(Option::OUTPUT);
 
         /** @phpstan-ignore-next-line The vendor lib uses magic calls for undocumented resources */
         $secretName = $this->kubernetesCluster
@@ -76,11 +79,11 @@ class SuperUserGetConfigCommand extends AbstractK8sCommand
         $url = trim($this->kubernetesCluster->getCallableUrl('', []), '?');
 
         $this->k8sConfigGenerator->generateConfigFile(
-            $this->defaultOutputPath,
+            $outputPath,
             base64_encode($secretData['ca.crt']),
             $url,
             $secretData['token'],
-            $secretData['namespace'],
+            $secretData[Option::NAMESPACE],
         );
 
         $symfonyStyle->success('Super-user configuration file created successfully!');

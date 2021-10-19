@@ -13,9 +13,11 @@ declare(strict_types=1);
 
 namespace Mep\MwtK8sCli\Contract;
 
+use Mep\MwtK8sCli\Argument;
 use Mep\MwtK8sCli\Exception\StopExecutionException;
 use Mep\MwtK8sCli\Factory\KubernetesClusterFactory;
 use Mep\MwtK8sCli\K8sCli;
+use Mep\MwtK8sCli\Option;
 use RenokiCo\PhpK8s\Exceptions\KubernetesAPIException;
 use RenokiCo\PhpK8s\Kinds\K8sResource;
 use RenokiCo\PhpK8s\KubernetesCluster;
@@ -54,12 +56,12 @@ abstract class AbstractK8sCommand extends Command
                 // Check given namespace names
                 $namespaceNames = [];
 
-                if ($input->hasArgument('namespace')) {
-                    $namespaceNames[] = $input->getArgument('namespace');
+                if ($input->hasArgument(Argument::NAMESPACE)) {
+                    $namespaceNames[] = $input->getArgument(Argument::NAMESPACE);
                 }
 
-                if ($input->hasOption('namespace')) {
-                    $namespaceNames[] = $input->getOption('namespace');
+                if ($input->hasOption(Option::NAMESPACE)) {
+                    $namespaceNames[] = $input->getOption(Option::NAMESPACE);
                 }
 
                 foreach ($namespaceNames as $namespaceName) {
@@ -124,8 +126,8 @@ abstract class AbstractK8sCommand extends Command
         OutputInterface $output,
     ): void {
         $symfonyStyle = new SymfonyStyle($input, $output);
-        $hasForce = $input->hasOption('force');
-        $forceValue = $hasForce && $input->getOption('force');
+        $hasForce = $input->hasOption(Option::FORCE);
+        $forceValue = $hasForce && $input->getOption(Option::FORCE);
 
         if ($forceValue || $this->isCreatedByThisTool($k8sResource)) {
             return;

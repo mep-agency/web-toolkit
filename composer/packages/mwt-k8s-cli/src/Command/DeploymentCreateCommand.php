@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Mep\MwtK8sCli\Command;
 
+use Mep\MwtK8sCli\Argument;
 use RuntimeException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -40,14 +41,14 @@ class DeploymentCreateCommand extends Command
 
     protected function configure(): void
     {
-        $this->addArgument('name', InputArgument::REQUIRED, 'The deployment name');
+        $this->addArgument(Argument::GENERIC_NAME, InputArgument::REQUIRED, 'The deployment name');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $symfonyStyle = new SymfonyStyle($input, $output);
         $filesystem = new Filesystem();
-        $appName = $input->getArgument('name');
+        $appName = $input->getArgument(Argument::GENERIC_NAME);
         $targetDirectory = $this->cwdPath.'/apps/'.$appName;
         $domain = 'my-app.dev';
         $stagingDomain = 'staging.my-app.dev';
@@ -104,10 +105,14 @@ class DeploymentCreateCommand extends Command
             $filePath = $configFile->getRealPath();
 
             if (false === $filePath) {
-                throw new RuntimeException('Unexpected value: the file path cannot be false.');
+                throw new RuntimeException('Unexpected value: the file path cannot be "false".');
             }
 
             $fileContent = file_get_contents($filePath);
+
+            if (false === $fileContent) {
+                throw new RuntimeException('Unexpected value: the file content cannot be "false".');
+            }
 
             foreach ($placeholders as $placeholder => $value) {
                 $fileContent = str_replace($placeholder, $value, $fileContent);

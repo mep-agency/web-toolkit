@@ -34,6 +34,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             'rector/rector' => '^0.11.53',
             'symplify/easy-coding-standard' => '^9.4',
             'symplify/monorepo-builder' => '^9.4',
+            'symplify/phpstan-rules' => '^9.4',
             // Skeleton dependencies
             'doctrine/doctrine-fixtures-bundle' => '*',
             'sensio/framework-extra-bundle' => '^6.1',

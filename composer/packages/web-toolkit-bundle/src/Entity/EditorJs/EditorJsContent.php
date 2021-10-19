@@ -15,6 +15,7 @@ namespace Mep\WebToolkitBundle\Entity\EditorJs;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 use Stringable;
@@ -48,13 +49,13 @@ class EditorJsContent implements JsonSerializable, Stringable
     #[Valid]
     private Collection $blocks;
 
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: Types::TEXT)]
     private string $plainText = '';
 
     public function __construct(
-        #[ORM\Column(type: 'bigint')]
+        #[ORM\Column(type: Types::BIGINT)]
         private string $time,
-        #[ORM\Column(type: 'string', length: 255)]
+        #[ORM\Column(type: Types::STRING, length: 255)]
         private string $version,
     ) {
         $this->id = Uuid::v6();

@@ -13,8 +13,10 @@ declare(strict_types=1);
 
 namespace Mep\MwtK8sCli\Command;
 
+use Mep\MwtK8sCli\Argument;
 use Mep\MwtK8sCli\Contract\AbstractK8sCommand;
 use Mep\MwtK8sCli\K8sCli;
+use Mep\MwtK8sCli\Option;
 use Mep\MwtK8sCli\Service\K8sBasicAuthSecretGenerator;
 use RenokiCo\PhpK8s\KubernetesCluster;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -43,17 +45,17 @@ class BasicAuthSecretDeleteCommand extends AbstractK8sCommand
 
     protected function configure(): void
     {
-        $this->addArgument('name', InputArgument::REQUIRED, 'A name of the HTTP Basic Auth secret');
+        $this->addArgument(Argument::GENERIC_NAME, InputArgument::REQUIRED, 'A name of the HTTP Basic Auth secret');
 
         $this->addOption(
-            'namespace',
+            Option::NAMESPACE,
             null,
             InputOption::VALUE_REQUIRED,
             'The namespace associated the HTTP Basic Auth secret',
             K8sCli::K8S_DEFAULT_NAMESPACE,
         );
         $this->addOption(
-            'force',
+            Option::FORCE,
             null,
             InputOption::VALUE_NONE,
             'Deletes the HTTP Basic Auth secret even if it was not created by this CLI',
@@ -63,8 +65,8 @@ class BasicAuthSecretDeleteCommand extends AbstractK8sCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $symfonyStyle = new SymfonyStyle($input, $output);
-        $basicAuthSecretName = $input->getArgument('name');
-        $namespace = $input->getOption('namespace');
+        $basicAuthSecretName = $input->getArgument(Argument::GENERIC_NAME);
+        $namespace = $input->getOption(Option::NAMESPACE);
 
         $k8sSecret = $this->kubernetesCluster->getSecretByName($basicAuthSecretName, $namespace);
 

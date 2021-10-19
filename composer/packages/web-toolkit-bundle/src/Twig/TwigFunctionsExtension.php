@@ -31,6 +31,27 @@ use Twig\TwigFunction;
  */
 class TwigFunctionsExtension extends AbstractExtension
 {
+    /**
+     * @see https://regex101.com/r/XRdfW0/1
+     *
+     * @var string
+     */
+    private const MATCH_SVG_TAG_REGEX = '#<svg[\s\S]+</svg>#';
+
+    /**
+     * @see https://regex101.com/r/wRI4WW/1
+     *
+     * @var string
+     */
+    private const MATCH_ICON_SIZE_REGEX = '#^icon-(\d+)\.(?:png|ico)$#';
+
+    /**
+     * @see https://regex101.com/r/euOXWW/1
+     *
+     * @var string
+     */
+    private const MATCH_ASSETS_PATH_PREFIX_REGEX = '#^build#';
+
     private string $projectDir;
 
     public function __construct(
@@ -82,7 +103,7 @@ class TwigFunctionsExtension extends AbstractExtension
             $rawSvg = file_get_contents($filePath) ?: '';
             $matches = [];
 
-            if (1 !== preg_match('#<svg[\s\S]+</svg>#', $rawSvg, $matches)) {
+            if (1 !== preg_match(self::MATCH_SVG_TAG_REGEX, $rawSvg, $matches)) {
                 throw new RuntimeException("Can't find <svg> tag in file: ".$filePath);
             }
 
@@ -122,8 +143,7 @@ class TwigFunctionsExtension extends AbstractExtension
         }
 
         $tags = '';
-        $regex = '/^icon-(\d+)\.(?:png|ico)$/';
-        $absolutePath = $this->projectDir.preg_replace('#^build#', '/assets', $path);
+        $absolutePath = $this->projectDir.preg_replace(self::MATCH_ASSETS_PATH_PREFIX_REGEX, '/assets', $path);
         $finder = new Finder();
 
         if (! is_dir($absolutePath)) {
@@ -132,7 +152,7 @@ class TwigFunctionsExtension extends AbstractExtension
 
         $icons = $finder->in($absolutePath)
             ->files()
-            ->name($regex)
+            ->name(self::MATCH_ICON_SIZE_REGEX)
             ->depth('== 0')
         ;
 
@@ -141,7 +161,7 @@ class TwigFunctionsExtension extends AbstractExtension
             $iconUrl = $this->packages->getUrl($path.'/'.$icon->getFilename());
             $matches = [];
 
-            preg_match($regex, $icon->getFilename(), $matches);
+            preg_match(self::MATCH_ICON_SIZE_REGEX, $icon->getFilename(), $matches);
 
             $tags .= '<link rel="shortcut icon" sizes="'.$matches[1].'x'.$matches[1].'" href="'.$iconUrl.'" type="'.$file->getMimeType().'">'."\n";
 

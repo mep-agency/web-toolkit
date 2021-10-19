@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Mep\WebToolkitBundle\FileStorage\GarbageCollector\AssociationContextGarbageCollector;
 use Mep\WebToolkitBundle\Validator\AssociativeArrayOfScalarValues;
@@ -46,23 +47,23 @@ class Attachment implements Stringable
      * @param array<string, scalar> $metadata
      */
     public function __construct(
-        #[ORM\Column(type: 'string', length: 255)]
+        #[ORM\Column(type: Types::STRING, length: 255)]
         #[NotNull]
         #[NotBlank]
         #[Length(max: 255)]
         private string $fileName,
-        #[ORM\Column(type: 'string', length: 255)]
+        #[ORM\Column(type: Types::STRING, length: 255)]
         #[NotNull]
         #[NotBlank]
         #[Length(max: 255)]
         private string $mimeType,
-        #[ORM\Column(type: 'integer')]
+        #[ORM\Column(type: Types::INTEGER)]
         #[PositiveOrZero]
         private int $fileSize,
-        #[ORM\Column(type: 'string', length: 255, nullable: true)]
+        #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
         #[Length(max: 255)]
         private ?string $context = null,
-        #[ORM\Column(type: 'json')]
+        #[ORM\Column(type: Types::JSON)]
         #[AssociativeArrayOfScalarValues]
         private array $metadata = [],
     ) {

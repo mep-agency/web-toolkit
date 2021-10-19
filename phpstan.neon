@@ -5,6 +5,10 @@ parameters:
   ignoreErrors:
     - message: '#Unable to resolve the template type T in call to method Doctrine\\Persistence\\ObjectManager::getRepository\(\)#'
       path: composer/packages/web-toolkit-bundle/src/EventListener/ForceSingleInstanceEventListener.php
+    - message: '#autowire\(\), autoconfigure\(\), and public\(\) are required in config service#'
+      paths:
+        - composer/packages/mwt-k8s-cli/config/services.php
+        - composer/packages/web-toolkit-bundle/src/Resources/config/services.php
   bootstrapFiles:
     # Fix class not found error for Symplify\MonorepoBuilder\Release\Contract\ReleaseWorker\ReleaseWorkerInterface
     - vendor/symplify/monorepo-builder/vendor/autoload.php
@@ -12,4 +16,21 @@ parameters:
     - vendor/symplify/easy-coding-standard/vendor/autoload.php
 
 includes:
+  - vendor/symplify/phpstan-rules/config/services/services.neon
+  - vendor/symplify/phpstan-rules/packages/cognitive-complexity/config/cognitive-complexity-services.neon
+  - vendor/symplify/phpstan-rules/packages/symfony/config/services.neon
+  ##- vendor/symplify/phpstan-rules/config/array-rules.neon
+  #- vendor/symplify/phpstan-rules/config/code-complexity-rules.neon
+  ##- vendor/symplify/phpstan-rules/config/doctrine-rules.neon
+  ##- vendor/symplify/phpstan-rules/config/forbidden-static-rules.neon
+  ##- vendor/symplify/phpstan-rules/config/naming-rules.neon
+  - vendor/symplify/phpstan-rules/config/regex-rules.neon
+  - vendor/symplify/phpstan-rules/config/services-rules.neon
+  ##- vendor/symplify/phpstan-rules/config/static-rules.neon
+  - vendor/symplify/phpstan-rules/config/size-rules.neon
+  - vendor/symplify/phpstan-rules/config/string-to-constant-rules.neon
+  - vendor/symplify/phpstan-rules/config/symfony-rules.neon
+  - vendor/symplify/phpstan-rules/config/test-rules.neon
   - vendor/knplabs/doctrine-behaviors/phpstan-extension.neon
+
+services:

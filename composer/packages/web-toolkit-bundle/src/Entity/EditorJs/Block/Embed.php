@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Entity\EditorJs\Block;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Mep\WebToolkitBundle\Entity\EditorJs\Block;
 
@@ -29,17 +30,17 @@ class Embed extends Block
 {
     public function __construct(
         string $id,
-        #[ORM\Column(type: 'string', length: 32)]
+        #[ORM\Column(type: Types::STRING, length: 32)]
         private string $service,
-        #[ORM\Column(type: 'string', length: 255)]
+        #[ORM\Column(type: Types::STRING, length: 255)]
         private string $source,
-        #[ORM\Column(type: 'string', length: 255)]
+        #[ORM\Column(type: Types::STRING, length: 255)]
         private string $embed,
-        #[ORM\Column(type: 'smallint')]
+        #[ORM\Column(type: Types::SMALLINT)]
         private int $width,
-        #[ORM\Column(type: 'smallint')]
+        #[ORM\Column(type: Types::SMALLINT)]
         private int $height,
-        #[ORM\Column(type: 'text')]
+        #[ORM\Column(type: Types::TEXT)]
         private string $caption,
     ) {
         parent::__construct($id);

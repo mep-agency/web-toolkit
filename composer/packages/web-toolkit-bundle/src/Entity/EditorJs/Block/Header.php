@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Entity\EditorJs\Block;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Mep\WebToolkitBundle\Entity\EditorJs\Block;
 
@@ -29,9 +30,9 @@ class Header extends Block
 {
     public function __construct(
         string $id,
-        #[ORM\Column(type: 'text')]
+        #[ORM\Column(type: Types::TEXT)]
         private string $text,
-        #[ORM\Column(type: 'smallint')]
+        #[ORM\Column(type: Types::SMALLINT)]
         private int $level,
     ) {
         parent::__construct($id);

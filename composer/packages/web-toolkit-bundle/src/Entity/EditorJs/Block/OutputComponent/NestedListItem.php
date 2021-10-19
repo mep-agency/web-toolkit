@@ -15,6 +15,7 @@ namespace Mep\WebToolkitBundle\Entity\EditorJs\Block\OutputComponent;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 use Stringable;
@@ -57,7 +58,7 @@ class NestedListItem implements JsonSerializable, Stringable
      * @param NestedListItem[] $items
      */
     public function __construct(
-        #[ORM\Column(type: 'text')]
+        #[ORM\Column(type: Types::TEXT)]
         private string $content,
         array $items,
     ) {

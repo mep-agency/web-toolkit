@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Entity\EditorJs\Block;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Mep\WebToolkitBundle\Entity\EditorJs\Block;
 
@@ -29,11 +30,11 @@ class Quote extends Block
 {
     public function __construct(
         string $id,
-        #[ORM\Column(type: 'text')]
+        #[ORM\Column(type: Types::TEXT)]
         private string $text,
-        #[ORM\Column(type: 'text')]
+        #[ORM\Column(type: Types::TEXT)]
         private string $caption,
-        #[ORM\Column(type: 'string', length: 10)]
+        #[ORM\Column(type: Types::STRING, length: 10)]
         private string $alignment,
     ) {
         parent::__construct($id);

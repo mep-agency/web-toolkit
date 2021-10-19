@@ -23,6 +23,13 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 final class AttachmentAssociationContextDto implements Stringable
 {
+    /**
+     * @see https://regex101.com/r/VlbQvj/1
+     *
+     * @var string
+     */
+    private const MATCH_FQCN_AND_FIELD_NAME_FROM_CONTEXT_REGEX = '#^([a-zA-Z_\x7f-\xff][a-zA-Z0-9\\\_\x7f-\xff]*)::\$([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)$#';
+
     public function __construct(
         #[NotBlank]
         public string $fqcn,
@@ -44,11 +51,7 @@ final class AttachmentAssociationContextDto implements Stringable
     {
         $matches = [];
 
-        if (1 !== preg_match(
-            '#^([a-zA-Z_\x7f-\xff][a-zA-Z0-9\_\x7f-\xff]*)::\$([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)$#',
-            $context,
-            $matches,
-        )) {
+        if (1 !== preg_match(self::MATCH_FQCN_AND_FIELD_NAME_FROM_CONTEXT_REGEX, $context, $matches,)) {
             return null;
         }
 

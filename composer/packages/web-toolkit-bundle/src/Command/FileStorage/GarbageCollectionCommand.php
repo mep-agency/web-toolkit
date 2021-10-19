@@ -33,6 +33,11 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class GarbageCollectionCommand extends Command
 {
     /**
+     * @var string
+     */
+    private const DRY_RUN_OPTION = 'dry-run';
+
+    /**
      * @param iterable<GarbageCollectorInterface> $garbageCollectors
      */
     public function __construct(
@@ -46,14 +51,19 @@ class GarbageCollectionCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addOption('dry-run', null, InputOption::VALUE_NONE, 'Prints the unused attachments without removing them')
+            ->addOption(
+                self::DRY_RUN_OPTION,
+                null,
+                InputOption::VALUE_NONE,
+                'Prints the unused attachments without removing them',
+            )
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $symfonyStyle = new SymfonyStyle($input, $output);
-        $dryRun = $input->getOption('dry-run');
+        $dryRun = $input->getOption(self::DRY_RUN_OPTION);
         $garbageAttachmentsLog = [];
 
         foreach ($this->garbageCollectors as $garbageCollector) {

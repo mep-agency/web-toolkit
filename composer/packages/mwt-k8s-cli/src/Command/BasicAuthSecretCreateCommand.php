@@ -13,8 +13,10 @@ declare(strict_types=1);
 
 namespace Mep\MwtK8sCli\Command;
 
+use Mep\MwtK8sCli\Argument;
 use Mep\MwtK8sCli\Contract\AbstractK8sCommand;
 use Mep\MwtK8sCli\K8sCli;
+use Mep\MwtK8sCli\Option;
 use Mep\MwtK8sCli\Service\K8sBasicAuthSecretGenerator;
 use RenokiCo\PhpK8s\KubernetesCluster;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -43,10 +45,10 @@ class BasicAuthSecretCreateCommand extends AbstractK8sCommand
 
     protected function configure(): void
     {
-        $this->addArgument('name', InputArgument::REQUIRED, 'A name for the HTTP Basic Auth secret');
+        $this->addArgument(Argument::GENERIC_NAME, InputArgument::REQUIRED, 'A name for the HTTP Basic Auth secret');
 
         $this->addOption(
-            'namespace',
+            Option::NAMESPACE,
             null,
             InputOption::VALUE_REQUIRED,
             'The namespace to associate with the new HTTP Basic Auth secret',
@@ -57,8 +59,8 @@ class BasicAuthSecretCreateCommand extends AbstractK8sCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $symfonyStyle = new SymfonyStyle($input, $output);
-        $pullSecretName = $input->getArgument('name');
-        $namespace = $input->getOption('namespace');
+        $pullSecretName = $input->getArgument(Argument::GENERIC_NAME);
+        $namespace = $input->getOption(Option::NAMESPACE);
 
         $this->k8sBasicAuthSecretGenerator->generate(
             $pullSecretName,
