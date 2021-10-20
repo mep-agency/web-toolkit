@@ -47,7 +47,10 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     // Disable "mep-agency/symfony-website-skeleton" when merging
     if ($isMergeCommand) {
-        $parameters->set(Option::PACKAGE_DIRECTORIES_EXCLUDES, ['symfony-web-toolkit-skeleton']);
+        $parameters->set(Option::PACKAGE_DIRECTORIES_EXCLUDES, [
+            'symfony-web-toolkit-skeleton',
+            'mwt-k8s-cli-skeleton',
+        ]);
     }
 
     $parameters->set(Option::DEFAULT_BRANCH_NAME, 'main');

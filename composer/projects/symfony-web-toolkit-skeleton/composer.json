@@ -2,7 +2,7 @@
     "name": "mep-agency/symfony-web-toolkit-skeleton",
     "type": "project",
     "license": "MIT",
-    "description": "A skeleton to start a new Symfony website",
+    "description": "A skeleton to start a new Symfony app",
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {

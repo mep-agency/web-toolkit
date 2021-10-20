@@ -1,6 +1,6 @@
 {
     "name": "mep-agency/mwt-k8s-cli",
-    "description": "CLI tool to deploy and manage MWT projects on a K8s cluster",
+    "description": "A CLI tool to deploy and manage MWT projects on a K8s cluster",
     "type": "library",
     "license": "MIT",
     "authors": [

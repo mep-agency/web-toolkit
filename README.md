@@ -14,3 +14,8 @@ In the meantime, you can create a new project running:
 ```shell
 composer create-project mep-agency/symfony-web-toolkit-skeleton PROJECT_PATH -n --repository="{\"type\": \"vcs\", \"url\": \"git@github.com:mep-agency/symfony-web-toolkit-skeleton.git\"}" --stability dev
 ```
+
+Or create a project to manage deployments on a Kubernetes cluster with:
+```shell
+composer create-project mep-agency/mwt-k8s-cli-skeleton PROJECT_PATH -n --repository="{\"type\": \"vcs\", \"url\": \"git@github.com:mep-agency/mwt-k8s-cli-skeleton.git\"}" --stability dev
+```
