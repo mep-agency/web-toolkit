@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Mep\MwtK8sCli\Command;
 
-use Mep\MwtK8sCli\Argument;
+use Mep\MwtK8sCli\Config\Argument;
 use RuntimeException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;

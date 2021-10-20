@@ -13,11 +13,11 @@ declare(strict_types=1);
 
 namespace Mep\MwtK8sCli\Command;
 
-use Mep\MwtK8sCli\Argument;
+use Mep\MwtK8sCli\Config\Argument;
+use Mep\MwtK8sCli\Config\Option;
 use Mep\MwtK8sCli\Contract\AbstractK8sCommand;
 use Mep\MwtK8sCli\Exception\StopExecutionException;
 use Mep\MwtK8sCli\K8sCli;
-use Mep\MwtK8sCli\Option;
 use RenokiCo\PhpK8s\Exceptions\KubernetesAPIException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;

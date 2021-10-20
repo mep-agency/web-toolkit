@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Mep\MwtK8sCli\Command;
 
-use Mep\MwtK8sCli\Argument;
+use Mep\MwtK8sCli\Config\Argument;
+use Mep\MwtK8sCli\Config\Option;
 use Mep\MwtK8sCli\Contract\AbstractHelmCommand;
 use Mep\MwtK8sCli\K8sCli;
-use Mep\MwtK8sCli\Option;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
