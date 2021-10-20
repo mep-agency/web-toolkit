@@ -60,7 +60,6 @@ abstract class AbstractLoginController extends AbstractController implements Aut
         return $this->render(
             static::LOGIN_TWIG_TEMPLATE,
             [
-                'page_title' => 'Login',
                 'error' => $exception,
                 'csrf_token_intention' => static::CSRF_TOKEN_INTENTION,
             ],

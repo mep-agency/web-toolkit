@@ -19,6 +19,12 @@
         <target>Username</target>
       </segment>
     </unit>
+    <unit id="Rl.a4oc" name="login_page.title">
+      <segment>
+        <source>login_page.title</source>
+        <target>Authentication required</target>
+      </segment>
+    </unit>
     <unit id="W0jkiQG" name="login_page.sign_in">
       <segment>
         <source>login_page.sign_in</source>
