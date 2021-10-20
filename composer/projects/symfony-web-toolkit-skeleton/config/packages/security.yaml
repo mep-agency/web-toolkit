@@ -21,7 +21,7 @@ security:
                 login_path: login
             logout:
                 path: logout
-            entry_point: App\Controller\SecurityController
+            entry_point: App\Controller\Security\LoginController
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication

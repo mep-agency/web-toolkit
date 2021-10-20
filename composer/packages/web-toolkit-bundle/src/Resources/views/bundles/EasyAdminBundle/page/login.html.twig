@@ -47,7 +47,7 @@ or from any other Symfony controller, where 'ea' is not defined #}
 
             <div class="mb-3">
                 <label for="email">{{ _username_label }}</label>
-                <input type="text" id="email" name="{{ username_parameter|default('email') }}" class="form-control" value="{{ last_username|default('') }}" required autofocus autocomplete="email">
+                <input type="text" id="email" name="{{ username_parameter|default('email') }}" class="form-control" value="{{ error.userIdentifier|default('') }}" required autofocus autocomplete="email">
             </div>
 
             <button type="submit" class="btn btn-primary btn-lg btn-block" onclick="this.form.submit(); this.disabled=true;">{{ _sign_in_label }}</button>
