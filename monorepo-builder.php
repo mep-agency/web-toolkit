@@ -31,7 +31,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ComposerJsonSection::REQUIRE_DEV => [
             'phpunit/phpunit' => '^9.5',
             'phpstan/phpstan' => '^0.12.99',
-            'rector/rector' => '^0.11.53',
+            'rector/rector' => '^0.11.60',
             'symplify/easy-coding-standard' => '^9.4',
             'symplify/monorepo-builder' => '^9.4',
             'symplify/phpstan-rules' => '^9.4',

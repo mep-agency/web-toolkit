@@ -109,8 +109,8 @@ class HelmDeploymentsManager
      */
     public function restart(string $appName, ?string $appEnv, string $namespace): void
     {
-        foreach ($this->getValuesFiles($appName, $appEnv) as $finder) {
-            $chartName = $this->getChartName($finder);
+        foreach ($this->getValuesFiles($appName, $appEnv) as $valuesFile) {
+            $chartName = $this->getChartName($valuesFile);
 
             // Faking a "kubectl rollout restart deployment/$NAME --namespace $NAMESPACE"
             $deployment = $this->kubernetesCluster->getDeploymentByName($chartName, $namespace);
@@ -144,9 +144,9 @@ class HelmDeploymentsManager
         array $envs = [],
         ?SymfonyStyle $symfonyStyle = null,
     ): bool {
-        foreach ($this->getValuesFiles($appName, $appEnv) as $finder) {
-            $chartName = $this->getChartName($finder);
-            $chartValuesPath = $finder->getRealPath();
+        foreach ($this->getValuesFiles($appName, $appEnv) as $valuesFile) {
+            $chartName = $this->getChartName($valuesFile);
+            $chartValuesPath = $valuesFile->getRealPath();
 
             if (false === $chartValuesPath) {
                 throw new RuntimeException('Unexpected value: chart values path should not be "false".');

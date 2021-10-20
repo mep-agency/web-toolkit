@@ -78,7 +78,7 @@ class EditorJsExtension extends AbstractExtension
     ): string {
         $blocks = [];
 
-        foreach ($editorJsContent->getBlocks()->getValues() as $block) {
+        foreach ($editorJsContent->getBlocks() as $block) {
             $blocks[] = [
                 'type' => Block::getTypeByClass($block::class),
                 'block' => $block,
