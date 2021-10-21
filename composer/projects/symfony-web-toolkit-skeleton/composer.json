@@ -93,14 +93,14 @@
             "php bin/console cache:clear --env test",
             "php bin/console doctrine:database:drop --force --env test",
             "php bin/console doctrine:schema:create --env test",
-            "bin/console mwt:sessions:create-table -n --env test",
+            "php bin/console mwt:sessions:create-table -n --env test",
             "php bin/console doctrine:fixtures:load -n --env test",
             "php bin/phpunit"
         ],
         "reset-db": [
             "php bin/console doctrine:database:drop --force",
             "php bin/console doctrine:schema:create",
-            "bin/console mwt:sessions:create-table -n",
+            "php bin/console mwt:sessions:create-table -n",
             "php bin/console doctrine:fixtures:load -n"
         ],
         "auto-scripts": [
