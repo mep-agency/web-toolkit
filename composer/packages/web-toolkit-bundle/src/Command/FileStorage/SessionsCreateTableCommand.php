@@ -44,7 +44,7 @@ class SessionsCreateTableCommand extends Command
                 CommandOption::IGNORE_MISSING_PDO_SESSION_HANDLER,
                 'i',
                 InputOption::VALUE_NONE,
-                'Doesn\'t fail if no PdoSessionHandler is available',
+                "Doesn't fail if no PdoSessionHandler is available",
             )
         ;
     }
@@ -55,8 +55,7 @@ class SessionsCreateTableCommand extends Command
         $ignoreMissingPdoSessionHandler = $input->getOption(CommandOption::IGNORE_MISSING_PDO_SESSION_HANDLER);
 
         if (null === $this->pdoSessionHandler) {
-            if ($ignoreMissingPdoSessionHandler)
-            {
+            if ($ignoreMissingPdoSessionHandler) {
                 $symfonyStyle->warning(
                     'The PDO session handler is not available as service, but you may be running dev or testing tasks...',
                 );

@@ -41,4 +41,3 @@ when@prod:
         Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler:
             arguments:
                 - '%env(resolve:DATABASE_URL)%'
-
