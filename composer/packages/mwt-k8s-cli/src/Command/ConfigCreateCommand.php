@@ -79,8 +79,9 @@ class ConfigCreateCommand extends Command
         }
 
         // Create a basic configuration file...
-        $this->k8sConfigGenerator->generateConfigFile(
+        $this->k8sConfigGenerator->generateConfigFileFromData(
             $this->kubeConfigPath,
+            'default-user',
             base64_encode(file_get_contents($certificatePath) ?: ''),
             $symfonyStyle->ask('Cluster URL', null, function ($value) {
                 if (null === $value) {

@@ -32,4 +32,9 @@ class Argument
      * @var string
      */
     public const SERVICE_ACCOUNT = 'service-account';
+
+    /**
+     * @var string
+     */
+    public const DEPLOYMENT = 'deployment';
 }

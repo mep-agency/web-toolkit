@@ -13,25 +13,57 @@ declare(strict_types=1);
 
 namespace Mep\MwtK8sCli\Service;
 
+use RenokiCo\PhpK8s\KubernetesCluster;
+
 /**
  * @author Marco Lipparini <developer@liarco.net>
  */
 class K8sConfigGenerator
 {
-    public function generateConfigFile(
+    public function __construct(
+        private KubernetesCluster $kubernetesCluster,
+    ) {
+    }
+
+    public function generateConfigFile(string $path, string $serviceAccountName, string $namespace): void
+    {
+        $k8sServiceAccount = $this->kubernetesCluster->getServiceAccountByName($serviceAccountName, $namespace);
+        /** @phpstan-ignore-next-line The vendor lib uses magic calls for undocumented resources */
+        $secretName = $k8sServiceAccount->getSecrets()[0]['name'];
+        $secretData = $this->kubernetesCluster
+            ->getSecretByName($secretName, $namespace)
+            ->getData(true)
+        ;
+
+        // The library doesn't return the clean API URL, so we generate one with no path nor query parameters
+        $url = trim($this->kubernetesCluster->getCallableUrl('', []), '?');
+
+        $this->generateConfigFileFromData(
+            $path,
+            $k8sServiceAccount->getName() ?? 'default-user',
+            base64_encode($secretData['ca.crt']),
+            $url,
+            $secretData['token'],
+            $secretData['namespace'],
+        );
+    }
+
+    public function generateConfigFileFromData(
         string $path,
+        string $accountName,
         string $certificate,
         string $url,
         string $token,
         ?string $namespace = null,
     ): void {
-        yaml_emit_file($path, $this->generateConfigArray($certificate, $url, $token, $namespace));
+        yaml_emit_file($path, $this->generateConfigArray($accountName, $certificate, $url, $token, $namespace));
     }
 
     /**
      * @return array<string, mixed>
      */
     private function generateConfigArray(
+        string $accountName,
         string $certificate,
         string $url,
         string $token,
@@ -55,13 +87,13 @@ class K8sConfigGenerator
                     'name' => 'default-context',
                     'context' => [
                         'cluster' => 'default-cluster',
-                        'user' => 'default-user',
+                        'user' => $accountName,
                     ],
                 ],
             ],
             'users' => [
                 [
-                    'name' => 'default-user',
+                    'name' => $accountName,
                     'user' => [
                         'token' => $token,
                     ],

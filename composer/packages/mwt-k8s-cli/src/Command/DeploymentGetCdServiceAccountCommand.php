@@ -31,10 +31,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * @author Marco Lipparini <developer@liarco.net>
  */
 #[AsCommand(
-    name: 'super-user:get-config',
-    description: 'Generates a config file for the given super-user service account.',
+    name: 'deployment:get-cd-service-account',
+    description: 'Generates a config file for a service account associated with the given deployment (useful for continuous delivery).',
 )]
-class SuperUserGetConfigCommand extends AbstractK8sCommand
+class DeploymentGetCdServiceAccountCommand extends AbstractK8sCommand
 {
     public function __construct(
         KubernetesCluster $kubernetesCluster,
@@ -46,7 +46,7 @@ class SuperUserGetConfigCommand extends AbstractK8sCommand
 
     protected function configure(): void
     {
-        $this->addArgument(Argument::SERVICE_ACCOUNT, InputArgument::REQUIRED, 'The service account name');
+        $this->addArgument(Argument::DEPLOYMENT, InputArgument::REQUIRED, 'The deployment name');
 
         $this->addOption(Option::OUTPUT, 'o', InputOption::VALUE_REQUIRED, 'An output file', $this->defaultOutputPath);
         $this->addOption(
@@ -61,14 +61,14 @@ class SuperUserGetConfigCommand extends AbstractK8sCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $symfonyStyle = new SymfonyStyle($input, $output);
-        $serviceAccountName = $input->getArgument(Argument::SERVICE_ACCOUNT);
+        $serviceAccountName = 'mwt-'.$input->getArgument(Argument::DEPLOYMENT).'-cd';
         $namespace = $input->getOption(Option::NAMESPACE);
         $outputPath = $input->getOption(Option::OUTPUT);
 
         $this->k8sConfigGenerator->generateConfigFile($outputPath, $serviceAccountName, $namespace);
 
         $symfonyStyle->success(
-            'Super-user configuration file created successfully!'.PHP_EOL.PHP_EOL.'Output file: '.realpath($outputPath),
+            'Configuration file created successfully!'.PHP_EOL.PHP_EOL.'Output file: '.realpath($outputPath),
         );
 
         return Command::SUCCESS;
