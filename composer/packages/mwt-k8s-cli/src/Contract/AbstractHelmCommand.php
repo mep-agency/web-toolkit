@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Mep\MwtK8sCli\Contract;
 
-use Mep\MwtK8sCli\Service\HelmDeploymentsManager;
+use Mep\MwtK8sCli\Service\HelmAppsManager;
 use RenokiCo\PhpK8s\KubernetesCluster;
 
 /**
@@ -23,7 +23,7 @@ abstract class AbstractHelmCommand extends AbstractK8sCommand
 {
     public function __construct(
         KubernetesCluster $kubernetesCluster,
-        protected HelmDeploymentsManager $helmDeploymentsManager,
+        protected HelmAppsManager $helmAppsManager,
     ) {
         parent::__construct($kubernetesCluster);
     }

@@ -36,5 +36,5 @@ class Argument
     /**
      * @var string
      */
-    public const DEPLOYMENT = 'deployment';
+    public const APP = 'app';
 }

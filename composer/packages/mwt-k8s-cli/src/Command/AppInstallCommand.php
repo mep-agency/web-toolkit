@@ -29,26 +29,26 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * @author Marco Lipparini <developer@liarco.net>
  */
 #[AsCommand(
-    name: 'deployment:restart',
-    description: 'Restarts an app deployment',
+    name: 'app:install',
+    description: 'Installs an app using Helm',
 )]
-class DeploymentRestartCommand extends AbstractHelmCommand
+class AppInstallCommand extends AbstractHelmCommand
 {
     protected function configure(): void
     {
-        $this->addArgument(Argument::GENERIC_NAME, InputArgument::REQUIRED, 'The deployment name');
+        $this->addArgument(Argument::GENERIC_NAME, InputArgument::REQUIRED, 'The app name');
 
         $this->addOption(
             Option::ENV,
             null,
             InputOption::VALUE_REQUIRED,
-            'Runs this command just on a specific env deployment (e.g. "staging")',
+            'Runs this command just on a specific env (e.g. "staging")',
         );
         $this->addOption(
             Option::NAMESPACE,
             null,
             InputOption::VALUE_REQUIRED,
-            'The namespace associated to the deployment',
+            'The namespace to associate with the new app',
             K8sCli::K8S_DEFAULT_NAMESPACE,
         );
     }
@@ -56,13 +56,15 @@ class DeploymentRestartCommand extends AbstractHelmCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $symfonyStyle = new SymfonyStyle($input, $output);
-        $deploymentName = $input->getArgument(Argument::GENERIC_NAME);
+        $appName = $input->getArgument(Argument::GENERIC_NAME);
         $namespace = $input->getOption(Option::NAMESPACE);
         $appEnv = $input->getOption(Option::ENV);
 
-        $this->helmDeploymentsManager->restart($deploymentName, $appEnv, $namespace);
+        if (! $this->helmAppsManager->install($appName, $appEnv, $namespace, $symfonyStyle)) {
+            return Command::FAILURE;
+        }
 
-        $symfonyStyle->success('Deployment "'.$deploymentName.'" restarted successfully!');
+        $symfonyStyle->success('App "'.$appName.'" installed successfully!');
 
         return Command::SUCCESS;
     }

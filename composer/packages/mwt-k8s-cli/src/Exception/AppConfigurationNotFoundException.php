@@ -18,10 +18,10 @@ use RuntimeException;
 /**
  * @author Marco Lipparini <developer@liarco.net>
  */
-class DeploymentConfigurationNotFoundException extends RuntimeException
+class AppConfigurationNotFoundException extends RuntimeException
 {
-    public function __construct(string $deployment, ?string $appEnv, string $deploymentPath)
+    public function __construct(string $app, ?string $appEnv, string $appPath)
     {
-        parent::__construct('Cannot find deployment configuration for "'.$deployment.'" ('.($appEnv ?: 'all envs').') in "'.$deploymentPath.'".');
+        parent::__construct('Cannot find app configuration for "'.$app.'" ('.($appEnv ?: 'all envs').') in "'.$appPath.'".');
     }
 }

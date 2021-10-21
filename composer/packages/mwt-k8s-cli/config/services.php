@@ -12,7 +12,7 @@
 declare(strict_types=1);
 
 use Mep\MwtK8sCli\Application;
-use Mep\MwtK8sCli\Command\DeploymentGetCdServiceAccountCommand;
+use Mep\MwtK8sCli\Command\AppGetCdServiceAccountCommand;
 use Mep\MwtK8sCli\Command\SuperUserGetConfigCommand;
 use Mep\MwtK8sCli\Factory\KubernetesClusterFactory;
 use RenokiCo\PhpK8s\KubernetesCluster;
@@ -54,7 +54,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->arg('$defaultOutputPath', '%working_dir%/su-config.yaml')
     ;
 
-    $services->get(DeploymentGetCdServiceAccountCommand::class)
+    $services->get(AppGetCdServiceAccountCommand::class)
         ->arg('$defaultOutputPath', '%working_dir%/cd-config.yaml')
     ;
 };

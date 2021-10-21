@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Mep\MwtK8sCli\Service;
 
 use DateTimeImmutable;
-use Mep\MwtK8sCli\Exception\DeploymentConfigurationNotFoundException;
+use Mep\MwtK8sCli\Exception\AppConfigurationNotFoundException;
 use RenokiCo\PhpHelm\Helm;
 use RenokiCo\PhpK8s\Kinds\K8sPod;
 use RenokiCo\PhpK8s\KubernetesCluster;
@@ -27,7 +27,7 @@ use Symfony\Component\Process\Process;
 /**
  * @author Marco Lipparini <developer@liarco.net>
  */
-class HelmDeploymentsManager
+class HelmAppsManager
 {
     /**
      * @var string
@@ -52,7 +52,7 @@ class HelmDeploymentsManager
         string $namespace,
         ?SymfonyStyle $symfonyStyle = null,
     ): bool {
-        return $this->runHelmCommandForAllDeployments(
+        return $this->runHelmCommandForAllEnvs(
             $appName,
             $appEnv,
             $namespace,
@@ -72,7 +72,7 @@ class HelmDeploymentsManager
         string $namespace,
         ?SymfonyStyle $symfonyStyle = null,
     ): bool {
-        return $this->runHelmCommandForAllDeployments(
+        return $this->runHelmCommandForAllEnvs(
             $appName,
             $appEnv,
             $namespace,
@@ -92,7 +92,7 @@ class HelmDeploymentsManager
         string $namespace,
         ?SymfonyStyle $symfonyStyle = null,
     ): bool {
-        return $this->runHelmCommandForAllDeployments(
+        return $this->runHelmCommandForAllEnvs(
             $appName,
             $appEnv,
             $namespace,
@@ -105,7 +105,7 @@ class HelmDeploymentsManager
     }
 
     /**
-     * Deployments must be restarted using the K8s API instead of Helm.
+     * Apps must be restarted using the K8s API instead of Helm.
      */
     public function restart(string $appName, ?string $appEnv, string $namespace): void
     {
@@ -113,19 +113,19 @@ class HelmDeploymentsManager
             $chartName = $this->getChartName($valuesFile);
 
             // Faking a "kubectl rollout restart deployment/$NAME --namespace $NAMESPACE"
-            $deployment = $this->kubernetesCluster->getDeploymentByName($chartName, $namespace);
-            $template = $deployment->getTemplate();
+            $k8sDeployment = $this->kubernetesCluster->getDeploymentByName($chartName, $namespace);
+            $template = $k8sDeployment->getTemplate();
 
             if (! $template instanceof K8sPod) {
-                throw new RuntimeException('Unexpected value: deployment template should be a K8sPod instance.');
+                throw new RuntimeException('Unexpected value: app template should be a K8sPod instance.');
             }
 
             $annotations = $template->getAnnotations();
             $annotations['kubectl.kubernetes.io/restartedAt'] = (new DateTimeImmutable())->format('Y-m-d H:i:s');
             $template->setAnnotations($annotations);
-            $deployment->setTemplate($template);
+            $k8sDeployment->setTemplate($template);
 
-            $deployment->update();
+            $k8sDeployment->update();
         }
     }
 
@@ -134,7 +134,7 @@ class HelmDeploymentsManager
      * @param array<int|string, string> $flags
      * @param string[]                  $envs
      */
-    private function runHelmCommandForAllDeployments(
+    private function runHelmCommandForAllEnvs(
         string $appName,
         ?string $appEnv,
         string $namespace,
@@ -182,16 +182,16 @@ class HelmDeploymentsManager
         return true;
     }
 
-    private function getValuesFiles(string $deployment, ?string $appEnv): Finder
+    private function getValuesFiles(string $app, ?string $appEnv): Finder
     {
-        $deploymentPath = $this->cwdPath.'/apps/'.$deployment;
+        $appPath = $this->cwdPath.'/apps/'.$app;
 
-        if (! is_dir($deploymentPath)) {
-            throw new DeploymentConfigurationNotFoundException($deployment, $appEnv, $deploymentPath);
+        if (! is_dir($appPath)) {
+            throw new AppConfigurationNotFoundException($app, $appEnv, $appPath);
         }
 
         $finder = (new Finder())
-            ->in($deploymentPath)
+            ->in($appPath)
             ->files()
             ->name([
                 '*'.(null === $appEnv ? '' : '-'.$appEnv).'.yaml',
@@ -200,7 +200,7 @@ class HelmDeploymentsManager
         ;
 
         if (! $finder->hasResults()) {
-            throw new DeploymentConfigurationNotFoundException($deployment, $appEnv, $deploymentPath);
+            throw new AppConfigurationNotFoundException($app, $appEnv, $appPath);
         }
 
         return $finder;

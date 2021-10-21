@@ -28,10 +28,10 @@ use Symfony\Component\Finder\Finder;
  * @author Marco Lipparini <developer@liarco.net>
  */
 #[AsCommand(
-    name: 'deployment:create',
-    description: 'Creates a configuration folder for a new deployment',
+    name: 'app:create',
+    description: 'Creates a configuration folder for a new app',
 )]
-class DeploymentCreateCommand extends Command
+class AppCreateCommand extends Command
 {
     public function __construct(
         private string $cwdPath,
@@ -41,7 +41,7 @@ class DeploymentCreateCommand extends Command
 
     protected function configure(): void
     {
-        $this->addArgument(Argument::GENERIC_NAME, InputArgument::REQUIRED, 'The deployment name');
+        $this->addArgument(Argument::GENERIC_NAME, InputArgument::REQUIRED, 'The app name');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
