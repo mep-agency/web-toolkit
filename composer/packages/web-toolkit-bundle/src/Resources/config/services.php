@@ -48,6 +48,7 @@ use Mep\WebToolkitBundle\Twig\TwigFunctionsExtension;
 use Mep\WebToolkitBundle\WebToolkitBundle;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
 use Symfony\Component\DependencyInjection\Reference;
@@ -74,7 +75,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     // General
     $services->set(WebToolkitBundle::SERVICE_SESSIONS_CREATE_TABLE_COMMAND, SessionsCreateTableCommand::class)
-        ->arg(0, new Reference(PdoSessionHandler::class))
+        ->arg(0, new Reference(PdoSessionHandler::class, ContainerInterface::NULL_ON_INVALID_REFERENCE))
         ->tag('console.command')
     ;
 

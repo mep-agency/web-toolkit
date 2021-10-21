@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Mep\WebToolkitBundle\Command\FileStorage;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Mep\WebToolkitBundle\Config\CommandOption;
 use Mep\WebToolkitBundle\Contract\FileStorage\GarbageCollectorInterface;
 use Mep\WebToolkitBundle\FileStorage\FileStorageManager;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -33,11 +34,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class GarbageCollectionCommand extends Command
 {
     /**
-     * @var string
-     */
-    private const DRY_RUN_OPTION = 'dry-run';
-
-    /**
      * @param iterable<GarbageCollectorInterface> $garbageCollectors
      */
     public function __construct(
@@ -52,7 +48,7 @@ class GarbageCollectionCommand extends Command
     {
         $this
             ->addOption(
-                self::DRY_RUN_OPTION,
+                CommandOption::DRY_RUN,
                 null,
                 InputOption::VALUE_NONE,
                 'Prints the unused attachments without removing them',
@@ -63,7 +59,7 @@ class GarbageCollectionCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $symfonyStyle = new SymfonyStyle($input, $output);
-        $dryRun = $input->getOption(self::DRY_RUN_OPTION);
+        $dryRun = $input->getOption(CommandOption::DRY_RUN);
         $garbageAttachmentsLog = [];
 
         foreach ($this->garbageCollectors as $garbageCollector) {

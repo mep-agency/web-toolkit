@@ -24,13 +24,6 @@ services:
             - '../src/Kernel.php'
             - '../src/Tests/'
 
-    # The PdoSessionHandler is used instead of the default one in order to allow sharing sessions between multiple
-    # instances of the app (e.g. many replicas can be deployed on a k8s cluster)
-    # see https://symfony.com/doc/current/session/database.html#store-sessions-in-a-relational-database-mariadb-mysql-postgresql
-    Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler:
-        arguments:
-            - '%env(resolve:DATABASE_URL)%'
-
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
     mep_web_toolkit.file_storage_driver:
@@ -40,3 +33,12 @@ services:
             $publicUrlPathPrefix: '/storage'
             # optional
             #$publicUrlPrefix: 'http://127.0.0.1:8000'
+
+when@prod:
+    services:
+        # In production, we store sessions into the database in order to support deployment to multiple stateless replicas
+        # See https://symfony.com/doc/current/session/database.html#store-sessions-in-a-relational-database-mariadb-mysql-postgresql
+        Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler:
+            arguments:
+                - '%env(resolve:DATABASE_URL)%'
+

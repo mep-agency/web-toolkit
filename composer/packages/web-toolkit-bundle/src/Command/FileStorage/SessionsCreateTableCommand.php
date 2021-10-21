@@ -13,9 +13,11 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Command\FileStorage;
 
+use Mep\WebToolkitBundle\Config\CommandOption;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
@@ -35,11 +37,33 @@ class SessionsCreateTableCommand extends Command
         parent::__construct();
     }
 
+    protected function configure(): void
+    {
+        $this
+            ->addOption(
+                CommandOption::IGNORE_MISSING_PDO_SESSION_HANDLER,
+                'i',
+                InputOption::VALUE_NONE,
+                'Doesn\'t fail if no PdoSessionHandler is available',
+            )
+        ;
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $symfonyStyle = new SymfonyStyle($input, $output);
+        $ignoreMissingPdoSessionHandler = $input->getOption(CommandOption::IGNORE_MISSING_PDO_SESSION_HANDLER);
 
         if (null === $this->pdoSessionHandler) {
+            if ($ignoreMissingPdoSessionHandler)
+            {
+                $symfonyStyle->warning(
+                    'The PDO session handler is not available as service, but you may be running dev or testing tasks...',
+                );
+
+                return Command::SUCCESS;
+            }
+
             $symfonyStyle->error(
                 'The PDO session handler is not available as service, did you change the default configuration?',
             );
