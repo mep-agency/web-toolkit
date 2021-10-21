@@ -68,7 +68,7 @@ class PullSecretCreateCommand extends AbstractK8sCommand
             $symfonyStyle->ask('Username', null, function ($value) {
                 return $this->notNull($value);
             }),
-            $symfonyStyle->ask('Password (or token)', null, function ($value) {
+            $symfonyStyle->askHidden('Password (or token)', function ($value) {
                 return $this->notNull($value);
             }),
             $namespace,

@@ -67,7 +67,7 @@ class BasicAuthSecretCreateCommand extends AbstractK8sCommand
             $symfonyStyle->ask('Username', null, function ($value) {
                 return $this->notNull($value);
             }),
-            $symfonyStyle->ask('Password', null, function ($value) {
+            $symfonyStyle->askHidden('Password', function ($value) {
                 return $this->notNull($value);
             }),
             $namespace,
