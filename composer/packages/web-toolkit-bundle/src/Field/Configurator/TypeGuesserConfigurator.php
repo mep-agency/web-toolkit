@@ -64,7 +64,7 @@ final class TypeGuesserConfigurator implements FieldConfiguratorInterface
 
         // Set pattern based on guessed value
         $patternGuess = $formTypeGuesser->guessPattern($entityDto->getFqcn(), $fieldDto->getProperty());
-        if (null !== $patternGuess) {
+        if (null !== $patternGuess?->getValue()) {
             $options = array_replace_recursive([
                 'attr' => [
                     'pattern' => $patternGuess->getValue(),
@@ -74,7 +74,7 @@ final class TypeGuesserConfigurator implements FieldConfiguratorInterface
 
         // Set maxlength based on guessed value
         $maxLengthGuess = $formTypeGuesser->guessMaxLength($entityDto->getFqcn(), $fieldDto->getProperty());
-        if (null !== $maxLengthGuess) {
+        if (null !== $maxLengthGuess?->getValue()) {
             $options = array_replace_recursive([
                 'attr' => [
                     'maxlength' => $maxLengthGuess->getValue(),
