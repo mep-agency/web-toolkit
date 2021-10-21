@@ -36,5 +36,10 @@ class Argument
     /**
      * @var string
      */
-    public const APP = 'app';
+    public const APP_NAME = 'app-name';
+
+    /**
+     * @var string
+     */
+    public const ENVIRONMENT = 'environment';
 }

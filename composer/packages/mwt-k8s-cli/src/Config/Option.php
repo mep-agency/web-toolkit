@@ -31,7 +31,7 @@ class Option
     /**
      * @var string
      */
-    public const ENV = 'env';
+    public const ALL_ENVIRONMENTS = 'all-environments';
 
     /**
      * @var string

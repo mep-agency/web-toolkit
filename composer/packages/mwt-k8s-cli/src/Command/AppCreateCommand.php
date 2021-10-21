@@ -41,14 +41,14 @@ class AppCreateCommand extends Command
 
     protected function configure(): void
     {
-        $this->addArgument(Argument::GENERIC_NAME, InputArgument::REQUIRED, 'The app name');
+        $this->addArgument(Argument::APP_NAME, InputArgument::REQUIRED, 'The app name');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $symfonyStyle = new SymfonyStyle($input, $output);
         $filesystem = new Filesystem();
-        $appName = $input->getArgument(Argument::GENERIC_NAME);
+        $appName = $input->getArgument(Argument::APP_NAME);
         $targetDirectory = $this->cwdPath.'/apps/'.$appName;
         $domain = 'my-app.dev';
         $stagingDomain = 'staging.my-app.dev';

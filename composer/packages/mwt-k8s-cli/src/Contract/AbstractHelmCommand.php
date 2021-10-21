@@ -13,8 +13,17 @@ declare(strict_types=1);
 
 namespace Mep\MwtK8sCli\Contract;
 
+use Mep\MwtK8sCli\Config\Argument;
+use Mep\MwtK8sCli\Config\Option;
+use Mep\MwtK8sCli\Exception\StopExecutionException;
+use Mep\MwtK8sCli\K8sCli;
 use Mep\MwtK8sCli\Service\HelmAppsManager;
 use RenokiCo\PhpK8s\KubernetesCluster;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
@@ -24,7 +33,64 @@ abstract class AbstractHelmCommand extends AbstractK8sCommand
     public function __construct(
         KubernetesCluster $kubernetesCluster,
         protected HelmAppsManager $helmAppsManager,
+        private bool $supportsAllEnvironmentsFlag = true,
     ) {
         parent::__construct($kubernetesCluster);
+
+        $this->addArgument(Argument::APP_NAME, InputArgument::REQUIRED, 'The app name');
+        $this->addArgument(
+            Argument::ENVIRONMENT,
+            InputArgument::OPTIONAL,
+            'The environment to run the Helm commands on (e.g. "staging")',
+        );
+
+        if ($this->supportsAllEnvironmentsFlag) {
+            $this->addOption(
+                Option::ALL_ENVIRONMENTS,
+                null,
+                InputOption::VALUE_NONE,
+                'Runs this command on all the environments',
+            );
+        }
+
+        $this->addOption(
+            Option::NAMESPACE,
+            null,
+            InputOption::VALUE_REQUIRED,
+            'The namespace associated to the app',
+            K8sCli::K8S_DEFAULT_NAMESPACE,
+        );
+    }
+
+    public function getAppName(InputInterface $input): string
+    {
+        return $input->getArgument(Argument::APP_NAME);
+    }
+
+    public function getAppEnvironment(InputInterface $input, OutputInterface $output): ?string
+    {
+        $environment = $input->getArgument(Argument::ENVIRONMENT);
+        $allEnvironments = $this->supportsAllEnvironmentsFlag && $input->getOption(Option::ALL_ENVIRONMENTS);
+
+        if (empty($environment) && ! $allEnvironments) {
+            throw new StopExecutionException(
+                $this->supportsAllEnvironmentsFlag ? 'No environment specified, please use "--'.Option::ALL_ENVIRONMENTS.'" to run this command on all environments' : 'Missing required argument: '.Argument::ENVIRONMENT,
+                Command::INVALID,
+            );
+        }
+
+        if ($allEnvironments && ! empty($environment)) {
+            throw new StopExecutionException(
+                'You cannot use "--'.Option::ALL_ENVIRONMENTS.'" and specify a single environment at the same time',
+                Command::INVALID,
+            );
+        }
+
+        return $environment;
+    }
+
+    public function getNamespace(InputInterface $input): string
+    {
+        return $input->getOption(Option::NAMESPACE);
     }
 }

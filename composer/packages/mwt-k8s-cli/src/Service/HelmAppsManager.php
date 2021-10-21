@@ -15,10 +15,12 @@ namespace Mep\MwtK8sCli\Service;
 
 use DateTimeImmutable;
 use Mep\MwtK8sCli\Exception\AppConfigurationNotFoundException;
+use Mep\MwtK8sCli\Exception\StopExecutionException;
 use RenokiCo\PhpHelm\Helm;
 use RenokiCo\PhpK8s\Kinds\K8sPod;
 use RenokiCo\PhpK8s\KubernetesCluster;
 use RuntimeException;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -50,9 +52,9 @@ class HelmAppsManager
         string $appName,
         ?string $appEnv,
         string $namespace,
-        ?SymfonyStyle $symfonyStyle = null,
-    ): bool {
-        return $this->runHelmCommandForAllEnvs(
+        SymfonyStyle $symfonyStyle,
+    ): void {
+        $this->runHelmCommandOnGivenEnvironments(
             $appName,
             $appEnv,
             $namespace,
@@ -70,9 +72,9 @@ class HelmAppsManager
         string $appName,
         ?string $appEnv,
         string $namespace,
-        ?SymfonyStyle $symfonyStyle = null,
-    ): bool {
-        return $this->runHelmCommandForAllEnvs(
+        SymfonyStyle $symfonyStyle,
+    ): void {
+        $this->runHelmCommandOnGivenEnvironments(
             $appName,
             $appEnv,
             $namespace,
@@ -90,9 +92,9 @@ class HelmAppsManager
         string $appName,
         ?string $appEnv,
         string $namespace,
-        ?SymfonyStyle $symfonyStyle = null,
-    ): bool {
-        return $this->runHelmCommandForAllEnvs(
+        SymfonyStyle $symfonyStyle,
+    ): void {
+        $this->runHelmCommandOnGivenEnvironments(
             $appName,
             $appEnv,
             $namespace,
@@ -134,16 +136,16 @@ class HelmAppsManager
      * @param array<int|string, string> $flags
      * @param string[]                  $envs
      */
-    private function runHelmCommandForAllEnvs(
+    private function runHelmCommandOnGivenEnvironments(
         string $appName,
         ?string $appEnv,
         string $namespace,
         string $action,
-        array $params = [],
-        array $flags = [],
-        array $envs = [],
-        ?SymfonyStyle $symfonyStyle = null,
-    ): bool {
+        array $params,
+        array $flags,
+        array $envs,
+        SymfonyStyle $symfonyStyle,
+    ): void {
         foreach ($this->getValuesFiles($appName, $appEnv) as $valuesFile) {
             $chartName = $this->getChartName($valuesFile);
             $chartValuesPath = $valuesFile->getRealPath();
@@ -169,17 +171,13 @@ class HelmAppsManager
                 $currentEnvs,
             );
 
-            $symfonyStyle?->section('Running "'.$action.'" action for configuration "'.$chartName.'"');
+            $symfonyStyle->section('Running "'.$action.'" action for configuration "'.$chartName.'"');
 
-            if (! $this->runSingleHelmCommand($helm, $symfonyStyle)) {
-                return false;
-            }
+            $this->runSingleHelmCommand($helm);
 
             /** @var Process<string> $helm */
-            $symfonyStyle?->text($helm->getOutput());
+            $symfonyStyle->text($helm->getOutput());
         }
-
-        return true;
     }
 
     private function getValuesFiles(string $app, ?string $appEnv): Finder
@@ -231,15 +229,16 @@ class HelmAppsManager
         }
     }
 
-    private function runSingleHelmCommand(Helm $helm, ?SymfonyStyle $symfonyStyle = null): bool
+    private function runSingleHelmCommand(Helm $helm): void
     {
         /** @var Process<string> $helm */
         $helm->run();
 
         if (! $helm->isSuccessful()) {
-            $symfonyStyle?->error('Failed running Helm command: '.PHP_EOL.$helm->getErrorOutput());
+            throw new StopExecutionException(
+                'Failed running Helm command: '.PHP_EOL.$helm->getErrorOutput(),
+                Command::FAILURE,
+            );
         }
-
-        return $helm->isSuccessful();
     }
 }
