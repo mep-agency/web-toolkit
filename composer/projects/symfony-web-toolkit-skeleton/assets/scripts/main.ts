@@ -12,4 +12,4 @@ import '../styles/main.scss';
 import './bootstrap';
 
 // The following line imports some useful tools with a default configuration
-import '@mep-agency/web-toolkit-front-end';
+//import '@mep-agency/web-toolkit-front-end';
