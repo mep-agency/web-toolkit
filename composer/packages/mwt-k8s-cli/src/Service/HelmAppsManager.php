@@ -194,8 +194,8 @@ class HelmAppsManager
             ->in($appPath)
             ->files()
             ->name([
-                '*'.(null === $appEnv ? '' : '-'.$appEnv).'.yaml',
-                '*'.(null === $appEnv ? '' : '-'.$appEnv).'.yml',
+                $app.'-'.(null === $appEnv ? '*' : $appEnv).'.yaml',
+                $app.'-'.(null === $appEnv ? '*' : $appEnv).'.yml',
             ])
         ;
 

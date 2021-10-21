@@ -118,7 +118,7 @@ class AppCreateCommand extends Command
                 $fileContent = str_replace($placeholder, $value, $fileContent);
             }
 
-            $targetBasename = str_replace('values', $appName, $configFile->getBasename());
+            $targetBasename = str_replace('app', $appName, $configFile->getBasename());
 
             $filesystem->dumpFile($targetDirectory.'/'.$targetBasename, $fileContent);
         }
