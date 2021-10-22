@@ -1,0 +1,33 @@
+name: MWT - K8s deployment restart
+
+on:
+  workflow_call:
+    inputs:
+      deployment_name:
+        type: string
+        required: false
+      environment:
+        type: string
+        required: true
+    secrets:
+      k8s_config:
+        description: Kube configuration file content
+        required: true
+
+jobs:
+  restart-deployment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup deployment name
+        run: |
+          if [ "${{ inputs.deployment_name }}" == "" ]; then
+            echo "MWT_DEPLOYMENT_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
+          else
+            echo "MWT_DEPLOYMENT_NAME=${{ inputs.deployment_name }}" >> $GITHUB_ENV
+          fi
+
+      - name: Setup Kubectl
+        run: mkdir ~/.kube && echo "${{ secrets.k8s_config }}" >> ~/.kube/config
+
+      - name: Restart deployment
+        run: kubectl rollout restart deployment/${{ env.MWT_DEPLOYMENT_NAME }}-${{ inputs.environment }} --namespace mwt-apps
