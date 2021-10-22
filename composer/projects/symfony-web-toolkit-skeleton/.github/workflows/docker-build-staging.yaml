@@ -1,3 +1,11 @@
+# !!! WARNING !!!
+# This file uses reusable GitHub workflows directly from a repository managed by the MEP Agency team.
+# While this feature is extremely convenient to keep all your workflows up-to-date automatically, you may prefer to
+# clone the "mep-agency/web-toolkit-workflows" repo and manage it manually for stronger security.
+#
+# Feel free to choose the best option according to your security needs.
+#
+# @see https://docs.github.com/en/actions/learn-github-actions/reusing-workflows
 name: Docker builds (staging)
 
 on:
@@ -41,3 +49,10 @@ jobs:
           #  YOUR_DOCKERHUB_USER/${{ env.MWT_REPOSITORY_NAME }}:staging
           cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/${{ env.MWT_REPOSITORY_NAME }}:staging
           cache-to: type=inline
+  # Uncomment the following lines to enable CD
+  #cd-staging:
+  #  uses: mep-agency/web-toolkit-workflows/.github/workflows/k8s-restart-deployment.yaml@main
+  #  with:
+  #    environment: staging
+  #  secrets:
+  #    k8s_config: ${{ secrets.K8S_CONFIG_STAGING }}
