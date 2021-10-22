@@ -24,23 +24,22 @@ jobs:
         # define package to repository map
         package:
           # Composer
-          -
-            local_path: composer/packages/mwt-k8s-cli
+          - local_path: composer/packages/mwt-k8s-cli
             split_repository: mwt-k8s-cli
-          -
-            local_path: composer/packages/web-toolkit-bundle
+          - local_path: composer/packages/web-toolkit-bundle
             split_repository: web-toolkit-bundle
-          -
-            local_path: composer/projects/mwt-k8s-cli-skeleton
+          - local_path: composer/projects/mwt-k8s-cli-skeleton
             split_repository: mwt-k8s-cli-skeleton
-          -
-            local_path: composer/projects/symfony-web-toolkit-skeleton
+          - local_path: composer/projects/symfony-web-toolkit-skeleton
             split_repository: symfony-web-toolkit-skeleton
 
           # NPM
-          -
-            local_path: npm/web-toolkit-front-end
+          - local_path: npm/web-toolkit-front-end
             split_repository: web-toolkit-front-end
+
+          # GitHub
+          - local_path: github/web-toolkit-workflows
+            split_repository: web-toolkit-workflows
 
     steps:
       -   uses: actions/checkout@v2
