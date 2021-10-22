@@ -47,7 +47,7 @@ abstract class AbstractHelmCommand extends AbstractK8sCommand
         if ($this->supportsAllEnvironmentsFlag) {
             $this->addOption(
                 Option::ALL_ENVIRONMENTS,
-                null,
+                'a',
                 InputOption::VALUE_NONE,
                 'Runs this command on all the environments',
             );
