@@ -30,8 +30,8 @@ FROM ghcr.io/mep-agency/symfony-app-runtime:8.0-apache
 # Copy source code
 COPY --from=composer /app/ /var/www/html/
 
-ARG BUILD_TYPE
+ARG BUILD_VERSION
 ARG COMMIT_HASH
 
-ENV APP_BUILD_TYPE=$BUILD_TYPE
+ENV APP_BUILD_VERSION=$BUILD_VERSION
 ENV APP_BUILD_COMMIT_HASH=$COMMIT_HASH

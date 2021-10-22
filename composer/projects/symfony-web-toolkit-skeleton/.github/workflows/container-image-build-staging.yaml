@@ -15,14 +15,14 @@ on:
 
 jobs:
   docker-build-staging:
-    uses: mep-agency/web-toolkit-workflows/.github/workflows/container-image-build.yaml@test-cd
-      with:
-        tag_name: latest
-        push_git_version_tag: true
-      secrets:
-        registry_host: ghcr.io
-        registry_username: ${{ github.repository_owner }}
-        registry_password: ${{ secrets.GITHUB_TOKEN }}
+    uses: mep-agency/web-toolkit-workflows/.github/workflows/container-image-build.yaml@main
+    with:
+      tag_name: staging
+    secrets:
+      registry_host: ghcr.io
+      registry_username: ${{ github.repository_owner }}
+      registry_password: ${{ secrets.GITHUB_TOKEN }}
+
   # Uncomment the following lines to enable CD
   #cd-staging:
   #  needs: [docker-build-staging]
