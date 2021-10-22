@@ -1,4 +1,4 @@
-name: 'Packages Split'
+name: Packages Split
 
 on:
   push:
@@ -21,17 +21,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # define package to repository map
+        # Define package to repository map
         package:
           # Composer
-          - local_path: composer/packages/web-toolkit-k8s-cli
-            split_repository: web-toolkit-k8s-cli
           - local_path: composer/packages/web-toolkit-bundle
             split_repository: web-toolkit-bundle
-          - local_path: composer/projects/web-toolkit-k8s-cli-project
-            split_repository: web-toolkit-k8s-cli-project
+          - local_path: composer/packages/web-toolkit-k8s-cli
+            split_repository: web-toolkit-k8s-cli
           - local_path: composer/projects/symfony-web-toolkit-skeleton
             split_repository: symfony-web-toolkit-skeleton
+          - local_path: composer/projects/web-toolkit-k8s-cli-project
+            split_repository: web-toolkit-k8s-cli-project
 
           # NPM
           - local_path: npm/web-toolkit-front-end
@@ -44,7 +44,7 @@ jobs:
     steps:
       -   uses: actions/checkout@v2
 
-      # no tag
+      # No tag
       -
         if: '!startsWith(github.ref, ''refs/tags/'')'
         uses: symplify/monorepo-split-github-action@2.1
@@ -56,7 +56,7 @@ jobs:
           user_name: GitHub Action
           user_email: action@github.com
 
-      # with tag
+      # With tag
       -
         if: startsWith(github.ref, 'refs/tags/')
         uses: symplify/monorepo-split-github-action@2.1
