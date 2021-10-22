@@ -56,8 +56,9 @@ jobs:
           cache-to: type=inline
   # Uncomment the following lines to enable CD
   #cd-release:
+  #  needs: [docker-build-release]
   #  uses: mep-agency/web-toolkit-workflows/.github/workflows/k8s-restart-deployment.yaml@main
   #  with:
-  #    environment: release
+  #    environment: prod
   #  secrets:
   #    k8s_config: ${{ secrets.K8S_CONFIG_RELEASE }}

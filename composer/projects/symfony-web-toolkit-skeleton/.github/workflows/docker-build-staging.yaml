@@ -51,6 +51,7 @@ jobs:
           cache-to: type=inline
   # Uncomment the following lines to enable CD
   #cd-staging:
+  #  needs: [docker-build-staging]
   #  uses: mep-agency/web-toolkit-workflows/.github/workflows/k8s-restart-deployment.yaml@main
   #  with:
   #    environment: staging
