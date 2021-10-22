@@ -17,5 +17,5 @@ composer create-project mep-agency/symfony-web-toolkit-skeleton PROJECT_PATH -n 
 
 Or create a project to manage deployments on a Kubernetes cluster with:
 ```shell
-composer create-project mep-agency/mwt-k8s-cli-skeleton PROJECT_PATH -n --repository="{\"type\": \"vcs\", \"url\": \"git@github.com:mep-agency/mwt-k8s-cli-skeleton.git\"}" --stability dev
+composer create-project mep-agency/web-toolkit-k8s-cli-project PROJECT_PATH -n --repository="{\"type\": \"vcs\", \"url\": \"git@github.com:mep-agency/web-toolkit-k8s-cli-project.git\"}" --stability dev
 ```

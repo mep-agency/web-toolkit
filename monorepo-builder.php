@@ -49,7 +49,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     if ($isMergeCommand) {
         $parameters->set(Option::PACKAGE_DIRECTORIES_EXCLUDES, [
             'symfony-web-toolkit-skeleton',
-            'mwt-k8s-cli-skeleton',
+            'web-toolkit-k8s-cli-project',
         ]);
     }
 

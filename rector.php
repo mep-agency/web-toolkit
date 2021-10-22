@@ -46,7 +46,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ],
         CallableThisArrayToAnonymousFunctionRector::class => [
             // Cannot use values of type "Closure" in service configuration files.
-            __DIR__.'/composer/packages/mwt-k8s-cli/config/services.php',
+            __DIR__.'/composer/packages/web-toolkit-k8s-cli/config/services.php',
         ],
     ]);
 

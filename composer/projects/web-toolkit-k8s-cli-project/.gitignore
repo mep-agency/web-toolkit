@@ -1,0 +1,5 @@
+# Local config files
+*-config.yaml
+
+# Composer dependencies
+vendor

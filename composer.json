@@ -45,15 +45,15 @@
     },
     "autoload": {
         "psr-4": {
+            "Mep\\MepWebToolkitK8sCli\\": "composer/packages/web-toolkit-k8s-cli/src",
             "Mep\\MonorepoUtils\\": "composer/packages/monorepo-utils/src",
-            "Mep\\MwtK8sCli\\": "composer/packages/mwt-k8s-cli/src",
             "Mep\\WebToolkitBundle\\": "composer/packages/web-toolkit-bundle/src"
         }
     },
     "replace": {
         "mep-agency/monorepo-utils": "self.version",
-        "mep-agency/mwt-k8s-cli": "self.version",
-        "mep-agency/web-toolkit-bundle": "self.version"
+        "mep-agency/web-toolkit-bundle": "self.version",
+        "mep-agency/web-toolkit-k8s-cli": "self.version"
     },
     "scripts": {
         "check": [

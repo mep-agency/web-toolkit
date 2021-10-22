@@ -24,12 +24,12 @@ jobs:
         # define package to repository map
         package:
           # Composer
-          - local_path: composer/packages/mwt-k8s-cli
-            split_repository: mwt-k8s-cli
+          - local_path: composer/packages/web-toolkit-k8s-cli
+            split_repository: web-toolkit-k8s-cli
           - local_path: composer/packages/web-toolkit-bundle
             split_repository: web-toolkit-bundle
-          - local_path: composer/projects/mwt-k8s-cli-skeleton
-            split_repository: mwt-k8s-cli-skeleton
+          - local_path: composer/projects/web-toolkit-k8s-cli-project
+            split_repository: web-toolkit-k8s-cli-project
           - local_path: composer/projects/symfony-web-toolkit-skeleton
             split_repository: symfony-web-toolkit-skeleton
 
