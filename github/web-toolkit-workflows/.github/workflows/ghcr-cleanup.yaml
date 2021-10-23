@@ -1,0 +1,52 @@
+name: MWT - GitHub Container Registry cleanup
+
+on:
+  workflow_call:
+    inputs:
+      repository_owner:
+        description: The repository owner (use "<user>" or "orgs/<org name>")
+        type: string
+        required: true
+      container_image_name:
+        description: The name of the container image (defaults to the repository name)
+        type: string
+        required: false
+    secrets:
+      gh_private_token:
+        description: The script run by this action needs an access token with permission to delete packages
+        required: true
+
+jobs:
+  ghcr-cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup container image name
+        run: |
+          if [ "${{ inputs.container_image_name }}" == "" ]; then
+            echo "MWT_CONTAINER_IMAGE_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
+          else
+            echo "MWT_CONTAINER_IMAGE_NAME=${{ inputs.container_image_name }}" >> $GITHUB_ENV
+          fi
+
+      - name: Untagged versions cleanup
+        uses: actions/github-script@v3
+        timeout-minutes: 5
+        with:
+          github-token: ${{ secrets.gh_private_token }}
+          script: |
+            const response = await github.request('GET /${{ env.OWNER }}/packages/container/${{ env.PACKAGE_NAME }}/versions',
+              { per_page: ${{ env.PER_PAGE }}
+            });
+            for (version of response.data) {
+                if (version.metadata.container.tags.length == 0) {
+                    console.log('Deleting untagged version: ' + version.id);
+                    const deleteResponse = await github.request('DELETE /${{ env.OWNER }}/packages/container/${{ env.PACKAGE_NAME }}/versions/' + version.id, { });
+                    console.log('Status: ' + deleteResponse.status);
+                } else {
+                  console.log('Skipping tagged version: ' + version.metadata.container.tags[0] + ' (' + version.id + ')');
+                }
+            }
+        env:
+          OWNER: ${{ inputs.repository_owner }}
+          PACKAGE_NAME: ${{ env.MWT_CONTAINER_IMAGE_NAME }}
+          PER_PAGE: 100

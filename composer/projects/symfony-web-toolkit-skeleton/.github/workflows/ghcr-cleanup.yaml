@@ -1,37 +1,24 @@
+# !!! WARNING !!!
+# This file uses reusable GitHub workflows directly from a repository managed by the MEP Agency team.
+# While this feature is extremely convenient to keep all your workflows up-to-date automatically, you may prefer to
+# clone the "mep-agency/web-toolkit-workflows" repo and manage it manually for stronger security.
+#
+# Feel free to choose the best option according to your security needs.
+#
+# @see https://docs.github.com/en/actions/learn-github-actions/reusing-workflows
 name: GitHub Container Registry cleanup
 
 on:
+  # Enable manual trigger
   workflow_dispatch:
+  # Schedule execution
   schedule:
     - cron: '0 3 * * *'
 
 jobs:
   ghcr-cleanup:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Setup repository name
-        run: echo "MWT_REPOSITORY_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
-
-      # The following step needs an access token with permission to delete packages
-      - name: Untagged versions cleanup
-        uses: actions/github-script@v3
-        timeout-minutes: 5
-        with:
-          github-token: ${{ secrets.GH_PRIVATE_TOKEN }}
-          script: |
-            const response = await github.request('GET /${{ env.OWNER }}/packages/container/${{ env.PACKAGE_NAME }}/versions',
-              { per_page: ${{ env.PER_PAGE }}
-            });
-            for (version of response.data) {
-                if (version.metadata.container.tags.length == 0) {
-                    console.log('Deleting untagged version: ' + version.id);
-                    const deleteResponse = await github.request('DELETE /${{ env.OWNER }}/packages/container/${{ env.PACKAGE_NAME }}/versions/' + version.id, { });
-                    console.log('Status: ' + deleteResponse.status);
-                } else {
-                  console.log('Skipping tagged version: ' + version.metadata.container.tags[0] + ' (' + version.id + ')');
-                }
-            }
-        env:
-          OWNER: orgs/${{ github.repository_owner }} # "user" or "orgs/<org name>"
-          PACKAGE_NAME: ${{ env.MWT_REPOSITORY_NAME }}
-          PER_PAGE: 100
+    uses: mep-agency/web-toolkit-workflows/.github/workflows/ghcr-cleanup.yaml@main
+    with:
+      repository_owner: orgs/${{ github.repository_owner }} # "<user>" or "orgs/<org name>"
+    secrets:
+      gh_private_token: ${{ secrets.GH_PRIVATE_TOKEN }}
