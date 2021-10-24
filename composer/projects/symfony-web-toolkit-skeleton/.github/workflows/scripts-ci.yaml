@@ -3,12 +3,12 @@ name: Scripts CI
 on:
   push:
     paths:
-      - .github/workflows/scripts-ci.yml
+      - .github/workflows/scripts-ci.yaml
       - 'assets/**/*.ts'
       - .eslintrc.yaml
   pull_request:
     paths:
-      - .github/workflows/scripts-ci.yml
+      - .github/workflows/scripts-ci.yaml
       - 'assets/**/*.ts'
       - .eslintrc.yaml
 

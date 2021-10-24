@@ -1,19 +1,21 @@
-name: Twig CI
+name: PHP CI
 
 on:
   push:
     paths:
-      - .github/workflows/twig-ci.yml
-      - 'templates/**'
+      - .github/workflows/php-ci.yaml
+      - '**.php'
+      - phpstan.neon
       - composer.lock
   pull_request:
     paths:
-      - .github/workflows/twig-ci.yml
-      - 'templates/**'
-      - composer.lock
+    - .github/workflows/php-ci.yaml
+    - '**.php'
+    - phpstan.neon
+    - composer.lock
 
 jobs:
-  twig-ci:
+  php-ci:
     runs-on: ubuntu-latest
 
     steps:
@@ -30,5 +32,11 @@ jobs:
         with:
           composer-options: --prefer-dist
 
-      - name: Run Twig linter
-        run: php bin/console lint:twig ./templates
+      - name: Run code-style checks (Rector)
+        run: composer rector
+
+      - name: Run code-style checks (ECS)
+        run: composer ecs
+
+      - name: Run PHPStan checks
+        run: composer phpstan

@@ -3,12 +3,12 @@ name: Styles CI
 on:
   push:
     paths:
-      - .github/workflows/styles-ci.yml
+      - .github/workflows/styles-ci.yaml
       - '**.scss'
       - .stylelintrc.yaml
   pull_request:
     paths:
-      - .github/workflows/styles-ci.yml
+      - .github/workflows/styles-ci.yaml
       - '**.scss'
       - .stylelintrc.yaml
 
