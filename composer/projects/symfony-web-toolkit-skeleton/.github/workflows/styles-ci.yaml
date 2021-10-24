@@ -1,3 +1,11 @@
+# !!! WARNING !!!
+# This file uses reusable GitHub workflows directly from a repository managed by the MEP Agency team.
+# While this feature is extremely convenient to keep all your workflows up-to-date automatically, you may prefer to
+# clone the "mep-agency/web-toolkit-workflows" repo and manage it manually for stronger security.
+#
+# Feel free to choose the best option according to your security needs.
+#
+# @see https://docs.github.com/en/actions/learn-github-actions/reusing-workflows
 name: Styles CI
 
 on:
@@ -14,29 +22,10 @@ on:
 
 jobs:
   styles-ci:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - uses: actions/setup-node@v2
-        with:
-          cache: yarn
-          registry-url: https://npm.pkg.github.com
-          always-auth: true
-          scope: '@mep-agency'
-
-      - run: yarn install
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - uses: actions/cache@v2
-        id: stylelint-cache # use this to check for `cache-hit` (`steps.stylelint-cache.outputs.cache-hit != 'true'`)
-        with:
-          path: .stylelintcache
-          key: ${{ runner.os }}-stylelint-${{ hashFiles('.stylelintrc.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-stylelint-
-
-      - name: Run Stylelint
-        run: yarn run stylelint
+    uses: mep-agency/web-toolkit-workflows/.github/workflows/styles-ci.yaml@main
+    #inputs:
+    #  yarn_always_auth: true
+    #  yarn_registry_url: https://npm.pkg.github.com
+    #  yarn_scope: @my-org
+    #secrets:
+    #  yarn_auth_token: ${{ secrets.GITHUB_TOKEN }}

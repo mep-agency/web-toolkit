@@ -1,0 +1,50 @@
+name: MWT - Styles CI
+
+on:
+  workflow_call:
+    inputs:
+      yarn_always_auth:
+        description: Set always-auth in npmrc
+        type: string
+        required: false
+        default: false
+      yarn_registry_url:
+        description: Optional registry to set up for auth. Will set the registry in a project level .npmrc and .yarnrc file, and set up auth to read in from env.NODE_AUTH_TOKEN
+        type: string
+        required: false
+      yarn_scope:
+        description: Optional scope for authenticating against scoped registries
+        type: string
+        required: false
+    secrets:
+      yarn_auth_token:
+        description: Access token to install yarn packages
+        required: false
+
+jobs:
+  styles-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v2
+        with:
+          cache: yarn
+          always-auth: ${{ inputs.yarn_always_auth }}
+          registry-url: ${{ inputs.yarn_registry_url }}
+          scope: ${{ inputs.yarn_scope }}
+
+      - run: yarn install
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.yarn_auth_token }}
+
+      - uses: actions/cache@v2
+        id: stylelint-cache # use this to check for `cache-hit` (`steps.stylelint-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: .stylelintcache
+          key: ${{ runner.os }}-stylelint-${{ hashFiles('.stylelintrc.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-stylelint-
+
+      - name: Run Stylelint
+        run: yarn run stylelint
