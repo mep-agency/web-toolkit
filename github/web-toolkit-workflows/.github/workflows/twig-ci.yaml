@@ -1,0 +1,38 @@
+name: MWT - Twig CI
+
+on:
+  workflow_call:
+    inputs:
+      php_version:
+        type: string
+        required: false
+        default: 8.0
+      php_extensions:
+        type: string
+        required: false
+        default: mbstring, xml, ctype, iconv, intl, pdo_sqlite
+    secrets:
+      composer_auth_token:
+        description: Access token to install composer packages
+        required: true
+
+jobs:
+  twig-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: setup-php
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ inputs.php_version }}
+          extensions: ${{ inputs.php_extensions }}
+        env:
+          COMPOSER_TOKEN: ${{ secrets.composer_auth_token }}
+
+      - uses: ramsey/composer-install@v1
+        with:
+          composer-options: --prefer-dist
+
+      - name: Run Twig linter
+        run: php bin/console lint:twig ./templates

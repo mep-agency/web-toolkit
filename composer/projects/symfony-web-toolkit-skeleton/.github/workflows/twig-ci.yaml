@@ -1,3 +1,11 @@
+# !!! WARNING !!!
+# This file uses reusable GitHub workflows directly from a repository managed by the MEP Agency team.
+# While this feature is extremely convenient to keep all your workflows up-to-date automatically, you may prefer to
+# clone the "mep-agency/web-toolkit-workflows" repo and manage it manually for stronger security.
+#
+# Feel free to choose the best option according to your security needs.
+#
+# @see https://docs.github.com/en/actions/learn-github-actions/reusing-workflows
 name: Twig CI
 
 on:
@@ -14,21 +22,9 @@ on:
 
 jobs:
   twig-ci:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: setup-php
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 8.0
-        env:
-          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - uses: ramsey/composer-install@v1
-        with:
-          composer-options: --prefer-dist
-
-      - name: Run Twig linter
-        run: php bin/console lint:twig ./templates
+    uses: mep-agency/web-toolkit-workflows/.github/workflows/twig-ci.yaml@main
+    #with:
+    #  php_version: 8.0
+    #  php_extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite
+    secrets:
+      composer_auth_token: ${{ secrets.GITHUB_TOKEN }}
