@@ -18,6 +18,9 @@ jobs:
     #with:
     #  php_version: 8.0
     #  php_extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite
+    #  yarn_always_auth: true
+    #  yarn_registry_url: https://npm.pkg.github.com
+    #  yarn_scope: @my-org
     secrets:
       composer_auth_token: ${{ secrets.GITHUB_TOKEN }}
-      yarn_auth_token: ${{ secrets.GITHUB_TOKEN }}
+    #  yarn_auth_token: ${{ secrets.GITHUB_TOKEN }}
