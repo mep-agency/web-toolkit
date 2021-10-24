@@ -1,0 +1,57 @@
+name: MWT - PHPUnit CI
+
+on:
+  workflow_call:
+    inputs:
+      php_version:
+        type: string
+        required: false
+        default: 8.0
+      php_extensions:
+        type: string
+        required: false
+        default: mbstring, xml, ctype, iconv, intl, pdo_sqlite
+    secrets:
+      composer_auth_token:
+        description: Access token to install composer packages
+        required: true
+      yarn_auth_token:
+        description: Access token to install yarn packages
+        required: true
+
+jobs:
+  phpunit-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: setup-php
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ inputs.php_version }}
+          extensions: ${{ inputs.php_extensions }}
+        env:
+          COMPOSER_TOKEN: ${{ secrets.composer_auth_token }}
+
+      - uses: ramsey/composer-install@v1
+        with:
+          composer-options: --prefer-dist
+
+      - uses: actions/setup-node@v2
+        with:
+          cache: yarn
+
+      - run: yarn install
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.yarn_auth_token }}
+
+      - name: Build assets
+        run: yarn build
+
+      - name: Initialize test DB
+        run: php bin/console doctrine:schema:create && php bin/console doctrine:fixtures:load -n
+        env:
+          APP_ENV: test
+
+      - name: Run PHPUnit tests
+        run: php bin/phpunit
