@@ -1,32 +1,33 @@
-name: PHP CI
+name: MWT - PHP CI
 
 on:
-  push:
-    paths:
-      - .github/workflows/php-ci.yml
-      - '**.php'
-      - phpstan.neon
-      - composer.lock
-  pull_request:
-    paths:
-    - .github/workflows/php-ci.yml
-    - '**.php'
-    - phpstan.neon
-    - composer.lock
+  workflow_call:
+    inputs:
+      php_version:
+        type: string
+        required: false
+        default: 8.0
+      php_extensions:
+        type: string
+        required: false
+    secrets:
+      gh_access_token:
+        description: Access token to install composer packages
+        required: true
 
 jobs:
   php-ci:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
 
       - name: setup-php
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.0
+          php-version: ${{ inputs.php_version }}
+          extensions: ${{ inputs.php_extensions }}
         env:
-          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COMPOSER_TOKEN: ${{ secrets.gh_access_token }}
 
       - uses: ramsey/composer-install@v1
         with:

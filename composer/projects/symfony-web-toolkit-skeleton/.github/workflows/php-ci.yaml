@@ -1,0 +1,32 @@
+# !!! WARNING !!!
+# This file uses reusable GitHub workflows directly from a repository managed by the MEP Agency team.
+# While this feature is extremely convenient to keep all your workflows up-to-date automatically, you may prefer to
+# clone the "mep-agency/web-toolkit-workflows" repo and manage it manually for stronger security.
+#
+# Feel free to choose the best option according to your security needs.
+#
+# @see https://docs.github.com/en/actions/learn-github-actions/reusing-workflows
+name: PHP CI
+
+on:
+  push:
+    paths:
+      - .github/workflows/php-ci.yaml
+      - '**.php'
+      - phpstan.neon
+      - composer.lock
+  pull_request:
+    paths:
+    - .github/workflows/php-ci.yaml
+    - '**.php'
+    - phpstan.neon
+    - composer.lock
+
+jobs:
+  php-ci:
+    uses: mep-agency/web-toolkit-workflows/.github/workflows/php-ci.yaml@main
+    #with:
+    #  php_version: 8.0
+    #  php_extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite
+    secrets:
+      gh_access_token: ${{ secrets.GITHUB_TOKEN }}
