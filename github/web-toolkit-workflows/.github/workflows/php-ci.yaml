@@ -11,7 +11,7 @@ on:
         type: string
         required: false
     secrets:
-      gh_access_token:
+      composer_auth_token:
         description: Access token to install composer packages
         required: true
 
@@ -27,7 +27,7 @@ jobs:
           php-version: ${{ inputs.php_version }}
           extensions: ${{ inputs.php_extensions }}
         env:
-          COMPOSER_TOKEN: ${{ secrets.gh_access_token }}
+          COMPOSER_TOKEN: ${{ secrets.composer_auth_token }}
 
       - uses: ramsey/composer-install@v1
         with:
