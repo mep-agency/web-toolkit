@@ -1,5 +1,5 @@
 # Build the assets
-FROM node:latest as node
+FROM node:lts as node
 
 COPY ./ /app
 
