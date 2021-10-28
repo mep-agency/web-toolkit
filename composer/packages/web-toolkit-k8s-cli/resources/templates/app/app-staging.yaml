@@ -21,7 +21,7 @@ image:
   #trustedProxies: 10.0.0.0/8
   env:
     - name: APP_DEBUG
-      value: "1"
+      value: '1'
   # Leave empty to use the default pull secret
   pullSecrets:
   #  - name: docker-auth
