@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.0" srcLang="en" trgLang="it">
+  <file id="WebToolkitBundle.en">
+    <unit id=".tbrCTv" name="language_switcher.header">
+      <segment>
+        <source>language_switcher.header</source>
+        <target>Lingue</target>
+      </segment>
+    </unit>
+    <unit id="MeBKL1V" name="language_switcher.switch_link_title">
+      <segment>
+        <source>language_switcher.switch_link_title</source>
+        <target>Cambia a {locale}</target>
+      </segment>
+    </unit>
+    <unit id="4J45.H4" name="login_page.username">
+      <segment>
+        <source>login_page.username</source>
+        <target>Nome utente</target>
+      </segment>
+    </unit>
+    <unit id="Rl.a4oc" name="login_page.title">
+      <segment>
+        <source>login_page.title</source>
+        <target>Autenticazione richiesta</target>
+      </segment>
+    </unit>
+    <unit id="W0jkiQG" name="login_page.sign_in">
+      <segment>
+        <source>login_page.sign_in</source>
+        <target>Sign in</target>
+      </segment>
+    </unit>
+    <unit id="sL0h.WU" name="language_switcher.locales.it">
+      <segment>
+        <source>language_switcher.locales.it</source>
+        <target>Italiano</target>
+      </segment>
+    </unit>
+    <unit id="4b0zy8p" name="language_switcher.locales.en">
+      <segment>
+        <source>language_switcher.locales.en</source>
+        <target>Inglese</target>
+      </segment>
+    </unit>
+  </file>
+</xliff>
