@@ -41,11 +41,28 @@ class HelmAppsManager
      */
     private const CHART_VALUES_PATH_PLACEHOLDER = '%chart_values_path%';
 
+    /**
+     * @var string
+     */
+    private const BUILT_IN_CHART_PATH = __DIR__.'/../../resources/charts/mwt-app';
+
+    /**
+     * @var string
+     */
+    private const CUSTOM_CHART_PATH = 'chart';
+
+    private string $chartPath = self::BUILT_IN_CHART_PATH;
+
     public function __construct(
         private KubernetesCluster $kubernetesCluster,
         private string $cwdPath,
         private string $kubeConfigPath,
     ) {
+        $customChartPath = implode('/', [$this->cwdPath, self::CUSTOM_CHART_PATH]);
+
+        if (is_dir($customChartPath)) {
+            $this->chartPath = $customChartPath;
+        }
     }
 
     public function install(
@@ -59,7 +76,7 @@ class HelmAppsManager
             $appEnv,
             $namespace,
             'install',
-            [self::CHART_NAME_PLACEHOLDER, __DIR__.'/../../resources/charts/mwt-app'],
+            [self::CHART_NAME_PLACEHOLDER, $this->chartPath],
             [
                 '--values' => self::CHART_VALUES_PATH_PLACEHOLDER,
             ],
@@ -79,7 +96,7 @@ class HelmAppsManager
             $appEnv,
             $namespace,
             'upgrade',
-            [self::CHART_NAME_PLACEHOLDER, __DIR__.'/../../resources/charts/mwt-app'],
+            [self::CHART_NAME_PLACEHOLDER, $this->chartPath],
             [
                 '--values' => self::CHART_VALUES_PATH_PLACEHOLDER,
             ],
