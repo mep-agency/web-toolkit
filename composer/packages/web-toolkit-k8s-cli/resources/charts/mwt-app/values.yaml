@@ -4,6 +4,7 @@ project:
   replicas: 3
 
 ingress:
+  className: nginx
   clusterIssuer:
   # Increase this to allow bigger uploads
   maxBodySize: 10m
