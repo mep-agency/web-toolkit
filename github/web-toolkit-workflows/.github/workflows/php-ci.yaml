@@ -19,9 +19,10 @@ jobs:
   php-ci:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
 
-      - name: setup-php
+      - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ inputs.php_version }}
@@ -29,7 +30,8 @@ jobs:
         env:
           COMPOSER_TOKEN: ${{ secrets.composer_auth_token }}
 
-      - uses: ramsey/composer-install@v1
+      - name: Composer install
+        uses: ramsey/composer-install@v1
         with:
           composer-options: --prefer-dist
 
