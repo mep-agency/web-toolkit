@@ -25,7 +25,6 @@ use Symfony\Component\Uid\Uuid;
 abstract class AbstractUser implements UserInterface
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
     #[ORM\Column(type: 'uuid', unique: true)]
     protected Uuid $id;
 
