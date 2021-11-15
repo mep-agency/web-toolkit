@@ -17,6 +17,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
@@ -25,8 +26,8 @@ abstract class AbstractUser implements UserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: Types::INTEGER)]
-    protected int $id;
+    #[ORM\Column(type: 'uuid', unique: true)]
+    protected Uuid $id;
 
     #[ORM\Column(type: Types::STRING, length: 255, unique: true)]
     protected string $email;
@@ -37,7 +38,12 @@ abstract class AbstractUser implements UserInterface
     #[ORM\Column(type: Types::JSON)]
     protected array $roles = [];
 
-    public function getId(): int
+    public function __construct()
+    {
+        $this->id = Uuid::v6();
+    }
+
+    public function getId(): Uuid
     {
         return $this->id;
     }
