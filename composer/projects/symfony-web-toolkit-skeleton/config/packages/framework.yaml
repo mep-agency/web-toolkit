@@ -25,6 +25,9 @@ when@test:
             storage_factory_id: session.storage.factory.mock_file
 
 when@prod:
+    # the IP address (or range) of your proxy
+    trusted_proxies: '%env(TRUSTED_PROXIES)%'
+
     framework:
         session:
             # In production, we store sessions into the database in order to support deployment to multiple stateless replicas
