@@ -85,7 +85,7 @@ $application = (new SingleCommandApplication())
         runCommandWithMessageOrFail(
             $io,
             'Creating sessions table...',
-            'php bin/console mwt:sessions:create-table -n',
+            'php bin/console mwt:sessions:create-table -n --ignore-missing-pdo-session-handler',
         );
         runCommandWithMessageOrFail($io, 'Loading fixtures...', 'php bin/console doctrine:fixtures:load -n');
         runCommandWithMessageOrFail(
