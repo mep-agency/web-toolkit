@@ -9,7 +9,7 @@
 import '../styles/main.scss';
 
 // start the Stimulus application
-import './bootstrap';
+import '../bootstrap';
 
 // The following line imports some useful tools with a default configuration
 //import '@mep-agency/web-toolkit-front-end';
