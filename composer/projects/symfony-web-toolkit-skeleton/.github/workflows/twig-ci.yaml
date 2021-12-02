@@ -10,6 +10,8 @@ name: Twig CI
 
 on:
   push:
+    branches:
+      - main
     paths:
       - .github/workflows/twig-ci.yaml
       - 'templates/**'
