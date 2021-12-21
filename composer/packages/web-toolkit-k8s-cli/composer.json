@@ -17,12 +17,12 @@
         "php": "^8.0",
         "ext-yaml": "*",
         "renoki-co/php-k8s": "^3.1",
-        "symfony/config": "5.3.*",
-        "symfony/console": "5.3.*",
-        "symfony/dependency-injection": "5.3.*",
-        "symfony/process": "5.3.*",
+        "symfony/config": "5.4.*",
+        "symfony/console": "5.4.*",
+        "symfony/dependency-injection": "5.4.*",
+        "symfony/process": "5.4.*",
         "renoki-co/php-helm": "^1.6",
-        "symfony/finder": "^5.3"
+        "symfony/finder": "5.4.*"
     },
     "autoload": {
         "psr-4": {

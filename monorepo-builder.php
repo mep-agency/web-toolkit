@@ -38,8 +38,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             // Skeleton dependencies
             'doctrine/doctrine-fixtures-bundle' => '*',
             'sensio/framework-extra-bundle' => '^6.1',
-            'symfony/console' => '5.3.*',
-            'symfony/process' => '5.3.*',
+            'symfony/console' => '5.4.*',
+            'symfony/process' => '5.4.*',
         ],
     ]);
 
