@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3b73f6c4835ef17a66e15de8a6ba0333",
+    "content-hash": "df1c0eecefc0cf05996ac1aa0a161757",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -9174,16 +9174,16 @@
         },
         {
             "name": "latte/latte",
-            "version": "v2.10.6",
+            "version": "v2.10.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/latte.git",
-                "reference": "8a9bd8af76557fc35abae639ab7b966af706fec9"
+                "reference": "a69d0b9598652438b5754ae5c1abc217d5003d98"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/latte/zipball/8a9bd8af76557fc35abae639ab7b966af706fec9",
-                "reference": "8a9bd8af76557fc35abae639ab7b966af706fec9",
+                "url": "https://api.github.com/repos/nette/latte/zipball/a69d0b9598652438b5754ae5c1abc217d5003d98",
+                "reference": "a69d0b9598652438b5754ae5c1abc217d5003d98",
                 "shasum": ""
             },
             "require": {
@@ -9252,9 +9252,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/latte/issues",
-                "source": "https://github.com/nette/latte/tree/v2.10.6"
+                "source": "https://github.com/nette/latte/tree/v2.10.7"
             },
-            "time": "2021-11-26T22:56:21+00:00"
+            "time": "2021-12-21T11:22:49+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -11702,16 +11702,16 @@
         },
         {
             "name": "symplify/easy-coding-standard",
-            "version": "9.4.70",
+            "version": "10.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symplify/easy-coding-standard.git",
-                "reference": "9276b0c7a1a5671fc4a067656ab40d0aea42aaca"
+                "reference": "f9e85ca9624138095098429711faf06f670b1bd8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symplify/easy-coding-standard/zipball/9276b0c7a1a5671fc4a067656ab40d0aea42aaca",
-                "reference": "9276b0c7a1a5671fc4a067656ab40d0aea42aaca",
+                "url": "https://api.github.com/repos/symplify/easy-coding-standard/zipball/f9e85ca9624138095098429711faf06f670b1bd8",
+                "reference": "f9e85ca9624138095098429711faf06f670b1bd8",
                 "shasum": ""
             },
             "require": {
@@ -11741,7 +11741,7 @@
             ],
             "description": "Prefixed scoped version of ECS package",
             "support": {
-                "source": "https://github.com/symplify/easy-coding-standard/tree/9.4.70"
+                "source": "https://github.com/symplify/easy-coding-standard/tree/10.0.4"
             },
             "funding": [
                 {
@@ -11753,7 +11753,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-10-02T16:09:04+00:00"
+            "time": "2021-12-19T19:08:31+00:00"
         },
         {
             "name": "symplify/easy-testing",
@@ -11946,16 +11946,16 @@
         },
         {
             "name": "symplify/monorepo-builder",
-            "version": "9.4.70",
+            "version": "10.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symplify/monorepo-builder.git",
-                "reference": "49260ac962cbeadb1670adc115c3dbe80abdd2b1"
+                "reference": "b02d31775f0913754afe50f148fed90722059cc3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symplify/monorepo-builder/zipball/49260ac962cbeadb1670adc115c3dbe80abdd2b1",
-                "reference": "49260ac962cbeadb1670adc115c3dbe80abdd2b1",
+                "url": "https://api.github.com/repos/symplify/monorepo-builder/zipball/b02d31775f0913754afe50f148fed90722059cc3",
+                "reference": "b02d31775f0913754afe50f148fed90722059cc3",
                 "shasum": ""
             },
             "require": {
@@ -11965,13 +11965,18 @@
                 "bin/monorepo-builder"
             ],
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "9.5-dev"
+                }
+            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "description": "Prefixed version of Not only Composer tools to build a Monorepo.",
             "support": {
-                "source": "https://github.com/symplify/monorepo-builder/tree/9.4.70"
+                "source": "https://github.com/symplify/monorepo-builder/tree/10.0.4"
             },
             "funding": [
                 {
@@ -11983,7 +11988,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-10-02T16:07:18+00:00"
+            "time": "2021-12-19T19:04:49+00:00"
         },
         {
             "name": "symplify/package-builder",

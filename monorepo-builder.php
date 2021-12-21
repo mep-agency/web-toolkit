@@ -32,8 +32,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             'phpunit/phpunit' => '^9.5',
             'phpstan/phpstan' => '^0.12.99',
             'rector/rector' => '^0.11.60',
-            'symplify/easy-coding-standard' => '^9.4',
-            'symplify/monorepo-builder' => '^9.4',
+            'symplify/easy-coding-standard' => '^10.0',
+            'symplify/monorepo-builder' => '^10.0',
             'symplify/phpstan-rules' => '^9.4',
             // Skeleton dependencies
             'doctrine/doctrine-fixtures-bundle' => '*',

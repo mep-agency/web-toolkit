@@ -49,7 +49,7 @@
         "symfony/maker-bundle": "^1.0",
         "symfony/profiler-pack": "*",
         "symfony/test-pack": "*",
-        "symplify/easy-coding-standard": "^9.4"
+        "symplify/easy-coding-standard": "^10.0"
     },
     "config": {
         "allow-plugins": {
