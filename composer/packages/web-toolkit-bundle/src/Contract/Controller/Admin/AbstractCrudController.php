@@ -14,9 +14,8 @@ declare(strict_types=1);
 namespace Mep\WebToolkitBundle\Contract\Controller\Admin;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\Persistence\ObjectManager;
-use Doctrine\Persistence\ObjectRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -59,6 +58,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
  * @template T of object
  *
  * @author Marco Lipparini <developer@liarco.net>
+ * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 abstract class AbstractCrudController extends OriginalAbstractCrudController
 {
@@ -79,6 +79,8 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
         protected FileStorageManager $fileStorageManager,
         protected NormalizerInterface $normalizer,
         protected EventDispatcherInterface $eventDispatcher,
+        protected EntityManagerInterface $entityManager,
+        protected EntityFactory $entityFactory,
     ) {
     }
 
@@ -206,17 +208,8 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
 
             if (null !== $currentTranslation) {
                 $instance->removeTranslation($currentTranslation);
-                $objectManager = $this->getDoctrine()
-                    ->getManagerForClass($adminContext->getEntity()->getFqcn())
-                ;
 
-                if (! $objectManager instanceof EntityManagerInterface) {
-                    $invalidFqcn = ($objectManager instanceof ObjectManager) ? $objectManager::class : 'null';
-
-                    throw new RuntimeException('Expected '.EntityManagerInterface::class.', '.$invalidFqcn.' given.');
-                }
-
-                $this->updateEntity($objectManager, $instance);
+                $this->updateEntity($this->entityManager, $instance);
 
                 $keyValueStore = $this->configureResponseParameters(KeyValueStore::new([
                     'entity' => $adminContext->getEntity(),
@@ -337,9 +330,7 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
             /** @var class-string<TranslatableInterface> $entityFqcn */
             $entityFqcn = $entityDto->getFqcn();
 
-            $entityRepository = $this->getDoctrine()
-                ->getRepository($entityFqcn)
-            ;
+            $entityRepository = $this->entityManager->getRepository($entityFqcn);
 
             if (! $entityRepository instanceof LocalizedRepositoryInterface) {
                 throw new RuntimeException(
@@ -399,12 +390,9 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
                 return $this->redirect($this->adminUrlGenerator->setAction(Action::NEW)->generateUrl());
             }
 
-            /** @var EntityFactory $entityFactory */
-            $entityFactory = $this->get(EntityFactory::class);
-
             return $this->redirect(
                 $this->adminUrlGenerator->setAction(Action::EDIT)
-                    ->setEntityId($entityFactory->createForEntityInstance($singleInstance)->getPrimaryKeyValue())
+                    ->setEntityId($this->entityFactory->createForEntityInstance($singleInstance)->getPrimaryKeyValue())
                     ->generateUrl(),
             );
         }
@@ -418,13 +406,11 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
     }
 
     /**
-     * @return ObjectRepository<T>
+     * @return EntityRepository<T>
      */
-    private function getRepository(): ObjectRepository
+    private function getRepository(): EntityRepository
     {
-        $doctrine = $this->getDoctrine();
-
-        return $doctrine->getRepository(static::getEntityFqcn());
+        return $this->entityManager->getRepository(static::getEntityFqcn());
     }
 
     private static function isTranslatableEntity(): bool

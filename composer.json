@@ -13,7 +13,7 @@
     ],
     "require": {
         "aws/aws-sdk-php": "^3.185",
-        "easycorp/easyadmin-bundle": "dev-master",
+        "easycorp/easyadmin-bundle": "^4.0",
         "ext-yaml": "*",
         "knplabs/doctrine-behaviors": "^2.2",
         "meteo-concept/hcaptcha-bundle": "^3.0",
