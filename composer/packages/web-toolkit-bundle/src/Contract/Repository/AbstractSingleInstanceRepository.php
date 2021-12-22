@@ -17,10 +17,11 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @template T
+ * @template T as object
  * @template-extends ServiceEntityRepository<T>
  *
  * @author Marco Lipparini <developer@liarco.net>
+ * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 abstract class AbstractSingleInstanceRepository extends ServiceEntityRepository
 {
@@ -32,12 +33,7 @@ abstract class AbstractSingleInstanceRepository extends ServiceEntityRepository
         parent::__construct($managerRegistry, $entityClass);
     }
 
-    /**
-     * @psalm-return T|null
-     *
-     * @return null|mixed
-     */
-    public function getInstance()
+    public function getInstance(): ?object
     {
         return $this->findOneBy([]);
     }
