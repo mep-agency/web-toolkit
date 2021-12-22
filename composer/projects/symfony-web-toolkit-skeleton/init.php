@@ -92,8 +92,13 @@ $application = (new SingleCommandApplication())
         runCommandWithMessageOrFail($io, 'Loading fixtures...', 'php bin/console doctrine:fixtures:load -n');
         runCommandWithMessageOrFail(
             $io,
-            'Installing front end dependencies and building assets...',
-            'yarn && yarn build',
+            'Installing front end dependencies...',
+            'yarn',
+        );
+        runCommandWithMessageOrFail(
+            $io,
+            'Building front end assets...',
+            'yarn build',
         );
         init_removeUnusedFiles($io);
         init_removeInitFile($io);
