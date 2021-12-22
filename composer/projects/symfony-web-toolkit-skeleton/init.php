@@ -28,6 +28,8 @@ function webpackEncore_removeUnusedFiles(SymfonyStyle $io): void
 
     $filesystem->remove(__DIR__.'/assets/app.js');
     $filesystem->remove(__DIR__.'/assets/styles/app.css');
+    $filesystem->remove(__DIR__.'/assets/bootstrap.js');
+    $filesystem->remove(__DIR__.'/assets/controllers');
 }
 
 function init_removeUnusedFiles(SymfonyStyle $io): void
