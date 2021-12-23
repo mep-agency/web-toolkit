@@ -97,8 +97,13 @@ class TwigFunctionsExtension extends AbstractExtension
             throw new RuntimeException('Given file is not an SVG: '.$filePath);
         }
 
+        /** @var array<string, int|string> $cacheItemArray */
+        $cacheItemArray = $cacheItem->get();
+        /** @var int $cachedMTime */
+        $cachedMTime = $cacheItemArray['mtime'];
+
         // Check cache
-        if (! $cacheItem->isHit() || $cacheItem->get()['mtime'] < $mTime) {
+        if (! $cacheItem->isHit() || $cachedMTime < $mTime) {
             // Cache missed, parse the SVG file
             $rawSvg = file_get_contents($filePath) ?: '';
             $matches = [];
@@ -115,7 +120,11 @@ class TwigFunctionsExtension extends AbstractExtension
             $this->adapter->save($cacheItem);
         }
 
-        $svgCode = $cacheItem->get()['data'];
+        /** @var array<string, int|string> $cacheItemArray */
+        $cacheItemArray = $cacheItem->get();
+        /** @var string $cachedData */
+        $cachedData = $cacheItemArray['data'];
+        $svgCode = $cachedData;
 
         // Add HTML id/classes
         if (! empty($class)) {

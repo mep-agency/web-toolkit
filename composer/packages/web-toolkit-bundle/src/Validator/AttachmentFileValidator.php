@@ -18,8 +18,6 @@ use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 /**
- * @final You should not extend this class.
- *
  * @author Marco Lipparini <developer@liarco.net>
  */
 class AttachmentFileValidator extends ConstraintValidator

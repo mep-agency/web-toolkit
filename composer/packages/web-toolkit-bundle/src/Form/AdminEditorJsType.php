@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Form;
 
+use LogicException;
 use Mep\WebToolkitBundle\Dto\AttachmentAssociationContextDto;
 use Mep\WebToolkitBundle\Entity\EditorJs\Block;
 use Mep\WebToolkitBundle\Entity\EditorJs\Block\Attaches;
@@ -33,6 +34,7 @@ use Symfony\Component\Validator\Constraints\Valid;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
+ * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 final class AdminEditorJsType extends AbstractType implements DataTransformerInterface
 {
@@ -84,16 +86,21 @@ final class AdminEditorJsType extends AbstractType implements DataTransformerInt
         // Normalize tool options for EditorJs
         $formView->vars['tools_options'] = [];
 
-        foreach ($options[self::ENABLED_TOOLS] as $enabledTool) {
-            if (isset($options[self::TOOLS_OPTIONS][$enabledTool])) {
+        /** @var array<string, class-string> $enabledTools */
+        $enabledTools = $options[self::ENABLED_TOOLS];
+        /** @var array<string, array<string, mixed>> $toolsOptions */
+        $toolsOptions = $options[self::TOOLS_OPTIONS];
+
+        foreach ($enabledTools as $enabledTool) {
+            if (isset($toolsOptions[$enabledTool])) {
                 if (Image::class === $enabledTool) {
                     $formView->vars['tools_options'][Block::getTypeByClass(
                         Image::class,
-                    )]['captionPlaceholder'] = $options[self::TOOLS_OPTIONS][Image::class]['captionPlaceholder'];
+                    )]['captionPlaceholder'] = $toolsOptions[Image::class]['captionPlaceholder'];
 
                     $formView->vars['tools_options'][Block::getTypeByClass(
                         Image::class,
-                    )]['buttonContent'] = $options[self::TOOLS_OPTIONS][Image::class]['buttonContent'];
+                    )]['buttonContent'] = $toolsOptions[Image::class]['buttonContent'];
 
                     $formView->vars['tools_options'][Block::getTypeByClass(
                         Image::class,
@@ -111,11 +118,11 @@ final class AdminEditorJsType extends AbstractType implements DataTransformerInt
                                 Image::class,
                                 'attachment',
                             )),
-                            AdminAttachmentType::MAX_SIZE => $options[self::TOOLS_OPTIONS][Image::class]['maxSize'],
+                            AdminAttachmentType::MAX_SIZE => $toolsOptions[Image::class]['maxSize'],
                             AdminAttachmentType::ALLOWED_MIME_TYPES => ['/image\/.+/'],
                             AdminAttachmentType::ALLOWED_NAME_PATTERN => null,
                             AdminAttachmentType::METADATA => [],
-                            AdminAttachmentType::PROCESSORS_OPTIONS => $options[self::TOOLS_OPTIONS][Image::class]['processorsOptions'],
+                            AdminAttachmentType::PROCESSORS_OPTIONS => $toolsOptions[Image::class]['processorsOptions'],
                         ],
                     );
 
@@ -140,11 +147,11 @@ final class AdminEditorJsType extends AbstractType implements DataTransformerInt
                                 Attaches::class,
                                 'attachment',
                             )),
-                            AdminAttachmentType::MAX_SIZE => $options[self::TOOLS_OPTIONS][Attaches::class]['maxSize'],
+                            AdminAttachmentType::MAX_SIZE => $toolsOptions[Attaches::class]['maxSize'],
                             AdminAttachmentType::ALLOWED_MIME_TYPES => [],
                             AdminAttachmentType::ALLOWED_NAME_PATTERN => null,
                             AdminAttachmentType::METADATA => [],
-                            AdminAttachmentType::PROCESSORS_OPTIONS => $options[self::TOOLS_OPTIONS][Attaches::class]['processorsOptions'],
+                            AdminAttachmentType::PROCESSORS_OPTIONS => $toolsOptions[Attaches::class]['processorsOptions'],
                         ],
                     );
 
@@ -153,7 +160,7 @@ final class AdminEditorJsType extends AbstractType implements DataTransformerInt
 
                 $formView->vars['tools_options'][Block::getTypeByClass(
                     $enabledTool,
-                )] = $options[self::TOOLS_OPTIONS][$enabledTool];
+                )] = $toolsOptions[$enabledTool];
 
                 continue;
             }
@@ -194,6 +201,9 @@ final class AdminEditorJsType extends AbstractType implements DataTransformerInt
         return 'mwt_admin_editorjs';
     }
 
+    /**
+     * @param ?EditorJsContent $data
+     */
     public function transform($data): ?EditorJsContent
     {
         return $data;
@@ -201,10 +211,20 @@ final class AdminEditorJsType extends AbstractType implements DataTransformerInt
 
     public function reverseTransform($data): ?EditorJsContent
     {
-        if (empty($data) || $data instanceof EditorJsContent) {
+        if (empty($data)) {
+            return null;
+        }
+
+        if ($data instanceof EditorJsContent) {
             return $data;
         }
 
-        return $this->serializer->deserialize($data, EditorJsContent::class, 'json');
+        $deserializedData = $this->serializer->deserialize($data, EditorJsContent::class, 'json');
+
+        if (! $deserializedData instanceof EditorJsContent) {
+            throw new LogicException('Data is not of the correct type.');
+        }
+
+        return $deserializedData;
     }
 }

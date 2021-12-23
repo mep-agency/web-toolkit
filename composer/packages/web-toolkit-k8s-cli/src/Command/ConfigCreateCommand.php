@@ -26,6 +26,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
+ * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 #[AsCommand(
     name: 'config:create',
@@ -56,6 +57,7 @@ class ConfigCreateCommand extends Command
     {
         $symfonyStyle = new SymfonyStyle($input, $output);
         $force = $input->getOption(Option::FORCE) ?? false;
+        /** @var string $certificatePath */
         $certificatePath = $input->getOption(Option::CERTIFICATE);
 
         if (! $input->isInteractive()) {
@@ -78,25 +80,30 @@ class ConfigCreateCommand extends Command
             return Command::INVALID;
         }
 
+        /** @var string $url */
+        $url = $symfonyStyle->ask('Cluster URL', null, function ($value) {
+            if (null === $value) {
+                throw new RuntimeException('Cluster URL cannot be empty.');
+            }
+
+            return $value;
+        });
+        /** @var string $token */
+        $token = $symfonyStyle->ask('Access token', null, function ($value) {
+            if (null === $value) {
+                throw new RuntimeException('Access token cannot be empty.');
+            }
+
+            return $value;
+        });
+
         // Create a basic configuration file...
         $this->k8sConfigGenerator->generateConfigFileFromData(
             $this->kubeConfigPath,
             'default-user',
             base64_encode(file_get_contents($certificatePath) ?: ''),
-            $symfonyStyle->ask('Cluster URL', null, function ($value) {
-                if (null === $value) {
-                    throw new RuntimeException('Cluster URL cannot be empty.');
-                }
-
-                return $value;
-            }),
-            $symfonyStyle->ask('Access token', null, function ($value) {
-                if (null === $value) {
-                    throw new RuntimeException('Access token cannot be empty.');
-                }
-
-                return $value;
-            }),
+            $url,
+            $token,
         );
 
         $symfonyStyle->success('New configuration file created successfully!');

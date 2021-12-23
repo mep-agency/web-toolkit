@@ -29,6 +29,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
+ * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 #[AsCommand(
     name: 'pull-secret:create',
@@ -59,18 +60,26 @@ class PullSecretCreateCommand extends AbstractK8sCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $symfonyStyle = new SymfonyStyle($input, $output);
+        /** @var string $pullSecretName */
         $pullSecretName = $input->getArgument(Argument::GENERIC_NAME);
+        /** @var string $registry */
+        $registry = $symfonyStyle->ask('Registry (e.g. "ghcr.io")', 'https://index.docker.io/v1/');
+        /** @var string $username */
+        $username = $symfonyStyle->ask('Username', null, function ($value) {
+            return $this->notNull($value);
+        });
+        /** @var string $password */
+        $password = $symfonyStyle->askHidden('Password (or token)', function ($value) {
+            return $this->notNull($value);
+        });
+        /** @var string $namespace */
         $namespace = $input->getOption(Option::NAMESPACE);
 
         $this->k8sPullSecretGenerator->generate(
             $pullSecretName,
-            $symfonyStyle->ask('Registry (e.g. "ghcr.io")', 'https://index.docker.io/v1/'),
-            $symfonyStyle->ask('Username', null, function ($value) {
-                return $this->notNull($value);
-            }),
-            $symfonyStyle->askHidden('Password (or token)', function ($value) {
-                return $this->notNull($value);
-            }),
+            $registry,
+            $username,
+            $password,
             $namespace,
         )->create();
 

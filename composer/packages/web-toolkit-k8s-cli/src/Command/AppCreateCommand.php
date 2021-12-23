@@ -26,6 +26,7 @@ use Symfony\Component\Finder\Finder;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
+ * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 #[AsCommand(
     name: 'app:create',
@@ -48,6 +49,7 @@ class AppCreateCommand extends Command
     {
         $symfonyStyle = new SymfonyStyle($input, $output);
         $filesystem = new Filesystem();
+        /** @var string $appName */
         $appName = $input->getArgument(Argument::APP_NAME);
         $targetDirectory = $this->cwdPath.'/apps/'.$appName;
         $domain = 'my-app.dev';
@@ -114,6 +116,9 @@ class AppCreateCommand extends Command
                 throw new RuntimeException('Unexpected value: the file content cannot be "false".');
             }
 
+            /**
+             * @var string $value
+             */
             foreach ($placeholders as $placeholder => $value) {
                 $fileContent = str_replace($placeholder, $value, $fileContent);
             }

@@ -32,8 +32,6 @@ use Symfony\Component\Serializer\Annotation\Ignore;
 use Symfony\Component\Uid\Uuid;
 
 /**
- * @final You should not extend this class.
- *
  * @author Marco Lipparini <developer@liarco.net>
  */
 #[ORM\Entity]
@@ -71,12 +69,12 @@ abstract class Block implements JsonSerializable, Stringable
     private static array $reverseBlocksMapping = [];
 
     /**
-     * @var array<string>
+     * @var string[]
      */
     private static array $supportedTypes = [];
 
     /**
-     * @var array<class-string>
+     * @var class-string<Block>[]
      */
     private static array $supportedClasses = [];
 
@@ -128,23 +126,25 @@ abstract class Block implements JsonSerializable, Stringable
     }
 
     /**
-     * @return class-string[]
+     * @return class-string<Block>[]
      */
     public static function getSupportedClasses(): array
     {
         if (empty(self::$supportedClasses)) {
-            self::$supportedClasses = array_values(self::BLOCKS_MAPPING);
+            /** @var class-string<Block>[] $supportedClasses */
+            $supportedClasses = array_values(self::BLOCKS_MAPPING);
+            self::$supportedClasses = $supportedClasses;
         }
 
         return self::$supportedClasses;
     }
 
-    public function getUuid(): ?Uuid
+    public function getUuid(): Uuid
     {
         return $this->uuid;
     }
 
-    public function getId(): ?string
+    public function getId(): string
     {
         return $this->id;
     }

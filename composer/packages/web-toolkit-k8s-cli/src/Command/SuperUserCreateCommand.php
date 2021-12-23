@@ -18,6 +18,7 @@ use Mep\MepWebToolkitK8sCli\Config\Option;
 use Mep\MepWebToolkitK8sCli\Contract\AbstractK8sCommand;
 use Mep\MepWebToolkitK8sCli\K8sCli;
 use RenokiCo\PhpK8s\K8s;
+use RenokiCo\PhpK8s\Kinds\K8sNamespace;
 use RenokiCo\PhpK8s\Kinds\K8sRole;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -29,6 +30,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
+ * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 #[AsCommand(
     name: 'super-user:create',
@@ -56,7 +58,9 @@ class SuperUserCreateCommand extends AbstractK8sCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $symfonyStyle = new SymfonyStyle($input, $output);
+        /** @var string $serviceAccountName */
         $serviceAccountName = $input->getArgument(Argument::SERVICE_ACCOUNT);
+        /** @var K8sNamespace|string $namespace */
         $namespace = $input->getOption(Option::NAMESPACE);
 
         $this->kubernetesCluster

@@ -17,8 +17,6 @@ use Attribute;
 use Symfony\Component\Validator\Constraint;
 
 /**
- * @final You should not extend this class.
- *
  * @author Marco Lipparini <developer@liarco.net>
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]

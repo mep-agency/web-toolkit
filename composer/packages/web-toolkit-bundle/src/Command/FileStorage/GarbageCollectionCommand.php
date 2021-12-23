@@ -26,6 +26,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
+ * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 #[AsCommand(
     name: 'mwt:storage:garbage-collection',
@@ -59,6 +60,7 @@ class GarbageCollectionCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $symfonyStyle = new SymfonyStyle($input, $output);
+        /** @var bool $dryRun */
         $dryRun = $input->getOption(CommandOption::DRY_RUN);
         $garbageAttachmentsLog = [];
 

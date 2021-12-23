@@ -58,9 +58,12 @@ function init_removeInitFile(SymfonyStyle $io): void
         throw new RuntimeException('Unable to read composer.json');
     }
 
+    /** @var array<string, mixed> $composerArrayContent */
     $composerArrayContent = json_decode($composerFileContent, true);
+    /** @var array<string, mixed> $composerScripts */
+    $composerScripts = $composerArrayContent['scripts'];
 
-    unset($composerArrayContent['scripts']['post-create-project-cmd']);
+    unset($composerScripts['post-create-project-cmd']);
 
     $composerJsonContent = json_encode($composerArrayContent, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 
@@ -90,16 +93,8 @@ $application = (new SingleCommandApplication())
             'php bin/console mwt:sessions:create-table -n --ignore-missing-pdo-session-handler',
         );
         runCommandWithMessageOrFail($io, 'Loading fixtures...', 'php bin/console doctrine:fixtures:load -n');
-        runCommandWithMessageOrFail(
-            $io,
-            'Installing front end dependencies...',
-            'yarn',
-        );
-        runCommandWithMessageOrFail(
-            $io,
-            'Building front end assets...',
-            'yarn build',
-        );
+        runCommandWithMessageOrFail($io, 'Installing front end dependencies...', 'yarn',);
+        runCommandWithMessageOrFail($io, 'Building front end assets...', 'yarn build',);
         init_removeUnusedFiles($io);
         init_removeInitFile($io);
 

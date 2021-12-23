@@ -246,13 +246,11 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
             );
         }
 
-        $form = $this->createForm(
-            AdminAttachmentUploadApiType::class,
-            null,
-            // Using EA::ROUTE_PARAMS to have them included in URL signature validation
-            $adminContext->getRequest()
-                ->get(EA::ROUTE_PARAMS),
-        );
+        // Using EA::ROUTE_PARAMS to have them included in URL signature validation
+        /** @var array<string, mixed> $options */
+        $options = $adminContext->getRequest()->get(EA::ROUTE_PARAMS);
+
+        $form = $this->createForm(AdminAttachmentUploadApiType::class, null, $options,);
         $form->handleRequest($adminContext->getRequest());
 
         if (! $form->isSubmitted()) {
@@ -283,6 +281,8 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
 
         /** @var AdminAttachmentUploadDto $formData */
         $formData = $form->getData();
+        /** @var ?string $context */
+        $context = $form->getConfig()->getOption(AdminAttachmentType::CONTEXT);
         /** @var array<string, scalar> $metadata */
         $metadata = $form->getConfig()
             ->getOption(AdminAttachmentType::METADATA)
@@ -293,13 +293,7 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
         ;
 
         $attachment = $this->fileStorageManager
-            ->store(
-                $formData->file,
-                $form->getConfig()
-                    ->getOption(AdminAttachmentType::CONTEXT),
-                $metadata,
-                $processorsOptions,
-            )
+            ->store($formData->file, $context, $metadata, $processorsOptions,)
         ;
 
         return new JsonResponse($this->normalizer->normalize($attachment, 'json'));
@@ -348,6 +342,16 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
      * @return class-string<T>
      */
     abstract public static function getEntityFqcn(): string;
+
+    /**
+     * @param null|T $instance
+     */
+    protected static function mergeNewTranslationsIfIsTranslatable(?object $instance): void
+    {
+        if ($instance instanceof TranslatableInterface) {
+            $instance->mergeNewTranslations();
+        }
+    }
 
     /**
      * @param null|T $instance
@@ -416,15 +420,5 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
     private static function isTranslatableEntity(): bool
     {
         return is_a(static::getEntityFqcn(), TranslatableInterface::class, true);
-    }
-
-    /**
-     * @param null|T $instance
-     */
-    private static function mergeNewTranslationsIfIsTranslatable(?object $instance): void
-    {
-        if ($instance instanceof TranslatableInterface) {
-            $instance->mergeNewTranslations();
-        }
     }
 }
