@@ -43,6 +43,7 @@
     },
     "flex-require-dev": {
         "doctrine/doctrine-fixtures-bundle": "*",
+        "phpstan/extension-installer": "^1.1",
         "phpstan/phpstan": "^1.2.0",
         "rector/rector": "^0.12.8",
         "symfony/debug-pack": "*",
