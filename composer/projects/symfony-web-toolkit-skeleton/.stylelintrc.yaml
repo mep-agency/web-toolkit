@@ -3,7 +3,12 @@ defaultSeverity: error
 plugins:
   - stylelint-order
 
+extends:
+  - stylelint-config-standard-scss
+
 rules:
+  indentation: 4
+
   order/order:
     - - dollar-variables
       - custom-properties
