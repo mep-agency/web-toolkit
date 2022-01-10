@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Mep\MepWebToolkitK8sCli\Contract;
 
-use LogicException;
 use Mep\MepWebToolkitK8sCli\Config\Argument;
 use Mep\MepWebToolkitK8sCli\Config\Option;
 use Mep\MepWebToolkitK8sCli\Exception\StopExecutionException;
@@ -96,17 +95,7 @@ abstract class AbstractK8sCommand extends Command
                     }
                 }
 
-                $stopExecutionExceptionCode = $stopExecutionException->getCode();
-
-                if (is_int($stopExecutionExceptionCode)) {
-                    return $stopExecutionExceptionCode;
-                }
-
-                throw new LogicException(
-                    'StopExecutionException code should always be an integer.',
-                    0,
-                    $stopExecutionException,
-                );
+                return $stopExecutionException->getCode();
             } catch (KubernetesAPIException $kubernetesapiException) {
                 $symfonyStyle = new SymfonyStyle($input, $output);
 

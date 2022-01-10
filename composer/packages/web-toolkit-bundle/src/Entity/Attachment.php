@@ -121,10 +121,8 @@ class Attachment implements Stringable
 
     /**
      * Sets a single metadata value by key.
-     *
-     * @param scalar $value
      */
-    public function set(string $key, $value): self
+    public function set(string $key, bool|float|int|string $value): self
     {
         $this->metadata[$key] = $value;
 
