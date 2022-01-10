@@ -29,6 +29,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
+ * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 #[AsCommand(
     name: 'basic-auth-secret:delete',
@@ -65,7 +66,9 @@ class BasicAuthSecretDeleteCommand extends AbstractK8sCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $symfonyStyle = new SymfonyStyle($input, $output);
+        /** @var string $basicAuthSecretName */
         $basicAuthSecretName = $input->getArgument(Argument::GENERIC_NAME);
+        /** @var string $namespace */
         $namespace = $input->getOption(Option::NAMESPACE);
 
         $k8sSecret = $this->kubernetesCluster->getSecretByName($basicAuthSecretName, $namespace);

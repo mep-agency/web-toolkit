@@ -17,6 +17,7 @@ use RenokiCo\PhpK8s\KubernetesCluster;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
+ * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 class K8sConfigGenerator
 {
@@ -30,21 +31,28 @@ class K8sConfigGenerator
         $k8sServiceAccount = $this->kubernetesCluster->getServiceAccountByName($serviceAccountName, $namespace);
         /** @phpstan-ignore-next-line The vendor lib uses magic calls for undocumented resources */
         $secretName = $k8sServiceAccount->getSecrets()[0]['name'];
+        /** @var array<string, mixed> $secretData */
         $secretData = $this->kubernetesCluster
             ->getSecretByName($secretName, $namespace)
             ->getData(true)
         ;
+        /** @var string $caCrt */
+        $caCrt = $secretData['ca.crt'];
+        /** @var string $token */
+        $token = $secretData['token'];
+        /** @var ?string $namespace */
+        $namespace = $secretData['namespace'];
 
         // The library doesn't return the clean API URL, so we generate one with no path nor query parameters
         $url = trim($this->kubernetesCluster->getCallableUrl('', []), '?');
 
         $this->generateConfigFileFromData(
             $path,
-            $k8sServiceAccount->getName() ?? 'default-user',
-            base64_encode($secretData['ca.crt']),
+            $k8sServiceAccount->getName() ?: 'default-user',
+            base64_encode($caCrt),
             $url,
-            $secretData['token'],
-            $secretData['namespace'],
+            $token,
+            $namespace,
         );
     }
 

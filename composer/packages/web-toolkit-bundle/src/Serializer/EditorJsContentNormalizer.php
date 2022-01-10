@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Serializer;
 
+use LogicException;
 use Mep\WebToolkitBundle\Entity\EditorJs\EditorJsContent;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
@@ -21,6 +22,7 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
  * @internal do not use this class directly
  *
  * @author Marco Lipparini <developer@liarco.net>
+ * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 final class EditorJsContentNormalizer implements DenormalizerInterface
 {
@@ -31,13 +33,21 @@ final class EditorJsContentNormalizer implements DenormalizerInterface
 
     /**
      * @param array<string, mixed> $context
-     * @param mixed                $data
+     * @param array<string, mixed> $data
      */
     public function denormalize($data, string $type, string $format = null, array $context = []): object
     {
-        $data['time'] = (string) $data['time'];
+        /** @var int $time */
+        $time = $data['time'];
+        $data['time'] = (string) $time;
+        /** @var array<string, mixed>[] $blocks */
+        $blocks = $data['blocks'];
 
-        foreach ($data['blocks'] as &$block) {
+        foreach ($blocks as &$block) {
+            if (! is_iterable($block['data'])) {
+                throw new LogicException('Data is not of the correct type.');
+            }
+
             foreach ($block['data'] as $key => $value) {
                 $block[$key] = $value;
             }
@@ -45,7 +55,13 @@ final class EditorJsContentNormalizer implements DenormalizerInterface
             unset($block['data']);
         }
 
-        return $this->objectNormalizer->denormalize($data, $type, $format, $context);
+        $denormalizedData = $this->objectNormalizer->denormalize($data, $type, $format, $context);
+
+        if (! is_object($denormalizedData)) {
+            throw new LogicException('Data is not of the correct type.');
+        }
+
+        return $denormalizedData;
     }
 
     public function supportsDenormalization($data, string $type, string $format = null): bool

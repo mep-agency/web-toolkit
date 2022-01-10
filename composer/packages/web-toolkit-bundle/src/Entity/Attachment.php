@@ -28,6 +28,7 @@ use Symfony\Component\Validator\Constraints\PositiveOrZero;
  * @final You should not extend this class.
  *
  * @author Marco Lipparini <developer@liarco.net>
+ * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'mwt_attachment')]
@@ -113,17 +114,15 @@ class Attachment implements Stringable
     /**
      * Gets a single metadata value by key.
      */
-    public function get(string $key): mixed
+    public function get(string $key): string|int|bool|null|float
     {
         return $this->metadata[$key] ?? null;
     }
 
     /**
      * Sets a single metadata value by key.
-     *
-     * @param scalar $value
      */
-    public function set(string $key, $value): self
+    public function set(string $key, bool|float|int|string $value): self
     {
         $this->metadata[$key] = $value;
 

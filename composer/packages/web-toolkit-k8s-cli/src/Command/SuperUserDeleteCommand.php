@@ -29,6 +29,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
+ * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 #[AsCommand(
     name: 'super-user:delete',
@@ -58,7 +59,9 @@ class SuperUserDeleteCommand extends AbstractK8sCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $symfonyStyle = new SymfonyStyle($input, $output);
+        /** @var string $serviceAccountName */
         $serviceAccountName = $input->getArgument(Argument::SERVICE_ACCOUNT);
+        /** @var string $namespace */
         $namespace = $input->getOption(Option::NAMESPACE);
         $deletedResourcesCounter = 0;
 

@@ -10,15 +10,15 @@
 @import "~typebase.css/src/typebase";
 
 @mixin typography() {
-  --main-background: #FFF;
+  --main-background: #fff;
   --secondary-background: #efefef;
   --text-color: #000;
   --secondary-text-color: #a1a1a1;
   --borders-color: #a1a1a1;
   --container-width: 30rem;
+
   background-color: var(--main-background);
   color: var(--text-color);
-
   line-height: 1.5;
 
   & > * {
@@ -42,23 +42,28 @@
     font-weight: 700;
     font-size: 3rem;
   }
+
   h2 {
     font-weight: 700;
     font-size: 2.5rem;
   }
+
   h3 {
     font-weight: 700;
     font-size: 2rem;
   }
+
   h4 {
     font-weight: 400;
     font-size: 1.5rem;
   }
+
   h5 {
     font-weight: 400;
     font-size: 1.2rem;
     text-decoration: underline;
   }
+
   h6 {
     font-weight: 400;
     font-size: 1rem;
@@ -82,7 +87,7 @@
       display: block;
     }
 
-    li:before {
+    li::before {
       content: counters(item, ".") " ";
       counter-increment: item;
     }
@@ -97,7 +102,7 @@
 
     td,
     th {
-      padding: .5rem;
+      padding: 0.5rem;
     }
 
     thead {
@@ -111,9 +116,9 @@
 
   figure {
     & figcaption {
-      margin-top: .5rem;
+      margin-top: 0.5rem;
       font-style: italic;
-      font-size: .8rem;
+      font-size: 0.8rem;
       text-align: center;
     }
   }
@@ -126,19 +131,19 @@
     padding-right: 2rem;
     padding-left: 2rem;
 
+    & > blockquote {
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+      font-size: 1.3rem;
+      color: var(--secondary-text-color);
+    }
+
     &.alignment-center blockquote {
       text-align: center;
     }
 
     &.alignment-left blockquote {
       text-align: left;
-    }
-
-    & > blockquote {
-      margin-top: 1rem;
-      margin-bottom: 1rem;
-      font-size: 1.3rem;
-      color: var(--secondary-text-color);
     }
 
     & > figcaption {
@@ -149,7 +154,7 @@
   .warning {
     padding: 1rem 2rem;
     background-color: var(--secondary-background);
-    font-size: .8rem;
+    font-size: 0.8rem;
     font-family: sans-serif;
 
     & > .title {
@@ -175,7 +180,7 @@
     }
 
     &.stretched,
-    &.stretched img{
+    &.stretched img {
       width: 100%;
     }
 

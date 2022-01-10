@@ -14,9 +14,8 @@ declare(strict_types=1);
 namespace Mep\WebToolkitBundle\Contract\Controller\Admin;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\Persistence\ObjectManager;
-use Doctrine\Persistence\ObjectRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -59,6 +58,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
  * @template T of object
  *
  * @author Marco Lipparini <developer@liarco.net>
+ * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 abstract class AbstractCrudController extends OriginalAbstractCrudController
 {
@@ -79,6 +79,8 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
         protected FileStorageManager $fileStorageManager,
         protected NormalizerInterface $normalizer,
         protected EventDispatcherInterface $eventDispatcher,
+        protected EntityManagerInterface $entityManager,
+        protected EntityFactory $entityFactory,
     ) {
     }
 
@@ -206,17 +208,8 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
 
             if (null !== $currentTranslation) {
                 $instance->removeTranslation($currentTranslation);
-                $objectManager = $this->getDoctrine()
-                    ->getManagerForClass($adminContext->getEntity()->getFqcn())
-                ;
 
-                if (! $objectManager instanceof EntityManagerInterface) {
-                    $invalidFqcn = ($objectManager instanceof ObjectManager) ? $objectManager::class : 'null';
-
-                    throw new RuntimeException('Expected '.EntityManagerInterface::class.', '.$invalidFqcn.' given.');
-                }
-
-                $this->updateEntity($objectManager, $instance);
+                $this->updateEntity($this->entityManager, $instance);
 
                 $keyValueStore = $this->configureResponseParameters(KeyValueStore::new([
                     'entity' => $adminContext->getEntity(),
@@ -253,13 +246,11 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
             );
         }
 
-        $form = $this->createForm(
-            AdminAttachmentUploadApiType::class,
-            null,
-            // Using EA::ROUTE_PARAMS to have them included in URL signature validation
-            $adminContext->getRequest()
-                ->get(EA::ROUTE_PARAMS),
-        );
+        // Using EA::ROUTE_PARAMS to have them included in URL signature validation
+        /** @var array<string, mixed> $options */
+        $options = $adminContext->getRequest()->get(EA::ROUTE_PARAMS);
+
+        $form = $this->createForm(AdminAttachmentUploadApiType::class, null, $options,);
         $form->handleRequest($adminContext->getRequest());
 
         if (! $form->isSubmitted()) {
@@ -290,6 +281,8 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
 
         /** @var AdminAttachmentUploadDto $formData */
         $formData = $form->getData();
+        /** @var ?string $context */
+        $context = $form->getConfig()->getOption(AdminAttachmentType::CONTEXT);
         /** @var array<string, scalar> $metadata */
         $metadata = $form->getConfig()
             ->getOption(AdminAttachmentType::METADATA)
@@ -300,13 +293,7 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
         ;
 
         $attachment = $this->fileStorageManager
-            ->store(
-                $formData->file,
-                $form->getConfig()
-                    ->getOption(AdminAttachmentType::CONTEXT),
-                $metadata,
-                $processorsOptions,
-            )
+            ->store($formData->file, $context, $metadata, $processorsOptions,)
         ;
 
         return new JsonResponse($this->normalizer->normalize($attachment, 'json'));
@@ -337,9 +324,7 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
             /** @var class-string<TranslatableInterface> $entityFqcn */
             $entityFqcn = $entityDto->getFqcn();
 
-            $entityRepository = $this->getDoctrine()
-                ->getRepository($entityFqcn)
-            ;
+            $entityRepository = $this->entityManager->getRepository($entityFqcn);
 
             if (! $entityRepository instanceof LocalizedRepositoryInterface) {
                 throw new RuntimeException(
@@ -357,6 +342,16 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
      * @return class-string<T>
      */
     abstract public static function getEntityFqcn(): string;
+
+    /**
+     * @param null|T $instance
+     */
+    protected static function mergeNewTranslationsIfIsTranslatable(?object $instance): void
+    {
+        if ($instance instanceof TranslatableInterface) {
+            $instance->mergeNewTranslations();
+        }
+    }
 
     /**
      * @param null|T $instance
@@ -399,12 +394,9 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
                 return $this->redirect($this->adminUrlGenerator->setAction(Action::NEW)->generateUrl());
             }
 
-            /** @var EntityFactory $entityFactory */
-            $entityFactory = $this->get(EntityFactory::class);
-
             return $this->redirect(
                 $this->adminUrlGenerator->setAction(Action::EDIT)
-                    ->setEntityId($entityFactory->createForEntityInstance($singleInstance)->getPrimaryKeyValue())
+                    ->setEntityId($this->entityFactory->createForEntityInstance($singleInstance)->getPrimaryKeyValue())
                     ->generateUrl(),
             );
         }
@@ -418,27 +410,15 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
     }
 
     /**
-     * @return ObjectRepository<T>
+     * @return EntityRepository<T>
      */
-    private function getRepository(): ObjectRepository
+    private function getRepository(): EntityRepository
     {
-        $doctrine = $this->getDoctrine();
-
-        return $doctrine->getRepository(static::getEntityFqcn());
+        return $this->entityManager->getRepository(static::getEntityFqcn());
     }
 
     private static function isTranslatableEntity(): bool
     {
         return is_a(static::getEntityFqcn(), TranslatableInterface::class, true);
-    }
-
-    /**
-     * @param null|T $instance
-     */
-    private static function mergeNewTranslationsIfIsTranslatable(?object $instance): void
-    {
-        if ($instance instanceof TranslatableInterface) {
-            $instance->mergeNewTranslations();
-        }
     }
 }

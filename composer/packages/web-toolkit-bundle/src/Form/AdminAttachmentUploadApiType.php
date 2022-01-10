@@ -31,20 +31,32 @@ use Symfony\Component\Validator\Validation;
  * @internal do not use this type directly, use the public types/fields instead
  *
  * @author Marco Lipparini <developer@liarco.net>
+ * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 final class AdminAttachmentUploadApiType extends AdminAttachmentType
 {
     public function buildForm(FormBuilderInterface $formBuilder, array $options): void
     {
+        /** @var int $maxSize */
+        $maxSize = $options[self::MAX_SIZE];
+        /** @var string[] $allowedMimeTypes */
+        $allowedMimeTypes = $options[self::ALLOWED_MIME_TYPES];
+        /** @var ?string $allowedNamePattern */
+        $allowedNamePattern = $options[self::ALLOWED_NAME_PATTERN];
+        /** @var array<string, bool|float|int|string> $metadata */
+        $metadata = $options[self::METADATA];
+        /** @var array<string, bool|float|int|string> $processorOptions */
+        $processorOptions = $options[self::PROCESSORS_OPTIONS];
+
         $formBuilder
             ->add('file', FileType::class, [
                 'constraints' => [
                     new AttachmentUploadedFile(
-                        $options[self::MAX_SIZE],
-                        $options[self::ALLOWED_MIME_TYPES],
-                        $options[self::ALLOWED_NAME_PATTERN],
-                        $options[self::METADATA],
-                        $options[self::PROCESSORS_OPTIONS],
+                        $maxSize,
+                        $allowedMimeTypes,
+                        $allowedNamePattern,
+                        $metadata,
+                        $processorOptions,
                     ),
                 ],
             ])
@@ -97,6 +109,9 @@ final class AdminAttachmentUploadApiType extends AdminAttachmentType
         return '';
     }
 
+    /**
+     * @return class-string
+     */
     public function getParent(): string
     {
         return FormType::class;

@@ -27,6 +27,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
+ * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 #[AsCommand(
     name: 'app:get-cd-service-account',
@@ -55,6 +56,7 @@ class AppGetCdServiceAccountCommand extends AbstractHelmCommand
         $appEnvironment = $this->getAppEnvironment($input, $output);
         $serviceAccountName = 'mwt-'.$appName.'-'.$appEnvironment.'-cd';
         $namespace = $this->getNamespace($input);
+        /** @var string $outputPath */
         $outputPath = $input->getOption(Option::OUTPUT);
 
         $this->k8sConfigGenerator->generateConfigFile($outputPath, $serviceAccountName, $namespace);

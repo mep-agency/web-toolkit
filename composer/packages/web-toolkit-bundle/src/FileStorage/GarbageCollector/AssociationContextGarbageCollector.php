@@ -17,6 +17,7 @@ use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr\Join;
 use Generator;
+use LogicException;
 use Mep\WebToolkitBundle\Contract\FileStorage\GarbageCollectorInterface;
 use Mep\WebToolkitBundle\Dto\AttachmentAssociationContextDto;
 use Mep\WebToolkitBundle\Entity\Attachment;
@@ -26,6 +27,7 @@ use Mep\WebToolkitBundle\Entity\Attachment;
  * "context" metadata.
  *
  * @author Marco Lipparini <developer@liarco.net>
+ * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 final class AssociationContextGarbageCollector implements GarbageCollectorInterface
 {
@@ -48,18 +50,32 @@ final class AssociationContextGarbageCollector implements GarbageCollectorInterf
             foreach ($entityManager->getClassMetadata($entity)->getAssociationMappings() as $mapping) {
                 if (Attachment::class === $mapping['targetEntity']) {
                     $attachmentRepository = $entityManager->getRepository(Attachment::class);
+                    /** @var string $fieldName */
+                    $fieldName = $mapping['fieldName'];
                     $queryBuilder = $attachmentRepository->createQueryBuilder('a')
                         ->leftJoin($entity, 'p', Join::WITH, 'p.attachment = a.id')
                         ->andWhere('p.'.$mapping['fieldName'].' IS NULL AND a.context = :context')
                         ->setParameter(
                             'context',
-                            (string) (new AttachmentAssociationContextDto($entity, $mapping['fieldName'])),
+                            (string) (new AttachmentAssociationContextDto($entity, $fieldName)),
                         )
                     ;
 
-                    yield from $queryBuilder->getQuery()
+                    $results = $queryBuilder->getQuery()
                         ->getResult()
                     ;
+
+                    if (! is_iterable($results)) {
+                        throw new LogicException('Data is not of the correct type.');
+                    }
+
+                    foreach ($results as $result) {
+                        if (! $result instanceof Attachment) {
+                            throw new LogicException('Data is not of the correct type.');
+                        }
+
+                        yield $result;
+                    }
                 }
             }
         }

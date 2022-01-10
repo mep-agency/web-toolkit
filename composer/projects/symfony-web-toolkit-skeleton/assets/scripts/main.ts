@@ -8,8 +8,5 @@
 // any CSS you import will output into a single css file (app.css in this case)
 import '../styles/main.scss';
 
-// start the Stimulus application
-import '../bootstrap';
-
 // The following line imports some useful tools with a default configuration
-//import '@mep-agency/web-toolkit-front-end';
+// import '@mep-agency/web-toolkit-front-end';

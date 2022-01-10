@@ -4,6 +4,9 @@ plugins:
   - stylelint-order
   - stylelint-plugin-license-header
 
+extends:
+  - stylelint-config-standard-scss
+
 # No checks inside the skeleton
 ignoreFiles: [./composer/projects/symfony-web-toolkit-skeleton/**]
 

@@ -29,6 +29,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
+ * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 abstract class AbstractK8sCommand extends Command
 {
@@ -38,7 +39,7 @@ abstract class AbstractK8sCommand extends Command
         parent::__construct();
     }
 
-    public function run(InputInterface $input, OutputInterface $output)
+    public function run(InputInterface $input, OutputInterface $output): int
     {
         // Always run validation before execution
         $this->setCode(function (InputInterface $input, OutputInterface $output): int {
@@ -64,6 +65,7 @@ abstract class AbstractK8sCommand extends Command
                     $namespaceNames[] = $input->getOption(Option::NAMESPACE);
                 }
 
+                /** @var string $namespaceName */
                 foreach ($namespaceNames as $namespaceName) {
                     $this->isCreatedByThisToolOrStop(
                         $this->kubernetesCluster->getNamespaceByName($namespaceName),

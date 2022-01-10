@@ -30,16 +30,17 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $parameters->set(Option::DATA_TO_APPEND, [
         ComposerJsonSection::REQUIRE_DEV => [
             'phpunit/phpunit' => '^9.5',
-            'phpstan/phpstan' => '^0.12.99',
-            'rector/rector' => '^0.11.60',
-            'symplify/easy-coding-standard' => '^9.4',
-            'symplify/monorepo-builder' => '^9.4',
-            'symplify/phpstan-rules' => '^9.4',
+            'phpstan/phpstan' => '^1.2.0',
+            'phpstan/extension-installer' => '^1.1',
+            'rector/rector' => '^0.12.8',
+            'symplify/easy-coding-standard' => '^10.0',
+            'symplify/monorepo-builder' => '^10.0',
+            'symplify/phpstan-rules' => '^10.0',
             // Skeleton dependencies
             'doctrine/doctrine-fixtures-bundle' => '*',
             'sensio/framework-extra-bundle' => '^6.1',
-            'symfony/console' => '5.3.*',
-            'symfony/process' => '5.3.*',
+            'symfony/console' => '5.4.*',
+            'symfony/process' => '5.4.*',
         ],
     ]);
 

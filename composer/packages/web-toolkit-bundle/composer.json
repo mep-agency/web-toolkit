@@ -16,14 +16,14 @@
     "require": {
         "php": "^8.0",
         "aws/aws-sdk-php": "^3.185",
-        "easycorp/easyadmin-bundle": "dev-master",
+        "easycorp/easyadmin-bundle": "^4.0",
         "knplabs/doctrine-behaviors": "^2.2",
         "meteo-concept/hcaptcha-bundle": "^3.0",
         "nyholm/psr7": "^1.4",
-        "symfony/mailer": "5.3.*",
-        "symfony/security-bundle": "5.3.*",
-        "symfony/serializer": "5.3.*",
-        "symfony/validator": "5.3.*",
+        "symfony/mailer": "5.4.*",
+        "symfony/security-bundle": "5.4.*",
+        "symfony/serializer": "5.4.*",
+        "symfony/validator": "5.4.*",
         "tinify/tinify": "^1.5"
     },
     "autoload": {

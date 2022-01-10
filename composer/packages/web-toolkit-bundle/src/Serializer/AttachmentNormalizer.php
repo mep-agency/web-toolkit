@@ -23,6 +23,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
  * @internal do not use this class directly
  *
  * @author Marco Lipparini <developer@liarco.net>
+ * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 final class AttachmentNormalizer implements NormalizerInterface, DenormalizerInterface
 {
@@ -54,7 +55,7 @@ final class AttachmentNormalizer implements NormalizerInterface, DenormalizerInt
 
     /**
      * @param array<string, mixed> $context
-     * @param mixed                $data
+     * @param array<string, mixed> $data
      */
     public function denormalize($data, string $type, string $format = null, array $context = []): ?Attachment
     {

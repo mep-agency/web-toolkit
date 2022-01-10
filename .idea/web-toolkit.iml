@@ -77,7 +77,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-uuid" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/intl" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-php73" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/http-client-contracts" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-php80" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/options-resolver" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/property-access" />
@@ -160,24 +159,19 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/evenement/evenement" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/psr/simple-cache" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/renoki-co/php-helm" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/latte/latte" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/danielstjules/stringy" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/nette/neon" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpstan/phpdoc-parser" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symplify/autowire-array-parameter" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symplify/phpstan-rules" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symplify/twig-phpstan-compiler" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symplify/package-builder" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symplify/rule-doc-generator-contracts" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symplify/smart-file-system" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symplify/latte-phpstan-compiler" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symplify/astral" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symplify/template-phpstan-compiler" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symplify/easy-testing" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symplify/simple-php-doc-parser" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symplify/composer-json-manipulator" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symplify/symplify-kernel" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symplify/console-package-builder" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symplify/astral" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phpstan/extension-installer" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

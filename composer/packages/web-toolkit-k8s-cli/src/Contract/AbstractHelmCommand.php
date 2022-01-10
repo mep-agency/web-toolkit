@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Mep\MepWebToolkitK8sCli\Contract;
 
+use LogicException;
 use Mep\MepWebToolkitK8sCli\Config\Argument;
 use Mep\MepWebToolkitK8sCli\Config\Option;
 use Mep\MepWebToolkitK8sCli\Exception\StopExecutionException;
@@ -27,6 +28,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
+ * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 abstract class AbstractHelmCommand extends AbstractK8sCommand
 {
@@ -64,11 +66,18 @@ abstract class AbstractHelmCommand extends AbstractK8sCommand
 
     public function getAppName(InputInterface $input): string
     {
-        return $input->getArgument(Argument::APP_NAME);
+        $appName = $input->getArgument(Argument::APP_NAME);
+
+        if (! is_string($appName)) {
+            throw new LogicException('Data is not of the correct type.');
+        }
+
+        return $appName;
     }
 
     public function getAppEnvironment(InputInterface $input, OutputInterface $output): ?string
     {
+        /** @var ?string $environment */
         $environment = $input->getArgument(Argument::ENVIRONMENT);
         $allEnvironments = $this->supportsAllEnvironmentsFlag && $input->getOption(Option::ALL_ENVIRONMENTS);
 
@@ -91,6 +100,12 @@ abstract class AbstractHelmCommand extends AbstractK8sCommand
 
     public function getNamespace(InputInterface $input): string
     {
-        return $input->getOption(Option::NAMESPACE);
+        $namespace = $input->getArgument(Argument::NAMESPACE);
+
+        if (! is_string($namespace)) {
+            throw new LogicException('Data is not of the correct type.');
+        }
+
+        return $namespace;
     }
 }

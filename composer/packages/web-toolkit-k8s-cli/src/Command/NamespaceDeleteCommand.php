@@ -25,6 +25,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
+ * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 #[AsCommand(
     name: 'namespace:delete',
@@ -47,6 +48,7 @@ class NamespaceDeleteCommand extends AbstractK8sCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $symfonyStyle = new SymfonyStyle($input, $output);
+        /** @var string $namespaceName */
         $namespaceName = $input->getArgument(Option::NAMESPACE);
 
         $k8sNamespace = $this->kubernetesCluster

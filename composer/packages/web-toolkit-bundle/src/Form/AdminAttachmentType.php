@@ -150,6 +150,9 @@ class AdminAttachmentType extends AbstractType implements DataTransformerInterfa
         return 'mwt_admin_attachment';
     }
 
+    /**
+     * @return class-string<TextType>
+     */
     public function getParent()
     {
         return TextType::class;
@@ -161,7 +164,7 @@ class AdminAttachmentType extends AbstractType implements DataTransformerInterfa
         return $data;
     }
 
-    public function reverseTransform($data)
+    public function reverseTransform($data): ?Attachment
     {
         if (null === $data || $data instanceof Attachment) {
             return $data;
