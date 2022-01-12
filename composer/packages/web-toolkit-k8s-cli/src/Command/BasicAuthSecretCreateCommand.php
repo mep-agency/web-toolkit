@@ -73,7 +73,7 @@ class BasicAuthSecretCreateCommand extends AbstractK8sCommand
         /** @var string $namespace */
         $namespace = $input->getOption(Option::NAMESPACE);
 
-        $this->k8sBasicAuthSecretGenerator->generate($pullSecretName, $username, $password, $namespace,)->create();
+        $this->k8sBasicAuthSecretGenerator->generate($pullSecretName, $username, $password, $namespace)->create();
 
         $symfonyStyle->success('HTTP Basic Auth secret  "'.$pullSecretName.'" created successfully!');
 

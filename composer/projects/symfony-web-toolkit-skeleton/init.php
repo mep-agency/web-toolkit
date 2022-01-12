@@ -93,8 +93,8 @@ $application = (new SingleCommandApplication())
             'php bin/console mwt:sessions:create-table -n --ignore-missing-pdo-session-handler',
         );
         runCommandWithMessageOrFail($io, 'Loading fixtures...', 'php bin/console doctrine:fixtures:load -n');
-        runCommandWithMessageOrFail($io, 'Installing front end dependencies...', 'yarn',);
-        runCommandWithMessageOrFail($io, 'Building front end assets...', 'yarn build',);
+        runCommandWithMessageOrFail($io, 'Installing front end dependencies...', 'yarn');
+        runCommandWithMessageOrFail($io, 'Building front end assets...', 'yarn build');
         init_removeUnusedFiles($io);
         init_removeInitFile($io);
 

@@ -61,9 +61,9 @@ class PrivacyConsent
         return $this->token;
     }
 
-    public function setToken(Uuid $token): self
+    public function setToken(Uuid $uuid): self
     {
-        $this->token = $token;
+        $this->token = $uuid;
 
         return $this;
     }

@@ -250,7 +250,7 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
         /** @var array<string, mixed> $options */
         $options = $adminContext->getRequest()->get(EA::ROUTE_PARAMS);
 
-        $form = $this->createForm(AdminAttachmentUploadApiType::class, null, $options,);
+        $form = $this->createForm(AdminAttachmentUploadApiType::class, null, $options);
         $form->handleRequest($adminContext->getRequest());
 
         if (! $form->isSubmitted()) {
@@ -293,7 +293,7 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
         ;
 
         $attachment = $this->fileStorageManager
-            ->store($formData->file, $context, $metadata, $processorsOptions,)
+            ->store($formData->file, $context, $metadata, $processorsOptions)
         ;
 
         return new JsonResponse($this->normalizer->normalize($attachment, 'json'));

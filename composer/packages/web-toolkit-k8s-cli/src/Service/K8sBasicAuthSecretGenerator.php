@@ -40,7 +40,7 @@ class K8sBasicAuthSecretGenerator
     ) {
     }
 
-    public function generate(string $name, string $username, string $password, string $namespace,): K8sSecret
+    public function generate(string $name, string $username, string $password, string $namespace): K8sSecret
     {
         return $this->kubernetesCluster
             ->secret()
