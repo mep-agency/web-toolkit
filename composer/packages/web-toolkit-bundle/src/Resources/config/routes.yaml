@@ -1,0 +1,4 @@
+privacy_consent:
+  resource: '../../Controller/PrivacyConsent'
+  type: annotation
+  prefix: /privacy-consent

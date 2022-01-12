@@ -15,6 +15,7 @@ namespace Mep\WebToolkitBundle\Config;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
+ * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 class RouteName
 {
@@ -22,4 +23,24 @@ class RouteName
      * @var string
      */
     public const LOGIN = 'login';
+
+    /**
+     * @var string
+     */
+    public const PRIVACY_CONSENT_CREATE = 'privacy_consent_create';
+
+    /**
+     * @var string
+     */
+    public const PRIVACY_CONSENT_UPDATE = 'privacy_consent_update';
+
+    /**
+     * @var string
+     */
+    public const PRIVACY_CONSENT_SHOW_LAST = 'privacy_consent_show_last';
+
+    /**
+     * @var string
+     */
+    public const PRIVACY_CONSENT_SHOW_HISTORY = 'privacy_consent_show_history';
 }

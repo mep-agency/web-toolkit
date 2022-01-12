@@ -254,4 +254,11 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->arg(2, new Reference(KernelInterface::class))
         ->tag('twig.extension')
     ;
+
+    // TODO: @Alllle convert this to set() method
+    // Privacy consent
+    $services->load('Mep\WebToolkitBundle\Controller\PrivacyConsent\\', __DIR__.'/../../Controller/PrivacyConsent')
+        ->autowire()
+        ->tag('controller.service_arguments')
+    ;
 };
