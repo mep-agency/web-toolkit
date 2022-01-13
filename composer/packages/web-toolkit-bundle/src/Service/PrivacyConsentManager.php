@@ -13,20 +13,40 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Service;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Mep\WebToolkitBundle\Repository\PrivacyConsent\PrivacyConsentCategoryRepository;
 use Mep\WebToolkitBundle\Repository\PrivacyConsent\PrivacyConsentServiceRepository;
+use MonorepoBuilder20220107\Nette\Utils\Json;
 
 class PrivacyConsentManager
 {
-    private PrivacyConsentCategoryRepository $privacyConsentCategoryRepository;
-
-    private PrivacyConsentServiceRepository $privacyConsentServiceRepository;
+    /**
+     * @var array<string, mixed>
+     */
+    private array $specs = [];
 
     public function __construct(
-        private EntityManagerInterface $entityManager,
+        private PrivacyConsentCategoryRepository $privacyConsentCategoryRepository,
+        private PrivacyConsentServiceRepository $privacyConsentServiceRepository,
     ) {
-        $this->privacyConsentCategoryRepository = $this->entityManager->getRepository(PrivacyConsentCategoryRepository::class);
-        $this->privacyConsentServiceRepository = $this->entityManager->getRepository(PrivacyConsentSericeRepository::class);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getSpecs(): array
+    {
+        if (empty($this->specs)) {
+            $this->specs = [
+                'categories' => $this->privacyConsentCategoryRepository->findAllOrderedByPriority(),
+                'services' => $this->privacyConsentServiceRepository->findAllOrderedByPriority(),
+            ];
+        }
+
+        return $this->specs;
+    }
+
+    public function getSpecsHash(): string
+    {
+        return hash('sha256', Json::encode($this->getSpecs()));
     }
 }
