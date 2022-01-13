@@ -24,7 +24,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ShowHistoryController extends AbstractController
 {
-    #[Route('/show-history/{token}/', name: RouteName::PRIVACY_CONSENT_SHOW_HISTORY, methods: [Request::METHOD_GET])]
+    #[Route('/{token}/history/', name: RouteName::PRIVACY_CONSENT_GET_HISTORY, methods: [Request::METHOD_GET])]
     public function __invoke(string $token): Response
     {
         return $this->json([]);

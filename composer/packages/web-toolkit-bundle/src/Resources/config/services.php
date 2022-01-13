@@ -39,6 +39,9 @@ use Mep\WebToolkitBundle\Form\TypeGuesser\AdminEditorJsTypeGuesser;
 use Mep\WebToolkitBundle\Mail\TemplateProvider\DummyTemplateProvider;
 use Mep\WebToolkitBundle\Mail\TemplateProvider\TwigTemplateProvider;
 use Mep\WebToolkitBundle\Mail\TemplateRenderer;
+use Mep\WebToolkitBundle\Repository\PrivacyConsent\PrivacyConsentCategoryRepository;
+use Mep\WebToolkitBundle\Repository\PrivacyConsent\PrivacyConsentRepository;
+use Mep\WebToolkitBundle\Repository\PrivacyConsent\PrivacyConsentServiceRepository;
 use Mep\WebToolkitBundle\Router\AttachmentsAdminApiUrlGenerator;
 use Mep\WebToolkitBundle\Serializer\AttachmentNormalizer;
 use Mep\WebToolkitBundle\Serializer\EditorJsContentNormalizer;
@@ -257,6 +260,18 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     // TODO: @Alllle convert this to set() method
     // Privacy consent
+    $services->set(PrivacyConsentRepository::class)
+        ->autowire()
+        ->tag('doctrine.repository_service')
+    ;
+    $services->set(PrivacyConsentServiceRepository::class)
+        ->autowire()
+        ->tag('doctrine.repository_service')
+    ;
+    $services->set(PrivacyConsentCategoryRepository::class)
+        ->autowire()
+        ->tag('doctrine.repository_service')
+    ;
     $services->load('Mep\WebToolkitBundle\Controller\PrivacyConsent\\', __DIR__.'/../../Controller/PrivacyConsent')
         ->autowire()
         ->tag('controller.service_arguments')

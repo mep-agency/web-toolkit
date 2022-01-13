@@ -22,10 +22,10 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
-class UpdateController extends AbstractController
+class GetSpecsController extends AbstractController
 {
-    #[Route('/{token}/', name: RouteName::PRIVACY_CONSENT_UPDATE, methods: [Request::METHOD_POST])]
-    public function __invoke(string $token): Response
+    #[Route('/specs/', name: RouteName::PRIVACY_CONSENT_GET_SPECS, methods: [Request::METHOD_GET])]
+    public function __invoke(): Response
     {
         return $this->json([]);
     }

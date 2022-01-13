@@ -11,13 +11,13 @@
 
 declare(strict_types=1);
 
-namespace Mep\WebToolkitBundle\Entity;
+namespace Mep\WebToolkitBundle\Entity\PrivacyConsent;
 
 use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Mep\WebToolkitBundle\Repository\PrivacyConsentRepository;
+use Mep\WebToolkitBundle\Repository\PrivacyConsent\PrivacyConsentRepository;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Uid\Uuid;
 
@@ -26,7 +26,7 @@ use Symfony\Component\Uid\Uuid;
  */
 #[ORM\Entity(PrivacyConsentRepository::class)]
 #[UniqueEntity(fields: ['token', 'datetime'])]
-#[ORM\Table(name: 'mwt_consent')]
+#[ORM\Table(name: 'mwt_privacy_consent')]
 class PrivacyConsent
 {
     #[ORM\Id]

@@ -22,9 +22,9 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
-class ShowLastController extends AbstractController
+class GetConsentController extends AbstractController
 {
-    #[Route('/show-last/{token}/', name: RouteName::PRIVACY_CONSENT_SHOW_LAST, methods: [Request::METHOD_GET])]
+    #[Route('/{token}/', name: RouteName::PRIVACY_CONSENT_GET, methods: [Request::METHOD_GET])]
     public function __invoke(string $token): Response
     {
         return $this->json([]);

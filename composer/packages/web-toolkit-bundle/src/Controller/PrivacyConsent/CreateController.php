@@ -24,7 +24,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class CreateController extends AbstractController
 {
-    #[Route('/create/', name: RouteName::PRIVACY_CONSENT_CREATE, methods: [Request::METHOD_POST])]
+    #[Route('/', name: RouteName::PRIVACY_CONSENT_CREATE, methods: [Request::METHOD_POST])]
     public function __invoke(): Response
     {
         return $this->json([]);

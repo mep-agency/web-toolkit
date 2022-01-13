@@ -37,10 +37,15 @@ class RouteName
     /**
      * @var string
      */
-    public const PRIVACY_CONSENT_SHOW_LAST = 'privacy_consent_show_last';
+    public const PRIVACY_CONSENT_GET_SPECS = 'privacy_consent_get_specs';
 
     /**
      * @var string
      */
-    public const PRIVACY_CONSENT_SHOW_HISTORY = 'privacy_consent_show_history';
+    public const PRIVACY_CONSENT_GET = 'privacy_consent_get';
+
+    /**
+     * @var string
+     */
+    public const PRIVACY_CONSENT_GET_HISTORY = 'privacy_consent_get_history';
 }

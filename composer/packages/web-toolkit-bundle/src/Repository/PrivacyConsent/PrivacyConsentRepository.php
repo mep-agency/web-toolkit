@@ -11,11 +11,11 @@
 
 declare(strict_types=1);
 
-namespace Mep\WebToolkitBundle\Repository;
+namespace Mep\WebToolkitBundle\Repository\PrivacyConsent;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Mep\WebToolkitBundle\Entity\PrivacyConsent;
+use Mep\WebToolkitBundle\Entity\PrivacyConsent\PrivacyConsent;
 
 /**
  * @method null|PrivacyConsent find($id, $lockMode = null, $lockVersion = null)
@@ -37,6 +37,18 @@ class PrivacyConsentRepository extends ServiceEntityRepository
     public function findLastByToken(string $token): ?PrivacyConsent
     {
         return $this->findOneBy([
+            'token' => $token,
+        ], [
+            'datetime' => 'DESC',
+        ]);
+    }
+
+    /**
+     * @return PrivacyConsent[]
+     */
+    public function findAllByToken(string $token): array
+    {
+        return $this->findBy([
             'token' => $token,
         ], [
             'datetime' => 'DESC',

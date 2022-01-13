@@ -19,6 +19,7 @@
         "easycorp/easyadmin-bundle": "^4.0",
         "knplabs/doctrine-behaviors": "^2.2",
         "meteo-concept/hcaptcha-bundle": "^3.0",
+        "nette/utils": "^3.2",
         "nyholm/psr7": "^1.4",
         "symfony/mailer": "5.4.*",
         "symfony/security-bundle": "5.4.*",
