@@ -45,6 +45,7 @@ use Mep\WebToolkitBundle\Repository\PrivacyConsent\PrivacyConsentServiceReposito
 use Mep\WebToolkitBundle\Router\AttachmentsAdminApiUrlGenerator;
 use Mep\WebToolkitBundle\Serializer\AttachmentNormalizer;
 use Mep\WebToolkitBundle\Serializer\EditorJsContentNormalizer;
+use Mep\WebToolkitBundle\Service\PrivacyConsentManager;
 use Mep\WebToolkitBundle\Twig\AttachmentExtension;
 use Mep\WebToolkitBundle\Twig\EditorJsExtension;
 use Mep\WebToolkitBundle\Twig\TwigFunctionsExtension;
@@ -258,7 +259,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->tag('twig.extension')
     ;
 
-    // TODO: @Alllle convert this to set() method
+    // TODO: @Alllle add constants
     // Privacy consent
     $services->set(PrivacyConsentRepository::class)
         ->autowire()
@@ -272,6 +273,11 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->autowire()
         ->tag('doctrine.repository_service')
     ;
+    $services->set(PrivacyConsentManager::class)
+        ->arg(0, new Reference(PrivacyConsentCategoryRepository::class))
+        ->arg(1, new Reference(PrivacyConsentServiceRepository::class))
+    ;
+    // TODO: @Alllle convert this to set() method
     $services->load('Mep\WebToolkitBundle\Controller\PrivacyConsent\\', __DIR__.'/../../Controller/PrivacyConsent')
         ->autowire()
         ->tag('controller.service_arguments')

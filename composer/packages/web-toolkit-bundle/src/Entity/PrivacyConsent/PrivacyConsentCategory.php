@@ -93,7 +93,7 @@ class PrivacyConsentCategory implements TranslatableInterface, Stringable, JsonS
     }
 
     /**
-     * @return array<string, string|bool>
+     * @return array<string, bool|string>
      */
     public function jsonSerialize(): array
     {

@@ -15,7 +15,7 @@ namespace Mep\WebToolkitBundle\Service;
 
 use Mep\WebToolkitBundle\Repository\PrivacyConsent\PrivacyConsentCategoryRepository;
 use Mep\WebToolkitBundle\Repository\PrivacyConsent\PrivacyConsentServiceRepository;
-use MonorepoBuilder20220107\Nette\Utils\Json;
+use Nette\Utils\Json;
 
 class PrivacyConsentManager
 {
