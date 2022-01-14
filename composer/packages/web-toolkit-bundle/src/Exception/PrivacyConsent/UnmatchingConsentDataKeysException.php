@@ -13,12 +13,12 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Exception\PrivacyConsent;
 
-use Exception;
+use Mep\WebToolkitBundle\Contract\Exception\AbstractPrivacyConsentException;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
  */
-final class UnmatchingConsentDataKeysException extends Exception
+final class UnmatchingConsentDataKeysException extends AbstractPrivacyConsentException
 {
     public function __construct()
     {

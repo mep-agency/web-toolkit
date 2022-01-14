@@ -13,12 +13,12 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Exception\PrivacyConsent;
 
-use Exception;
+use Mep\WebToolkitBundle\Contract\Exception\AbstractPrivacyConsentException;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
  */
-final class InvalidSpecsHashException extends Exception
+final class InvalidSpecsHashException extends AbstractPrivacyConsentException
 {
     public function __construct()
     {
