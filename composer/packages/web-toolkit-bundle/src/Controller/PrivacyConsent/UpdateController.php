@@ -28,7 +28,7 @@ use Symfony\Component\Uid\Uuid;
  */
 class UpdateController extends AbstractController
 {
-    #[Route('/{token<[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}>}/', name: RouteName::PRIVACY_CONSENT_UPDATE, methods: [Request::METHOD_POST])]
+    #[Route('/{token<[0-9a-f]{8}-[0-9a-f]{4}-[04][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}>}/', name: RouteName::PRIVACY_CONSENT_UPDATE, methods: [Request::METHOD_POST])]
     public function __invoke(
         string $token,
         PrivacyConsentManager $privacyConsentManager,

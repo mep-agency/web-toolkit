@@ -51,7 +51,7 @@ class PrivacyConsentExtension extends AbstractExtension
     /**
      * @var string
      */
-    private const TOKEN_PLACEHOLDER = '__TOKEN__';
+    private const TOKEN_PLACEHOLDER = '00000000-0000-0000-0000-000000000000';
 
     public function __construct(
         private UrlGeneratorInterface $urlGenerator,
@@ -78,7 +78,7 @@ class PrivacyConsentExtension extends AbstractExtension
             ),
             self::ENDPOINT_GET_HISTORY => $this->urlGenerator->generate(
                 RouteName::PRIVACY_CONSENT_GET_HISTORY,
-                [],
+                ['token' => self::TOKEN_PLACEHOLDER],
                 UrlGeneratorInterface::ABSOLUTE_URL,
             ),
             self::ENDPOINT_CONSENT_GET => $this->urlGenerator->generate(

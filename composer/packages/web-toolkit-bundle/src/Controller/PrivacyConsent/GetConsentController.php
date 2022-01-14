@@ -26,7 +26,7 @@ use Symfony\Component\Uid\Uuid;
  */
 class GetConsentController extends AbstractController
 {
-    #[Route('/{token<[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}>}/', name: RouteName::PRIVACY_CONSENT_GET, methods: [Request::METHOD_GET])]
+    #[Route('/{token<[0-9a-f]{8}-[0-9a-f]{4}-[04][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}>}/', name: RouteName::PRIVACY_CONSENT_GET, methods: [Request::METHOD_GET])]
     public function __invoke(string $token, PrivacyConsentRepository $privacyConsentRepository): Response
     {
         $token = Uuid::fromString($token);
