@@ -40,15 +40,15 @@ class PrivacyConsent
     private DateTimeInterface $datetime;
 
     /**
-     * @param array<string, mixed> $consents
+     * @param array<string, mixed> $data
      */
     public function __construct(
         #[ORM\Column(type: Types::JSON)]
-        private array $consents = [],
+        private array $data = [],
         ?Uuid $token = null,
     ) {
         $this->id = Uuid::v6();
-        $this->token = $token ?: Uuid::v4();
+        $this->token = $token ?? Uuid::v4();
         $this->datetime = new DateTimeImmutable();
     }
 
@@ -60,13 +60,6 @@ class PrivacyConsent
     public function getToken(): Uuid
     {
         return $this->token;
-    }
-
-    public function setToken(Uuid $uuid): self
-    {
-        $this->token = $uuid;
-
-        return $this;
     }
 
     public function getDatetime(): DateTimeInterface
@@ -84,17 +77,17 @@ class PrivacyConsent
     /**
      * @return array<string, mixed>
      */
-    public function getConsents(): array
+    public function getData(): array
     {
-        return $this->consents;
+        return $this->data;
     }
 
     /**
-     * @param array<string, mixed> $consents
+     * @param array<string, mixed> $data
      */
-    public function setConsents(array $consents): self
+    public function setData(array $data): self
     {
-        $this->consents = $consents;
+        $this->data = $data;
 
         return $this;
     }

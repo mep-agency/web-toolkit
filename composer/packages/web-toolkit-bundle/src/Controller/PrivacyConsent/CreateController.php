@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Controller\PrivacyConsent;
 
-use Exception;
 use Mep\WebToolkitBundle\Config\RouteName;
+use Mep\WebToolkitBundle\Contract\Exception\AbstractPrivacyConsentException;
 use Mep\WebToolkitBundle\Service\PrivacyConsentManager;
 use Nette\Utils\Json;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -36,9 +36,9 @@ class CreateController extends AbstractController
                     Json::decode($request->getContent(), Json::FORCE_ARRAY),
                 )->getToken(),
             ]);
-        } catch (Exception $exception) {
+        } catch (AbstractPrivacyConsentException $abstractPrivacyConsentException) {
             return $this->json([
-                'message' => $exception->getMessage(),
+                'message' => $abstractPrivacyConsentException->getMessage(),
             ], 400);
         }
     }

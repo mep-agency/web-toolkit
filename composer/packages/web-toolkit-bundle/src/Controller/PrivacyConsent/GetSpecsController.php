@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Mep\WebToolkitBundle\Controller\PrivacyConsent;
 
 use Mep\WebToolkitBundle\Config\RouteName;
+use Mep\WebToolkitBundle\Service\PrivacyConsentManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,8 +26,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class GetSpecsController extends AbstractController
 {
     #[Route('/specs/', name: RouteName::PRIVACY_CONSENT_GET_SPECS, methods: [Request::METHOD_GET])]
-    public function __invoke(): Response
+    public function __invoke(PrivacyConsentManager $privacyConsentManager): Response
     {
-        return $this->json([]);
+        $specsArray = [
+            PrivacyConsentManager::JSON_KEY_SPECS => $privacyConsentManager->getSpecs(),
+        ];
+
+        return $this->json($specsArray);
     }
 }

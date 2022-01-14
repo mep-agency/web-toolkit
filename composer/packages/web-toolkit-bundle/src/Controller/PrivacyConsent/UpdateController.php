@@ -14,19 +14,39 @@ declare(strict_types=1);
 namespace Mep\WebToolkitBundle\Controller\PrivacyConsent;
 
 use Mep\WebToolkitBundle\Config\RouteName;
+use Mep\WebToolkitBundle\Contract\Exception\AbstractPrivacyConsentException;
+use Mep\WebToolkitBundle\Service\PrivacyConsentManager;
+use Nette\Utils\Json;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 class UpdateController extends AbstractController
 {
-    #[Route('/{token}/', name: RouteName::PRIVACY_CONSENT_UPDATE, methods: [Request::METHOD_POST])]
-    public function __invoke(string $token): Response
-    {
-        return $this->json([]);
+    #[Route('/{token<[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}>}/', name: RouteName::PRIVACY_CONSENT_UPDATE, methods: [Request::METHOD_POST])]
+    public function __invoke(
+        string $token,
+        PrivacyConsentManager $privacyConsentManager,
+        Request $request,
+    ): Response {
+        $token = Uuid::fromString($token);
+
+        try {
+            return $this->json([
+                'token' => $privacyConsentManager->generateConsent(
+                    Json::decode($request->getContent(), Json::FORCE_ARRAY),
+                    $token,
+                )->getData(),
+            ]);
+        } catch (AbstractPrivacyConsentException $abstractPrivacyConsentException) {
+            return $this->json([
+                'message' => $abstractPrivacyConsentException->getMessage(),
+            ], 400);
+        }
     }
 }

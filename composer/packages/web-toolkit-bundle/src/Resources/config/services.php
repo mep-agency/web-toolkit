@@ -54,6 +54,7 @@ use Symfony\Component\Asset\Packages;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symfony\Component\HttpFoundation\RequestStack;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Form\FormRegistryInterface;
@@ -274,8 +275,11 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->tag('doctrine.repository_service')
     ;
     $services->set(PrivacyConsentManager::class)
-        ->arg(0, new Reference(PrivacyConsentCategoryRepository::class))
-        ->arg(1, new Reference(PrivacyConsentServiceRepository::class))
+        ->arg(0, new Reference(PrivacyConsentRepository::class))
+        ->arg(1, new Reference(PrivacyConsentCategoryRepository::class))
+        ->arg(2, new Reference(PrivacyConsentServiceRepository::class))
+        ->arg(3, new Reference(RequestStack::class))
+        ->arg(4, new Reference(EntityManagerInterface::class))
     ;
     // TODO: @Alllle convert this to set() method
     $services->load('Mep\WebToolkitBundle\Controller\PrivacyConsent\\', __DIR__.'/../../Controller/PrivacyConsent')

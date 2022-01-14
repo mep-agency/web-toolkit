@@ -15,6 +15,7 @@ namespace Mep\WebToolkitBundle\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Mep\WebToolkitBundle\Entity\PrivacyConsent\PrivacyConsent;
+use Mep\WebToolkitBundle\Entity\PrivacyConsent\PrivacyConsentService;
 use Mep\WebToolkitBundle\Exception\PrivacyConsent\CannotGenerateUpdatedConsentForUnexistingTokenException;
 use Mep\WebToolkitBundle\Exception\PrivacyConsent\InvalidSpecsHashException;
 use Mep\WebToolkitBundle\Exception\PrivacyConsent\UnmatchingConsentDataKeysException;
@@ -30,17 +31,17 @@ class PrivacyConsentManager
     /**
      * @var string
      */
+    public const JSON_KEY_SPECS = 'specs';
+
+    /**
+     * @var string
+     */
     private const JSON_KEY_SPECS_HASH = 'specsHash';
 
     /**
      * @var string
      */
     private const JSON_KEY_USER_AGENT = 'userAgent';
-
-    /**
-     * @var string
-     */
-    private const JSON_KEY_SPECS = 'specs';
 
     /**
      * @var string
@@ -108,6 +109,7 @@ class PrivacyConsentManager
 
         $clientData[self::JSON_KEY_SPECS] = $this->getSpecs();
         $clientData[self::JSON_KEY_USER_AGENT] = $this->requestStack->getCurrentRequest()?->headers->get('User-Agent');
+        // TODO: @Lippa add further custom user data
 
         $privacyConsent = new PrivacyConsent($clientData, $token);
 
@@ -132,8 +134,9 @@ class PrivacyConsentManager
         }
 
         $specsServices = [];
-        foreach ($this->getSpecs()[self::JSON_KEY_SERVICES] as $serviceSpecs) {
-            $specsServices[] = $serviceSpecs['id'];
+        foreach ($this->getSpecs()[self::JSON_KEY_SERVICES] as $service) {
+            /** @var PrivacyConsentService $service */
+            $specsServices[] = $service->getId();
         }
 
         $clientDataServices = array_keys($clientData[self::JSON_KEY_CONSENT]);
