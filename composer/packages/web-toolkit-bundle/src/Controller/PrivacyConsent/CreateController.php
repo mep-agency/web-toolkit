@@ -13,7 +13,10 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Controller\PrivacyConsent;
 
+use Exception;
 use Mep\WebToolkitBundle\Config\RouteName;
+use Mep\WebToolkitBundle\Service\PrivacyConsentManager;
+use Nette\Utils\Json;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,8 +28,18 @@ use Symfony\Component\Routing\Annotation\Route;
 class CreateController extends AbstractController
 {
     #[Route('/', name: RouteName::PRIVACY_CONSENT_CREATE, methods: [Request::METHOD_POST])]
-    public function __invoke(): Response
+    public function __invoke(PrivacyConsentManager $privacyConsentManager, Request $request): Response
     {
-        return $this->json([]);
+        try {
+            return $this->json([
+                'token' => $privacyConsentManager->generateConsent(
+                    Json::decode($request->getContent(), Json::FORCE_ARRAY),
+                )->getToken(),
+            ]);
+        } catch (Exception $exception) {
+            return $this->json([
+                'message' => $exception->getMessage(),
+            ], 400);
+        }
     }
 }
