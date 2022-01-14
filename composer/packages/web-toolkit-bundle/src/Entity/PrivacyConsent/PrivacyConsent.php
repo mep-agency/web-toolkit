@@ -17,15 +17,12 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Mep\WebToolkitBundle\Repository\PrivacyConsent\PrivacyConsentRepository;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Uid\Uuid;
 
 /**
  * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
-#[ORM\Entity(PrivacyConsentRepository::class)]
-#[UniqueEntity(fields: ['token', 'datetime'])]
+#[ORM\Entity]
 #[ORM\Table(name: 'mwt_privacy_consent')]
 class PrivacyConsent
 {
@@ -45,10 +42,10 @@ class PrivacyConsent
     public function __construct(
         #[ORM\Column(type: Types::JSON)]
         private array $data = [],
-        ?Uuid $token = null,
+        ?Uuid $uuid = null,
     ) {
         $this->id = Uuid::v6();
-        $this->token = $token ?? Uuid::v4();
+        $this->token = $uuid ?? Uuid::v4();
         $this->datetime = new DateTimeImmutable();
     }
 

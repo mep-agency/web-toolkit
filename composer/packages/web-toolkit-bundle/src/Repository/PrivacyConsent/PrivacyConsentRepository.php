@@ -35,10 +35,10 @@ class PrivacyConsentRepository extends ServiceEntityRepository
         parent::__construct($managerRegistry, PrivacyConsent::class);
     }
 
-    public function findLastByToken(Uuid $token): ?PrivacyConsent
+    public function findLastByToken(Uuid $uuid): ?PrivacyConsent
     {
         return $this->findOneBy([
-            'token' => $token,
+            'token' => $uuid,
         ], [
             'datetime' => 'DESC',
         ]);
@@ -47,10 +47,10 @@ class PrivacyConsentRepository extends ServiceEntityRepository
     /**
      * @return PrivacyConsent[]
      */
-    public function findAllByToken(Uuid $token): array
+    public function findAllByToken(Uuid $uuid): array
     {
         return $this->findBy([
-            'token' => $token,
+            'token' => $uuid,
         ], [
             'datetime' => 'DESC',
         ]);

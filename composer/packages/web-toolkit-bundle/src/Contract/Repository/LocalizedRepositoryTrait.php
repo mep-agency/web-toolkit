@@ -47,7 +47,7 @@ trait LocalizedRepositoryTrait
     }
 
     #[Required]
-    public function setLocaleProvider(LocaleProviderInterface $localeProvider): void
+    public function autowire(LocaleProviderInterface $localeProvider): void
     {
         $this->localeProvider = $localeProvider;
     }

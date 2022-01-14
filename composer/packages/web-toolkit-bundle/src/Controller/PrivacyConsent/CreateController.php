@@ -30,11 +30,14 @@ class CreateController extends AbstractController
     #[Route('/', name: RouteName::PRIVACY_CONSENT_CREATE, methods: [Request::METHOD_POST])]
     public function __invoke(PrivacyConsentManager $privacyConsentManager, Request $request): Response
     {
+        /** @var string $content */
+        $content = $request->getContent();
+        /** @var array<string, mixed> $contentArray */
+        $contentArray = Json::decode($content, Json::FORCE_ARRAY);
+
         try {
             return $this->json([
-                'token' => $privacyConsentManager->generateConsent(
-                    Json::decode($request->getContent(), Json::FORCE_ARRAY),
-                )->getToken(),
+                'token' => $privacyConsentManager->generateConsent($contentArray)->getToken(),
             ]);
         } catch (AbstractPrivacyConsentException $abstractPrivacyConsentException) {
             return $this->json([

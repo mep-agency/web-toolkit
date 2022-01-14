@@ -99,9 +99,9 @@ class PrivacyConsentManager
      * @throws InvalidSpecsHashException
      * @throws UnmatchingConsentDataKeysException
      */
-    public function generateConsent(array $clientData, ?Uuid $token = null): PrivacyConsent
+    public function generateConsent(array $clientData, ?Uuid $uuid = null): PrivacyConsent
     {
-        if (null !== $token && null === $this->privacyConsentRepository->findLastByToken($token)) {
+        if (null !== $uuid && null === $this->privacyConsentRepository->findLastByToken($uuid)) {
             throw new CannotGenerateUpdatedConsentForUnexistingTokenException();
         }
 
@@ -111,7 +111,7 @@ class PrivacyConsentManager
         $clientData[self::JSON_KEY_USER_AGENT] = $this->requestStack->getCurrentRequest()?->headers->get('User-Agent');
         // TODO: @Lippa add further custom user data
 
-        $privacyConsent = new PrivacyConsent($clientData, $token);
+        $privacyConsent = new PrivacyConsent($clientData, $uuid);
 
         $this->entityManager->persist($privacyConsent);
         $this->entityManager->flush();
@@ -133,13 +133,17 @@ class PrivacyConsentManager
             throw new InvalidSpecsHashException();
         }
 
+        /** @var PrivacyConsentService[] $services */
+        $services = $this->getSpecs()[self::JSON_KEY_SERVICES];
+
         $specsServices = [];
-        foreach ($this->getSpecs()[self::JSON_KEY_SERVICES] as $service) {
-            /** @var PrivacyConsentService $service */
+        foreach ($services as $service) {
             $specsServices[] = $service->getId();
         }
 
-        $clientDataServices = array_keys($clientData[self::JSON_KEY_CONSENT]);
+        /** @var array<string, bool> $consentArray */
+        $consentArray = $clientData[self::JSON_KEY_CONSENT];
+        $clientDataServices = array_keys($consentArray);
 
         if ($specsServices !== $clientDataServices) {
             throw new UnmatchingConsentDataKeysException();

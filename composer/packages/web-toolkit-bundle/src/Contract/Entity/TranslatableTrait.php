@@ -28,7 +28,7 @@ trait TranslatableTrait
     use OriginalTranslatableTrait;
 
     /**
-     * @var Collection|TranslationInterface[]
+     * @var Collection<int, TranslationInterface>|TranslationInterface[]
      */
     #[Assert\Valid]
     protected $translations;
@@ -36,19 +36,24 @@ trait TranslatableTrait
     /**
      * @see mergeNewTranslations
      *
-     * @var Collection|TranslationInterface[]
+     * @var Collection<int, TranslationInterface>|TranslationInterface[]
      */
     #[Assert\Valid]
     protected $newTranslations;
 
-    public function __call(string $name, array $arguments)
+    /**
+     * @param mixed[] $arguments
+     */
+    public function __call(string $name, array $arguments): mixed
     {
-        return PropertyAccess::createPropertyAccessor()->getValue(
-            $this->getTranslations()
-                ->get($this->currentLocale) ??
-            $this->getTranslations()
-                ->first(),
-            $name,
-        );
+        if (is_string($this->currentLocale)) {
+            return PropertyAccess::createPropertyAccessor()->getValue(
+                $this->getTranslations()
+                    ->get($this->currentLocale),
+                $name,
+            );
+        }
+
+        return PropertyAccess::createPropertyAccessor()->getValue($this->getTranslations()->first(), $name,);
     }
 }

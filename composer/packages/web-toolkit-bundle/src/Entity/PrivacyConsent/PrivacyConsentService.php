@@ -18,7 +18,6 @@ use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Mep\WebToolkitBundle\Contract\Entity\TranslatableTrait;
-use Mep\WebToolkitBundle\Repository\PrivacyConsent\PrivacyConsentServiceRepository;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -27,7 +26,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
-#[ORM\Entity(repositoryClass: PrivacyConsentServiceRepository::class)]
+#[ORM\Entity]
 #[ORM\Table(name: 'mwt_privacy_consent_service')]
 class PrivacyConsentService implements TranslatableInterface, JsonSerializable
 {
@@ -40,9 +39,11 @@ class PrivacyConsentService implements TranslatableInterface, JsonSerializable
     #[Assert\NotBlank]
     private string $id;
 
-    #[ORM\Column(type: Types::SMALLINT)]
+    #[ORM\Column(type: Types::SMALLINT, options: [
+        'default' => 10,
+    ])]
     #[Assert\NotNull]
-    private int $priority;
+    private int $priority = 10;
 
     #[ORM\ManyToOne(targetEntity: PrivacyConsentCategory::class)]
     #[ORM\JoinColumn(nullable: false)]

@@ -191,4 +191,55 @@ final class WebToolkitBundle extends Bundle
      * @var string
      */
     public const SERVICE_TWIG_FUNCTIONS_EXTENSION = self::REFERENCE_PREFIX.'twig_functions_extension';
+
+    // Privacy consent
+    /**
+     * @var string
+     */
+    public const SERVICE_PRIVACY_CONSENT_REPOSITORY = self::REFERENCE_PREFIX.'privacy_consent_repository';
+
+    /**
+     * @var string
+     */
+    public const SERVICE_PRIVACY_CONSENT_CATEGORY_REPOSITORY = self::REFERENCE_PREFIX.'privacy_consent_category_repository';
+
+    /**
+     * @var string
+     */
+    public const SERVICE_PRIVACY_CONSENT_SERVICE_REPOSITORY = self::REFERENCE_PREFIX.'privacy_consent_service_repository';
+
+    /**
+     * @var string
+     */
+    public const SERVICE_PRIVACY_CONSENT_MANAGER = self::REFERENCE_PREFIX.'privacy_consent_manager';
+
+    /**
+     * @var string
+     */
+    public const SERVICE_PRIVACY_CONSENT_EXTENSION = self::REFERENCE_PREFIX.'privacy_consent_extension';
+
+    /**
+     * @var string
+     */
+    public const SERVICE_PRIVACY_CREATE_CONTROLLER = self::REFERENCE_PREFIX.'privacy_create_controller';
+
+    /**
+     * @var string
+     */
+    public const SERVICE_PRIVACY_GET_CONSENT_CONTROLLER = self::REFERENCE_PREFIX.'privacy_get_consent_controller';
+
+    /**
+     * @var string
+     */
+    public const SERVICE_PRIVACY_GET_SPECS_CONTROLLER = self::REFERENCE_PREFIX.'privacy_get_specs_controller';
+
+    /**
+     * @var string
+     */
+    public const SERVICE_PRIVACY_SHOW_HISTORY_CONTROLLER = self::REFERENCE_PREFIX.'privacy_show_history_controller';
+
+    /**
+     * @var string
+     */
+    public const SERVICE_PRIVACY_UPDATE_CONTROLLER = self::REFERENCE_PREFIX.'privacy_update_controller';
 }

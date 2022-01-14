@@ -22,6 +22,6 @@ final class CannotGenerateUpdatedConsentForUnexistingTokenException extends Abst
 {
     public function __construct()
     {
-        parent::__construct("Cannot generate updated consent for unexisting token.");
+        parent::__construct('Cannot generate updated consent for unexisting token.');
     }
 }

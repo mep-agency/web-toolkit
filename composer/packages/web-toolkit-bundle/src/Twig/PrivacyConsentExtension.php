@@ -58,10 +58,15 @@ class PrivacyConsentExtension extends AbstractExtension
     ) {
     }
 
+    /**
+     * @return TwigFunction[]
+     */
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('privacy_consent_endpoints', [$this, 'getPrivacyConsentEndpoint']),
+            new TwigFunction('privacy_consent_endpoints', function (): array {
+                return $this->getPrivacyConsentEndpoint();
+            }),
         ];
     }
 
@@ -78,12 +83,16 @@ class PrivacyConsentExtension extends AbstractExtension
             ),
             self::ENDPOINT_GET_HISTORY => $this->urlGenerator->generate(
                 RouteName::PRIVACY_CONSENT_GET_HISTORY,
-                ['token' => self::TOKEN_PLACEHOLDER],
+                [
+                    'token' => self::TOKEN_PLACEHOLDER,
+                ],
                 UrlGeneratorInterface::ABSOLUTE_URL,
             ),
             self::ENDPOINT_CONSENT_GET => $this->urlGenerator->generate(
                 RouteName::PRIVACY_CONSENT_GET,
-                ['token' => self::TOKEN_PLACEHOLDER],
+                [
+                    'token' => self::TOKEN_PLACEHOLDER,
+                ],
                 UrlGeneratorInterface::ABSOLUTE_URL,
             ),
             self::ENDPOINT_CONSENT_CREATE => $this->urlGenerator->generate(
@@ -93,7 +102,9 @@ class PrivacyConsentExtension extends AbstractExtension
             ),
             self::ENDPOINT_CONSENT_UPDATE => $this->urlGenerator->generate(
                 RouteName::PRIVACY_CONSENT_UPDATE,
-                ['token' => self::TOKEN_PLACEHOLDER],
+                [
+                    'token' => self::TOKEN_PLACEHOLDER,
+                ],
                 UrlGeneratorInterface::ABSOLUTE_URL,
             ),
         ];

@@ -20,6 +20,11 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface;
 use Mep\WebToolkitBundle\Command\FileStorage\GarbageCollectionCommand;
 use Mep\WebToolkitBundle\Command\FileStorage\SessionsCreateTableCommand;
+use Mep\WebToolkitBundle\Controller\PrivacyConsent\CreateController;
+use Mep\WebToolkitBundle\Controller\PrivacyConsent\GetConsentController;
+use Mep\WebToolkitBundle\Controller\PrivacyConsent\GetSpecsController;
+use Mep\WebToolkitBundle\Controller\PrivacyConsent\ShowHistoryController;
+use Mep\WebToolkitBundle\Controller\PrivacyConsent\UpdateController;
 use Mep\WebToolkitBundle\Entity\Attachment;
 use Mep\WebToolkitBundle\EventListener\AttachmentLifecycleEventListener;
 use Mep\WebToolkitBundle\EventListener\ForceSingleInstanceEventListener;
@@ -55,14 +60,14 @@ use Symfony\Component\Asset\Packages;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Form\FormRegistryInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -262,33 +267,50 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->tag('twig.extension')
     ;
 
-    // TODO: @Alllle add constants
     // Privacy consent
-    $services->set(PrivacyConsentRepository::class)
+    $services->set(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_REPOSITORY, PrivacyConsentRepository::class)
         ->autowire()
         ->tag('doctrine.repository_service')
     ;
-    $services->set(PrivacyConsentServiceRepository::class)
+    $services->set(
+        WebToolkitBundle::SERVICE_PRIVACY_CONSENT_CATEGORY_REPOSITORY,
+        PrivacyConsentCategoryRepository::class,
+    )
         ->autowire()
         ->tag('doctrine.repository_service')
     ;
-    $services->set(PrivacyConsentCategoryRepository::class)
+    $services->set(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_SERVICE_REPOSITORY, PrivacyConsentServiceRepository::class)
         ->autowire()
         ->tag('doctrine.repository_service')
     ;
-    $services->set(PrivacyConsentManager::class)
-        ->arg(0, new Reference(PrivacyConsentRepository::class))
-        ->arg(1, new Reference(PrivacyConsentCategoryRepository::class))
-        ->arg(2, new Reference(PrivacyConsentServiceRepository::class))
+    $services->set(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_MANAGER, PrivacyConsentManager::class)
+        ->arg(0, new Reference(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_REPOSITORY))
+        ->arg(1, new Reference(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_CATEGORY_REPOSITORY))
+        ->arg(2, new Reference(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_SERVICE_REPOSITORY))
         ->arg(3, new Reference(RequestStack::class))
         ->arg(4, new Reference(EntityManagerInterface::class))
     ;
-    $services->set(PrivacyConsentExtension::class)
+    $services->set(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_EXTENSION, PrivacyConsentExtension::class)
         ->arg(0, new Reference(UrlGeneratorInterface::class))
         ->tag('twig.extension')
     ;
-    // TODO: @Alllle convert this to set() method
-    $services->load('Mep\WebToolkitBundle\Controller\PrivacyConsent\\', __DIR__.'/../../Controller/PrivacyConsent')
+    $services->set(WebToolkitBundle::SERVICE_PRIVACY_CREATE_CONTROLLER, CreateController::class)
+        ->autowire()
+        ->tag('controller.service_arguments')
+    ;
+    $services->set(WebToolkitBundle::SERVICE_PRIVACY_GET_CONSENT_CONTROLLER, GetConsentController::class)
+        ->autowire()
+        ->tag('controller.service_arguments')
+    ;
+    $services->set(WebToolkitBundle::SERVICE_PRIVACY_GET_SPECS_CONTROLLER, GetSpecsController::class)
+        ->autowire()
+        ->tag('controller.service_arguments')
+    ;
+    $services->set(WebToolkitBundle::SERVICE_PRIVACY_SHOW_HISTORY_CONTROLLER, ShowHistoryController::class)
+        ->autowire()
+        ->tag('controller.service_arguments')
+    ;
+    $services->set(WebToolkitBundle::SERVICE_PRIVACY_UPDATE_CONTROLLER, UpdateController::class)
         ->autowire()
         ->tag('controller.service_arguments')
     ;

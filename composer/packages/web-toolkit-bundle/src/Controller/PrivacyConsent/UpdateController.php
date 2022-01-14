@@ -28,20 +28,23 @@ use Symfony\Component\Uid\Uuid;
  */
 class UpdateController extends AbstractController
 {
-    #[Route('/{token<[0-9a-f]{8}-[0-9a-f]{4}-[04][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}>}/', name: RouteName::PRIVACY_CONSENT_UPDATE, methods: [Request::METHOD_POST])]
+    #[Route('/{token<[0-9a-f]{8}-[0-9a-f]{4}-[04][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}>}/', name: RouteName::PRIVACY_CONSENT_UPDATE, methods: [
+        Request::METHOD_POST,
+    ])]
     public function __invoke(
         string $token,
         PrivacyConsentManager $privacyConsentManager,
         Request $request,
     ): Response {
         $token = Uuid::fromString($token);
+        /** @var string $content */
+        $content = $request->getContent();
+        /** @var array<string, mixed> $contentArray */
+        $contentArray = Json::decode($content, Json::FORCE_ARRAY);
 
         try {
             return $this->json([
-                'token' => $privacyConsentManager->generateConsent(
-                    Json::decode($request->getContent(), Json::FORCE_ARRAY),
-                    $token,
-                )->getData(),
+                'token' => $privacyConsentManager->generateConsent($contentArray, $token,)->getData(),
             ]);
         } catch (AbstractPrivacyConsentException $abstractPrivacyConsentException) {
             return $this->json([
