@@ -16,6 +16,7 @@ namespace Mep\WebToolkitBundle\Repository\PrivacyConsent;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Mep\WebToolkitBundle\Entity\PrivacyConsent\PrivacyConsent;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * @method null|PrivacyConsent find($id, $lockMode = null, $lockVersion = null)
@@ -34,7 +35,7 @@ class PrivacyConsentRepository extends ServiceEntityRepository
         parent::__construct($managerRegistry, PrivacyConsent::class);
     }
 
-    public function findLastByToken(string $token): ?PrivacyConsent
+    public function findLastByToken(Uuid $token): ?PrivacyConsent
     {
         return $this->findOneBy([
             'token' => $token,
@@ -46,7 +47,7 @@ class PrivacyConsentRepository extends ServiceEntityRepository
     /**
      * @return PrivacyConsent[]
      */
-    public function findAllByToken(string $token): array
+    public function findAllByToken(Uuid $token): array
     {
         return $this->findBy([
             'token' => $token,
