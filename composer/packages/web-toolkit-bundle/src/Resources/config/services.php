@@ -48,6 +48,7 @@ use Mep\WebToolkitBundle\Serializer\EditorJsContentNormalizer;
 use Mep\WebToolkitBundle\Service\PrivacyConsentManager;
 use Mep\WebToolkitBundle\Twig\AttachmentExtension;
 use Mep\WebToolkitBundle\Twig\EditorJsExtension;
+use Mep\WebToolkitBundle\Twig\PrivacyConsentExtension;
 use Mep\WebToolkitBundle\Twig\TwigFunctionsExtension;
 use Mep\WebToolkitBundle\WebToolkitBundle;
 use Symfony\Component\Asset\Packages;
@@ -55,6 +56,7 @@ use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Form\FormRegistryInterface;
@@ -280,6 +282,10 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->arg(2, new Reference(PrivacyConsentServiceRepository::class))
         ->arg(3, new Reference(RequestStack::class))
         ->arg(4, new Reference(EntityManagerInterface::class))
+    ;
+    $services->set(PrivacyConsentExtension::class)
+        ->arg(0, new Reference(UrlGeneratorInterface::class))
+        ->tag('twig.extension')
     ;
     // TODO: @Alllle convert this to set() method
     $services->load('Mep\WebToolkitBundle\Controller\PrivacyConsent\\', __DIR__.'/../../Controller/PrivacyConsent')
