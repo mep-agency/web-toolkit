@@ -45,9 +45,10 @@ class PrivacyConsent
     public function __construct(
         #[ORM\Column(type: Types::JSON)]
         private array $consents = [],
+        ?Uuid $token = null,
     ) {
         $this->id = Uuid::v6();
-        $this->token = Uuid::v4();
+        $this->token = $token ?: Uuid::v4();
         $this->datetime = new DateTimeImmutable();
     }
 
