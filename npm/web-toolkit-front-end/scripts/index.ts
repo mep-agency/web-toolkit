@@ -9,7 +9,11 @@
 
 import createConsentManager from './ConsentManagement/ConsentManager';
 import createBrowserUiDriver from './Vendor/Usercentrics/BrowserUiDriver';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import HCaptcha from './Vendor/HCaptcha';
+
+import BrowserBanner from './MwtPrivacyConsent/BrowserBanner';
+import createPrivacyConsentManager from './MwtPrivacyConsent/MwtPrivacyConsent';
 
 // Initialize the ConsentManager with Usercentrics' Browser UI driver
 export const consentManager = createConsentManager(createBrowserUiDriver(
@@ -22,6 +26,9 @@ export const consentManager = createConsentManager(createBrowserUiDriver(
   // 'XXXXXXXXX',
 ));
 
+export const privacyConsentManager = createPrivacyConsentManager(BrowserBanner());
+/*
 // Initialize HCaptcha inputs
 export const hCaptcha = new HCaptcha();
 hCaptcha.init(consentManager);
+*/
