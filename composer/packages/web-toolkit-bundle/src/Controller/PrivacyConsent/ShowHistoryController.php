@@ -13,22 +13,29 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Controller\PrivacyConsent;
 
-use Mep\WebToolkitBundle\Config\RouteName;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
+use Mep\WebToolkitBundle\Contract\Controller\AbstractMwtController;
+use Mep\WebToolkitBundle\Repository\PrivacyConsent\PrivacyConsentRepository;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
-class ShowHistoryController extends AbstractController
+class ShowHistoryController extends AbstractMwtController
 {
-    #[Route('/{token<[0-9a-f]{8}-[0-9a-f]{4}-[04][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}>}/history/', name: RouteName::PRIVACY_CONSENT_GET_HISTORY, methods: [
-        Request::METHOD_GET,
-    ])]
+    public function __construct(
+        private PrivacyConsentRepository $privacyConsentRepository,
+        ?SerializerInterface $serializer = null,
+    ) {
+        parent::__construct($serializer);
+    }
+
     public function __invoke(string $token): Response
     {
-        return $this->json([]);
+        $token = Uuid::fromString($token);
+
+        // TODO: @Alllle finish this
+        return $this->json($this->privacyConsentRepository->findAllByToken($token));
     }
 }

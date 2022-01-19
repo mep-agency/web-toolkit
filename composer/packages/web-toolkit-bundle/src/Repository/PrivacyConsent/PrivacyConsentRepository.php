@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Mep\WebToolkitBundle\Repository\PrivacyConsent;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 use Mep\WebToolkitBundle\Entity\PrivacyConsent\PrivacyConsent;
 use Symfony\Component\Uid\Uuid;
@@ -30,6 +31,11 @@ use Symfony\Component\Uid\Uuid;
  */
 class PrivacyConsentRepository extends ServiceEntityRepository
 {
+    /**
+     * @var int
+     */
+    public const MAX_PRIVACY_CONSENT_PER_PAGE = 3;
+
     public function __construct(ManagerRegistry $managerRegistry)
     {
         parent::__construct($managerRegistry, PrivacyConsent::class);
@@ -45,14 +51,18 @@ class PrivacyConsentRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return PrivacyConsent[]
+     * @return Paginator<PrivacyConsent>
      */
-    public function findAllByToken(Uuid $uuid): array
+    public function findAllByToken(Uuid $uuid, int $offset = 0): Paginator
     {
-        return $this->findBy([
-            'token' => $uuid,
-        ], [
-            'datetime' => 'DESC',
-        ]);
+        $query = $this->createQueryBuilder('p')
+            ->andWhere('p.token = :token')
+            ->setParameter('token', $uuid->toBinary())
+            ->setFirstResult($offset)
+            ->setMaxResults(self::MAX_PRIVACY_CONSENT_PER_PAGE)
+            ->getQuery()
+        ;
+
+        return new Paginator($query);
     }
 }

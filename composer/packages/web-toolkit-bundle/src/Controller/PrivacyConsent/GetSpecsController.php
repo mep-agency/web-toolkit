@@ -13,23 +13,27 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Controller\PrivacyConsent;
 
-use Mep\WebToolkitBundle\Config\RouteName;
+use Mep\WebToolkitBundle\Contract\Controller\AbstractMwtController;
 use Mep\WebToolkitBundle\Service\PrivacyConsentManager;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
-class GetSpecsController extends AbstractController
+class GetSpecsController extends AbstractMwtController
 {
-    #[Route('/specs/', name: RouteName::PRIVACY_CONSENT_GET_SPECS, methods: [Request::METHOD_GET])]
-    public function __invoke(PrivacyConsentManager $privacyConsentManager): Response
+    public function __construct(
+        private PrivacyConsentManager $privacyConsentManager,
+        ?SerializerInterface $serializer = null,
+    ) {
+        parent::__construct($serializer);
+    }
+
+    public function __invoke(): Response
     {
         $specsArray = [
-            PrivacyConsentManager::JSON_KEY_SPECS => $privacyConsentManager->getSpecs(),
+            PrivacyConsentManager::JSON_KEY_SPECS => $this->privacyConsentManager->getSpecs(),
         ];
 
         return $this->json($specsArray);

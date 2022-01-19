@@ -295,23 +295,30 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->tag('twig.extension')
     ;
     $services->set(WebToolkitBundle::SERVICE_PRIVACY_CREATE_CONTROLLER, CreateController::class)
-        ->autowire()
-        ->tag('controller.service_arguments')
+        ->public()
+        ->arg(0, new Reference(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_MANAGER))
+        ->arg(1, new Reference(RequestStack::class))
+        ->arg(2, new Reference(SerializerInterface::class))
     ;
     $services->set(WebToolkitBundle::SERVICE_PRIVACY_GET_CONSENT_CONTROLLER, GetConsentController::class)
-        ->autowire()
-        ->tag('controller.service_arguments')
+        ->public()
+        ->arg(0, new Reference(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_REPOSITORY))
+        ->arg(1, new Reference(SerializerInterface::class))
     ;
     $services->set(WebToolkitBundle::SERVICE_PRIVACY_GET_SPECS_CONTROLLER, GetSpecsController::class)
-        ->autowire()
-        ->tag('controller.service_arguments')
+        ->public()
+        ->arg(0, new Reference(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_MANAGER))
+        ->arg(1, new Reference(SerializerInterface::class))
     ;
     $services->set(WebToolkitBundle::SERVICE_PRIVACY_SHOW_HISTORY_CONTROLLER, ShowHistoryController::class)
-        ->autowire()
-        ->tag('controller.service_arguments')
+        ->public()
+        ->arg(0, new Reference(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_REPOSITORY))
+        ->arg(1, new Reference(SerializerInterface::class))
     ;
     $services->set(WebToolkitBundle::SERVICE_PRIVACY_UPDATE_CONTROLLER, UpdateController::class)
-        ->autowire()
-        ->tag('controller.service_arguments')
+        ->public()
+        ->arg(0, new Reference(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_MANAGER))
+        ->arg(1, new Reference(RequestStack::class))
+        ->arg(2, new Reference(SerializerInterface::class))
     ;
 };
