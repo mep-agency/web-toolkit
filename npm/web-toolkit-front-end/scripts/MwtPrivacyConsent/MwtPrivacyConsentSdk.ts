@@ -6,100 +6,176 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-import { SpecsHashed, SpecsList } from './MwtPrivacyConsentInterface';
-import EndpointList from './MwtPrivacyConsentSdkInterface';
+import sha256 from 'crypto-js/sha256';
+import {
+  Consent,
+  EndpointList, ConsentLocalData,
+  MwtPrivacyConsentSdkInterface, ConsentSpecs, ServicesStatus, ConsentRequestBody,
+} from './MwtPrivacyConsentSdkInterface';
 
-export default class MwtPrivacyConsentSdk {
-  URLPaths:EndpointList = new EndpointList();
+const DEFAULT_EXPIRATION_DELAY = 600000; // 10 minuti
+const TOKEN_COOKIE_NAME = 'mwt_privacy_consent_token';
+const LOCAL_STORAGE_KEY = 'mwt_privacy_consent';
+const TOKEN_PLACEHOLDER = '00000000-0000-0000-0000-000000000000';
 
-  public async init(endpoints: EndpointList) {
-    this.URLPaths = endpoints;
+export default class MwtPrivacyConsentSdk implements MwtPrivacyConsentSdkInterface {
+  private savedSpecsConsents!: ConsentLocalData;
 
-    return this.getSpecs();
+  constructor(
+    private apiUrls: EndpointList,
+    private cacheExpiration: number = DEFAULT_EXPIRATION_DELAY,
+  ) {
+
   }
 
-  public sendConsent(hashedSpecs: SpecsHashed) {
-    // eslint-disable-next-line no-console
-    console.log('Consent Send!');
-    this.consentCreate(hashedSpecs);
+  // TODO: function to replace token before fetch
+
+  // COOKIE FUNCTIONS
+  private setCookie(key:string, value:string) {
+    document.cookie = `${key}=${value || ''}; path=/`;
   }
 
-  private async getSpecs() {
-    try {
-      const response = await fetch(this.URLPaths.getSpecs, {
-        method: 'GET',
-      });
-      return await response.json();
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error(e);
-      return null;
+  private getCookie(key:string): string | null {
+    const nameEQ = `${key}=`;
+    const ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+      if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
     }
+    return null;
   }
 
-  private async consentCreate(data: SpecsHashed) {
+  private invalidateCookie(key:string) {
+    document.cookie = `${key}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+  }
+  // END COOKIE FUNCTIONS
+
+  async getCurrentConsent(): Promise<Consent> {
+    if (this.getToken() === null) {
+      return this.buildNewConsent();
+    }
+
+    let localStorageData = localStorage.getItem(LOCAL_STORAGE_KEY);
+
+    if (localStorageData === null) {
+      await this.refreshConsent();
+
+      localStorageData = localStorage.getItem(LOCAL_STORAGE_KEY)!;
+    }
+
+    let localConsentStorageConsentData: ConsentLocalData = JSON.parse(localStorageData) as ConsentLocalData;
+
+    if ((this.getCurrentTime() - localConsentStorageConsentData.lastCheck) >= this.cacheExpiration) {
+      await this.refreshConsent();
+
+      localStorageData = localStorage.getItem(LOCAL_STORAGE_KEY)!;
+      localConsentStorageConsentData = JSON.parse(localStorageData) as ConsentLocalData;
+    }
+
+    return localConsentStorageConsentData.consent;
+  }
+
+  async registerConsent(temporaryConsent: Consent): Promise<any> {
+    let apiUrl = this.apiUrls.consentCreate;
+
+    if (temporaryConsent.token !== null) {
+      apiUrl = this.generateUrl(this.apiUrls.consentUpdate);
+    }
+
     try {
-      const response = await fetch(this.URLPaths.consentCreate, {
+      const response = await fetch(apiUrl, {
         method: 'POST',
-        body: JSON.stringify(data),
+        body: this.buildConsentRequestBody(temporaryConsent),
       });
-      // eslint-disable-next-line no-console
-      console.log(response);
-      return await response.json();
+      const consent = await response.json() as Consent;
+
+      this.setCookie(TOKEN_COOKIE_NAME, consent.token!);
+      this.storeConsent(consent);
+
+      return consent;
     } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error(e);
-      return null;
+      throw e;
     }
   }
 
-  private async getHistory(token: string) {
-    this.URLPaths.getHistory.replace('00000000-0000-0000-0000-000000000000', token);
-
+  private async refreshConsent() {
     try {
-      const response = await fetch(this.URLPaths.getHistory, {
+      const response = await fetch(this.generateUrl(this.apiUrls.consentGet), {
         method: 'GET',
       });
-      return await response.json();
+
+      this.storeConsent(await response.json() as Consent);
     } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error(e);
-      return null;
+      throw e;
     }
   }
 
-  private async consentGet(token: string) {
-    // Temporary implementation
-    this.URLPaths.consentGet.replace('00000000-0000-0000-0000-000000000000', token);
+  private async getSpecs(): Promise<ConsentSpecs> {
     try {
-      const response = await fetch(this.URLPaths.consentGet, {
+      const response = await fetch(this.apiUrls.getSpecs, {
         method: 'GET',
       });
-      return await response.json();
+
+      return await response.json() as ConsentSpecs;
     } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error(e);
-      return null;
+      throw e;
     }
   }
 
-  private async consentUpdate(token: string, data: SpecsList) {
-    this.URLPaths.consentUpdate.replace('00000000-0000-0000-0000-000000000000', token);
-
-    try {
-      const response = await fetch(this.URLPaths.consentUpdate, {
-        method: 'POST',
-        body: JSON.stringify(data),
-      });
-      return await response.json();
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error(e);
-      return null;
-    }
+  private getToken(): string | null {
+    return this.getCookie(TOKEN_COOKIE_NAME);
   }
 
-  // TODO: reimplement localstorage saving of token and lastCheckDate
+  private getCurrentTime(): number {
+    return (new Date()).getTime();
+  }
 
-  // TODO: Debouncer
+  private async buildNewConsent(): Promise<Consent> {
+    const specs: ConsentSpecs = await this.getSpecs();
+    const servicesStatus: ServicesStatus = {};
+    const requiredCategories: string[] = [];
+
+    specs.categories.map((categorySpecs) => {
+      if (categorySpecs.required) {
+        requiredCategories.push(categorySpecs.id);
+      }
+    });
+
+    specs.services.map((serviceSpecs) => {
+      servicesStatus[serviceSpecs.id] = requiredCategories.includes(serviceSpecs.category);
+    });
+
+    const newConsent: Consent = {
+      token: null,
+      specs,
+      consent: servicesStatus,
+    };
+
+    this.storeConsent(newConsent);
+
+    return newConsent;
+  }
+
+  private generateUrl(url: string): string {
+    return url.replace(TOKEN_PLACEHOLDER, this.getToken()!);
+  }
+
+  private storeConsent(consent: Consent): void {
+    const newConsentLocalData: ConsentLocalData = {
+      consent,
+      lastCheck: this.getCurrentTime(),
+    };
+
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newConsentLocalData));
+  }
+
+  private buildConsentRequestBody(consent: Consent): string {
+    const consentRequestBody: ConsentRequestBody = {
+      specsHash: sha256(JSON.stringify(consent.specs, null, 0)).toString(),
+      consent: consent.consent,
+    };
+
+    return JSON.stringify(consentRequestBody, null, 0);
+  }
 }

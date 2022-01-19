@@ -7,6 +7,8 @@
   "author": "Marco Lipparini <developer@liarco.net>",
   "license": "MIT",
   "dependencies": {
+    "@types/crypto-js": "^4.1.0",
+    "crypto-js": "^4.1.1",
     "typebase.css": "^0.5.1"
   }
 }

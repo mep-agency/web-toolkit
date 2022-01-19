@@ -13,8 +13,8 @@ import createBrowserUiDriver from './Vendor/Usercentrics/BrowserUiDriver';
 import HCaptcha from './Vendor/HCaptcha';
 
 import BrowserBanner from './MwtPrivacyConsent/BrowserBanner';
-import createPrivacyConsentManager from './MwtPrivacyConsent/MwtPrivacyConsent';
-
+import MwtPrivacyConsentSdk from './MwtPrivacyConsent/MwtPrivacyConsentSdk';
+/*
 // Initialize the ConsentManager with Usercentrics' Browser UI driver
 export const consentManager = createConsentManager(createBrowserUiDriver(
   // Tell Browser UI to hide the panel on page load. You can leave it undefined to check for a
@@ -25,8 +25,13 @@ export const consentManager = createConsentManager(createBrowserUiDriver(
   // "data-uc-settings-id" attribute of the <html> element.
   // 'XXXXXXXXX',
 ));
+ */
 
-export const privacyConsentManager = createPrivacyConsentManager(BrowserBanner());
+const bannerUi = new BrowserBanner();
+const privacyConsent = new MwtPrivacyConsentSdk(bannerUi.parseEndpoints());
+console.log(privacyConsent.getCurrentConsent());
+
+// export const privacyConsentManager = createPrivacyConsentManager(BrowserBanner());
 /*
 // Initialize HCaptcha inputs
 export const hCaptcha = new HCaptcha();

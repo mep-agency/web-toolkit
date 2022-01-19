@@ -6,42 +6,26 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-import { EndpointList } from './MwtPrivacyConsentSdkInterface';
-import { SpecsList } from './MwtPrivacyConsentInterface';
 
-class BrowserBanner {
+import { EndpointList, ConsentSpecs } from './MwtPrivacyConsentSdkInterface';
+
+export default class BrowserBanner {
   private bannerContainer:HTMLElement | null;
 
-  specs:SpecsList = {
-    services: [],
+  specs:ConsentSpecs = {
     categories: [],
+    services: [],
   };
 
   public constructor() {
     this.bannerContainer = document.getElementById('data-pcm-container');
   }
 
-  public init(specList: SpecsList) {
-    this.specs = specList;
+  public init() {
 
-    // TODO: Show specs inside banner
   }
 
   public parseEndpoints() {
-    const endpointList:EndpointList = new EndpointList();
-
-    return Object.assign(endpointList, JSON.parse(this.bannerContainer?.getAttribute('data-endpoints')!));
+    return JSON.parse(this.bannerContainer?.getAttribute('data-endpoints')!) as EndpointList;
   }
-}
-
-let alreadyInitialized = false;
-
-export default function createBrowserUiDriver() {
-  if (alreadyInitialized) {
-    throw new Error('This function must be called once, please store the returned object');
-  }
-
-  alreadyInitialized = true;
-
-  return new BrowserBanner();
 }
