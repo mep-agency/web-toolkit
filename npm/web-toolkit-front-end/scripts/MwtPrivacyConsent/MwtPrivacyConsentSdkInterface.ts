@@ -27,7 +27,7 @@ export interface MwtPrivacyConsentSdkInterface {
   registerConsent(consentElement:Consent): Promise<Consent>;
 }
 
-export interface ServicesStatus {
+export interface PreferencesStatus {
   [key: string]: boolean;
 }
 
@@ -38,15 +38,13 @@ export interface ConsentSpecs {
 
 export interface ConsentRequestBody {
   specsHash: string;
-  // TODO: Change consent to servicesStatus
-  consent: ServicesStatus;
+  preferences: PreferencesStatus;
 }
 
 export interface Consent {
   token: string | null;
   specs: ConsentSpecs | null;
-  // TODO: Change consent to servicesStatus
-  consent: ServicesStatus;
+  preferences: PreferencesStatus;
 }
 
 export interface ConsentLocalData {

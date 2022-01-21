@@ -7,22 +7,13 @@
  * file that was distributed with this source code.
  */
 
-import { EndpointList, ConsentSpecs } from './MwtPrivacyConsentSdkInterface';
+import { EndpointList } from './MwtPrivacyConsentSdkInterface';
 
 export default class BrowserBanner {
   private bannerContainer:HTMLElement | null;
 
-  specs:ConsentSpecs = {
-    categories: [],
-    services: [],
-  };
-
   public constructor() {
     this.bannerContainer = document.getElementById('data-pcm-container');
-  }
-
-  public init() {
-
   }
 
   public parseEndpoints() {

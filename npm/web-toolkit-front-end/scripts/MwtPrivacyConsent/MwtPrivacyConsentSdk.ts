@@ -7,10 +7,12 @@
  * file that was distributed with this source code.
  */
 import sha256 from 'crypto-js/sha256';
+import Cookies from 'js-cookie';
+
 import {
   Consent,
   EndpointList, ConsentLocalData,
-  MwtPrivacyConsentSdkInterface, ConsentSpecs, ServicesStatus, ConsentRequestBody,
+  MwtPrivacyConsentSdkInterface, ConsentSpecs, PreferencesStatus, ConsentRequestBody,
 } from './MwtPrivacyConsentSdkInterface';
 
 const DEFAULT_EXPIRATION_DELAY = 600000; // 10 minuti
@@ -19,40 +21,14 @@ const LOCAL_STORAGE_KEY = 'mwt_privacy_consent';
 const TOKEN_PLACEHOLDER = '00000000-0000-0000-0000-000000000000';
 
 export default class MwtPrivacyConsentSdk implements MwtPrivacyConsentSdkInterface {
-  private savedSpecsConsents!: ConsentLocalData;
-
   constructor(
     private apiUrls: EndpointList,
     private cacheExpiration: number = DEFAULT_EXPIRATION_DELAY,
   ) {
-
   }
-
-  // TODO: function to replace token before fetch
-
-  // COOKIE FUNCTIONS
-  private setCookie(key:string, value:string) {
-    document.cookie = `${key}=${value || ''}; path=/`;
-  }
-
-  private getCookie(key:string): string | null {
-    const nameEQ = `${key}=`;
-    const ca = document.cookie.split(';');
-    for (let i = 0; i < ca.length; i++) {
-      let c = ca[i];
-      while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-      if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
-    }
-    return null;
-  }
-
-  private invalidateCookie(key:string) {
-    document.cookie = `${key}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-  }
-  // END COOKIE FUNCTIONS
 
   async getCurrentConsent(): Promise<Consent> {
-    if (this.getToken() === null) {
+    if (MwtPrivacyConsentSdk.getToken() === undefined) {
       return this.buildNewConsent();
     }
 
@@ -64,15 +40,16 @@ export default class MwtPrivacyConsentSdk implements MwtPrivacyConsentSdkInterfa
       localStorageData = localStorage.getItem(LOCAL_STORAGE_KEY)!;
     }
 
-    let localConsentStorageConsentData: ConsentLocalData = JSON.parse(localStorageData) as ConsentLocalData;
+    let localConsentStorageConsentData = JSON.parse(localStorageData) as ConsentLocalData;
+    // eslint-disable-next-line max-len
+    const timeDifference = MwtPrivacyConsentSdk.getCurrentTime() - localConsentStorageConsentData.lastCheck;
 
-    if ((this.getCurrentTime() - localConsentStorageConsentData.lastCheck) >= this.cacheExpiration) {
+    if (timeDifference >= this.cacheExpiration) {
       await this.refreshConsent();
 
       localStorageData = localStorage.getItem(LOCAL_STORAGE_KEY)!;
       localConsentStorageConsentData = JSON.parse(localStorageData) as ConsentLocalData;
     }
-
     return localConsentStorageConsentData.consent;
   }
 
@@ -80,18 +57,40 @@ export default class MwtPrivacyConsentSdk implements MwtPrivacyConsentSdkInterfa
     let apiUrl = this.apiUrls.consentCreate;
 
     if (temporaryConsent.token !== null) {
-      apiUrl = this.generateUrl(this.apiUrls.consentUpdate);
-    }
+      const localStorageElement = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)!);
 
+      if (localStorageElement) {
+        if (JSON.stringify(localStorageElement.consent) === JSON.stringify(temporaryConsent)) {
+          return localStorageElement.consent;
+        }
+        apiUrl = MwtPrivacyConsentSdk.generateUrl(this.apiUrls.consentUpdate);
+      }
+    }
+    // eslint-disable-next-line no-useless-catch
     try {
       const response = await fetch(apiUrl, {
         method: 'POST',
-        body: this.buildConsentRequestBody(temporaryConsent),
+        body: MwtPrivacyConsentSdk.buildConsentRequestBody(temporaryConsent),
       });
-      const consent = await response.json() as Consent;
 
-      this.setCookie(TOKEN_COOKIE_NAME, consent.token!);
-      this.storeConsent(consent);
+      if (apiUrl === this.apiUrls.consentCreate) {
+        const token = await response.json();
+
+        const consent: Consent = {
+          preferences: temporaryConsent.preferences,
+          specs: temporaryConsent.specs,
+          token: token.token,
+        };
+
+        Cookies.set(TOKEN_COOKIE_NAME, consent.token!);
+        MwtPrivacyConsentSdk.storeConsent(consent);
+
+        return consent;
+      }
+
+      const consent = await response.json();
+
+      MwtPrivacyConsentSdk.storeConsent(consent.token);
 
       return consent;
     } catch (e) {
@@ -100,18 +99,20 @@ export default class MwtPrivacyConsentSdk implements MwtPrivacyConsentSdkInterfa
   }
 
   private async refreshConsent() {
+    // eslint-disable-next-line no-useless-catch
     try {
-      const response = await fetch(this.generateUrl(this.apiUrls.consentGet), {
+      const response = await fetch(MwtPrivacyConsentSdk.generateUrl(this.apiUrls.consentGet), {
         method: 'GET',
       });
 
-      this.storeConsent(await response.json() as Consent);
+      MwtPrivacyConsentSdk.storeConsent(await response.json() as Consent);
     } catch (e) {
       throw e;
     }
   }
 
   private async getSpecs(): Promise<ConsentSpecs> {
+    // eslint-disable-next-line no-useless-catch
     try {
       const response = await fetch(this.apiUrls.getSpecs, {
         method: 'GET',
@@ -123,57 +124,56 @@ export default class MwtPrivacyConsentSdk implements MwtPrivacyConsentSdkInterfa
     }
   }
 
-  private getToken(): string | null {
-    return this.getCookie(TOKEN_COOKIE_NAME);
+  private static getToken(): string | undefined {
+    return Cookies.get(TOKEN_COOKIE_NAME);
   }
 
-  private getCurrentTime(): number {
+  private static getCurrentTime(): number {
     return (new Date()).getTime();
   }
 
   private async buildNewConsent(): Promise<Consent> {
     const specs: ConsentSpecs = await this.getSpecs();
-    const servicesStatus: ServicesStatus = {};
+    const servicesStatus: PreferencesStatus = {};
     const requiredCategories: string[] = [];
 
-    specs.categories.map((categorySpecs) => {
+    specs.categories.forEach((categorySpecs) => {
       if (categorySpecs.required) {
         requiredCategories.push(categorySpecs.id);
       }
     });
 
-    specs.services.map((serviceSpecs) => {
+    specs.services.forEach((serviceSpecs) => {
       servicesStatus[serviceSpecs.id] = requiredCategories.includes(serviceSpecs.category);
     });
 
     const newConsent: Consent = {
       token: null,
       specs,
-      consent: servicesStatus,
+      preferences: servicesStatus,
     };
 
-    this.storeConsent(newConsent);
+    MwtPrivacyConsentSdk.storeConsent(newConsent);
 
     return newConsent;
   }
 
-  private generateUrl(url: string): string {
-    return url.replace(TOKEN_PLACEHOLDER, this.getToken()!);
+  private static generateUrl(url: string): string {
+    return url.replace(TOKEN_PLACEHOLDER, MwtPrivacyConsentSdk.getToken()!);
   }
 
-  private storeConsent(consent: Consent): void {
+  private static storeConsent(consent: Consent): void {
     const newConsentLocalData: ConsentLocalData = {
       consent,
-      lastCheck: this.getCurrentTime(),
+      lastCheck: MwtPrivacyConsentSdk.getCurrentTime(),
     };
-
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newConsentLocalData));
   }
 
-  private buildConsentRequestBody(consent: Consent): string {
+  private static buildConsentRequestBody(consent: Consent): string {
     const consentRequestBody: ConsentRequestBody = {
       specsHash: sha256(JSON.stringify(consent.specs, null, 0)).toString(),
-      consent: consent.consent,
+      preferences: consent.preferences,
     };
 
     return JSON.stringify(consentRequestBody, null, 0);
