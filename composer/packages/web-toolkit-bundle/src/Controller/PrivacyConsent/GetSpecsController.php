@@ -32,10 +32,6 @@ class GetSpecsController extends AbstractMwtController
 
     public function __invoke(): Response
     {
-        $specsArray = [
-            PrivacyConsentManager::JSON_KEY_SPECS => $this->privacyConsentManager->getSpecs(),
-        ];
-
-        return $this->json($specsArray);
+        return $this->json($this->privacyConsentManager->getSpecs());
     }
 }

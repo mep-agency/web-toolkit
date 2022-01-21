@@ -14,9 +14,12 @@ declare(strict_types=1);
 namespace Mep\WebToolkitBundle\Repository\PrivacyConsent;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
+use LogicException;
 use Mep\WebToolkitBundle\Contract\Repository\LocalizedRepositoryInterface;
 use Mep\WebToolkitBundle\Contract\Repository\LocalizedRepositoryTrait;
+use Mep\WebToolkitBundle\Entity\PrivacyConsent\PrivacyConsentCategory;
 use Mep\WebToolkitBundle\Entity\PrivacyConsent\PrivacyConsentService;
 
 /**
@@ -46,5 +49,24 @@ class PrivacyConsentServiceRepository extends ServiceEntityRepository implements
         return $this->findBy([], [
             'priority' => 'DESC',
         ]);
+    }
+
+    /**
+     * @return PrivacyConsentService[]
+     */
+    public function findRequired(): array
+    {
+        $query = $this->createQueryBuilder('p')
+            ->innerJoin(PrivacyConsentCategory::class, 'pcc', Join::WITH, 'pcc.id = p.category')
+            ->andWhere('pcc.required = :true')
+            ->setParameter('true', true)
+            ->getQuery()
+        ;
+
+        if (! is_array($query->getResult())) {
+            throw new LogicException('Invalid query.');
+        }
+
+        return $query->getResult();
     }
 }

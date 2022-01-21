@@ -17,6 +17,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Mep\WebToolkitBundle\Entity\PrivacyConsent\PrivacyConsent;
 use Mep\WebToolkitBundle\Entity\PrivacyConsent\PrivacyConsentService;
 use Mep\WebToolkitBundle\Exception\PrivacyConsent\CannotGenerateUpdatedConsentForUnexistingTokenException;
+use Mep\WebToolkitBundle\Exception\PrivacyConsent\InvalidRequiredPreferencesException;
 use Mep\WebToolkitBundle\Exception\PrivacyConsent\InvalidSpecsHashException;
 use Mep\WebToolkitBundle\Exception\PrivacyConsent\UnmatchingConsentDataKeysException;
 use Mep\WebToolkitBundle\Repository\PrivacyConsent\PrivacyConsentCategoryRepository;
@@ -26,13 +27,12 @@ use Nette\Utils\Json;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Uid\Uuid;
 
+/**
+ * @author Marco Lipparini <developer@liarco.net>
+ * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
+ */
 class PrivacyConsentManager
 {
-    /**
-     * @var string
-     */
-    public const JSON_KEY_SPECS = 'specs';
-
     /**
      * @var string
      */
@@ -51,12 +51,17 @@ class PrivacyConsentManager
     /**
      * @var string
      */
+    private const JSON_KEY_SPECS = 'specs';
+
+    /**
+     * @var string
+     */
     private const JSON_KEY_SERVICES = 'services';
 
     /**
      * @var string
      */
-    private const JSON_KEY_CONSENT = 'consent';
+    private const JSON_KEY_PREFERENCES = 'preferences';
 
     /**
      * @var array<string, mixed>
@@ -124,6 +129,7 @@ class PrivacyConsentManager
      *
      * @throws InvalidSpecsHashException
      * @throws UnmatchingConsentDataKeysException
+     * @throws InvalidRequiredPreferencesException
      */
     private function validateClientData(array $clientData): void
     {
@@ -141,12 +147,19 @@ class PrivacyConsentManager
             $specsServices[] = $service->getId();
         }
 
-        /** @var array<string, bool> $consentArray */
-        $consentArray = $clientData[self::JSON_KEY_CONSENT];
-        $clientDataServices = array_keys($consentArray);
+        /** @var array<string, bool> $preferencesArray */
+        $preferencesArray = $clientData[self::JSON_KEY_PREFERENCES];
+        $clientDataServices = array_keys($preferencesArray);
 
         if ($specsServices !== $clientDataServices) {
             throw new UnmatchingConsentDataKeysException();
+        }
+
+        // Required check
+        foreach ($this->privacyConsentServiceRepository->findRequired() as $requiredPrivacyConsentService) {
+            if (! $preferencesArray[$requiredPrivacyConsentService->getId()]) {
+                throw new InvalidRequiredPreferencesException($requiredPrivacyConsentService->getName());
+            }
         }
     }
 }

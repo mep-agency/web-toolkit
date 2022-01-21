@@ -15,6 +15,7 @@ namespace Mep\WebToolkitBundle\Controller\PrivacyConsent;
 
 use Mep\WebToolkitBundle\Contract\Controller\AbstractMwtController;
 use Mep\WebToolkitBundle\Repository\PrivacyConsent\PrivacyConsentRepository;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Uid\Uuid;
@@ -26,6 +27,7 @@ class ShowHistoryController extends AbstractMwtController
 {
     public function __construct(
         private PrivacyConsentRepository $privacyConsentRepository,
+        private RequestStack $requestStack,
         ?SerializerInterface $serializer = null,
     ) {
         parent::__construct($serializer);
@@ -34,8 +36,14 @@ class ShowHistoryController extends AbstractMwtController
     public function __invoke(string $token): Response
     {
         $token = Uuid::fromString($token);
+        /** @var string $stringPage */
+        $stringPage = $this->requestStack->getCurrentRequest()?->get('page') ?: '1';
+        $offset = PrivacyConsentRepository::MAX_PRIVACY_CONSENT_PER_PAGE * ((int) $stringPage - 1);
+        $paginator = $this->privacyConsentRepository->findAllByToken($token, $offset);
 
-        // TODO: @Alllle finish this
-        return $this->json($this->privacyConsentRepository->findAllByToken($token));
+        return $this->json([
+            'history' => $paginator,
+            'totalItems' => $paginator->count(),
+        ]);
     }
 }
