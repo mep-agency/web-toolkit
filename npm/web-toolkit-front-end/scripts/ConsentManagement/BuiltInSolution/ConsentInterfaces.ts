@@ -15,18 +15,6 @@ export interface EndpointList {
   consentUpdate: string;
 }
 
-export interface MwtPrivacyConsentSdkInterface {
-  /*
-     Restituisce il consenso corrente
-   */
-  getCurrentConsent(): Promise<Consent>;
-
-  /*
-     Invia i consensi creati al server remoto
-   */
-  registerConsent(consentElement:Consent): Promise<Consent>;
-}
-
 export interface PreferencesStatus {
   [key: string]: boolean;
 }

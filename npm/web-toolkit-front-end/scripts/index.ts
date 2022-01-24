@@ -13,13 +13,13 @@ import HCaptcha from './Vendor/HCaptcha';
 
 // Initialize the ConsentManager with Usercentrics' Browser UI driver
 export const consentManager = createConsentManager(createBrowserUiDriver(
-    // Tell Browser UI to hide the panel on page load. You can leave it undefined to check for a
-    // "data-uc-start-hidden" attribute with value of "true" on the <html> element.
-    // true,
+  // Tell Browser UI to hide the panel on page load. You can leave it undefined to check for a
+  // "data-uc-start-hidden" attribute with value of "true" on the <html> element.
+  // true,
 
-    // Pass a settings ID manually or leave it undefined to get it automatically from a
-    // "data-uc-settings-id" attribute of the <html> element.
-    // 'XXXXXXXXX',
+  // Pass a settings ID manually or leave it undefined to get it automatically from a
+  // "data-uc-settings-id" attribute of the <html> element.
+  // 'XXXXXXXXX',
 ));
 
 // Initialize HCaptcha inputs
