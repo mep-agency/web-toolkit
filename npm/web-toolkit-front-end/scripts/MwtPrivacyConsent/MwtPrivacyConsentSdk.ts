@@ -40,17 +40,16 @@ export default class MwtPrivacyConsentSdk implements MwtPrivacyConsentSdkInterfa
       localStorageData = localStorage.getItem(LOCAL_STORAGE_KEY)!;
     }
 
-    let localConsentStorageConsentData = JSON.parse(localStorageData) as ConsentLocalData;
-    // eslint-disable-next-line max-len
-    const timeDifference = MwtPrivacyConsentSdk.getCurrentTime() - localConsentStorageConsentData.lastCheck;
+    let localStorageConsentData = JSON.parse(localStorageData) as ConsentLocalData;
+    const timeDif = MwtPrivacyConsentSdk.getCurrentTime() - localStorageConsentData.lastCheck;
 
-    if (timeDifference >= this.cacheExpiration) {
+    if (timeDif >= this.cacheExpiration) {
       await this.refreshConsent();
 
       localStorageData = localStorage.getItem(LOCAL_STORAGE_KEY)!;
-      localConsentStorageConsentData = JSON.parse(localStorageData) as ConsentLocalData;
+      localStorageConsentData = JSON.parse(localStorageData) as ConsentLocalData;
     }
-    return localConsentStorageConsentData.consent;
+    return localStorageConsentData.consent;
   }
 
   async registerConsent(temporaryConsent: Consent): Promise<any> {
