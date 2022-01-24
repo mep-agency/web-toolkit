@@ -65,62 +65,48 @@ export default class MwtPrivacyConsentSdk implements MwtPrivacyConsentSdkInterfa
         apiUrl = MwtPrivacyConsentSdk.generateUrl(this.apiUrls.consentUpdate);
       }
     }
-    // eslint-disable-next-line no-useless-catch
-    try {
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        body: MwtPrivacyConsentSdk.buildConsentRequestBody(temporaryConsent),
-      });
 
-      if (apiUrl === this.apiUrls.consentCreate) {
-        const token = await response.json();
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      body: MwtPrivacyConsentSdk.buildConsentRequestBody(temporaryConsent),
+    });
 
-        const consent: Consent = {
-          preferences: temporaryConsent.preferences,
-          specs: temporaryConsent.specs,
-          token: token.token,
-        };
+    if (apiUrl === this.apiUrls.consentCreate) {
+      const token = await response.json();
 
-        Cookies.set(TOKEN_COOKIE_NAME, consent.token!);
-        MwtPrivacyConsentSdk.storeConsent(consent);
+      const consent: Consent = {
+        preferences: temporaryConsent.preferences,
+        specs: temporaryConsent.specs,
+        token: token.token,
+      };
 
-        return consent;
-      }
-
-      const consent = await response.json();
-
-      MwtPrivacyConsentSdk.storeConsent(consent.token);
+      Cookies.set(TOKEN_COOKIE_NAME, consent.token!);
+      MwtPrivacyConsentSdk.storeConsent(consent);
 
       return consent;
-    } catch (e) {
-      throw e;
     }
+
+    const consent = await response.json();
+
+    MwtPrivacyConsentSdk.storeConsent(consent.token);
+
+    return consent;
   }
 
   private async refreshConsent() {
-    // eslint-disable-next-line no-useless-catch
-    try {
-      const response = await fetch(MwtPrivacyConsentSdk.generateUrl(this.apiUrls.consentGet), {
-        method: 'GET',
-      });
+    const response = await fetch(MwtPrivacyConsentSdk.generateUrl(this.apiUrls.consentGet), {
+      method: 'GET',
+    });
 
-      MwtPrivacyConsentSdk.storeConsent(await response.json() as Consent);
-    } catch (e) {
-      throw e;
-    }
+    MwtPrivacyConsentSdk.storeConsent(await response.json() as Consent);
   }
 
   private async getSpecs(): Promise<ConsentSpecs> {
-    // eslint-disable-next-line no-useless-catch
-    try {
-      const response = await fetch(this.apiUrls.getSpecs, {
-        method: 'GET',
-      });
+    const response = await fetch(this.apiUrls.getSpecs, {
+      method: 'GET',
+    });
 
-      return await response.json() as ConsentSpecs;
-    } catch (e) {
-      throw e;
-    }
+    return await response.json() as ConsentSpecs;
   }
 
   private static getToken(): string | undefined {
