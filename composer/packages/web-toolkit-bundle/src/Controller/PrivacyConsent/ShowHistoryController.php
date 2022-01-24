@@ -38,12 +38,17 @@ class ShowHistoryController extends AbstractMwtController
         $token = Uuid::fromString($token);
         /** @var string $stringPage */
         $stringPage = $this->requestStack->getCurrentRequest()?->get('page') ?: '1';
-        $offset = PrivacyConsentRepository::MAX_PRIVACY_CONSENT_PER_PAGE * ((int) $stringPage - 1);
+        /** @var int|string $itemsPerPage */
+        $itemsPerPage = $this->requestStack->getCurrentRequest()?->get(
+            'itemsPerPage',
+        ) ?: PrivacyConsentRepository::MAX_PRIVACY_CONSENT_PER_PAGE;
+        $offset = (int) $itemsPerPage * ((int) $stringPage - 1);
         $paginator = $this->privacyConsentRepository->findAllByToken($token, $offset);
 
         return $this->json([
             'history' => $paginator,
             'totalItems' => $paginator->count(),
+            'itemsPerPage' => $itemsPerPage,
         ]);
     }
 }

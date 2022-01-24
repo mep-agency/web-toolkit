@@ -34,7 +34,7 @@ class PrivacyConsentRepository extends ServiceEntityRepository
     /**
      * @var int
      */
-    public const MAX_PRIVACY_CONSENT_PER_PAGE = 3;
+    public const MAX_PRIVACY_CONSENT_PER_PAGE = 6;
 
     public function __construct(ManagerRegistry $managerRegistry)
     {
@@ -53,13 +53,13 @@ class PrivacyConsentRepository extends ServiceEntityRepository
     /**
      * @return Paginator<PrivacyConsent>
      */
-    public function findAllByToken(Uuid $uuid, int $offset = 0): Paginator
+    public function findAllByToken(Uuid $uuid, int $itemsPerPage, int $offset = 0): Paginator
     {
         $query = $this->createQueryBuilder('p')
             ->andWhere('p.token = :token')
             ->setParameter('token', $uuid->toBinary())
             ->setFirstResult($offset)
-            ->setMaxResults(self::MAX_PRIVACY_CONSENT_PER_PAGE)
+            ->setMaxResults($itemsPerPage)
             ->getQuery()
         ;
 
