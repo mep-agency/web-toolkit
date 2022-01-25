@@ -24,20 +24,25 @@ export interface ConsentSpecs {
   services: ServiceSpecs[];
 }
 
+export interface ResponseConsent {
+  token: string | null;
+  datetime: string | null;
+  data: {
+    specsHash: string | null;
+    preferences: PreferencesStatus;
+    specs: ConsentSpecs;
+    userAgent: string | null;
+  }
+}
+
 export interface ConsentRequestBody {
   specsHash: string;
   preferences: PreferencesStatus;
 }
 
-export interface Consent {
-  token: string | null;
-  specs: ConsentSpecs | null;
-  preferences: PreferencesStatus;
-}
-
 export interface ConsentLocalData {
   lastCheck: number;
-  consent: Consent;
+  consent: ResponseConsent;
 }
 
 interface CategorySpecs {

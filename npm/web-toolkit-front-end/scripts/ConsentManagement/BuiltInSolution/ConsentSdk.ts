@@ -10,12 +10,12 @@ import sha256 from 'crypto-js/sha256';
 import Cookies from 'js-cookie';
 
 import {
-  Consent,
   EndpointList,
   ConsentLocalData,
   ConsentSpecs,
   PreferencesStatus,
   ConsentRequestBody,
+  ResponseConsent,
 } from './ConsentInterfaces';
 
 const DEFAULT_EXPIRATION_DELAY = 600000; // 10 minuti
@@ -30,7 +30,7 @@ export default class ConsentSdk {
   ) {
   }
 
-  async getCurrentConsent(): Promise<Consent> {
+  async getCurrentConsent(): Promise<ResponseConsent> {
     if (ConsentSdk.getToken() === undefined) {
       return this.buildNewConsent();
     }
@@ -52,10 +52,11 @@ export default class ConsentSdk {
       localStorageData = localStorage.getItem(LOCAL_STORAGE_KEY)!;
       localStorageConsentData = JSON.parse(localStorageData) as ConsentLocalData;
     }
+
     return localStorageConsentData.consent;
   }
 
-  async registerConsent(temporaryConsent: Consent): Promise<any> {
+  async registerConsent(temporaryConsent: ResponseConsent): Promise<ResponseConsent> {
     let apiUrl = this.apiUrls.consentCreate;
 
     if (temporaryConsent.token !== null) {
@@ -75,13 +76,7 @@ export default class ConsentSdk {
     });
 
     if (apiUrl === this.apiUrls.consentCreate) {
-      const token = await response.json();
-
-      const consent: Consent = {
-        preferences: temporaryConsent.preferences,
-        specs: temporaryConsent.specs,
-        token: token.token,
-      };
+      const consent:ResponseConsent = await response.json();
 
       Cookies.set(TOKEN_COOKIE_NAME, consent.token!);
       ConsentSdk.storeConsent(consent);
@@ -91,7 +86,7 @@ export default class ConsentSdk {
 
     const consent = await response.json();
 
-    ConsentSdk.storeConsent(consent.token);
+    ConsentSdk.storeConsent(consent);
 
     return consent;
   }
@@ -101,7 +96,7 @@ export default class ConsentSdk {
       method: 'GET',
     });
 
-    ConsentSdk.storeConsent(await response.json() as Consent);
+    ConsentSdk.storeConsent(await response.json() as ResponseConsent);
   }
 
   private async getSpecs(): Promise<ConsentSpecs> {
@@ -120,7 +115,7 @@ export default class ConsentSdk {
     return (new Date()).getTime();
   }
 
-  private async buildNewConsent(): Promise<Consent> {
+  private async buildNewConsent(): Promise<ResponseConsent> {
     const specs: ConsentSpecs = await this.getSpecs();
     const servicesStatus: PreferencesStatus = {};
     const requiredCategories: string[] = [];
@@ -135,10 +130,15 @@ export default class ConsentSdk {
       servicesStatus[serviceSpecs.id] = requiredCategories.includes(serviceSpecs.category);
     });
 
-    const newConsent: Consent = {
+    const newConsent: ResponseConsent = {
       token: null,
-      specs,
-      preferences: servicesStatus,
+      datetime: null,
+      data: {
+        specs,
+        preferences: servicesStatus,
+        specsHash: null,
+        userAgent: null,
+      },
     };
 
     ConsentSdk.storeConsent(newConsent);
@@ -150,7 +150,7 @@ export default class ConsentSdk {
     return url.replace(TOKEN_PLACEHOLDER, ConsentSdk.getToken()!);
   }
 
-  private static storeConsent(consent: Consent): void {
+  private static storeConsent(consent: ResponseConsent): void {
     const newConsentLocalData: ConsentLocalData = {
       consent,
       lastCheck: ConsentSdk.getCurrentTime(),
@@ -158,10 +158,10 @@ export default class ConsentSdk {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newConsentLocalData));
   }
 
-  private static buildConsentRequestBody(consent: Consent): string {
+  private static buildConsentRequestBody(consent: ResponseConsent): string {
     const consentRequestBody: ConsentRequestBody = {
-      specsHash: sha256(JSON.stringify(consent.specs, null, 0)).toString(),
-      preferences: consent.preferences,
+      specsHash: sha256(JSON.stringify(consent.data.specs, null, 0)).toString(),
+      preferences: consent.data.preferences,
     };
 
     return JSON.stringify(consentRequestBody, null, 0);
