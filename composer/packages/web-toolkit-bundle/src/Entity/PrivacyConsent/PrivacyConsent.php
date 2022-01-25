@@ -17,6 +17,7 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 use Symfony\Component\Uid\Uuid;
 
 /**
@@ -24,7 +25,7 @@ use Symfony\Component\Uid\Uuid;
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'mwt_privacy_consent')]
-class PrivacyConsent
+class PrivacyConsent implements JsonSerializable
 {
     #[ORM\Id]
     #[ORM\Column(type: 'uuid', unique: true)]
@@ -87,5 +88,17 @@ class PrivacyConsent
         $this->data = $data;
 
         return $this;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function jsonSerialize(): array
+    {
+        return [
+            'token' => $this->getToken(),
+            'datetime' => $this->getDatetime(),
+            'data' => $this->getData(),
+        ];
     }
 }
