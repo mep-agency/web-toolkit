@@ -42,9 +42,7 @@ class CreateController extends AbstractMwtController
         $contentArray = Json::decode($content, Json::FORCE_ARRAY);
 
         try {
-            return $this->json([
-                'token' => $this->privacyConsentManager->generateConsent($contentArray)->getToken(),
-            ]);
+            return $this->json($this->privacyConsentManager->generateConsent($contentArray));
         } catch (AbstractPrivacyConsentException $abstractPrivacyConsentException) {
             return $this->json([
                 'message' => $abstractPrivacyConsentException->getMessage(),

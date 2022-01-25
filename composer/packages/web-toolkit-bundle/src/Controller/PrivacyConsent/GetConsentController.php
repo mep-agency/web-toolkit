@@ -42,6 +42,6 @@ class GetConsentController extends AbstractMwtController
             throw new EntityNotFoundException('Token not found.');
         }
 
-        return $this->json($privacyConsent->getData());
+        return $this->json($privacyConsent);
     }
 }
