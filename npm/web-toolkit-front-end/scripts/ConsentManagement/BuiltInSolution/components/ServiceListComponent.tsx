@@ -18,20 +18,22 @@ interface ConsentProps {
 }
 
 const ServiceListComponent = (props: ConsentProps) => (
-    <>
-        <ul>
-            {props.consent !== undefined && props.consent.services.map((service, index) => (
-                    <ListItem
-                        key={index}
-                        id={service.id}
-                        name={service.name}
-                        description={service.description}
-                        checked={props.preferencesStatus[service.id]}
-                        callback={props.checkIfRequired(service.category) ? null : (serviceName, newValue) => props.callback(serviceName, newValue)}
-                    />
-            ))}
-        </ul>
-    </>
+    <dl>
+        {props.consent !== undefined && props.consent.services.map((service, index) => (
+            <ListItem
+                key={index}
+                id={service.id}
+                name={service.name}
+                description={service.description}
+                checked={props.preferencesStatus[service.id]}
+                callback={
+                    props.checkIfRequired(service.category)
+                      ? null
+                      : (serviceName, newValue) => props.callback(serviceName, newValue)
+                }
+            />
+        ))}
+    </dl>
 );
 
 export default ServiceListComponent;

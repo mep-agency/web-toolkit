@@ -20,7 +20,13 @@ interface Props {
 interface State {
   currentConsent: ResponseConsent | null,
   isOpen: boolean,
-  categoryFlag: boolean,
+  enableTab: BannerStatus,
+}
+
+enum BannerStatus {
+  DEFAULT,
+  CATEGORY,
+  SERVICE,
 }
 
 export default class ConsentBanner extends React.Component<Props, State> {
@@ -36,7 +42,7 @@ export default class ConsentBanner extends React.Component<Props, State> {
     this.state = {
       currentConsent: null,
       isOpen: false,
-      categoryFlag: true,
+      enableTab: BannerStatus.DEFAULT,
     };
   }
 
@@ -107,9 +113,9 @@ export default class ConsentBanner extends React.Component<Props, State> {
   private acceptAllConsent(): void {
     const preferences = this.state.currentConsent?.data.preferences;
 
-    for (const preferencesKey in preferences) {
-      this.updatePreferences(preferencesKey, true);
-    }
+    Object.entries(preferences!).forEach((preferenceElement) => {
+      this.updatePreferences(preferenceElement[0], true);
+    });
 
     this.saveConsent();
   }
@@ -117,55 +123,64 @@ export default class ConsentBanner extends React.Component<Props, State> {
   private acceptRequired(): void {
     const consentData = this.state.currentConsent!.data;
 
-    consentData.specs.services.map((service) => {
+    consentData.specs.services.forEach((service) => {
       consentData.preferences[service.id] = this.checkIfRequired(service.category);
     });
 
     this.saveConsent();
   }
 
-  private chooseList(): void {
-    this.setState({ categoryFlag: !this.state.categoryFlag });
+  private chooseBannerStatus(newType: BannerStatus): void {
+    this.setState({ enableTab: newType });
   }
 
   render() {
     return (
-            <>
-                <button
-                    onClick={() => this.openPopup()}>{this.state.isOpen ? 'Close' : 'Open'}Banner
-                </button>
-                {!this.state.isOpen ? ''
-                  : <div className="consent-body">
-                        <button onClick={() => this.saveConsent()}>Salva</button>
-                        <button onClick={() => this.acceptAllConsent()}>Accetta tutti</button>
-                        <button onClick={() => this.acceptRequired()}>Accetta solo necessari</button>
+      <>
+        <button
+            onClick={() => this.openPopup()}>{this.state.isOpen ? 'Close' : 'Open'}Banner
+        </button>
+        {!this.state.isOpen ? ''
+          : <div className="consent-body">
+                <button onClick={() => this.saveConsent()}>Salva</button>
+                <button onClick={() => this.acceptAllConsent()}>Accetta tutti</button>
+                <button onClick={() => this.acceptRequired()}>Accetta solo necessari</button>
 
-                        <div>
-                            <button disabled={!this.state.categoryFlag} onClick={() => this.chooseList()}>Servizi</button>
-                            <button disabled={this.state.categoryFlag} onClick={() => this.chooseList()}>Categorie</button>
-                            {
-                                this.state.categoryFlag
-                                  ? <>
-                                        <CategoryListComponent
-                                            consent={this.state.currentConsent!.data.specs!}
-                                            preferencesStatus={this.state.currentConsent!.data.preferences}
-                                            checkIfRequired={(categoryName: string) => this.checkIfRequired(categoryName)}
-                                            callback={(serviceName: string, newValue: boolean) => this.updatePreferences(serviceName, newValue)}
-                                        />
-                                    </>
-                                  : <>
-                                        <ServiceListComponent
-                                            consent={this.state.currentConsent!.data.specs!}
-                                            preferencesStatus={this.state.currentConsent!.data.preferences}
-                                            checkIfRequired={(categoryName: string) => this.checkIfRequired(categoryName)}
-                                            callback={(serviceName: string, newValue: boolean) => this.updatePreferences(serviceName, newValue)}
-                                        />
-                                    </>
-                            }
-                        </div>
-                    </div>
-                }
-            </>
+              {this.state.enableTab !== BannerStatus.DEFAULT
+                ? <div>
+                  <button disabled={this.state.enableTab === BannerStatus.SERVICE}
+                          onClick={() => this.chooseBannerStatus(BannerStatus.SERVICE)}>Servizi
+                  </button>
+                  <button disabled={this.state.enableTab === BannerStatus.CATEGORY}
+                          onClick={() => this.chooseBannerStatus(BannerStatus.CATEGORY)}>Categorie
+                  </button>
+                  {
+                    this.state.enableTab === BannerStatus.CATEGORY
+                      ? <>
+                          <CategoryListComponent
+                            consent={this.state.currentConsent!.data.specs!}
+                            preferencesStatus={this.state.currentConsent!.data.preferences}
+                            checkIfRequired={(categoryName: string) => this.checkIfRequired(categoryName)}
+                            callback={(serviceName: string, newValue: boolean) => this.updatePreferences(serviceName, newValue)}
+                          />
+                        </>
+                      : <>
+                          <ServiceListComponent
+                              consent={this.state.currentConsent!.data.specs!}
+                              preferencesStatus={this.state.currentConsent!.data.preferences}
+                              checkIfRequired={(categoryName: string) => this.checkIfRequired(categoryName)}
+                              callback={(serviceName: string, newValue: boolean) => this.updatePreferences(serviceName, newValue)}
+                          />
+                        </>
+                  }
+                </div>
+                : <button onClick={() => this.chooseBannerStatus(BannerStatus.CATEGORY)}>
+                    Apri preferenze
+                </button>
+              }
+            </div>
+        }
+      </>
     );
   }
 }

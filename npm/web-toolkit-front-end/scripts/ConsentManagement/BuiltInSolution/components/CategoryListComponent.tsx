@@ -8,39 +8,64 @@
  */
 import React from 'react';
 import { ConsentSpecs, PreferencesStatus } from '../ConsentInterfaces';
-import ListItem from './ListItem';
 
 interface ConsentProps {
   consent: ConsentSpecs;
-  checkIfRequired: (serviceName: string) => boolean;
+  checkIfRequired: (categoryName: string) => boolean;
   preferencesStatus: PreferencesStatus;
-  callback: (serviceName: string, newValue: boolean) => void
+  callback: (serviceName: string, newValue: boolean) => void;
 }
 
-const CategoryListComponent = (props: ConsentProps) => (
-    <>
-        {props.consent !== undefined && props.consent.categories.map((category, index) => (
-            <div key={index}>
-                <h2>{category.name}{category.required ? ' - REQUIRED' : ''}</h2>
-                <ul key={category.id}>
-                    {props.consent !== undefined && props.consent.services.map((service) => {
-                      if (service.category === category.id) {
-                        return (
-                                <ListItem
-                                    key={service.id}
-                                    id={service.id}
-                                    name={service.name}
-                                    description={service.description}
-                                    checked={props.preferencesStatus[service.id]}
-                                    callback={props.checkIfRequired(category.id) ? null : (serviceName, newValue) => props.callback(serviceName, newValue)}
-                                />
-                        );
-                      }
-                    })}
-                </ul>
-            </div>
-        ))}
-    </>
-);
+const CategoryListComponent = (props: ConsentProps) => {
+  const handleCheck = (e: React.ChangeEvent<HTMLInputElement>, serviceId: string) => {
+    props.consent.services.forEach((service) => {
+      if (service.category === serviceId) {
+        props.callback!(service.id, e.target.checked);
+      }
+    });
+  };
+
+  const checkIfChecked = (categoryId: string): boolean | undefined => {
+    const valueArray = props.consent.services.map((service) => {
+      if (service.category === categoryId) {
+        return props.preferencesStatus[service.id];
+      }
+      return undefined;
+    });
+
+    if (valueArray.includes(false) && valueArray.includes(true)) {
+      return undefined;
+    }
+    return valueArray.includes(true);
+  };
+
+  return (
+    <dl key="category-list">
+      {props.consent.categories.map((category) => (
+          <React.Fragment key={category.id}>
+              <dt>
+                  {category.name}{category.required ? ' - REQUIRED' : null}
+              </dt>
+              <dd>
+                  <p>{category.description}</p>
+                  <input type="checkbox"
+                     ref={(input) => {
+                       if (input) {
+                         if (checkIfChecked(category.id) !== undefined) {
+                           input.checked = checkIfChecked(category.id)!;
+                         } else {
+                           input.indeterminate = true;
+                         }
+                       }
+                     }}
+                     disabled={category.required}
+                     onChange={(e) => handleCheck(e, category.id)}
+                  />
+              </dd>
+          </React.Fragment>
+      ))}
+    </dl>
+  );
+};
 
 export default CategoryListComponent;

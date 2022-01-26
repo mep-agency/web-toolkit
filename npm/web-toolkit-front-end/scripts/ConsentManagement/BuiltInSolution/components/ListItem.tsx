@@ -22,12 +22,17 @@ const ListItem = (props: ListItemProps) => {
   };
 
   return (
-        <li>
-            <h3>{props.name}</h3>
+    <>
+        <dt>{props.name}</dt>
+        <dd>
             <p>{props.description}</p>
-            <input type="checkbox" defaultChecked={props.checked} disabled={props.callback === null}
-                   onChange={(e) => handleCheck(e)}/>
-        </li>
+            <input type="checkbox"
+                   defaultChecked={props.checked}
+                   disabled={props.callback === null}
+                   onChange={(e) => handleCheck(e)}
+            />
+        </dd>
+    </>
   );
 };
 
