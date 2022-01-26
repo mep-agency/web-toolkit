@@ -66,15 +66,13 @@ class ConsentManager implements ConsentManagerInterface {
     await this.getConsentManagementDriver().closePreferencesPanel();
   }
 
-  private getConsentManagementDriver(): ConsentManagementDriverInterface
-  {
+  private getConsentManagementDriver(): ConsentManagementDriverInterface {
     this.checkDriverOrThrow();
 
     return this.consentManagementDriver;
   }
 
-  private checkDriverOrThrow(): void
-  {
+  private checkDriverOrThrow(): void {
     if (this.consentManagementDriver === undefined) {
       throw new Error('You can\'t use the consent manager before registering a driver.');
     }

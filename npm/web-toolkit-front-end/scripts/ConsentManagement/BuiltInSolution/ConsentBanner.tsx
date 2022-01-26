@@ -11,6 +11,7 @@ import React from 'react';
 import { ResponseConsent, EndpointList, PreferencesStatus } from './ConsentInterfaces';
 import ConsentSdk from './ConsentSdk';
 import CategoryListComponent from './components/CategoryListComponent';
+import ServiceListComponent from './components/ServiceListComponent';
 
 interface Props {
   container: HTMLElement,
@@ -19,6 +20,7 @@ interface Props {
 interface State {
   currentConsent: ResponseConsent | null,
   isOpen: boolean,
+  categoryFlag: boolean,
 }
 
 export default class ConsentBanner extends React.Component<Props, State> {
@@ -34,28 +36,36 @@ export default class ConsentBanner extends React.Component<Props, State> {
     this.state = {
       currentConsent: null,
       isOpen: false,
+      categoryFlag: true,
     };
   }
 
   componentDidMount = async () => {
+    const consent = await this.sdk.getCurrentConsent();
+    if (consent === null) throw new Error('Couldn\'t get consent!');
+
     this.setState({
       currentConsent: await this.sdk.getCurrentConsent(),
     });
+
+    this.createRequiredList();
 
     if (this.state.currentConsent?.token === null) {
       this.setState({
         isOpen: true,
       });
     }
-
-    this.createRequiredList();
   };
+
+  openPopup(): void {
+    this.setState({ isOpen: !this.state.isOpen });
+  }
 
   private getEndpoints(): EndpointList {
     return JSON.parse(this.props.container.getAttribute('data-endpoints')!);
   }
 
-  private updatePreferences(serviceName:string, newValue: boolean): void {
+  private updatePreferences(serviceName: string, newValue: boolean): void {
     const consent = this.state.currentConsent!;
 
     if (consent.data.preferences[serviceName] === undefined) throw new Error('Service does not exist!');
@@ -87,7 +97,7 @@ export default class ConsentBanner extends React.Component<Props, State> {
   }
 
   private async saveConsent(): Promise<void> {
-    const response:ResponseConsent = await this.sdk.registerConsent(this.state.currentConsent!);
+    const response: ResponseConsent = await this.sdk.registerConsent(this.state.currentConsent!);
     this.setState({
       currentConsent: response,
       isOpen: false,
@@ -100,8 +110,6 @@ export default class ConsentBanner extends React.Component<Props, State> {
     for (const preferencesKey in preferences) {
       this.updatePreferences(preferencesKey, true);
     }
-
-
 
     this.saveConsent();
   }
@@ -116,30 +124,48 @@ export default class ConsentBanner extends React.Component<Props, State> {
     this.saveConsent();
   }
 
+  private chooseList(): void {
+    this.setState({ categoryFlag: !this.state.categoryFlag });
+  }
+
   render() {
     return (
-      <>
-        {this.state.currentConsent === null
-          ? 'NO CONSENT'
-          : <>
-            <button onClick={() => this.setState({ isOpen: !this.state.isOpen })}>{this.state.isOpen ? 'Close' : 'Open'}Banner</button>
-            {!this.state.isOpen ? ''
-              : <div className="consent-body">
-                <button onClick={() => this.saveConsent()}>Salva</button>
-                <button onClick={() => this.acceptAllConsent()}>Accetta tutti</button>
-                <button onClick={() => this.acceptRequired()}>Accetta solo necessari</button>
+            <>
+                <button
+                    onClick={() => this.openPopup()}>{this.state.isOpen ? 'Close' : 'Open'}Banner
+                </button>
+                {!this.state.isOpen ? ''
+                  : <div className="consent-body">
+                        <button onClick={() => this.saveConsent()}>Salva</button>
+                        <button onClick={() => this.acceptAllConsent()}>Accetta tutti</button>
+                        <button onClick={() => this.acceptRequired()}>Accetta solo necessari</button>
 
-                <CategoryListComponent
-                  consent={this.state.currentConsent.data.specs!}
-                  preferencesStatus={this.state.currentConsent.data.preferences}
-                  checkIfRequired={(serviceName:string) => this.checkIfRequired(serviceName)}
-                  callback={(serviceName:string, newValue:boolean) => this.updatePreferences(serviceName, newValue)}
-                />
-              </div>
-            }
-          </>
-        }
-      </>
+                        <div>
+                            <button disabled={!this.state.categoryFlag} onClick={() => this.chooseList()}>Servizi</button>
+                            <button disabled={this.state.categoryFlag} onClick={() => this.chooseList()}>Categorie</button>
+                            {
+                                this.state.categoryFlag
+                                  ? <>
+                                        <CategoryListComponent
+                                            consent={this.state.currentConsent!.data.specs!}
+                                            preferencesStatus={this.state.currentConsent!.data.preferences}
+                                            checkIfRequired={(categoryName: string) => this.checkIfRequired(categoryName)}
+                                            callback={(serviceName: string, newValue: boolean) => this.updatePreferences(serviceName, newValue)}
+                                        />
+                                    </>
+                                  : <>
+                                        <ServiceListComponent
+                                            consent={this.state.currentConsent!.data.specs!}
+                                            preferencesStatus={this.state.currentConsent!.data.preferences}
+                                            checkIfRequired={(categoryName: string) => this.checkIfRequired(categoryName)}
+                                            callback={(serviceName: string, newValue: boolean) => this.updatePreferences(serviceName, newValue)}
+                                        />
+                                    </>
+                            }
+                        </div>
+                    </div>
+                }
+            </>
     );
   }
 }
