@@ -12,6 +12,7 @@ import { ResponseConsent, EndpointList, PreferencesStatus } from './ConsentInter
 import ConsentSdk from './ConsentSdk';
 import CategoryListComponent from './components/CategoryListComponent';
 import ServiceListComponent from './components/ServiceListComponent';
+import I18n from './I18n';
 
 interface Props {
   container: HTMLElement,
@@ -137,23 +138,27 @@ export default class ConsentBanner extends React.Component<Props, State> {
   render() {
     return (
       <>
-        <button
-            onClick={() => this.openPopup()}>{this.state.isOpen ? 'Close' : 'Open'}Banner
+        <button onClick={() => this.openPopup()}>
+          {this.state.isOpen ? I18n.close_banner : I18n.open_banner}
         </button>
         {!this.state.isOpen ? ''
           : <div className="consent-body">
-                <button onClick={() => this.saveConsent()}>Salva</button>
-                <button onClick={() => this.acceptAllConsent()}>Accetta tutti</button>
-                <button onClick={() => this.acceptRequired()}>Accetta solo necessari</button>
-
               {this.state.enableTab !== BannerStatus.DEFAULT
-                ? <div>
-                  <button disabled={this.state.enableTab === BannerStatus.SERVICE}
-                          onClick={() => this.chooseBannerStatus(BannerStatus.SERVICE)}>Servizi
-                  </button>
-                  <button disabled={this.state.enableTab === BannerStatus.CATEGORY}
-                          onClick={() => this.chooseBannerStatus(BannerStatus.CATEGORY)}>Categorie
-                  </button>
+                ? <div className="floatingWindow">
+                  <div className="bannerHeader">
+                    <h2>{I18n.title}</h2>
+                    <p>{I18n.body}</p>
+                  </div>
+                  <div className="bannerStatusButtons">
+                    <button disabled={this.state.enableTab === BannerStatus.SERVICE}
+                            onClick={() => this.chooseBannerStatus(BannerStatus.SERVICE)}>
+                      {I18n.services}
+                    </button>
+                    <button disabled={this.state.enableTab === BannerStatus.CATEGORY}
+                            onClick={() => this.chooseBannerStatus(BannerStatus.CATEGORY)}>
+                      {I18n.categories}
+                    </button>
+                  </div>
                   {
                     this.state.enableTab === BannerStatus.CATEGORY
                       ? <>
@@ -166,17 +171,31 @@ export default class ConsentBanner extends React.Component<Props, State> {
                         </>
                       : <>
                           <ServiceListComponent
-                              consent={this.state.currentConsent!.data.specs!}
-                              preferencesStatus={this.state.currentConsent!.data.preferences}
-                              checkIfRequired={(categoryName: string) => this.checkIfRequired(categoryName)}
-                              callback={(serviceName: string, newValue: boolean) => this.updatePreferences(serviceName, newValue)}
+                            consent={this.state.currentConsent!.data.specs!}
+                            preferencesStatus={this.state.currentConsent!.data.preferences}
+                            checkIfRequired={(categoryName: string) => this.checkIfRequired(categoryName)}
+                            callback={(serviceName: string, newValue: boolean) => this.updatePreferences(serviceName, newValue)}
                           />
                         </>
                   }
+                  <div className={'buttonList'}>
+                    <button onClick={() => this.saveConsent()}>{I18n.save}</button>
+                    <button onClick={() => this.acceptAllConsent()}>{I18n.accept_all}</button>
+                    <button onClick={() => this.acceptRequired()}>{I18n.accept_required}</button>
+                  </div>
                 </div>
-                : <button onClick={() => this.chooseBannerStatus(BannerStatus.CATEGORY)}>
-                    Apri preferenze
-                </button>
+                : <div className="dockedWindow">
+                  <h2>{I18n.title}</h2>
+                  <p>{I18n.body}</p>
+                  <div className={'buttonList'}>
+                    <button onClick={() => this.saveConsent()}>{I18n.save}</button>
+                    <button onClick={() => this.acceptAllConsent()}>{I18n.accept_all}</button>
+                    <button onClick={() => this.acceptRequired()}>{I18n.accept_required}</button>
+                    <button onClick={() => this.chooseBannerStatus(BannerStatus.CATEGORY)}>
+                      {I18n.open_pref}
+                    </button>
+                  </div>
+                </div>
               }
             </div>
         }

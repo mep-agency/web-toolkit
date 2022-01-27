@@ -26,7 +26,9 @@ export function setFallbackLanguage(newFallbackLanguage: string) {
   fallbackLanguage = newFallbackLanguage;
 }
 
-export function pickLanguageData(languageData: LocalizationData): Dictionary {
+export function pickLanguageData(languageData: LocalizationData): typeof ret extends Dictionary
+  ? typeof ret
+  : never {
   const preferredOptions = [lang.toLowerCase().replace('-', '_')];
   let bestFallbackOption: string | null = null;
 
@@ -54,6 +56,6 @@ export function pickLanguageData(languageData: LocalizationData): Dictionary {
   if (bestFallbackOption === null) {
     throw new Error(`Cannot find any useful dictionary in "${languageData.id}". Language options: ${preferredOptions.toString()}`);
   }
-
-  return languageData.dictionaries[bestFallbackOption];
+  const ret = languageData.dictionaries[bestFallbackOption];
+  return ret;
 }

@@ -50,11 +50,12 @@ const CategoryListComponent = (props: ConsentProps) => {
                   <p>{category.description}</p>
                   <input type="checkbox"
                      ref={(input) => {
-                       if (input) {
+                       const inputEl = input;
+                       if (inputEl) {
                          if (checkIfChecked(category.id) !== undefined) {
-                           input.checked = checkIfChecked(category.id)!;
+                           inputEl.checked = checkIfChecked(category.id)!;
                          } else {
-                           input.indeterminate = true;
+                           inputEl.indeterminate = true;
                          }
                        }
                      }}
