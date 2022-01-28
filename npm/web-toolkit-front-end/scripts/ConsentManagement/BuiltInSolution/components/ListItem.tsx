@@ -23,7 +23,7 @@ const ListItem = (props: ListItemProps) => {
 
   return (
     <>
-        <dt>{props.name}</dt>
+        <dt>{props.name}{props.callback === null ? ' - REQUIRED' : null}</dt>
         <dd>
             <p>{props.description}</p>
             <input type="checkbox"

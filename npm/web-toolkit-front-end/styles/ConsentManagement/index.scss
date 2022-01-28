@@ -1,0 +1,266 @@
+/*
+ * This file is part of the MEP Web Toolkit package.
+ *
+ * (c) Marco Lipparini <developer@liarco.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+#consent-banner-container {
+  .consent-body {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999999;
+    width: 100%;
+    height: 100%;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      background-color: rgb(0 0 0 / 50%);
+    }
+
+    & > .floating-window {
+      position: absolute;
+      right: 0;
+      bottom: 2vh;
+      left: 0;
+      z-index: 9999999;
+      margin: 0 auto;
+      width: 80vw;
+      height: 80vh;
+      padding: 2em 1em;
+      display: grid;
+      grid-template:
+        "banner-header" 1fr
+        "view-buttons" max-content
+        "service-list" 3fr
+        "action-buttons" 3em;
+      border-radius: 5px;
+      background-color: white;
+
+      & > .banner-header {
+        grid-area: banner-header;
+      }
+
+      & > .banner-status-buttons {
+        grid-area: view-buttons;
+        width: 100%;
+        height: 2em;
+
+        // TODO: fix colors
+        & > button {
+          width: 50%;
+          height: 100%;
+          border: 1px solid black;
+          border-bottom: none;
+          border-radius: 4px 4px 0 0;
+          background-color: cornflowerblue;
+          color: white;
+
+          &:hover {
+            background-color: dodgerblue;
+          }
+
+          &:disabled {
+            background-color: dimgray;
+          }
+        }
+      }
+
+      & > dl {
+        grid-area: service-list;
+        margin-top: 0;
+        padding: 1em;
+        overflow: scroll;
+        border: 1px solid black;
+        border-radius: 0 0 5px 5px;
+        background-color: lightgray;
+        scrollbar-color: black white;
+
+        & > dt {
+          padding-top: 0.5em;
+          border-top: 1px solid grey;
+          font-weight: bold;
+        }
+
+        & > dd {
+          margin-left: 0;
+          width: 100%;
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+        }
+      }
+
+      & > .button-list {
+        grid-area: action-buttons;
+        height: 3em;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        & > button {
+          width: 30%;
+          height: 100%;
+          padding: 0.5em 1em;
+          border: none;
+          border-radius: 5px;
+          box-shadow: 0 1px 2px black;
+          font-weight: bold;
+
+          &:hover {
+            cursor: pointer;
+          }
+        }
+
+        & > .accept-all {
+          background-color: #0a387d;
+          color: white;
+
+          &:hover {
+            background-color: #214f96;
+          }
+        }
+      }
+    }
+
+    & > .docked-window {
+      position: absolute;
+      right: 0;
+      bottom: 2vh;
+      left: 0;
+      z-index: 9999999;
+      margin: 0 auto;
+      width: 90vw;
+      height: 70vh;
+      display: grid;
+      grid-template:
+        "illustration"
+        "message" 1fr
+        "buttons" min-content;
+      border-radius: 5px;
+      background-color: white;
+
+      & > .illustration {
+        // TODO: placeholder data
+        grid-area: illustration;
+        position: relative;
+        margin-right: auto;
+        margin-left: auto;
+        width: 100%;
+        height: 12.5em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        object-fit: contain;
+        border-bottom: 1px solid black;
+        background-color: #a1a1a1;
+
+        & > img {
+          width: 100%;
+          height: 15vh;
+        }
+      }
+
+      & > .body {
+        grid-area: message;
+        padding: 1.5em;
+      }
+
+      & > .button-list {
+        grid-area: buttons;
+        padding: 1.5em;
+        display: flex;
+        gap: 0.5em;
+        justify-content: space-between;
+
+        & > button {
+          padding: 1em 1.5em;
+          border: none;
+          border-radius: 5px;
+          box-shadow: 0 1px 2px black;
+          font-weight: bold;
+
+          &:hover {
+            cursor: pointer;
+          }
+        }
+
+        & > .accept-all {
+          background-color: #0a387d;
+          color: white;
+
+          &:hover {
+            background-color: #214f96;
+          }
+        }
+
+        & > .preferences {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 980px) {
+  #consent-banner-container {
+    .consent-body {
+      & > .docked-window {
+        margin-right: auto;
+        margin-left: 2vw;
+        width: max-content;
+        max-width: 50vw;
+        height: max-content;
+        grid-template:
+          "illustration message"
+          "illustration buttons";
+
+        & > .illustration {
+          width: 15vw;
+
+          // TODO: placeholder data
+          height: 100%;
+          border-right: 1px solid black;
+          border-bottom: none;
+
+          & > img {
+            width: 10vw;
+          }
+        }
+
+        & > .body {
+          width: calc(100% - 3.5em);
+          padding: 1.2em;
+
+          & > .preferences {
+            display: none;
+          }
+        }
+
+        & > .button-list {
+          width: calc(100% - 3em);
+          padding: 0 1.2em 1.2em;
+          justify-content: right;
+
+          & > button {
+            height: min-content;
+            padding: 1em 1.5em;
+          }
+
+          & > .preferences {
+            display: block;
+          }
+        }
+      }
+    }
+  }
+}

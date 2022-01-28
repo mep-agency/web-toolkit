@@ -31,7 +31,7 @@ const i18n: Localization = {
   dictionaries: {
     it: {
       title: 'Titolo del banner',
-      body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi varius condimentum tortor non suscipit. Fusce mattis augue elit, ac lacinia massa dignissim in. Cras vel pulvinar metus.',
+      body: 'Questo sito utilizza cookie, propri e di terze parti, e altre tecnologie per offrirti una migliore esperienza utente. Ti preghiamo di accettare l\'utilizzo di queste tecnologie per procedere.',
       open_banner: 'Apri banner',
       close_banner: 'Chiudi banner',
       save: 'Salva',
@@ -43,7 +43,7 @@ const i18n: Localization = {
     },
     en: {
       title: 'Title of the banner',
-      body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi varius condimentum tortor non suscipit. Fusce mattis augue elit, ac lacinia massa dignissim in. Cras vel pulvinar metus.',
+      body: 'This site uses its own and third-party cookies and other technologies to offer you a better user experience. Please accept the use of these technologies to proceed.',
       open_banner: 'Open banner',
       close_banner: 'Close banner',
       save: 'Save',
