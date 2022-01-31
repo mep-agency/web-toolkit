@@ -21,6 +21,7 @@
         "meteo-concept/hcaptcha-bundle": "^3.0",
         "nette/utils": "^3.2",
         "nyholm/psr7": "^1.4",
+        "phpseclib/phpseclib": "~3.0",
         "symfony/mailer": "5.4.*",
         "symfony/security-bundle": "5.4.*",
         "symfony/serializer": "5.4.*",

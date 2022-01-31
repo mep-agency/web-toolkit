@@ -172,6 +172,9 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/symplify/symplify-kernel" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symplify/astral" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpstan/extension-installer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/paragonie/random_compat" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/paragonie/constant_time_encoding" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phpseclib/phpseclib" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

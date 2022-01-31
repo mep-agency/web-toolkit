@@ -169,6 +169,9 @@
       <path value="$PROJECT_DIR$/vendor/symplify/symplify-kernel" />
       <path value="$PROJECT_DIR$/vendor/symplify/astral" />
       <path value="$PROJECT_DIR$/vendor/phpstan/extension-installer" />
+      <path value="$PROJECT_DIR$/vendor/paragonie/random_compat" />
+      <path value="$PROJECT_DIR$/vendor/paragonie/constant_time_encoding" />
+      <path value="$PROJECT_DIR$/vendor/phpseclib/phpseclib" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.0">
