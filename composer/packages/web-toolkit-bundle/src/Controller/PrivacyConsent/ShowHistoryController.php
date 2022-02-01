@@ -42,7 +42,7 @@ class ShowHistoryController extends AbstractMwtController
             'itemsPerPage',
         ) ?: PrivacyConsentRepository::MAX_PRIVACY_CONSENT_PER_PAGE;
         $offset = (int) $itemsPerPage * ((int) $stringPage - 1);
-        $paginator = $this->privacyConsentRepository->findAllByToken($publicKey, $offset);
+        $paginator = $this->privacyConsentRepository->findAllByToken($publicKey, $itemsPerPage, $offset);
 
         return $this->json([
             'history' => $paginator,

@@ -14,14 +14,11 @@ declare(strict_types=1);
 namespace Mep\WebToolkitBundle\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
+use LogicException;
 use Mep\WebToolkitBundle\Entity\PrivacyConsent\PrivacyConsent;
 use Mep\WebToolkitBundle\Entity\PrivacyConsent\PrivacyConsentService;
 use Mep\WebToolkitBundle\Entity\PrivacyConsent\PublicKey;
-use Mep\WebToolkitBundle\Exception\PrivacyConsent\CannotGenerateUpdatedConsentForUnexistingPublicKeyException;
 use Mep\WebToolkitBundle\Exception\PrivacyConsent\InvalidUserConsentDataException;
-use Mep\WebToolkitBundle\Exception\PrivacyConsent\nvalidRequiredPreferencesException;
-use Mep\WebToolkitBundle\Exception\PrivacyConsent\InvalidSpecsHashException;
-use Mep\WebToolkitBundle\Exception\PrivacyConsent\UnmatchingConsentDataKeysException;
 use Mep\WebToolkitBundle\Repository\PrivacyConsent\PrivacyConsentCategoryRepository;
 use Mep\WebToolkitBundle\Repository\PrivacyConsent\PrivacyConsentRepository;
 use Mep\WebToolkitBundle\Repository\PrivacyConsent\PrivacyConsentServiceRepository;
@@ -39,7 +36,32 @@ class PrivacyConsentManager
     /**
      * @var string
      */
+    private const JSON_KEY_PUBLIC_KEY = 'publicKey';
+
+    /**
+     * @var string
+     */
+    private const JSON_KEY_PUBLIC_KEY_HASH = 'publicKeyHash';
+
+    /**
+     * @var string
+     */
+    private const JSON_KEY_SIGNATURE = 'signature';
+
+    /**
+     * @var string
+     */
+    private const JSON_KEY_DATA = 'data';
+
+    /**
+     * @var string
+     */
     private const JSON_KEY_USER_AGENT = 'userAgent';
+
+    /**
+     * @var string
+     */
+    private const JSON_KEY_TIMESTAMP = 'timestamp';
 
     /**
      * @var string
@@ -120,23 +142,25 @@ class PrivacyConsentManager
     {
         $publicKeyRepository = $this->entityManager->getRepository(PublicKey::class);
         
-        if (isset($requestContent['publicKey'])) {
-            $userPublicKey = new PublicKey($requestContent['publicKey']);
+        if (isset($requestContent[self::JSON_KEY_PUBLIC_KEY])) {
+            $userPublicKey = new PublicKey($requestContent[self::JSON_KEY_PUBLIC_KEY]);
         } else {
-            $userPublicKey = $publicKeyRepository->find($requestContent['publicKeyHash']) ??
+            $userPublicKey = $publicKeyRepository->find($requestContent[self::JSON_KEY_PUBLIC_KEY_HASH]) ??
                 throw new InvalidUserConsentDataException(
                     InvalidUserConsentDataException::CANNOT_UPDATE_CONSENT_FOR_UNEXISTING_PUBLIC_KEY,
                 );
         }
 
-        $privacyConsent = new PrivacyConsent($userPublicKey, $requestContent['signature'], $requestContent['data']);
+        $privacyConsent = new PrivacyConsent($userPublicKey, $requestContent[self::JSON_KEY_SIGNATURE], $requestContent[self::JSON_KEY_DATA]);
 
         if (! $privacyConsent->verifyUserSignature()) {
-            throw new CannotGenerateUpdatedConsentForUnexistingPublicKeyException(); // TODO: @Alle Invalid signature
+            throw new InvalidUserConsentDataException(
+                InvalidUserConsentDataException::INVALID_SIGNATURE,
+            );
         }
 
         $this->validateClientData(
-            $requestContent['data'],
+            $requestContent[self::JSON_KEY_DATA],
             $this->privacyConsentRepository->findLatestByPublicKey($userPublicKey),
         );
 
@@ -146,7 +170,7 @@ class PrivacyConsentManager
         
         $privacyConsent->setSystemSignature(bin2hex(
             $this->getPrivateKeyObject()
-                ->sign($requestContent['data']),
+                ->sign($requestContent[self::JSON_KEY_DATA]),
         ), $systemPublicKey);
 
         $this->entityManager->persist($privacyConsent);
@@ -156,9 +180,7 @@ class PrivacyConsentManager
     }
 
     /**
-     * @throws InvalidSpecsHashException
-     * @throws UnmatchingConsentDataKeysException
-     * @throws nvalidRequiredPreferencesException
+     * @throws InvalidUserConsentDataException
      */
     private function validateClientData(string $jsonData, ?PrivacyConsent $latestPrivacyConsent): void
     {
@@ -170,7 +192,9 @@ class PrivacyConsentManager
         $this->validateUserAgent($data);
 
         if ($this->getSpecsHash() !== $this->getSpecsHash($data[self::JSON_KEY_SPECS])) {
-            throw new InvalidSpecsHashException();
+            throw new InvalidUserConsentDataException(
+                InvalidUserConsentDataException::INVALID_SPECS_HASH,
+            );
         }
 
         /** @var PrivacyConsentService[] $services */
@@ -186,13 +210,17 @@ class PrivacyConsentManager
         $dataServices = array_keys($preferencesArray);
 
         if ($specsServices !== $dataServices) {
-            throw new UnmatchingConsentDataKeysException();
+            throw new InvalidUserConsentDataException(
+                InvalidUserConsentDataException::UNMATCHING_CONSENT_DATA_KEY,
+            );
         }
 
         // Required check
         foreach ($this->privacyConsentServiceRepository->findRequired() as $requiredPrivacyConsentService) {
             if (! $preferencesArray[$requiredPrivacyConsentService->getId()]) {
-                throw new nvalidRequiredPreferencesException($requiredPrivacyConsentService->getName());
+                throw new InvalidUserConsentDataException(
+                    InvalidUserConsentDataException::INVALID_REQUIRED_PREFERENCES,
+                );
             }
         }
     }
@@ -200,55 +228,73 @@ class PrivacyConsentManager
     /**
      * @param array<string, mixed> $data
      * @param null|array<string, mixed> $latestConsentData
+     *
+     * @throws InvalidUserConsentDataException
      */
     private function validateTimestamp(array $data, ?array $latestConsentData): void
     {
-        if (! isset($data['timestamp'])) {
-            throw new \RuntimeException('no timestamp'); // TODO
+        if (! isset($data[self::JSON_KEY_TIMESTAMP])) {
+            throw new InvalidUserConsentDataException(
+                InvalidUserConsentDataException::UNSET_TIMESTAMP,
+            );
         }
 
-        if (! is_int($data['timestamp'])) {
-            throw new \RuntimeException('no int'); // TODO
+        if (! is_int($data[self::JSON_KEY_TIMESTAMP])) {
+            throw new InvalidUserConsentDataException(
+                InvalidUserConsentDataException::TIMESTAMP_IS_NOT_INTEGER,
+            );
         }
 
-        $userTimestamp = $data['timestamp'];
+        $userTimestamp = $data[self::JSON_KEY_TIMESTAMP];
 
         if ($userTimestamp < $_SERVER['REQUEST_TIME'] - $this->timestampTolerance || $userTimestamp > $_SERVER['REQUEST_TIME'] + 1) {
-            throw new \RuntimeException('mi stai fottendo'); // TODO
+            throw new InvalidUserConsentDataException(
+                InvalidUserConsentDataException::TIMESTAMP_IS_NOT_IN_VALID_RANGE,
+            );
         }
 
         if (null === $latestConsentData) {
             return;
         }
 
-        if (! isset($latestConsentData['timestamp'])) {
-            throw new \RuntimeException('no timestamp'); // TODO diverse diosvizzero
+        if (! isset($latestConsentData[self::JSON_KEY_TIMESTAMP])) {
+            throw new LogicException('Latest consent does not have "timestamp" key in its data.');
         }
 
-        if (! is_int($latestConsentData['timestamp'])) {
-            throw new \RuntimeException('no int'); // TODO diverse diosvizzero
+        if (! is_int($latestConsentData[self::JSON_KEY_TIMESTAMP])) {
+            throw new LogicException('Latest consent\'s timestamp in not an integer.');
         }
 
-        if ($userTimestamp > $latestConsentData['timestamp'] + 1) {
-            throw new \RuntimeException('troppo in fretta'); // TODO
+        if ($userTimestamp > $latestConsentData[self::JSON_KEY_TIMESTAMP] + 1) {
+            throw new InvalidUserConsentDataException(
+                InvalidUserConsentDataException::TIMESTAMP_IS_PRIOR_TO_LATEST_CONSENT,
+            );
         }
     }
 
     /**
      * @param array<string, mixed> $data
+     *
+     * @throws InvalidUserConsentDataException
      */
     private function validateUserAgent(array $data): void
     {
-        if (! isset($data['userAgent'])) {
-            throw new \RuntimeException('no user agent'); // TODO
+        if (! isset($data[self::JSON_KEY_USER_AGENT])) {
+            throw new InvalidUserConsentDataException(
+                InvalidUserConsentDataException::UNSET_USER_AGENT,
+            );
         }
 
-        if (! is_string($data['userAgent'])) {
-            throw new \RuntimeException('no string'); // TODO
+        if (! is_string($data[self::JSON_KEY_USER_AGENT])) {
+            throw new InvalidUserConsentDataException(
+                InvalidUserConsentDataException::USER_AGENT_IS_NOT_STRING,
+            );
         }
 
-        if ($data['userAgent'] !== $this->requestStack->getCurrentRequest()?->headers->get('User-Agent')) {
-            throw new \RuntimeException('mi stai rifottendo'); // TODO
+        if ($data[self::JSON_KEY_USER_AGENT] !== $this->requestStack->getCurrentRequest()?->headers->get('User-Agent')) {
+            throw new InvalidUserConsentDataException(
+                InvalidUserConsentDataException::INVALID_USER_AGENT,
+            );
         }
     }
 }
