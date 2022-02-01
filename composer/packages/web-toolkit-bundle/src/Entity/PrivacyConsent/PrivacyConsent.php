@@ -21,6 +21,7 @@ use JsonSerializable;
 use Symfony\Component\Uid\Uuid;
 
 /**
+ * @author Marco Lipparini <developer@liarco.net>
  * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 #[ORM\Entity]
@@ -31,23 +32,26 @@ class PrivacyConsent implements JsonSerializable
     #[ORM\Column(type: 'uuid', unique: true)]
     private Uuid $id;
 
-    #[ORM\Column(type: 'uuid')]
-    private Uuid $token;
-
-    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
-    private DateTimeInterface $datetime;
+    #[ORM\ManyToOne(targetEntity: PublicKey::class, cascade: ['persist'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private PublicKey $systemPublicKey;
+    
+    #[ORM\Column(type: Types::STRING, length: 512)]
+    private string $systemSignature;
 
     /**
      * @param array<string, mixed> $data
      */
     public function __construct(
-        #[ORM\Column(type: Types::JSON)]
-        private array $data = [],
-        ?Uuid $uuid = null,
+        #[ORM\ManyToOne(targetEntity: PublicKey::class, cascade: ['persist'])]
+        #[ORM\JoinColumn(nullable: false)]
+        private PublicKey $userPublicKey,
+        #[ORM\Column(type: Types::STRING, length: 512)]
+        private string $userSignature,
+        #[ORM\Column(type: Types::TEXT)]
+        private string $data,
     ) {
         $this->id = Uuid::v6();
-        $this->token = $uuid ?? Uuid::v4();
-        $this->datetime = new DateTimeImmutable();
     }
 
     public function getId(): Uuid
@@ -55,39 +59,51 @@ class PrivacyConsent implements JsonSerializable
         return $this->id;
     }
 
-    public function getToken(): Uuid
+    public function getSystemPublicKey(): PublicKey
     {
-        return $this->token;
+        return $this->systemPublicKey;
+    }
+    
+    public function getSystemSignature(): string
+    {
+        return $this->systemSignature;
     }
 
-    public function getDatetime(): DateTimeInterface
+    public function setSystemSignature(string $systemSignature, PublicKey $systemPublicKey): self
     {
-        return $this->datetime;
-    }
-
-    public function setDatetime(DateTimeInterface $datetime): self
-    {
-        $this->datetime = $datetime;
+        $this->systemSignature = $systemSignature;
+        $this->systemPublicKey = $systemPublicKey;
 
         return $this;
     }
 
-    /**
-     * @return array<string, mixed>
-     */
-    public function getData(): array
+    public function getUserPublicKey(): PublicKey
+    {
+        return $this->userPublicKey;
+    }
+
+    public function getUserSignature(): string
+    {
+        return $this->userSignature;
+    }
+
+    public function getData(): string
     {
         return $this->data;
     }
 
-    /**
-     * @param array<string, mixed> $data
-     */
-    public function setData(array $data): self
+    public function setData(string $data): self
     {
         $this->data = $data;
 
         return $this;
+    }
+
+    public function verifyUserSignature(): bool
+    {
+        $publicKey = $this->userPublicKey->getKey();
+
+        return $publicKey->verify($this->data, hex2bin($this->userSignature));
     }
 
     /**
@@ -96,8 +112,10 @@ class PrivacyConsent implements JsonSerializable
     public function jsonSerialize(): array
     {
         return [
-            'token' => $this->getToken(),
-            'datetime' => $this->getDatetime(),
+            'systemPublicKey' => base64_encode((string) $this->getSystemPublicKey()->getKey()),
+            'systemSignature' => $this->getSystemSignature(),
+            'userPublicKey' => base64_encode((string) $this->getUserPublicKey()->getKey()),
+            'userSignature' => $this->getUserSignature(),
             'data' => $this->getData(),
         ];
     }

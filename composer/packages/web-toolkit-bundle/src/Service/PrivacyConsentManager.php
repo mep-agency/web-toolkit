@@ -16,16 +16,18 @@ namespace Mep\WebToolkitBundle\Service;
 use Doctrine\ORM\EntityManagerInterface;
 use Mep\WebToolkitBundle\Entity\PrivacyConsent\PrivacyConsent;
 use Mep\WebToolkitBundle\Entity\PrivacyConsent\PrivacyConsentService;
-use Mep\WebToolkitBundle\Exception\PrivacyConsent\CannotGenerateUpdatedConsentForUnexistingTokenException;
-use Mep\WebToolkitBundle\Exception\PrivacyConsent\InvalidRequiredPreferencesException;
+use Mep\WebToolkitBundle\Entity\PrivacyConsent\PublicKey;
+use Mep\WebToolkitBundle\Exception\PrivacyConsent\CannotGenerateUpdatedConsentForUnexistingPublicKeyException;
+use Mep\WebToolkitBundle\Exception\PrivacyConsent\nvalidRequiredPreferencesException;
 use Mep\WebToolkitBundle\Exception\PrivacyConsent\InvalidSpecsHashException;
 use Mep\WebToolkitBundle\Exception\PrivacyConsent\UnmatchingConsentDataKeysException;
 use Mep\WebToolkitBundle\Repository\PrivacyConsent\PrivacyConsentCategoryRepository;
 use Mep\WebToolkitBundle\Repository\PrivacyConsent\PrivacyConsentRepository;
 use Mep\WebToolkitBundle\Repository\PrivacyConsent\PrivacyConsentServiceRepository;
 use Nette\Utils\Json;
+use phpseclib3\Crypt\Common\PrivateKey;
+use phpseclib3\Crypt\RSA;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Uid\Uuid;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
@@ -33,11 +35,6 @@ use Symfony\Component\Uid\Uuid;
  */
 class PrivacyConsentManager
 {
-    /**
-     * @var string
-     */
-    private const JSON_KEY_SPECS_HASH = 'specsHash';
-
     /**
      * @var string
      */
@@ -63,18 +60,31 @@ class PrivacyConsentManager
      */
     private const JSON_KEY_PREFERENCES = 'preferences';
 
+    private PrivateKey $privateKeyObject;
+
     /**
      * @var array<string, mixed>
      */
     private array $specs = [];
 
     public function __construct(
-        private PrivacyConsentRepository $privacyConsentRepository,
+        private string                           $privateKey,
+        private int                              $timestampTolerance,
+        private PrivacyConsentRepository         $privacyConsentRepository,
         private PrivacyConsentCategoryRepository $privacyConsentCategoryRepository,
-        private PrivacyConsentServiceRepository $privacyConsentServiceRepository,
-        private RequestStack $requestStack,
-        private EntityManagerInterface $entityManager,
+        private PrivacyConsentServiceRepository  $privacyConsentServiceRepository,
+        private RequestStack                     $requestStack,
+        private EntityManagerInterface           $entityManager,
     ) {
+    }
+
+    public function getPrivateKeyObject(): PrivateKey
+    {
+        if (! isset($this->privateKeyObject)) {
+            $this->privateKeyObject = RSA::loadPrivateKey($this->privateKey);
+        }
+
+        return $this->privateKeyObject;
     }
 
     /**
@@ -92,31 +102,51 @@ class PrivacyConsentManager
         return $this->specs;
     }
 
-    public function getSpecsHash(): string
+    /**
+     * @param null|array<string, mixed> $specs
+     */
+    public function getSpecsHash(?array $specs = null): string
     {
-        return hash('sha256', Json::encode($this->getSpecs()));
+        return hash('sha256', Json::encode($specs ?? $this->getSpecs()));
     }
 
     /**
-     * @param array<string, mixed> $clientData
+     * @param array<string, string> $requestContent
      *
-     * @throws CannotGenerateUpdatedConsentForUnexistingTokenException
+     * @throws CannotGenerateUpdatedConsentForUnexistingPublicKeyException
      * @throws InvalidSpecsHashException
      * @throws UnmatchingConsentDataKeysException
      */
-    public function generateConsent(array $clientData, ?Uuid $uuid = null): PrivacyConsent
+    public function generateConsent(array $requestContent): PrivacyConsent
     {
-        if (null !== $uuid && null === $this->privacyConsentRepository->findLastByToken($uuid)) {
-            throw new CannotGenerateUpdatedConsentForUnexistingTokenException();
+        $publicKeyRepository = $this->entityManager->getRepository(PublicKey::class);
+        
+        if (isset($requestContent['publicKey'])) {
+            $userPublicKey = new PublicKey($requestContent['publicKey']);
+        } else {
+            $userPublicKey = $publicKeyRepository->find($requestContent['publicKeyHash']) ??
+                throw new CannotGenerateUpdatedConsentForUnexistingPublicKeyException();
         }
 
-        $this->validateClientData($clientData);
+        $privacyConsent = new PrivacyConsent($userPublicKey, $requestContent['signature'], $requestContent['data']);
 
-        $clientData[self::JSON_KEY_SPECS] = $this->getSpecs();
-        $clientData[self::JSON_KEY_USER_AGENT] = $this->requestStack->getCurrentRequest()?->headers->get('User-Agent');
-        // TODO: @Lippa add further custom user data
+        if (! $privacyConsent->verifyUserSignature()) {
+            throw new CannotGenerateUpdatedConsentForUnexistingPublicKeyException(); // TODO: @Alle Invalid signature
+        }
 
-        $privacyConsent = new PrivacyConsent($clientData, $uuid);
+        $this->validateClientData(
+            $requestContent['data'],
+            $this->privacyConsentRepository->findLatestByPublicKey($userPublicKey),
+        );
+
+        $systemPrivateKey = $this->getPrivateKeyObject();
+        $systemPublicKey = new PublicKey((string) $systemPrivateKey->getPublicKey());
+        $systemPublicKey = $publicKeyRepository->find($systemPublicKey->getHash()) ?? $systemPublicKey;
+        
+        $privacyConsent->setSystemSignature(bin2hex(
+            $this->getPrivateKeyObject()
+                ->sign($requestContent['data']),
+        ), $systemPublicKey);
 
         $this->entityManager->persist($privacyConsent);
         $this->entityManager->flush();
@@ -125,17 +155,20 @@ class PrivacyConsentManager
     }
 
     /**
-     * @param array<string, mixed> $clientData
-     *
      * @throws InvalidSpecsHashException
      * @throws UnmatchingConsentDataKeysException
-     * @throws InvalidRequiredPreferencesException
+     * @throws nvalidRequiredPreferencesException
      */
-    private function validateClientData(array $clientData): void
+    private function validateClientData(string $jsonData, ?PrivacyConsent $latestPrivacyConsent): void
     {
-        $specsHash = $this->getSpecsHash();
+        $data = Json::decode($jsonData, Json::FORCE_ARRAY);
+        $latestConsentData = $latestPrivacyConsent instanceof PrivacyConsent ?
+            Json::decode($latestPrivacyConsent->getData(), Json::FORCE_ARRAY) : null;
 
-        if ($specsHash !== $clientData[self::JSON_KEY_SPECS_HASH]) {
+        $this->validateTimestamp($data, $latestConsentData);
+        $this->validateUserAgent($data);
+
+        if ($this->getSpecsHash() !== $this->getSpecsHash($data[self::JSON_KEY_SPECS])) {
             throw new InvalidSpecsHashException();
         }
 
@@ -148,18 +181,73 @@ class PrivacyConsentManager
         }
 
         /** @var array<string, bool> $preferencesArray */
-        $preferencesArray = $clientData[self::JSON_KEY_PREFERENCES];
-        $clientDataServices = array_keys($preferencesArray);
+        $preferencesArray = $data[self::JSON_KEY_PREFERENCES];
+        $dataServices = array_keys($preferencesArray);
 
-        if ($specsServices !== $clientDataServices) {
+        if ($specsServices !== $dataServices) {
             throw new UnmatchingConsentDataKeysException();
         }
 
         // Required check
         foreach ($this->privacyConsentServiceRepository->findRequired() as $requiredPrivacyConsentService) {
             if (! $preferencesArray[$requiredPrivacyConsentService->getId()]) {
-                throw new InvalidRequiredPreferencesException($requiredPrivacyConsentService->getName());
+                throw new nvalidRequiredPreferencesException($requiredPrivacyConsentService->getName());
             }
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     * @param null|array<string, mixed> $latestConsentData
+     */
+    private function validateTimestamp(array $data, ?array $latestConsentData): void
+    {
+        if (! isset($data['timestamp'])) {
+            throw new \RuntimeException('no timestamp'); // TODO
+        }
+
+        if (! is_int($data['timestamp'])) {
+            throw new \RuntimeException('no int'); // TODO
+        }
+
+        $userTimestamp = $data['timestamp'];
+
+        if ($userTimestamp < $_SERVER['REQUEST_TIME'] - $this->timestampTolerance || $userTimestamp > $_SERVER['REQUEST_TIME'] + 1) {
+            throw new \RuntimeException('mi stai fottendo'); // TODO
+        }
+
+        if (null === $latestConsentData) {
+            return;
+        }
+
+        if (! isset($latestConsentData['timestamp'])) {
+            throw new \RuntimeException('no timestamp'); // TODO diverse diosvizzero
+        }
+
+        if (! is_int($latestConsentData['timestamp'])) {
+            throw new \RuntimeException('no int'); // TODO diverse diosvizzero
+        }
+
+        if ($userTimestamp > $latestConsentData['timestamp'] + 1) {
+            throw new \RuntimeException('troppo in fretta'); // TODO
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    private function validateUserAgent(array $data): void
+    {
+        if (! isset($data['userAgent'])) {
+            throw new \RuntimeException('no user agent'); // TODO
+        }
+
+        if (! is_string($data['userAgent'])) {
+            throw new \RuntimeException('no string'); // TODO
+        }
+
+        if ($data['userAgent'] !== $this->requestStack->getCurrentRequest()?->headers->get('User-Agent')) {
+            throw new \RuntimeException('mi stai rifottendo'); // TODO
         }
     }
 }

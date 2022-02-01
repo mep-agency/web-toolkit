@@ -14,18 +14,17 @@ declare(strict_types=1);
 namespace Mep\WebToolkitBundle\Controller\PrivacyConsent;
 
 use Mep\WebToolkitBundle\Contract\Controller\AbstractMwtController;
-use Mep\WebToolkitBundle\Contract\Exception\AbstractPrivacyConsentException;
+use Mep\WebToolkitBundle\Contract\Exception\PrivacyConsentValidationExceptionInterface;
 use Mep\WebToolkitBundle\Service\PrivacyConsentManager;
 use Nette\Utils\Json;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Uid\Uuid;
 
 /**
  * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
-class UpdateController extends AbstractMwtController
+class CreateConsentController extends AbstractMwtController
 {
     public function __construct(
         private PrivacyConsentManager $privacyConsentManager,
@@ -35,17 +34,16 @@ class UpdateController extends AbstractMwtController
         parent::__construct($serializer);
     }
 
-    public function __invoke(string $token): Response
+    public function __invoke(): Response
     {
-        $token = Uuid::fromString($token);
         /** @var string $content */
         $content = $this->requestStack->getCurrentRequest()?->getContent();
         /** @var array<string, mixed> $contentArray */
         $contentArray = Json::decode($content, Json::FORCE_ARRAY);
 
         try {
-            return $this->json($this->privacyConsentManager->generateConsent($contentArray, $token));
-        } catch (AbstractPrivacyConsentException $abstractPrivacyConsentException) {
+            return $this->json($this->privacyConsentManager->generateConsent($contentArray));
+        } catch (PrivacyConsentValidationExceptionInterface $abstractPrivacyConsentException) {
             return $this->json([
                 'message' => $abstractPrivacyConsentException->getMessage(),
             ], 400);

@@ -16,10 +16,10 @@ namespace Mep\WebToolkitBundle\Controller\PrivacyConsent;
 use Doctrine\ORM\EntityNotFoundException;
 use Mep\WebToolkitBundle\Contract\Controller\AbstractMwtController;
 use Mep\WebToolkitBundle\Entity\PrivacyConsent\PrivacyConsent;
+use Mep\WebToolkitBundle\Entity\PrivacyConsent\PublicKey;
 use Mep\WebToolkitBundle\Repository\PrivacyConsent\PrivacyConsentRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Uid\Uuid;
 
 /**
  * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
@@ -33,10 +33,9 @@ class GetConsentController extends AbstractMwtController
         parent::__construct($serializer);
     }
 
-    public function __invoke(string $token): Response
+    public function __invoke(PublicKey $publicKey): Response
     {
-        $token = Uuid::fromString($token);
-        $privacyConsent = $this->privacyConsentRepository->findLastByToken($token);
+        $privacyConsent = $this->privacyConsentRepository->findLatestByPublicKey($publicKey);
 
         if (! $privacyConsent instanceof PrivacyConsent) {
             throw new EntityNotFoundException('Token not found.');

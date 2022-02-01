@@ -13,13 +13,14 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Exception\PrivacyConsent;
 
-use Mep\WebToolkitBundle\Contract\Exception\AbstractPrivacyConsentException;
+use Exception;
+use Mep\WebToolkitBundle\Contract\Exception\PrivacyConsentValidationExceptionInterface;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
  * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
-final class InvalidRequiredPreferencesException extends AbstractPrivacyConsentException
+final class nvalidRequiredPreferencesException extends Exception implements PrivacyConsentValidationExceptionInterface
 {
     public function __construct(string $service)
     {

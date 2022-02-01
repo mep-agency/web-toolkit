@@ -13,11 +13,9 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Contract\Exception;
 
-use Exception;
-
 /**
  * @author Marco Lipparini <developer@liarco.net>
  */
-abstract class AbstractPrivacyConsentException extends Exception
+interface PrivacyConsentValidationExceptionInterface
 {
 }

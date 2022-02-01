@@ -13,15 +13,16 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Exception\PrivacyConsent;
 
-use Mep\WebToolkitBundle\Contract\Exception\AbstractPrivacyConsentException;
+use Exception;
+use Mep\WebToolkitBundle\Contract\Exception\PrivacyConsentValidationExceptionInterface;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
  */
-final class CannotGenerateUpdatedConsentForUnexistingTokenException extends AbstractPrivacyConsentException
+final class CannotGenerateUpdatedConsentForUnexistingPublicKeyException extends Exception implements PrivacyConsentValidationExceptionInterface
 {
     public function __construct()
     {
-        parent::__construct('Cannot generate updated consent for unexisting token.');
+        parent::__construct('Cannot generate updated consent for unexisting public key.');
     }
 }

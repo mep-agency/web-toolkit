@@ -221,7 +221,7 @@ final class WebToolkitBundle extends Bundle
     /**
      * @var string
      */
-    public const SERVICE_PRIVACY_CREATE_CONTROLLER = self::REFERENCE_PREFIX.'privacy_create_controller';
+    public const SERVICE_PRIVACY_CREATE_CONSENT_CONTROLLER = self::REFERENCE_PREFIX.'privacy_create_consent_controller';
 
     /**
      * @var string
@@ -237,9 +237,4 @@ final class WebToolkitBundle extends Bundle
      * @var string
      */
     public const SERVICE_PRIVACY_SHOW_HISTORY_CONTROLLER = self::REFERENCE_PREFIX.'privacy_show_history_controller';
-
-    /**
-     * @var string
-     */
-    public const SERVICE_PRIVACY_UPDATE_CONTROLLER = self::REFERENCE_PREFIX.'privacy_update_controller';
 }
