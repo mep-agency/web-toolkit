@@ -18,6 +18,7 @@ use Mep\WebToolkitBundle\Entity\PrivacyConsent\PrivacyConsent;
 use Mep\WebToolkitBundle\Entity\PrivacyConsent\PrivacyConsentService;
 use Mep\WebToolkitBundle\Entity\PrivacyConsent\PublicKey;
 use Mep\WebToolkitBundle\Exception\PrivacyConsent\CannotGenerateUpdatedConsentForUnexistingPublicKeyException;
+use Mep\WebToolkitBundle\Exception\PrivacyConsent\InvalidUserConsentDataException;
 use Mep\WebToolkitBundle\Exception\PrivacyConsent\nvalidRequiredPreferencesException;
 use Mep\WebToolkitBundle\Exception\PrivacyConsent\InvalidSpecsHashException;
 use Mep\WebToolkitBundle\Exception\PrivacyConsent\UnmatchingConsentDataKeysException;
@@ -113,9 +114,7 @@ class PrivacyConsentManager
     /**
      * @param array<string, string> $requestContent
      *
-     * @throws CannotGenerateUpdatedConsentForUnexistingPublicKeyException
-     * @throws InvalidSpecsHashException
-     * @throws UnmatchingConsentDataKeysException
+     * @throws InvalidUserConsentDataException
      */
     public function generateConsent(array $requestContent): PrivacyConsent
     {
@@ -125,7 +124,9 @@ class PrivacyConsentManager
             $userPublicKey = new PublicKey($requestContent['publicKey']);
         } else {
             $userPublicKey = $publicKeyRepository->find($requestContent['publicKeyHash']) ??
-                throw new CannotGenerateUpdatedConsentForUnexistingPublicKeyException();
+                throw new InvalidUserConsentDataException(
+                    InvalidUserConsentDataException::CANNOT_UPDATE_CONSENT_FOR_UNEXISTING_PUBLIC_KEY,
+                );
         }
 
         $privacyConsent = new PrivacyConsent($userPublicKey, $requestContent['signature'], $requestContent['data']);
