@@ -11,6 +11,8 @@
 
 declare(strict_types=1);
 
+namespace Symfony\Component\DependencyInjection\Loader\Configurator;
+
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\DependencyInjection\EasyAdminExtension;
 use EasyCorp\Bundle\EasyAdminBundle\Factory\EntityFactory;
@@ -58,8 +60,6 @@ use Mep\WebToolkitBundle\WebToolkitBundle;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
-use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Form\FormRegistryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -283,8 +283,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->tag('doctrine.repository_service')
     ;
     $services->set(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_MANAGER, PrivacyConsentManager::class)
-        ->arg(0, '%env(PRIVACY_CONSENT_MANAGER_PRIVATE_KEY)')
-        ->arg(1, '%env(PRIVACY_CONSENT_MANAGER_TIMESTAMP_TOLERANCE)')
+        ->arg(0, env('PRIVACY_CONSENT_MANAGER_PRIVATE_KEY')->base64())
+        ->arg(1, env('PRIVACY_CONSENT_MANAGER_TIMESTAMP_TOLERANCE')->int())
         ->arg(2, new Reference(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_REPOSITORY))
         ->arg(3, new Reference(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_CATEGORY_REPOSITORY))
         ->arg(4, new Reference(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_SERVICE_REPOSITORY))

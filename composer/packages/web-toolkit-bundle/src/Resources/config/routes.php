@@ -11,6 +11,8 @@
 
 declare(strict_types=1);
 
+namespace Symfony\Component\DependencyInjection\Loader\Configurator;
+
 use Mep\WebToolkitBundle\Config\RouteName;
 use Mep\WebToolkitBundle\WebToolkitBundle;
 use Symfony\Component\HttpFoundation\Request;
