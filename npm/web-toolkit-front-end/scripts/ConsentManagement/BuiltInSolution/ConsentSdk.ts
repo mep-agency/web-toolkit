@@ -6,15 +6,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 import sha256 from 'crypto-js/sha256';
 import Cookies from 'js-cookie';
 
 import {
-  EndpointList,
   ConsentLocalData,
-  ConsentSpecs,
-  PreferencesStatus,
   ConsentRequestBody,
+  ConsentSpecs,
+  EndpointList,
+  PreferencesStatus,
   ResponseConsent,
 } from './ConsentInterfaces';
 

@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { pickLanguageData, LocalizationData } from '../../I18nTools';
+import { pickLanguageData, LocalizationData } from '../../Util/I18nTools';
 
 interface Localization extends LocalizationData {
   dictionaries: {

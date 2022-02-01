@@ -36,6 +36,7 @@ enum BannerStatus {
 
 export default class ConsentBanner extends React.Component<Props, State> {
   private readonly sdk!: ConsentSdk;
+
   private readonly requiredCategories: string[] = [];
 
   constructor(props: Props) {
@@ -66,7 +67,7 @@ export default class ConsentBanner extends React.Component<Props, State> {
     }
 
     this.props.activator.addEventListener('click', () => {
-      this.openPopup()
+      this.openPopup();
     });
   };
 
