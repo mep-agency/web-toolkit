@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Mep\WebToolkitBundle\Exception\PrivacyConsent;
 
 use Exception;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>

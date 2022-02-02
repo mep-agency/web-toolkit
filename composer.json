@@ -31,6 +31,7 @@
         "symfony/process": "5.4.*",
         "symfony/security-bundle": "5.4.*",
         "symfony/serializer": "5.4.*",
+        "symfony/translation": "5.4.*",
         "symfony/validator": "5.4.*",
         "tinify/tinify": "^1.5"
     },

@@ -36,7 +36,10 @@ return function (RoutingConfigurator $routingConfigurator) {
         ->methods([Request::METHOD_GET])
     ;
 
-    $routingConfigurator->add(RouteName::PRIVACY_CONSENT_GET_HISTORY, $privacyConsentUrlPrefix.'/{hash<[[:xdigit:]]{64}>}/history/')
+    $routingConfigurator->add(
+        RouteName::PRIVACY_CONSENT_GET_HISTORY,
+        $privacyConsentUrlPrefix.'/{hash<[[:xdigit:]]{64}>}/history/',
+    )
         ->controller(WebToolkitBundle::SERVICE_PRIVACY_SHOW_HISTORY_CONTROLLER)
         ->methods([Request::METHOD_GET])
     ;

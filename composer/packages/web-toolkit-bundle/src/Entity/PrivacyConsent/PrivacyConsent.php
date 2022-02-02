@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Entity\PrivacyConsent;
 
-use DateTimeImmutable;
-use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
@@ -35,13 +33,10 @@ class PrivacyConsent implements JsonSerializable
     #[ORM\ManyToOne(targetEntity: PublicKey::class, cascade: ['persist'])]
     #[ORM\JoinColumn(name: 'system_public_key_hash', referencedColumnName: 'hash', nullable: false)]
     private PublicKey $systemPublicKey;
-    
+
     #[ORM\Column(type: Types::STRING, length: 512)]
     private string $systemSignature;
 
-    /**
-     * @param array<string, mixed> $data
-     */
     public function __construct(
         #[ORM\ManyToOne(targetEntity: PublicKey::class, cascade: ['persist'])]
         #[ORM\JoinColumn(name: 'user_public_key_hash', referencedColumnName: 'hash', nullable: false)]
@@ -63,7 +58,7 @@ class PrivacyConsent implements JsonSerializable
     {
         return $this->systemPublicKey;
     }
-    
+
     public function getSystemSignature(): string
     {
         return $this->systemSignature;
@@ -112,9 +107,9 @@ class PrivacyConsent implements JsonSerializable
     public function jsonSerialize(): array
     {
         return [
-            'systemPublicKey' => base64_encode((string) $this->getSystemPublicKey()->getKey()),
+            'systemPublicKey' => base64_encode($this->getSystemPublicKey()->getKey()->toString('PKCS8')),
             'systemSignature' => $this->getSystemSignature(),
-            'userPublicKey' => base64_encode((string) $this->getUserPublicKey()->getKey()),
+            'userPublicKey' => base64_encode($this->getUserPublicKey()->getKey()->toString('PKCS8')),
             'userSignature' => $this->getUserSignature(),
             'data' => $this->getData(),
         ];
