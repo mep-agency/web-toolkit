@@ -33,7 +33,7 @@ class PrivacyConsent implements JsonSerializable
     private Uuid $id;
 
     #[ORM\ManyToOne(targetEntity: PublicKey::class, cascade: ['persist'])]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(name: 'system_public_key_hash', referencedColumnName: 'hash', nullable: false)]
     private PublicKey $systemPublicKey;
     
     #[ORM\Column(type: Types::STRING, length: 512)]
@@ -44,7 +44,7 @@ class PrivacyConsent implements JsonSerializable
      */
     public function __construct(
         #[ORM\ManyToOne(targetEntity: PublicKey::class, cascade: ['persist'])]
-        #[ORM\JoinColumn(nullable: false)]
+        #[ORM\JoinColumn(name: 'user_public_key_hash', referencedColumnName: 'hash', nullable: false)]
         private PublicKey $userPublicKey,
         #[ORM\Column(type: Types::STRING, length: 512)]
         private string $userSignature,
