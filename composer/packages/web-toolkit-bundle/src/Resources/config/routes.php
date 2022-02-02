@@ -26,10 +26,7 @@ return function (RoutingConfigurator $routingConfigurator) {
         ->methods([Request::METHOD_POST])
     ;
 
-    $routingConfigurator->add(
-        RouteName::PRIVACY_CONSENT_GET,
-        $privacyConsentUrlPrefix.'/{hash}/',
-    )
+    $routingConfigurator->add(RouteName::PRIVACY_CONSENT_GET, $privacyConsentUrlPrefix.'/{hash<[[:xdigit:]]{64}>}/')
         ->controller(WebToolkitBundle::SERVICE_PRIVACY_GET_CONSENT_CONTROLLER)
         ->methods([Request::METHOD_GET])
     ;
@@ -39,10 +36,7 @@ return function (RoutingConfigurator $routingConfigurator) {
         ->methods([Request::METHOD_GET])
     ;
 
-    $routingConfigurator->add(
-        RouteName::PRIVACY_CONSENT_GET_HISTORY,
-        $privacyConsentUrlPrefix.'/{hash}/history/',
-    )
+    $routingConfigurator->add(RouteName::PRIVACY_CONSENT_GET_HISTORY, $privacyConsentUrlPrefix.'/{hash<[[:xdigit:]]{64}>}/history/')
         ->controller(WebToolkitBundle::SERVICE_PRIVACY_SHOW_HISTORY_CONTROLLER)
         ->methods([Request::METHOD_GET])
     ;
