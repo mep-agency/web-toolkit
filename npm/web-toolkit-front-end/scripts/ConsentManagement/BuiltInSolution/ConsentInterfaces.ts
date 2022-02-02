@@ -6,13 +6,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 export interface EndpointList {
   getSpecs: string;
-  consentCreate: string;
   getHistory: string;
   consentGet: string;
-  consentUpdate: string;
+  consentCreate: string;
 }
 
 export interface PreferencesStatus {
@@ -24,20 +22,26 @@ export interface ConsentSpecs {
   services: ServiceSpecs[];
 }
 
-export interface ResponseConsent {
-  token: string | null;
-  datetime: string | null;
-  data: {
-    specsHash: string | null;
-    preferences: PreferencesStatus;
-    specs: ConsentSpecs;
-    userAgent: string | null;
-  }
+export interface ConsentData {
+  timestamp: string | null;
+  userAgent: string | null;
+  preferences: PreferencesStatus;
+  specs: ConsentSpecs;
 }
 
-export interface ConsentRequestBody {
-  specsHash: string;
-  preferences: PreferencesStatus;
+export interface LocalConsent {
+  publicKey?: string;
+  publicKeyHash?: string;
+  signature?: string | null;
+  data: ConsentData;
+}
+
+export interface ResponseConsent {
+  systemPublicKey: string;
+  systemSignature: string;
+  userPublicKey: string;
+  userSignature: string;
+  data: ConsentData;
 }
 
 export interface ConsentLocalData {

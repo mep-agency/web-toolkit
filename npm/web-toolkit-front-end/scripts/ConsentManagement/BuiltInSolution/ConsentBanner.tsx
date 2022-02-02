@@ -8,7 +8,7 @@
  */
 
 import React from 'react';
-import { ResponseConsent, EndpointList, PreferencesStatus } from './ConsentInterfaces';
+import { LocalConsent, EndpointList, PreferencesStatus } from './ConsentInterfaces';
 import ConsentSdk from './ConsentSdk';
 import CategoryListComponent from './components/CategoryListComponent';
 import ServiceListComponent from './components/ServiceListComponent';
@@ -23,7 +23,7 @@ interface Props {
 }
 
 interface State {
-  currentConsent: ResponseConsent | null,
+  currentConsent: LocalConsent | null,
   isOpen: boolean,
   enableTab: BannerStatus,
 }
@@ -60,7 +60,7 @@ export default class ConsentBanner extends React.Component<Props, State> {
 
     this.createRequiredList();
 
-    if (this.state.currentConsent?.token === null) {
+    if (this.state.currentConsent?.publicKeyHash === undefined) {
       this.setState({
         isOpen: true,
       });
@@ -111,7 +111,7 @@ export default class ConsentBanner extends React.Component<Props, State> {
   }
 
   private async saveConsent(): Promise<void> {
-    const response: ResponseConsent = await this.sdk.registerConsent(this.state.currentConsent!);
+    const response: LocalConsent = await this.sdk.registerConsent(this.state.currentConsent!);
     this.setState({
       currentConsent: response,
       isOpen: false,

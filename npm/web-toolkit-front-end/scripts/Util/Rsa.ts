@@ -42,6 +42,12 @@ function base64ToUint8Array(message: string): Uint8Array {
   return byteArray;
 }
 
+function stringToUint8Array(message: string): Uint8Array {
+  const b64string = window.btoa(message);
+  const encoder = new TextEncoder();
+  return encoder.encode(b64string);
+}
+
 function pemToArrayBuffer(pemKey: string): Uint8Array {
   const cleanInput = pemKey
     .replace('\n', '')
@@ -58,11 +64,11 @@ async function importPemKey(format: 'pkcs8' | 'spki', key: string): Promise<Cryp
     format,
     pemToArrayBuffer(key),
     {
-      name: 'RSA-OAEP',
+      name: 'RSA-PSS',
       hash: { name: 'SHA-256' },
     },
     true,
-    [format === 'pkcs8' ? 'decrypt' : 'encrypt'],
+    [format === 'pkcs8' ? 'sign' : 'verify'],
   );
 }
 
@@ -71,6 +77,10 @@ export async function importFromPem(pemKeyPair: PemKeyPair): Promise<CryptoKeyPa
     privateKey: await importPemKey('pkcs8', pemKeyPair.privateKey),
     publicKey: await importPemKey('spki', pemKeyPair.publicKey),
   };
+}
+
+export async function importPublicPem(publicKeyPem: string): Promise<CryptoKey> {
+  return importPemKey('spki', publicKeyPem);
 }
 
 export async function exportToPem(keyPair: CryptoKeyPair): Promise<PemKeyPair> {
@@ -99,20 +109,18 @@ export async function exportToPem(keyPair: CryptoKeyPair): Promise<PemKeyPair> {
 }
 
 export async function sign(privateKey: CryptoKey, message: string): Promise<string> {
-  const encoder = new TextEncoder();
-  return uint8ArrayToBase64(new Uint8Array(await crypto.subtle.sign(
+  const signature = await crypto.subtle.sign(
     {
       name: 'RSA-PSS',
       saltLength: 32,
     },
     privateKey,
-    encoder.encode(message).buffer,
-  )));
+    stringToUint8Array(message),
+  );
+  return uint8ArrayToBase64(new Uint8Array(signature));
 }
 
 export async function verify(publicKey: CryptoKey, signature: string, message: string): Promise<boolean> {
-  const encoder = new TextEncoder();
-
   return crypto.subtle.verify(
     {
       name: 'RSA-PSS',
@@ -120,6 +128,6 @@ export async function verify(publicKey: CryptoKey, signature: string, message: s
     },
     publicKey,
     base64ToUint8Array(signature),
-    encoder.encode(message).buffer,
+    base64ToUint8Array(message),
   );
 }
