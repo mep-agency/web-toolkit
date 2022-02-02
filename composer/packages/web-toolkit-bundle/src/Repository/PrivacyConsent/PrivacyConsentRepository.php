@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Mep\WebToolkitBundle\Repository\PrivacyConsent;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 use Mep\WebToolkitBundle\Entity\PrivacyConsent\PrivacyConsent;
@@ -32,9 +33,9 @@ use Mep\WebToolkitBundle\Entity\PrivacyConsent\PublicKey;
 class PrivacyConsentRepository extends ServiceEntityRepository
 {
     /**
-     * @var int
+     * @var string
      */
-    public const MAX_PRIVACY_CONSENT_PER_PAGE = 6;
+    public const MAX_PRIVACY_CONSENT_PER_PAGE = '6';
 
     public function __construct(ManagerRegistry $managerRegistry)
     {
@@ -46,7 +47,7 @@ class PrivacyConsentRepository extends ServiceEntityRepository
         return $this->findOneBy([
             'userPublicKey' => $publicKey,
         ], [
-            'id' => 'DESC',
+            'id' => Criteria::DESC,
         ]);
     }
 
@@ -58,7 +59,7 @@ class PrivacyConsentRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('p')
             ->andWhere('p.userPublicKey = :userPublicKey')
             ->setParameter('userPublicKey', $publicKey)
-            ->orderBy('id', 'DESC')
+            ->orderBy('id', Criteria::DESC)
             ->setFirstResult($offset)
             ->setMaxResults($itemsPerPage)
             ->getQuery()

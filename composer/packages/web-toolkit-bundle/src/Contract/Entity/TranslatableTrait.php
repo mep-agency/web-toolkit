@@ -54,6 +54,6 @@ trait TranslatableTrait
             );
         }
 
-        return PropertyAccess::createPropertyAccessor()->getValue($this->getTranslations()->first(), $name,);
+        return PropertyAccess::createPropertyAccessor()->getValue($this->getTranslations()->first(), $name);
     }
 }

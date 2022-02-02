@@ -46,11 +46,6 @@ class PrivacyConsentExtension extends AbstractExtension
     /**
      * @var string
      */
-    private const ENDPOINT_CONSENT_UPDATE = 'consentUpdate';
-
-    /**
-     * @var string
-     */
     private const PUBLIC_KEY_HASH_PLACEHOLDER = '__PUBLIC_KEY_HASH__';
 
     public function __construct(

@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Mep\WebToolkitBundle\Controller\PrivacyConsent;
 
 use Mep\WebToolkitBundle\Contract\Controller\AbstractMwtController;
-use Mep\WebToolkitBundle\Contract\Exception\PrivacyConsentValidationExceptionInterface;
+use Mep\WebToolkitBundle\Exception\PrivacyConsent\InvalidUserConsentDataException;
 use Mep\WebToolkitBundle\Service\PrivacyConsentManager;
 use Nette\Utils\Json;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -38,14 +38,14 @@ class CreateConsentController extends AbstractMwtController
     {
         /** @var string $content */
         $content = $this->requestStack->getCurrentRequest()?->getContent();
-        /** @var array<string, mixed> $contentArray */
+        /** @var array<string, string> $contentArray */
         $contentArray = Json::decode($content, Json::FORCE_ARRAY);
 
         try {
             return $this->json($this->privacyConsentManager->generateConsent($contentArray));
-        } catch (PrivacyConsentValidationExceptionInterface $abstractPrivacyConsentException) {
+        } catch (InvalidUserConsentDataException $invalidUserConsentDataException) {
             return $this->json([
-                'message' => $abstractPrivacyConsentException->getMessage(),
+                'message' => $invalidUserConsentDataException->getMessage(),
             ], 400);
         }
     }
