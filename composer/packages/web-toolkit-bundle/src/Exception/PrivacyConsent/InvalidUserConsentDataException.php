@@ -50,6 +50,16 @@ final class InvalidUserConsentDataException extends Exception
     /**
      * @var string
      */
+    public const PREVIOUS_CONSENT_HASH_HAS_TO_BE_NULL = 'previous_consent_hash_has_to_be_null';
+
+    /**
+     * @var string
+     */
+    public const PREVIOUS_CONSENT_HASH_DOES_NOT_MATCH = 'previous_consent_hash_does_not_match';
+
+    /**
+     * @var string
+     */
     public const UNSET_TIMESTAMP = 'unset_timestamp';
 
     /**

@@ -56,6 +56,11 @@ class PrivacyConsentManager
     /**
      * @var string
      */
+    private const JSON_KEY_PREVIOUS_CONSENT_DATA_HASH = 'previousConsentDataHash';
+
+    /**
+     * @var string
+     */
     private const JSON_KEY_USER_AGENT = 'userAgent';
 
     /**
@@ -194,6 +199,7 @@ class PrivacyConsentManager
         $latestConsentData = $latestPrivacyConsent instanceof PrivacyConsent ?
             Json::decode($latestPrivacyConsent->getData(), Json::FORCE_ARRAY) : null;
 
+        $this->validatePreviousConsent($data, $latestPrivacyConsent);
         $this->validateTimestamp($data, $latestConsentData);
         $this->validateUserAgent($data);
 
@@ -222,6 +228,32 @@ class PrivacyConsentManager
             if (! $preferencesArray[$requiredPrivacyConsentService->getId()]) {
                 throw new InvalidUserConsentDataException(
                     InvalidUserConsentDataException::INVALID_REQUIRED_PREFERENCES,
+                );
+            }
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     *
+     * @throws InvalidUserConsentDataException
+     */
+    private function validatePreviousConsent(array $data, ?PrivacyConsent $latestPrivacyConsent): void
+    {
+        if (! $latestPrivacyConsent instanceof PrivacyConsent && null !== $data[self::JSON_KEY_PREVIOUS_CONSENT_DATA_HASH]) {
+            throw new InvalidUserConsentDataException(
+                InvalidUserConsentDataException::PREVIOUS_CONSENT_HASH_HAS_TO_BE_NULL,
+            );
+        }
+
+        if ($latestPrivacyConsent instanceof PrivacyConsent) {
+            /** @var string $previousConsentData */
+            $previousConsentData = Json::decode($latestPrivacyConsent->getData());
+            $previousConsentDataHash = hash('sha256', $previousConsentData);
+
+            if ($previousConsentDataHash !== $data[self::JSON_KEY_PREVIOUS_CONSENT_DATA_HASH]) {
+                throw new InvalidUserConsentDataException(
+                    InvalidUserConsentDataException::PREVIOUS_CONSENT_HASH_DOES_NOT_MATCH,
                 );
             }
         }
