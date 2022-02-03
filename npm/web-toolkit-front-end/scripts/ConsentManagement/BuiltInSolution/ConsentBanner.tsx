@@ -8,7 +8,7 @@
  */
 
 import React from 'react';
-import { LocalConsent, EndpointList, PreferencesStatus } from './ConsentInterfaces';
+import {EndpointList, PreferencesStatus, ConsentData} from './ConsentInterfaces';
 import ConsentSdk from './ConsentSdk';
 import CategoryListComponent from './components/CategoryListComponent';
 import ServiceListComponent from './components/ServiceListComponent';
@@ -23,7 +23,7 @@ interface Props {
 }
 
 interface State {
-  currentConsent: LocalConsent | null,
+  currentConsent: ConsentData | null,
   isOpen: boolean,
   enableTab: BannerStatus,
 }
@@ -60,7 +60,7 @@ export default class ConsentBanner extends React.Component<Props, State> {
 
     this.createRequiredList();
 
-    if (this.state.currentConsent?.publicKeyHash === undefined) {
+    if (this.state.currentConsent?.timestamp === null) {
       this.setState({
         isOpen: true,
       });
@@ -82,9 +82,9 @@ export default class ConsentBanner extends React.Component<Props, State> {
   private updatePreferences(serviceName: string, newValue: boolean): void {
     const consent = this.state.currentConsent!;
 
-    if (consent.data.preferences[serviceName] === undefined) throw new Error('Service does not exist!');
+    if (consent.preferences[serviceName] === undefined) throw new Error('Service does not exist!');
 
-    consent.data.preferences[serviceName] = newValue;
+    consent.preferences[serviceName] = newValue;
 
     this.setState({
       currentConsent: consent,
@@ -96,7 +96,7 @@ export default class ConsentBanner extends React.Component<Props, State> {
   }
 
   private createRequiredList(): void {
-    const specs = this.state.currentConsent?.data.specs!;
+    const specs = this.state.currentConsent?.specs!;
     const servicesStatus: PreferencesStatus = {};
 
     specs.categories.forEach((categorySpecs) => {
@@ -111,7 +111,7 @@ export default class ConsentBanner extends React.Component<Props, State> {
   }
 
   private async saveConsent(): Promise<void> {
-    const response: LocalConsent = await this.sdk.registerConsent(this.state.currentConsent!);
+    const response: ConsentData = await this.sdk.registerConsent(this.state.currentConsent!);
     this.setState({
       currentConsent: response,
       isOpen: false,
@@ -119,7 +119,7 @@ export default class ConsentBanner extends React.Component<Props, State> {
   }
 
   private acceptAllConsent(): void {
-    const preferences = this.state.currentConsent?.data.preferences;
+    const preferences = this.state.currentConsent?.preferences;
 
     Object.entries(preferences!).forEach((preferenceElement) => {
       this.updatePreferences(preferenceElement[0], true);
@@ -129,7 +129,7 @@ export default class ConsentBanner extends React.Component<Props, State> {
   }
 
   private acceptRequired(): void {
-    const consentData = this.state.currentConsent!.data;
+    const consentData = this.state.currentConsent!;
 
     consentData.specs.services.forEach((service) => {
       consentData.preferences[service.id] = this.checkIfRequired(service.category);
@@ -167,16 +167,16 @@ export default class ConsentBanner extends React.Component<Props, State> {
                     this.state.enableTab === BannerStatus.CATEGORY
                       ? <>
                           <CategoryListComponent
-                            consent={this.state.currentConsent!.data.specs!}
-                            preferencesStatus={this.state.currentConsent!.data.preferences}
+                            consent={this.state.currentConsent!.specs!}
+                            preferencesStatus={this.state.currentConsent!.preferences}
                             checkIfRequired={(categoryName: string) => this.checkIfRequired(categoryName)}
                             callback={(serviceName: string, newValue: boolean) => this.updatePreferences(serviceName, newValue)}
                           />
                         </>
                       : <>
                           <ServiceListComponent
-                            consent={this.state.currentConsent!.data.specs!}
-                            preferencesStatus={this.state.currentConsent!.data.preferences}
+                            consent={this.state.currentConsent!.specs!}
+                            preferencesStatus={this.state.currentConsent!.preferences}
                             checkIfRequired={(categoryName: string) => this.checkIfRequired(categoryName)}
                             callback={(serviceName: string, newValue: boolean) => this.updatePreferences(serviceName, newValue)}
                           />

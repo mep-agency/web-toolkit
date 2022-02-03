@@ -295,7 +295,7 @@ class PrivacyConsentManager
             throw new LogicException("Latest consent's timestamp in not an integer.");
         }
 
-        if ($userTimestamp > $latestConsentData[self::JSON_KEY_TIMESTAMP] + 1) {
+        if ($userTimestamp < $latestConsentData[self::JSON_KEY_TIMESTAMP] - 1) {
             throw new InvalidUserConsentDataException(
                 InvalidUserConsentDataException::TIMESTAMP_IS_PRIOR_TO_LATEST_CONSENT,
             );

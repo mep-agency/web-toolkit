@@ -23,7 +23,7 @@ export interface ConsentSpecs {
 }
 
 export interface ConsentData {
-  timestamp: string | null;
+  timestamp: number | null;
   userAgent: string | null;
   preferences: PreferencesStatus;
   specs: ConsentSpecs;
@@ -41,7 +41,7 @@ export interface ResponseConsent {
   systemSignature: string;
   userPublicKey: string;
   userSignature: string;
-  data: ConsentData;
+  data: string;
 }
 
 export interface ConsentLocalData {

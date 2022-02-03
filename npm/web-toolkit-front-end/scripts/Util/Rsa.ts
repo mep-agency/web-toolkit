@@ -42,12 +42,6 @@ function base64ToUint8Array(message: string): Uint8Array {
   return byteArray;
 }
 
-function stringToUint8Array(message: string): Uint8Array {
-  const b64string = window.btoa(message);
-  const encoder = new TextEncoder();
-  return encoder.encode(b64string);
-}
-
 function pemToArrayBuffer(pemKey: string): Uint8Array {
   const cleanInput = pemKey
     .replace('\n', '')
@@ -87,7 +81,6 @@ export async function exportToPem(keyPair: CryptoKeyPair): Promise<PemKeyPair> {
   if (keyPair.privateKey === undefined || keyPair.publicKey === undefined) {
     throw new Error('Keys not defined!');
   }
-
   return {
     privateKey: `-----BEGIN PRIVATE KEY-----\n${uint8ArrayToBase64(
       new Uint8Array(
@@ -115,7 +108,7 @@ export async function sign(privateKey: CryptoKey, message: string): Promise<stri
       saltLength: 32,
     },
     privateKey,
-    stringToUint8Array(message),
+    base64ToUint8Array(message),
   );
   return uint8ArrayToBase64(new Uint8Array(signature));
 }
