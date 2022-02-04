@@ -113,7 +113,11 @@ export async function sign(privateKey: CryptoKey, message: string): Promise<stri
   return uint8ArrayToBase64(new Uint8Array(signature));
 }
 
-export async function verify(publicKey: CryptoKey, signature: string, message: string): Promise<boolean> {
+export async function verify(
+  publicKey: CryptoKey,
+  signature: string,
+  message: string,
+): Promise<boolean> {
   return crypto.subtle.verify(
     {
       name: 'RSA-PSS',

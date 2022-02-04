@@ -175,7 +175,7 @@ class PrivacyConsentManager
         $systemPublicKey = new PublicKey((string) $systemPrivateKey->getPublicKey());
         $systemPublicKey = $publicKeyRepository->find($systemPublicKey->getHash()) ?? $systemPublicKey;
 
-        $privacyConsent->setSystemSignature(bin2hex(
+        $privacyConsent->setSystemSignature(base64_encode(
             $this->getPrivateKeyObject()
                 ->sign($requestContent[self::JSON_KEY_DATA]),
         ), $systemPublicKey);
@@ -247,8 +247,7 @@ class PrivacyConsentManager
         }
 
         if ($latestPrivacyConsent instanceof PrivacyConsent) {
-            /** @var string $previousConsentData */
-            $previousConsentData = Json::decode($latestPrivacyConsent->getData());
+            $previousConsentData = $latestPrivacyConsent->getData();
             $previousConsentDataHash = hash('sha256', $previousConsentData);
 
             if ($previousConsentDataHash !== $data[self::JSON_KEY_PREVIOUS_CONSENT_DATA_HASH]) {

@@ -25,6 +25,7 @@ export interface ConsentSpecs {
 export interface ConsentData {
   timestamp: number | null;
   userAgent: string | null;
+  previousConsentDataHash: string | null;
   preferences: PreferencesStatus;
   specs: ConsentSpecs;
 }
@@ -32,8 +33,8 @@ export interface ConsentData {
 export interface LocalConsent {
   publicKey?: string;
   publicKeyHash?: string;
-  signature?: string | null;
-  data: ConsentData;
+  signature: string | null;
+  data: string;
 }
 
 export interface ResponseConsent {

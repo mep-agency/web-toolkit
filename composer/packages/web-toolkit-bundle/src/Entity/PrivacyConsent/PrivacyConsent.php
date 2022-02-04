@@ -98,7 +98,7 @@ class PrivacyConsent implements JsonSerializable
     {
         $publicKey = $this->userPublicKey->getKey();
 
-        return $publicKey->verify($this->data, hex2bin($this->userSignature));
+        return $publicKey->verify($this->data, base64_decode($this->userSignature));
     }
 
     /**

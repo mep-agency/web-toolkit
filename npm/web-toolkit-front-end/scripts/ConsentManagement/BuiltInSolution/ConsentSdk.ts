@@ -33,21 +33,16 @@ export default class ConsentSdk {
     private apiUrls: EndpointList,
     private cacheExpiration: number = DEFAULT_EXPIRATION_DELAY,
   ) {
-    ConsentSdk.getPemKeyPair().then((r) => {
-      PEMKEYPAIR = r;
-    });
+    ConsentSdk.getPemKeyPair();
   }
 
   async getCurrentConsent(): Promise<ConsentData> {
-    // Se non ho salvato la hash dei system, il consento non esiste in locale
     if (ConsentSdk.getPublicKeyHash() === undefined) {
       return this.buildNewConsent();
     }
 
-    // prendo il consento dal locale
     let localStorageData = localStorage.getItem(LOCAL_STORAGE_KEY);
 
-    // Se il consento non esiste in locale, c'è stato un problema e lo richiedo dal system
     if (localStorageData === null) {
       await this.refreshConsent();
 
@@ -64,38 +59,41 @@ export default class ConsentSdk {
       localStorageConsentData = JSON.parse(localStorageData) as ConsentLocalData;
     }
 
-    return JSON.parse(localStorageConsentData.consent.data);
+    return JSON.parse(localStorageConsentData.consent.data) as ConsentData;
   }
 
   async registerConsent(temporaryConsent: ConsentData): Promise<ConsentData> {
     let isNewConsent = true;
 
     if (ConsentSdk.getPublicKeyHash() !== undefined) {
-      let localStorageElement = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)!) as ConsentLocalData;
+      const localStorageElement = localStorage.getItem(LOCAL_STORAGE_KEY);
 
       if (localStorageElement) {
-        if (JSON.stringify(localStorageElement.consent.data) === JSON.stringify(temporaryConsent)) {
-          return JSON.parse(localStorageElement.consent.data);
+        const localStorageConsent = JSON.parse(localStorageElement).consent as ResponseConsent;
+
+        if (JSON.stringify(localStorageConsent.data) === JSON.stringify(temporaryConsent)) {
+          return JSON.parse(localStorageConsent.data) as ConsentData;
         }
         isNewConsent = false;
       } else {
         await this.refreshConsent();
-        localStorageElement = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)!);
-        return JSON.parse(localStorageElement.consent.data);
+        return JSON.parse(
+          JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)!).consent!.data,
+        ) as ConsentData;
       }
     }
 
-    const localBuiltConsent = await ConsentSdk.buildConsentRequestBody(temporaryConsent, isNewConsent);
+    const builtConsent = await ConsentSdk.buildConsentRequestBody(temporaryConsent, isNewConsent);
     const response = await fetch(this.apiUrls.consentCreate, {
       method: 'POST',
-      body: localBuiltConsent,
+      body: builtConsent,
     });
 
     if (!response.ok) throw new Error('Invalid response');
 
-    const consent:ResponseConsent = await response.json();
+    const consent: ResponseConsent = await response.json();
 
-    if (!await this.checkConsent(consent, JSON.parse(localBuiltConsent))) throw new Error('Consent invalid!');
+    await ConsentSdk.checkConsent(consent, JSON.parse(builtConsent) as LocalConsent);
 
     if (isNewConsent) {
       Cookies.set(HASH_COOKIE_NAME, sha256(PEMKEYPAIR.publicKey).toString());
@@ -103,34 +101,40 @@ export default class ConsentSdk {
 
     ConsentSdk.storeConsent(consent);
 
-    return JSON.parse(consent.data);
+    return JSON.parse(consent.data) as ConsentData;
   }
 
-  private async checkConsent(remoteConsent: ResponseConsent, sentConsent: LocalConsent): Promise<boolean> {
+  private static async checkConsent(
+    remoteConsent: ResponseConsent,
+    sentConsent: LocalConsent,
+  ): Promise<void> {
     if (sentConsent.signature !== remoteConsent.userSignature) throw new Error('User signatures not match!');
 
-    /* TODO: implement checks
-    console.log(sentConsent.data)
-    console.log(JSON.parse(remoteConsent.data) as ConsentData)
-    if(sentConsent.data !== JSON.parse(remoteConsent.data) as ConsentData) throw new Error('Data sent and received not match!');
+    if (sentConsent.data !== remoteConsent.data) throw new Error('Data not match!');
 
-    const userRemotePublicKey: CryptoKey = await Rsa.importPublicPem(window.atob(remoteConsent.userPublicKey));
-    const userPublicKey: CryptoKey = await Rsa.importPublicPem(PEMKEYPAIR.publicKey);
-    if(userRemotePublicKey !== userPublicKey) throw new Error('User public keys not match!');
-    */
+    if (window
+      .atob(remoteConsent.userPublicKey)
+      .includes(
+        PEMKEYPAIR
+          .publicKey
+          .replace(/.{64}/g, '$&\n'),
+      )
+    ) throw new Error('User public keys not match!');
 
-    const systemPublicKey: CryptoKey = await Rsa.importPublicPem(window.atob(remoteConsent.systemPublicKey));
-    const systemVerify = await Rsa.verify(systemPublicKey, remoteConsent.systemSignature, window.btoa(remoteConsent.data));
+    const systemVerify = await Rsa.verify(
+      await Rsa.importPublicPem(window.atob(remoteConsent.systemPublicKey)),
+      remoteConsent.systemSignature,
+      window.btoa(remoteConsent.data),
+    );
+
     if (!systemVerify) throw new Error('System signature not valid!');
-
-    return true;
   }
 
   private async refreshConsent() {
     const response = await fetch(ConsentSdk.generateUrl(this.apiUrls.consentGet), {
       method: 'GET',
     });
-    const consent = await response.json() as ResponseConsent;
+    const consent: ResponseConsent = await response.json();
 
     ConsentSdk.storeConsent(consent);
   }
@@ -167,6 +171,7 @@ export default class ConsentSdk {
     });
 
     return {
+      previousConsentDataHash: null,
       userAgent: null,
       timestamp: null,
       specs,
@@ -186,24 +191,35 @@ export default class ConsentSdk {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newConsentLocalData));
   }
 
-  private static async buildConsentRequestBody(consent: ConsentData, isCreate: boolean): Promise<string> {
+  private static async buildConsentRequestBody(
+    consent: ConsentData,
+    isCreate: boolean,
+  ): Promise<string> {
     let publicKey;
     let publicKeyHash;
+    let previousConsentDataHash = null;
+
+    if (isCreate) {
+      publicKey = PEMKEYPAIR.publicKey;
+    } else {
+      publicKeyHash = sha256(PEMKEYPAIR.publicKey).toString();
+
+      if (publicKeyHash !== ConsentSdk.getPublicKeyHash()) throw new Error('CookieHash and KeyHash not match!');
+
+      const previousConsent = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)!);
+      previousConsentDataHash = sha256(previousConsent.consent.data).toString();
+    }
 
     const cryptoKeyPair: CryptoKeyPair = await Rsa.importFromPem(PEMKEYPAIR);
+
     const data = {
+      previousConsentDataHash,
       userAgent: navigator.userAgent,
       timestamp: Math.ceil(new Date().getTime() / 1000),
       specs: consent.specs,
       preferences: consent.preferences,
     };
     const signature = await Rsa.sign(cryptoKeyPair.privateKey!, window.btoa(JSON.stringify(data)));
-
-    if (isCreate) {
-      publicKey = PEMKEYPAIR.publicKey;
-    } else {
-      publicKeyHash = sha256(PEMKEYPAIR.publicKey).toString();
-    }
 
     return JSON.stringify({
       data: JSON.stringify(data),
@@ -213,12 +229,15 @@ export default class ConsentSdk {
     }, null, 0);
   }
 
-  private static async getPemKeyPair(): Promise<Rsa.PemKeyPair> {
+  private static async getPemKeyPair(): Promise<void> {
     if (localStorage.getItem(PEM_RSA_STORAGE_KEY)) {
-      return JSON.parse(localStorage.getItem(PEM_RSA_STORAGE_KEY)!) as Rsa.PemKeyPair;
+      PEMKEYPAIR = JSON.parse(localStorage.getItem(PEM_RSA_STORAGE_KEY)!) as Rsa.PemKeyPair;
+      if (Cookies.get(HASH_COOKIE_NAME) === undefined) {
+        Cookies.set(HASH_COOKIE_NAME, sha256(PEMKEYPAIR.publicKey).toString());
+      }
+    } else {
+      PEMKEYPAIR = await Rsa.exportToPem(await Rsa.generateKey());
+      localStorage.setItem(PEM_RSA_STORAGE_KEY, JSON.stringify(PEMKEYPAIR));
     }
-    const pemKeyPair = await Rsa.exportToPem(await Rsa.generateKey());
-    localStorage.setItem(PEM_RSA_STORAGE_KEY, JSON.stringify(pemKeyPair));
-    return pemKeyPair;
   }
 }

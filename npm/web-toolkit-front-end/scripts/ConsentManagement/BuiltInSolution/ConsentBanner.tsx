@@ -8,7 +8,7 @@
  */
 
 import React from 'react';
-import {EndpointList, PreferencesStatus, ConsentData} from './ConsentInterfaces';
+import { EndpointList, PreferencesStatus, ConsentData } from './ConsentInterfaces';
 import ConsentSdk from './ConsentSdk';
 import CategoryListComponent from './components/CategoryListComponent';
 import ServiceListComponent from './components/ServiceListComponent';
@@ -169,20 +169,28 @@ export default class ConsentBanner extends React.Component<Props, State> {
                           <CategoryListComponent
                             consent={this.state.currentConsent!.specs!}
                             preferencesStatus={this.state.currentConsent!.preferences}
-                            checkIfRequired={(categoryName: string) => this.checkIfRequired(categoryName)}
-                            callback={(serviceName: string, newValue: boolean) => this.updatePreferences(serviceName, newValue)}
+                            checkIfRequired={
+                              (categoryName: string) => this.checkIfRequired(categoryName)
+                            }
+                            callback={
+                              (serviceName: string, newValue: boolean) => this.updatePreferences(serviceName, newValue)
+                            }
                           />
                         </>
                       : <>
                           <ServiceListComponent
                             consent={this.state.currentConsent!.specs!}
                             preferencesStatus={this.state.currentConsent!.preferences}
-                            checkIfRequired={(categoryName: string) => this.checkIfRequired(categoryName)}
-                            callback={(serviceName: string, newValue: boolean) => this.updatePreferences(serviceName, newValue)}
+                            checkIfRequired={
+                              (categoryName: string) => this.checkIfRequired(categoryName)
+                            }
+                            callback={
+                              (serviceName: string, newValue: boolean) => this.updatePreferences(serviceName, newValue)
+                            }
                           />
                         </>
                   }
-                  <div className={'button-list'}>
+                  <div className="button-list">
                     <button className="save-button" onClick={() => this.saveConsent()}>{I18n.save}</button>
                     <button className="accept-required" onClick={() => this.acceptRequired()}>{I18n.accept_required}</button>
                     <button className="accept-all" onClick={() => this.acceptAllConsent()}>{I18n.accept_all}</button>
