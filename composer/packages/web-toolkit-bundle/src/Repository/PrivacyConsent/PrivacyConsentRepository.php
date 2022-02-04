@@ -33,9 +33,9 @@ use Mep\WebToolkitBundle\Entity\PrivacyConsent\PublicKey;
 class PrivacyConsentRepository extends ServiceEntityRepository
 {
     /**
-     * @var string
+     * @var int
      */
-    public const MAX_PRIVACY_CONSENT_PER_PAGE = '6';
+    public const MAX_PRIVACY_CONSENT_PER_PAGE = 6;
 
     public function __construct(ManagerRegistry $managerRegistry)
     {
@@ -59,7 +59,7 @@ class PrivacyConsentRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('p')
             ->andWhere('p.userPublicKey = :userPublicKey')
             ->setParameter('userPublicKey', $publicKey)
-            ->orderBy('id', Criteria::DESC)
+            ->orderBy('p.id', Criteria::DESC)
             ->setFirstResult($offset)
             ->setMaxResults($itemsPerPage)
             ->getQuery()

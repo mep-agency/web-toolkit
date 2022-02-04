@@ -35,14 +35,14 @@ class ShowHistoryController extends AbstractMwtController
 
     public function __invoke(PublicKey $publicKey): Response
     {
-        /** @var string $stringPage */
-        $stringPage = $this->requestStack->getCurrentRequest()?->get('page') ?: '1';
-        /** @var string $itemsPerPage */
-        $itemsPerPage = $this->requestStack->getCurrentRequest()?->get(
-            'itemsPerPage',
-        ) ?: PrivacyConsentRepository::MAX_PRIVACY_CONSENT_PER_PAGE;
-        $offset = (int) $itemsPerPage * ((int) $stringPage - 1);
-        $paginator = $this->privacyConsentRepository->findAllByToken($publicKey, (int) $itemsPerPage, $offset);
+        $requestPage = $this->requestStack->getCurrentRequest()?->get('page');
+        $requestItemsPerPage = $this->requestStack->getCurrentRequest()?->get('itemsPerPage');
+        $page = is_numeric($requestPage) ? (int) $requestPage : 1;
+        $itemsPerPage = is_numeric(
+            $requestItemsPerPage,
+        ) ? (int) $requestItemsPerPage : PrivacyConsentRepository::MAX_PRIVACY_CONSENT_PER_PAGE;
+        $offset = $itemsPerPage * ($page - 1);
+        $paginator = $this->privacyConsentRepository->findAllByToken($publicKey, $itemsPerPage, $offset);
 
         return $this->json([
             'history' => $paginator,
