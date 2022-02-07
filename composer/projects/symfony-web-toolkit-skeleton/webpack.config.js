@@ -20,7 +20,7 @@ Encore
      * Each entry will result in one JavaScript file (e.g. app.js)
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
-    .addEntry('main', './assets/scripts/main.ts')
+    .addEntry('main', './assets/scripts/main.tsx')
 
     // copy images
     /*.copyFiles({
@@ -81,7 +81,7 @@ Encore
     .enablePostCssLoader()
 
     // uncomment if you use React
-    //.enableReactPreset()
+    .enableReactPreset()
 
     // uncomment to get integrity="..." attributes on your script & link tags
     // requires WebpackEncoreBundle 1.4 or higher

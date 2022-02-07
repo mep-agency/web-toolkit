@@ -183,7 +183,14 @@
         gap: 0.5em;
         justify-content: space-between;
 
-        & > button {
+        & > button.accept-all {
+          background-color: #0a387d;
+          color: white;
+        }
+
+        & > button.preferences,
+        & > button.accept-required,
+        & > button.accept-all {
           padding: 1em 1.5em;
           border: none;
           border-radius: 5px;
@@ -192,15 +199,6 @@
 
           &:hover {
             cursor: pointer;
-          }
-        }
-
-        & > .accept-all {
-          background-color: #0a387d;
-          color: white;
-
-          &:hover {
-            background-color: #214f96;
           }
         }
 
@@ -255,6 +253,10 @@
           & > button {
             height: min-content;
             padding: 1em 1.5em;
+          }
+
+          & > .accept-all:hover {
+            background-color: #214f96;
           }
 
           & > .preferences {

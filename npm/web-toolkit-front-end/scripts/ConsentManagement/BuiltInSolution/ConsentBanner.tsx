@@ -14,7 +14,7 @@ import CategoryListComponent from './components/CategoryListComponent';
 import ServiceListComponent from './components/ServiceListComponent';
 import I18n from './I18n';
 import '../../../styles/ConsentManagement/index.scss';
-// TODO: temporary asset
+// TODO: insert in css
 const CookieLogo = require('../../../images/cookie-logo.svg') as string;
 
 interface Props {
@@ -173,7 +173,10 @@ export default class ConsentBanner extends React.Component<Props, State> {
                               (categoryName: string) => this.checkIfRequired(categoryName)
                             }
                             callback={
-                              (serviceName: string, newValue: boolean) => this.updatePreferences(serviceName, newValue)
+                              (serviceName: string, newValue: boolean) => this.updatePreferences(
+                                serviceName,
+                                newValue,
+                              )
                             }
                           />
                         </>
@@ -185,7 +188,10 @@ export default class ConsentBanner extends React.Component<Props, State> {
                               (categoryName: string) => this.checkIfRequired(categoryName)
                             }
                             callback={
-                              (serviceName: string, newValue: boolean) => this.updatePreferences(serviceName, newValue)
+                              (serviceName: string, newValue: boolean) => this.updatePreferences(
+                                serviceName,
+                                newValue,
+                              )
                             }
                           />
                         </>
