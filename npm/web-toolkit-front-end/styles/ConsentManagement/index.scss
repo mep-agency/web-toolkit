@@ -86,7 +86,6 @@
         width: 100%;
         height: 2em;
 
-        // TODO: fix colors
         & > .category-button,
         & > .service-button {
           width: 50%;
@@ -151,7 +150,6 @@
       background-color: white;
 
       & > .illustration {
-        // TODO: placeholder data
         grid-area: illustration;
         position: relative;
         margin-right: auto;
@@ -165,9 +163,13 @@
         border-bottom: 1px solid black;
         background-color: #a1a1a1;
 
-        & > img {
-          width: 100%;
-          height: 15vh;
+        & > .cookie-element {
+          content: "";
+          width: 60%;
+          height: 60%;
+          display: block;
+          background: url("../../images/cookie-logo.svg") no-repeat center;
+          background-size: contain;
         }
       }
 
@@ -225,14 +227,17 @@
 
         & > .illustration {
           width: 15vw;
-
-          // TODO: placeholder data
           height: 100%;
           border-right: 1px solid black;
           border-bottom: none;
 
-          & > img {
-            width: 10vw;
+          & > .cookie-element {
+            content: "";
+            width: 60%;
+            height: 60%;
+            display: block;
+            background: url("../../images/cookie-logo.svg") no-repeat center;
+            background-size: contain;
           }
         }
 

@@ -15,7 +15,7 @@ import ServiceListComponent from './components/ServiceListComponent';
 import I18n from './I18n';
 import '../../../styles/ConsentManagement/index.scss';
 // TODO: insert in css
-const CookieLogo = require('../../../images/cookie-logo.svg') as string;
+// const CookieLogo = require('../../../images/cookie-logo.svg') as string;
 
 interface Props {
   container: HTMLElement,
@@ -204,7 +204,7 @@ export default class ConsentBanner extends React.Component<Props, State> {
                 </div>
                 : <div className="docked-window">
                   <div className="illustration">
-                    <img src={CookieLogo} alt="Cookie Logo"/>
+                    <div className="cookie-element"/>
                   </div>
                   <div className="body">
                     <p>{I18n.body}</p>

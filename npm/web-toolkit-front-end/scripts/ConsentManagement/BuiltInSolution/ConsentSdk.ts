@@ -160,6 +160,8 @@ export default class ConsentSdk {
     const servicesStatus: PreferencesStatus = {};
     const requiredCategories: string[] = [];
 
+    localStorage.removeItem(LOCAL_STORAGE_KEY);
+
     specs.categories.forEach((categorySpecs) => {
       if (categorySpecs.required) {
         requiredCategories.push(categorySpecs.id);
@@ -230,14 +232,15 @@ export default class ConsentSdk {
   }
 
   private static async getPemKeyPair(): Promise<void> {
-    if (localStorage.getItem(PEM_RSA_STORAGE_KEY)) {
-      PEMKEYPAIR = JSON.parse(localStorage.getItem(PEM_RSA_STORAGE_KEY)!) as Rsa.PemKeyPair;
-      if (Cookies.get(HASH_COOKIE_NAME) === undefined) {
-        Cookies.set(HASH_COOKIE_NAME, sha256(PEMKEYPAIR.publicKey).toString());
-      }
-    } else {
+    if (!localStorage.getItem(PEM_RSA_STORAGE_KEY)) {
+      Cookies.remove(HASH_COOKIE_NAME);
       PEMKEYPAIR = await Rsa.exportToPem(await Rsa.generateKey());
       localStorage.setItem(PEM_RSA_STORAGE_KEY, JSON.stringify(PEMKEYPAIR));
+      return;
+    }
+    PEMKEYPAIR = JSON.parse(localStorage.getItem(PEM_RSA_STORAGE_KEY)!) as Rsa.PemKeyPair;
+    if (Cookies.get(HASH_COOKIE_NAME) === undefined && localStorage.getItem(LOCAL_STORAGE_KEY)) {
+      Cookies.set(HASH_COOKIE_NAME, sha256(PEMKEYPAIR.publicKey).toString());
     }
   }
 }
