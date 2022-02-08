@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
  */
 import React from 'react';
+import I18n from '../I18n';
 import { ConsentSpecs, PreferencesStatus } from '../ConsentInterfaces';
 
 interface ConsentProps {
@@ -36,6 +37,7 @@ const CategoryListComponent = (props: ConsentProps) => {
     if (valueArray.includes(false) && valueArray.includes(true)) {
       return undefined;
     }
+
     return valueArray.includes(true);
   };
 
@@ -47,7 +49,12 @@ const CategoryListComponent = (props: ConsentProps) => {
                   {category.name}{category.required ? ' - REQUIRED' : null}
               </dt>
               <dd>
+                <div className="text-container">
                   <p>{category.description}</p>
+                  {
+                    checkIfChecked(category.id) === undefined && <p className="half-category-text">{I18n.half_check_category}</p>
+                  }
+                </div>
                   <input type="checkbox"
                      ref={(input) => {
                        const inputEl = input;

@@ -8,7 +8,7 @@ plugins:
 
 extends:
   - airbnb-base
-  - airbnb-typescript/base
+  - airbnb-typescript
 
 parserOptions:
   ecmaVersion: 11
@@ -18,6 +18,9 @@ parserOptions:
 rules:
   # ++variable is impossible to express in terms of the += operator
   no-plusplus: off
+
+  # Disable jsx file extension restriction
+  react/jsx-filename-extension: off
 
   # This rule, combined with max-length, makes some code impossible to write correctly;
   # ideally, we should configure it with the option multiline-arguments, but that turns out

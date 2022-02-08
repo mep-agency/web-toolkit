@@ -128,6 +128,10 @@
           display: flex;
           flex-direction: row;
           justify-content: space-between;
+
+          & > .text-container > .half-category-text {
+            color: red;
+          }
         }
       }
     }

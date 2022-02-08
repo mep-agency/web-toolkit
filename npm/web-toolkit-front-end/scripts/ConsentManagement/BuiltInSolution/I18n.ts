@@ -22,6 +22,7 @@ interface Localization extends LocalizationData {
       open_pref: string;
       services: string;
       categories: string;
+      half_check_category: string;
     }
   }
 }
@@ -40,6 +41,7 @@ const i18n: Localization = {
       open_pref: 'Apri preferenze',
       services: 'Servizi',
       categories: 'Categorie',
+      half_check_category: 'Attenzione, esistono elementi selezionati in questa categoria! Per controllare quali sono attivi, andare sulla scheda "Servizi".',
     },
     en: {
       title: 'Title of the banner',
@@ -52,6 +54,7 @@ const i18n: Localization = {
       open_pref: 'Open preferences',
       services: 'Services',
       categories: 'Categories',
+      half_check_category: 'Attention, there are selected items in this category! To check which are active, go to the "Services" tab.',
     },
   },
 };
