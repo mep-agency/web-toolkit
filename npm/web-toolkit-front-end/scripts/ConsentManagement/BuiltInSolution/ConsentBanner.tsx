@@ -150,8 +150,11 @@ export default class ConsentBanner extends React.Component<Props, State> {
               {this.state.enableTab !== BannerStatus.DEFAULT
                 ? <div className="floating-window">
                   <div className="banner-header">
-                    <h2>{I18n.title}</h2>
                     <p>{I18n.body}</p>
+                    <div className="privacy-links">
+                      <a href="#">{I18n.privacy_policy}</a>
+                      <a href="#">{I18n.cookie_policy}</a>
+                    </div>
                   </div>
                   <div className="banner-status-buttons">
                     <button className="category-button" disabled={this.state.enableTab === BannerStatus.CATEGORY}

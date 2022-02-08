@@ -12,7 +12,6 @@ import { pickLanguageData, LocalizationData } from '../../Util/I18nTools';
 interface Localization extends LocalizationData {
   dictionaries: {
     [localeCode: string]: {
-      title: string;
       body: string;
       open_banner: string;
       close_banner: string;
@@ -23,6 +22,8 @@ interface Localization extends LocalizationData {
       services: string;
       categories: string;
       half_check_category: string;
+      privacy_policy: string;
+      cookie_policy: string;
     }
   }
 }
@@ -31,7 +32,6 @@ const i18n: Localization = {
   id: 'consent_manager_built_in_solution',
   dictionaries: {
     it: {
-      title: 'Titolo del banner',
       body: 'Questo sito utilizza cookie, propri e di terze parti, e altre tecnologie per offrirti una migliore esperienza utente. Ti preghiamo di accettare l\'utilizzo di queste tecnologie per procedere.',
       open_banner: 'Apri banner',
       close_banner: 'Chiudi banner',
@@ -42,9 +42,10 @@ const i18n: Localization = {
       services: 'Servizi',
       categories: 'Categorie',
       half_check_category: 'Attenzione, esistono elementi selezionati in questa categoria! Per controllare quali sono attivi, andare sulla scheda "Servizi".',
+      privacy_policy: 'Privacy policy',
+      cookie_policy: 'Cookie policy',
     },
     en: {
-      title: 'Title of the banner',
       body: 'This site uses its own and third-party cookies and other technologies to offer you a better user experience. Please accept the use of these technologies to proceed.',
       open_banner: 'Open banner',
       close_banner: 'Close banner',
@@ -55,6 +56,8 @@ const i18n: Localization = {
       services: 'Services',
       categories: 'Categories',
       half_check_category: 'Attention, there are selected items in this category! To check which are active, go to the "Services" tab.',
+      privacy_policy: 'Privacy policy',
+      cookie_policy: 'Cookie policy',
     },
   },
 };
