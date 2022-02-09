@@ -31,6 +31,12 @@
         <target>Invalid required preferences.</target>
       </segment>
     </unit>
+    <unit id="data_array_keys_do_not_match" name="data_array_keys_do_not_match">
+      <segment state="translated">
+        <source>data_array_keys_do_not_match</source>
+        <target>Data array keys do not match.</target>
+      </segment>
+    </unit>
     <unit id="previous_consent_hash_has_to_be_null" name="previous_consent_hash_has_to_be_null">
       <segment>
         <source>previous_consent_hash_has_to_be_null</source>

@@ -50,6 +50,11 @@ final class InvalidUserConsentDataException extends Exception
     /**
      * @var string
      */
+    public const DATA_ARRAY_KEYS_DO_NOT_MATCH = 'data_array_keys_do_not_match';
+
+    /**
+     * @var string
+     */
     public const PREVIOUS_CONSENT_HASH_HAS_TO_BE_NULL = 'previous_consent_hash_has_to_be_null';
 
     /**

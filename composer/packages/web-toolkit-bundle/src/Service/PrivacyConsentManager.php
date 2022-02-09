@@ -78,6 +78,16 @@ class PrivacyConsentManager
     private const JSON_KEY_SERVICES = 'services';
 
     /**
+     * @var string[]
+     */
+    private const DATA_ARRAY_KEYS = [
+        self::JSON_KEY_PREVIOUS_CONSENT_DATA_HASH,
+        self::JSON_KEY_TIMESTAMP,
+        self::JSON_KEY_SPECS,
+        self::JSON_KEY_PREFERENCES,
+    ];
+
+    /**
      * @var string
      */
     private const JSON_KEY_PREFERENCES = 'preferences';
@@ -192,6 +202,7 @@ class PrivacyConsentManager
         $latestConsentData = $latestPrivacyConsent instanceof PrivacyConsent ?
             Json::decode($latestPrivacyConsent->getData(), Json::FORCE_ARRAY) : null;
 
+        $this->validateDataKey($data);
         $this->validatePreviousConsent($data, $latestPrivacyConsent);
         $this->validateTimestamp($data, $latestConsentData);
 
@@ -222,6 +233,20 @@ class PrivacyConsentManager
                     InvalidUserConsentDataException::INVALID_REQUIRED_PREFERENCES,
                 );
             }
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     *
+     * @throws InvalidUserConsentDataException
+     */
+    private function validateDataKey(array $data): void
+    {
+        $requestDataKeys = array_keys($data);
+
+        if (self::DATA_ARRAY_KEYS !== $requestDataKeys) {
+            throw new InvalidUserConsentDataException(InvalidUserConsentDataException::DATA_ARRAY_KEYS_DO_NOT_MATCH, );
         }
     }
 
