@@ -71,6 +71,7 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
 /**
@@ -288,8 +289,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->arg(2, new Reference(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_REPOSITORY))
         ->arg(3, new Reference(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_CATEGORY_REPOSITORY))
         ->arg(4, new Reference(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_SERVICE_REPOSITORY))
-        ->arg(5, new Reference(RequestStack::class))
-        ->arg(6, new Reference(EntityManagerInterface::class))
+        ->arg(5, new Reference(EntityManagerInterface::class))
     ;
     $services->set(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_EXTENSION, PrivacyConsentExtension::class)
         ->arg(0, new Reference(UrlGeneratorInterface::class))
@@ -299,7 +299,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->public()
         ->arg(0, new Reference(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_MANAGER))
         ->arg(1, new Reference(RequestStack::class))
-        ->arg(2, new Reference(SerializerInterface::class))
+        ->arg(2, new Reference(TranslatorInterface::class))
+        ->arg(3, new Reference(SerializerInterface::class))
     ;
     $services->set(WebToolkitBundle::SERVICE_PRIVACY_GET_CONSENT_CONTROLLER, GetConsentController::class)
         ->public()

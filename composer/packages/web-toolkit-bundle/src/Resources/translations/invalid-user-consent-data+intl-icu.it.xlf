@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.0" srcLang="it" trgLang="it">
+  <file id="invalid-user-consent-data.it">
+    <unit id="cannot_update_consent_for_unexisting_public_key" name="cannot_update_consent_for_unexisting_public_key">
+      <segment state="translated">
+        <source>cannot_update_consent_for_unexisting_public_key</source>
+        <target>Chiave pubblica inesistente, impossibile aggiornare il consenso.</target>
+      </segment>
+    </unit>
+    <unit id="invalid_signature" name="invalid_signature">
+      <segment state="translated">
+        <source>invalid_signature</source>
+        <target>Firma non valida.</target>
+      </segment>
+    </unit>
+    <unit id="invalid_specs_hash" name="invalid_specs_hash">
+      <segment state="translated">
+        <source>invalid_specs_hash</source>
+        <target>Hash delle specifiche non valido.</target>
+      </segment>
+    </unit>
+    <unit id="unmatching_services" name="unmatching_services">
+      <segment state="translated">
+        <source>unmatching_services</source>
+        <target>I servizi non corrispondono.</target>
+      </segment>
+    </unit>
+    <unit id="invalid_required_preferences" name="invalid_required_preferences">
+      <segment state="translated">
+        <source>invalid_required_preferences</source>
+        <target>Preferenze obbligatorie non valide.</target>
+      </segment>
+    </unit>
+    <unit id="previous_consent_hash_has_to_be_null" name="previous_consent_hash_has_to_be_null">
+      <segment state="translated">
+        <source>previous_consent_hash_has_to_be_null</source>
+        <target>Il consenso precedente deve essere nullo.</target>
+      </segment>
+    </unit>
+    <unit id="previous_consent_hash_does_not_match" name="previous_consent_hash_does_not_match">
+      <segment state="translated">
+        <source>previous_consent_hash_does_not_match</source>
+        <target>L'hash del consenso precedente non corrisponde.</target>
+      </segment>
+    </unit>
+    <unit id="unset_timestamp" name="unset_timestamp">
+      <segment state="translated">
+        <source>unset_timestamp</source>
+        <target>Timestamp non settato.</target>
+      </segment>
+    </unit>
+    <unit id="timestamp_is_not_integer" name="timestamp_is_not_integer">
+      <segment state="translated">
+        <source>timestamp_is_not_integer</source>
+        <target>Timestamp non è un numero intero.</target>
+      </segment>
+    </unit>
+    <unit id="timestamp_is_not_in_valid_range" name="timestamp_is_not_in_valid_range">
+      <segment state="translated">
+        <source>timestamp_is_not_in_valid_range</source>
+        <target>Timestamp non rientra in un intervallo valido.</target>
+      </segment>
+    </unit>
+    <unit id="timestamp_is_prior_to_latest_consent" name="timestamp_is_prior_to_latest_consent">
+      <segment state="translated">
+        <source>timestamp_is_prior_to_latest_consent</source>
+        <target>Timestamp è antecedente al consenso precedente</target>
+      </segment>
+    </unit>
+  </file>
+</xliff>

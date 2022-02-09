@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.0" srcLang="en" trgLang="en">
+  <file id="invalid-user-consent-data.en">
+    <unit id="cannot_update_consent_for_unexisting_public_key" name="cannot_update_consent_for_unexisting_public_key">
+      <segment>
+        <source>cannot_update_consent_for_unexisting_public_key</source>
+        <target>Cannot update consent for unexisting public key.</target>
+      </segment>
+    </unit>
+    <unit id="invalid_signature" name="invalid_signature">
+      <segment>
+        <source>invalid_signature</source>
+        <target>Invalid signature.</target>
+      </segment>
+    </unit>
+    <unit id="invalid_specs_hash" name="invalid_specs_hash">
+      <segment>
+        <source>invalid_specs_hash</source>
+        <target>Invalid specs hash.</target>
+      </segment>
+    </unit>
+    <unit id="unmatching_services" name="unmatching_services">
+      <segment>
+        <source>unmatching_services</source>
+        <target>Unmatching services.</target>
+      </segment>
+    </unit>
+    <unit id="invalid_required_preferences" name="invalid_required_preferences">
+      <segment>
+        <source>invalid_required_preferences</source>
+        <target>Invalid required preferences.</target>
+      </segment>
+    </unit>
+    <unit id="previous_consent_hash_has_to_be_null" name="previous_consent_hash_has_to_be_null">
+      <segment>
+        <source>previous_consent_hash_has_to_be_null</source>
+        <target>Previous consent hash has to be null.</target>
+      </segment>
+    </unit>
+    <unit id="previous_consent_hash_does_not_match" name="previous_consent_hash_does_not_match">
+      <segment>
+        <source>previous_consent_hash_does_not_match</source>
+        <target>Previous consent hash does not match.</target>
+      </segment>
+    </unit>
+    <unit id="unset_timestamp" name="unset_timestamp">
+      <segment>
+        <source>unset_timestamp</source>
+        <target>Unset timestamp.</target>
+      </segment>
+    </unit>
+    <unit id="timestamp_is_not_integer" name="timestamp_is_not_integer">
+      <segment>
+        <source>timestamp_is_not_integer</source>
+        <target>Timestamp is not an integer.</target>
+      </segment>
+    </unit>
+    <unit id="timestamp_is_not_in_valid_range" name="timestamp_is_not_in_valid_range">
+      <segment>
+        <source>timestamp_is_not_in_valid_range</source>
+        <target>Timestamp is not in valid range.</target>
+      </segment>
+    </unit>
+    <unit id="timestamp_is_prior_to_latest_consent" name="timestamp_is_prior_to_latest_consent">
+      <segment>
+        <source>timestamp_is_prior_to_latest_consent</source>
+        <target>Timestamp is prior to latest consent.</target>
+      </segment>
+    </unit>
+  </file>
+</xliff>

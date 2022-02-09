@@ -20,6 +20,7 @@ use Nette\Utils\Json;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
@@ -29,6 +30,7 @@ class CreateConsentController extends AbstractMwtController
     public function __construct(
         private PrivacyConsentManager $privacyConsentManager,
         private RequestStack $requestStack,
+        private TranslatorInterface $translator,
         ?SerializerInterface $serializer = null,
     ) {
         parent::__construct($serializer);
@@ -45,7 +47,8 @@ class CreateConsentController extends AbstractMwtController
             return $this->json($this->privacyConsentManager->generateConsent($contentArray));
         } catch (InvalidUserConsentDataException $invalidUserConsentDataException) {
             return $this->json([
-                'message' => $invalidUserConsentDataException->getMessage(),
+                'code' => $invalidUserConsentDataException->getMessage(),
+                'message' => $invalidUserConsentDataException->getTranslatedMessage($this->translator),
             ], 400);
         }
     }

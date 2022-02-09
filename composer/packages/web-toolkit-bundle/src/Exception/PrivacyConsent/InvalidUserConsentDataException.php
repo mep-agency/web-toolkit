@@ -40,7 +40,7 @@ final class InvalidUserConsentDataException extends Exception
     /**
      * @var string
      */
-    public const UNMATCHING_CONSENT_DATA_KEY = 'unmatching_consent_data_key';
+    public const UNMATCHING_SERVICES = 'unmatching_services';
 
     /**
      * @var string
@@ -76,21 +76,6 @@ final class InvalidUserConsentDataException extends Exception
      * @var string
      */
     public const TIMESTAMP_IS_PRIOR_TO_LATEST_CONSENT = 'timestamp_is_prior_to_latest_consent';
-
-    /**
-     * @var string
-     */
-    public const UNSET_USER_AGENT = 'unset_user_agent';
-
-    /**
-     * @var string
-     */
-    public const USER_AGENT_IS_NOT_STRING = 'user_agent_is_not_string';
-
-    /**
-     * @var string
-     */
-    public const INVALID_USER_AGENT = 'invalid_user_agent';
 
     /**
      * @var string

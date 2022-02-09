@@ -25,7 +25,6 @@ use Mep\WebToolkitBundle\Repository\PrivacyConsent\PrivacyConsentServiceReposito
 use Nette\Utils\Json;
 use phpseclib3\Crypt\Common\PrivateKey;
 use phpseclib3\Crypt\RSA;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
@@ -57,11 +56,6 @@ class PrivacyConsentManager
      * @var string
      */
     private const JSON_KEY_PREVIOUS_CONSENT_DATA_HASH = 'previousConsentDataHash';
-
-    /**
-     * @var string
-     */
-    private const JSON_KEY_USER_AGENT = 'userAgent';
 
     /**
      * @var string
@@ -101,7 +95,6 @@ class PrivacyConsentManager
         private PrivacyConsentRepository $privacyConsentRepository,
         private PrivacyConsentCategoryRepository $privacyConsentCategoryRepository,
         private PrivacyConsentServiceRepository $privacyConsentServiceRepository,
-        private RequestStack $requestStack,
         private EntityManagerInterface $entityManager,
     ) {
     }
@@ -201,7 +194,6 @@ class PrivacyConsentManager
 
         $this->validatePreviousConsent($data, $latestPrivacyConsent);
         $this->validateTimestamp($data, $latestConsentData);
-        $this->validateUserAgent($data);
 
         if ($this->getSpecsHash() !== $this->getSpecsHash($dataSpecs)) {
             throw new InvalidUserConsentDataException(InvalidUserConsentDataException::INVALID_SPECS_HASH);
@@ -220,7 +212,7 @@ class PrivacyConsentManager
         $dataServices = array_keys($preferencesArray);
 
         if ($specsServices !== $dataServices) {
-            throw new InvalidUserConsentDataException(InvalidUserConsentDataException::UNMATCHING_CONSENT_DATA_KEY);
+            throw new InvalidUserConsentDataException(InvalidUserConsentDataException::UNMATCHING_SERVICES);
         }
 
         // Required check
@@ -298,28 +290,6 @@ class PrivacyConsentManager
             throw new InvalidUserConsentDataException(
                 InvalidUserConsentDataException::TIMESTAMP_IS_PRIOR_TO_LATEST_CONSENT,
             );
-        }
-    }
-
-    /**
-     * @param array<string, mixed> $data
-     *
-     * @throws InvalidUserConsentDataException
-     */
-    private function validateUserAgent(array $data): void
-    {
-        if (! isset($data[self::JSON_KEY_USER_AGENT])) {
-            throw new InvalidUserConsentDataException(InvalidUserConsentDataException::UNSET_USER_AGENT);
-        }
-
-        if (! is_string($data[self::JSON_KEY_USER_AGENT])) {
-            throw new InvalidUserConsentDataException(InvalidUserConsentDataException::USER_AGENT_IS_NOT_STRING);
-        }
-
-        if ($data[self::JSON_KEY_USER_AGENT] !== $this->requestStack->getCurrentRequest()?->headers->get(
-            'User-Agent',
-        )) {
-            throw new InvalidUserConsentDataException(InvalidUserConsentDataException::INVALID_USER_AGENT);
         }
     }
 }
