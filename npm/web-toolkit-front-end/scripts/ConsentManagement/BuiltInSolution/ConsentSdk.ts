@@ -35,7 +35,7 @@ export default class ConsentSdk {
   }
 
   async getCurrentConsent(): Promise<ConsentData> {
-    if(PEMKEYPAIR === undefined) await ConsentSdk.getPemKeyPair();
+    if (PEMKEYPAIR === undefined) await ConsentSdk.getPemKeyPair();
 
     if (ConsentSdk.getPublicKeyHash() === undefined) {
       return this.buildNewConsent();
@@ -44,8 +44,7 @@ export default class ConsentSdk {
     let localStorageData = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (localStorageData === null) {
       const updatedConsent = await this.refreshConsent();
-      if(updatedConsent != undefined)
-      {
+      if (updatedConsent !== undefined) {
         return updatedConsent;
       }
       localStorageData = localStorage.getItem(LOCAL_STORAGE_KEY)!;
@@ -56,8 +55,7 @@ export default class ConsentSdk {
 
     if (timeDif >= this.cacheExpiration) {
       const updatedConsent = await this.refreshConsent();
-      if(updatedConsent != undefined)
-      {
+      if (updatedConsent !== undefined) {
         return updatedConsent;
       }
 
@@ -138,39 +136,37 @@ export default class ConsentSdk {
     const remoteSpecs = await this.getSpecs();
     ConsentSdk.storeConsent(consent);
 
-    if (JSON.stringify(JSON.parse(consent.data).specs) !== JSON.stringify(remoteSpecs))
-    {
-      return this.updateConsent(JSON.parse(consent.data), remoteSpecs);
+    if (JSON.stringify(JSON.parse(consent.data).specs) !== JSON.stringify(remoteSpecs)) {
+      return ConsentSdk.updateConsent(JSON.parse(consent.data), remoteSpecs);
     }
     return undefined;
   }
 
-  private updateConsent(consentData: ConsentData, remoteSpecs: ConsentSpecs): ConsentData
-  {
+  private static updateConsent(consentData: ConsentData, remoteSpecs: ConsentSpecs): ConsentData {
     const consentSpecs = consentData.specs;
     const consentPreferences = consentData.preferences;
 
-    const changedServices = remoteSpecs.services.filter(service => (consentSpecs.services.findIndex(x =>
-          x.id == service.id
-          && x.category == service.category
-          && x.name == service.name
-          && x.description == service.description
+    const changedServices = remoteSpecs.services.filter(
+      (remoteService) => (consentSpecs.services.findIndex(
+        (consentService) => consentService.id === remoteService.id
+          && consentService.category === remoteService.category
+          && consentService.name === remoteService.name
+          && consentService.description === remoteService.description,
       ) < 0));
 
-    for (let consentPreferencesKey in consentPreferences) {
-      changedServices.forEach(el => {
-        if(el.id === consentPreferencesKey)
-        {
-          consentPreferences[consentPreferencesKey] = false;
+    Object.keys(consentPreferences).forEach((pref) => {
+      changedServices.forEach((el) => {
+        if (el.id === pref) {
+          consentPreferences[pref] = false;
         }
-      })
-    }
+      });
+    });
 
     return {
       timestamp: null,
       previousConsentDataHash: consentData.previousConsentDataHash,
       preferences: consentPreferences,
-      specs: remoteSpecs
+      specs: remoteSpecs,
     };
   }
 
