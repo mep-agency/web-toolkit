@@ -8,7 +8,6 @@
  */
 
 import sha256 from 'crypto-js/sha256';
-import Cookies from 'js-cookie';
 import * as Rsa from '../../Util/Rsa';
 
 import {
@@ -22,7 +21,6 @@ import {
 } from './ConsentInterfaces';
 
 const DEFAULT_EXPIRATION_DELAY = 600000; // 10 minuti
-const HASH_COOKIE_NAME = 'mwt_privacy_consent_hash';
 const LOCAL_STORAGE_KEY = 'mwt_privacy_consent';
 const PEM_RSA_STORAGE_KEY = 'mwt_privacy_consent_rsa_pem';
 const HASH_PLACEHOLDER = '0000000000000000000000000000000000000000000000000000000000000000';
@@ -37,15 +35,19 @@ export default class ConsentSdk {
   }
 
   async getCurrentConsent(): Promise<ConsentData> {
+    if(PEMKEYPAIR === undefined) await ConsentSdk.getPemKeyPair();
+
     if (ConsentSdk.getPublicKeyHash() === undefined) {
       return this.buildNewConsent();
     }
 
     let localStorageData = localStorage.getItem(LOCAL_STORAGE_KEY);
-
     if (localStorageData === null) {
-      await this.refreshConsent();
-
+      const updatedConsent = await this.refreshConsent();
+      if(updatedConsent != undefined)
+      {
+        return updatedConsent;
+      }
       localStorageData = localStorage.getItem(LOCAL_STORAGE_KEY)!;
     }
 
@@ -53,18 +55,20 @@ export default class ConsentSdk {
     const timeDif = ConsentSdk.getCurrentTime() - localStorageConsentData.lastCheck;
 
     if (timeDif >= this.cacheExpiration) {
-      await this.refreshConsent();
+      const updatedConsent = await this.refreshConsent();
+      if(updatedConsent != undefined)
+      {
+        return updatedConsent;
+      }
 
       localStorageData = localStorage.getItem(LOCAL_STORAGE_KEY)!;
       localStorageConsentData = JSON.parse(localStorageData) as ConsentLocalData;
     }
-
     return JSON.parse(localStorageConsentData.consent.data) as ConsentData;
   }
 
   async registerConsent(temporaryConsent: ConsentData): Promise<ConsentData> {
     let isNewConsent = true;
-
     if (ConsentSdk.getPublicKeyHash() !== undefined) {
       const localStorageElement = localStorage.getItem(LOCAL_STORAGE_KEY);
 
@@ -75,11 +79,6 @@ export default class ConsentSdk {
           return JSON.parse(localStorageConsent.data) as ConsentData;
         }
         isNewConsent = false;
-      } else {
-        await this.refreshConsent();
-        return JSON.parse(
-          JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)!).consent!.data,
-        ) as ConsentData;
       }
     }
 
@@ -96,7 +95,8 @@ export default class ConsentSdk {
     await ConsentSdk.checkConsent(consent, JSON.parse(builtConsent) as LocalConsent);
 
     if (isNewConsent) {
-      Cookies.set(HASH_COOKIE_NAME, sha256(PEMKEYPAIR.publicKey).toString());
+      PEMKEYPAIR.publicKeyHash = sha256(PEMKEYPAIR.publicKey).toString();
+      localStorage.setItem(PEM_RSA_STORAGE_KEY, JSON.stringify(PEMKEYPAIR));
     }
 
     ConsentSdk.storeConsent(consent);
@@ -130,13 +130,48 @@ export default class ConsentSdk {
     if (!systemVerify) throw new Error('System signature not valid!');
   }
 
-  private async refreshConsent() {
+  private async refreshConsent(): Promise<ConsentData | undefined> {
     const response = await fetch(ConsentSdk.generateUrl(this.apiUrls.consentGet), {
       method: 'GET',
     });
     const consent: ResponseConsent = await response.json();
-
+    const remoteSpecs = await this.getSpecs();
     ConsentSdk.storeConsent(consent);
+
+    if (JSON.stringify(JSON.parse(consent.data).specs) !== JSON.stringify(remoteSpecs))
+    {
+      return this.updateConsent(JSON.parse(consent.data), remoteSpecs);
+    }
+    return undefined;
+  }
+
+  private updateConsent(consentData: ConsentData, remoteSpecs: ConsentSpecs): ConsentData
+  {
+    const consentSpecs = consentData.specs;
+    const consentPreferences = consentData.preferences;
+
+    const changedServices = remoteSpecs.services.filter(service => (consentSpecs.services.findIndex(x =>
+          x.id == service.id
+          && x.category == service.category
+          && x.name == service.name
+          && x.description == service.description
+      ) < 0));
+
+    for (let consentPreferencesKey in consentPreferences) {
+      changedServices.forEach(el => {
+        if(el.id === consentPreferencesKey)
+        {
+          consentPreferences[consentPreferencesKey] = false;
+        }
+      })
+    }
+
+    return {
+      timestamp: null,
+      previousConsentDataHash: consentData.previousConsentDataHash,
+      preferences: consentPreferences,
+      specs: remoteSpecs
+    };
   }
 
   private async getSpecs(): Promise<ConsentSpecs> {
@@ -148,7 +183,7 @@ export default class ConsentSdk {
   }
 
   private static getPublicKeyHash(): string | undefined {
-    return Cookies.get(HASH_COOKIE_NAME);
+    return PEMKEYPAIR.publicKeyHash;
   }
 
   private static getCurrentTime(): number {
@@ -174,7 +209,6 @@ export default class ConsentSdk {
 
     return {
       previousConsentDataHash: null,
-      userAgent: null,
       timestamp: null,
       specs,
       preferences: servicesStatus,
@@ -216,7 +250,6 @@ export default class ConsentSdk {
 
     const data = {
       previousConsentDataHash,
-      userAgent: navigator.userAgent,
       timestamp: Math.ceil(new Date().getTime() / 1000),
       specs: consent.specs,
       preferences: consent.preferences,
@@ -232,15 +265,11 @@ export default class ConsentSdk {
   }
 
   private static async getPemKeyPair(): Promise<void> {
-    if (!localStorage.getItem(PEM_RSA_STORAGE_KEY)) {
-      Cookies.remove(HASH_COOKIE_NAME);
-      PEMKEYPAIR = await Rsa.exportToPem(await Rsa.generateKey());
-      localStorage.setItem(PEM_RSA_STORAGE_KEY, JSON.stringify(PEMKEYPAIR));
+    if (localStorage.getItem(PEM_RSA_STORAGE_KEY)) {
+      PEMKEYPAIR = JSON.parse(localStorage.getItem(PEM_RSA_STORAGE_KEY)!) as Rsa.PemKeyPair;
       return;
     }
-    PEMKEYPAIR = JSON.parse(localStorage.getItem(PEM_RSA_STORAGE_KEY)!) as Rsa.PemKeyPair;
-    if (Cookies.get(HASH_COOKIE_NAME) === undefined && localStorage.getItem(LOCAL_STORAGE_KEY)) {
-      Cookies.set(HASH_COOKIE_NAME, sha256(PEMKEYPAIR.publicKey).toString());
-    }
+    PEMKEYPAIR = await Rsa.exportToPem(await Rsa.generateKey());
+    localStorage.setItem(PEM_RSA_STORAGE_KEY, JSON.stringify(PEMKEYPAIR));
   }
 }

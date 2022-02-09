@@ -10,6 +10,7 @@
 export interface PemKeyPair {
   privateKey: string;
   publicKey: string;
+  publicKeyHash: string | undefined;
 }
 
 export async function generateKey(bits: number = 2048): Promise<CryptoKeyPair> {
@@ -98,6 +99,7 @@ export async function exportToPem(keyPair: CryptoKeyPair): Promise<PemKeyPair> {
         ),
       ),
     )}\n-----END PUBLIC KEY-----`,
+    publicKeyHash: undefined,
   };
 }
 

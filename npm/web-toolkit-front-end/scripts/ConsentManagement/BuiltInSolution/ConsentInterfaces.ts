@@ -24,7 +24,6 @@ export interface ConsentSpecs {
 
 export interface ConsentData {
   timestamp: number | null;
-  userAgent: string | null;
   previousConsentDataHash: string | null;
   preferences: PreferencesStatus;
   specs: ConsentSpecs;

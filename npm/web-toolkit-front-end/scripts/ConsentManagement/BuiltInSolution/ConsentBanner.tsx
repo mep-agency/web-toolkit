@@ -55,7 +55,7 @@ export default class ConsentBanner extends React.Component<Props, State> {
     if (consent === null) throw new Error('Couldn\'t get consent!');
 
     this.setState({
-      currentConsent: await this.sdk.getCurrentConsent(),
+      currentConsent: consent,
     });
 
     this.createRequiredList();
