@@ -11,6 +11,7 @@ import sha256 from 'crypto-js/sha256';
 import * as Rsa from '../../Util/Rsa';
 
 import {
+  CategorySpecs,
   ConsentData,
   ConsentLocalData,
   ConsentSpecs,
@@ -18,9 +19,10 @@ import {
   LocalConsent,
   PreferencesStatus,
   ResponseConsent,
+  ServiceSpecs,
 } from './ConsentInterfaces';
 
-const DEFAULT_EXPIRATION_DELAY = 600000; // 10 minuti
+const DEFAULT_EXPIRATION_DELAY = 300000; // Five minutes expiration delay in ms
 const LOCAL_STORAGE_KEY = 'mwt_privacy_consent';
 const PEM_RSA_STORAGE_KEY = 'mwt_privacy_consent_rsa_pem';
 const HASH_PLACEHOLDER = '0000000000000000000000000000000000000000000000000000000000000000';
@@ -145,22 +147,54 @@ export default class ConsentSdk {
   private static updateConsent(consentData: ConsentData, remoteSpecs: ConsentSpecs): ConsentData {
     const consentSpecs = consentData.specs;
     const consentPreferences = consentData.preferences;
+    let changedServices: ServiceSpecs[] = [];
+    let changedCategories: CategorySpecs[] = [];
 
-    const changedServices = remoteSpecs.services.filter(
-      (remoteService) => (consentSpecs.services.findIndex(
-        (consentService) => consentService.id === remoteService.id
-          && consentService.category === remoteService.category
-          && consentService.name === remoteService.name
-          && consentService.description === remoteService.description,
-      ) < 0));
+    const requiredCategories: string[] = [];
 
-    Object.keys(consentPreferences).forEach((pref) => {
+    remoteSpecs.categories.forEach((categorySpecs) => {
+      if (categorySpecs.required) {
+        requiredCategories.push(categorySpecs.id);
+      }
+    });
+
+    if (JSON.stringify(consentSpecs.services) !== JSON.stringify(remoteSpecs.services)) {
+      changedServices = remoteSpecs.services.filter(
+        (remoteService) => (consentSpecs.services.findIndex(
+          (consentService) => (consentService.id === remoteService.id
+            && consentService.category === remoteService.category
+            && consentService.name === remoteService.name
+            && consentService.description === remoteService.description),
+        ) < 0));
+
       changedServices.forEach((el) => {
-        if (el.id === pref) {
-          consentPreferences[pref] = false;
+        if (!requiredCategories.includes(el.category)) {
+          consentPreferences[el.id] = false;
         }
       });
-    });
+    }
+
+    if (JSON.stringify(consentSpecs.categories) !== JSON.stringify(remoteSpecs.categories)) {
+      changedCategories = remoteSpecs.categories.filter(
+        (remoteCategory) => (consentSpecs.categories.findIndex(
+          (consentCategory) => consentCategory.id === remoteCategory.id
+            && consentCategory.name === remoteCategory.name
+            && consentCategory.description === remoteCategory.description
+            && consentCategory.required === remoteCategory.required,
+        ) < 0));
+
+      changedCategories.forEach(
+        (category) => {
+          remoteSpecs.services.forEach(
+            (service) => {
+              if (!category.required && service.category === category.id) {
+                consentPreferences[service.id] = false;
+              }
+            },
+          );
+        },
+      );
+    }
 
     return {
       timestamp: null,

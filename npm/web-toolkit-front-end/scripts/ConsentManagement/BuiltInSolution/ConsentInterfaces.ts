@@ -49,14 +49,14 @@ export interface ConsentLocalData {
   consent: ResponseConsent;
 }
 
-interface CategorySpecs {
+export interface CategorySpecs {
   id: string;
   name: string;
   description: string;
   required: boolean;
 }
 
-interface ServiceSpecs {
+export interface ServiceSpecs {
   id: string;
   name: string;
   description: string;
