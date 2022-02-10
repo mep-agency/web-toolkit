@@ -149,6 +149,10 @@ export default class ConsentBanner extends React.Component<Props, State> {
           : <div className="consent-body">
               {this.state.enableTab !== BannerStatus.DEFAULT
                 ? <div className="floating-window">
+                  <div className="navigation">
+                    <button className="back-arrow" onClick={() => this.chooseBannerStatus(BannerStatus.DEFAULT)}/>
+                    <button className="close-button" onClick={() => this.saveConsent()}/>
+                  </div>
                   <div className="banner-header">
                     <p>{I18n.body}</p>
                     <div className="privacy-links">
