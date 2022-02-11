@@ -26,6 +26,12 @@ const DEFAULT_EXPIRATION_DELAY = 300000; // Five minutes expiration delay in ms
 const LOCAL_STORAGE_KEY = 'mwt_privacy_consent';
 const PEM_RSA_STORAGE_KEY = 'mwt_privacy_consent_rsa_pem';
 const HASH_PLACEHOLDER = '0000000000000000000000000000000000000000000000000000000000000000';
+const ERROR_LIST = [
+  'invalid_signature',
+  'cannot_update_consent_for_unexisting_public_key',
+  'previous_consent_hash_has_to_be_null',
+  'previous_consent_hash_does_not_match',
+];
 let PEMKEYPAIR: Rsa.PemKeyPair;
 
 export default class ConsentSdk {
@@ -69,17 +75,19 @@ export default class ConsentSdk {
 
   async registerConsent(temporaryConsent: ConsentData): Promise<ConsentData> {
     let isNewConsent = true;
+
     if (ConsentSdk.getPublicKeyHash() !== undefined) {
       const localStorageElement = localStorage.getItem(LOCAL_STORAGE_KEY);
 
       if (localStorageElement) {
         const localStorageConsent = JSON.parse(localStorageElement).consent as ResponseConsent;
-
-        if (JSON.stringify(localStorageConsent.data) === JSON.stringify(temporaryConsent)) {
+        if (localStorageConsent.data === JSON.stringify(temporaryConsent)) {
           return JSON.parse(localStorageConsent.data) as ConsentData;
         }
         isNewConsent = false;
       }
+    } else {
+      await ConsentSdk.getPemKeyPair();
     }
 
     const builtConsent = await ConsentSdk.buildConsentRequestBody(temporaryConsent, isNewConsent);
@@ -87,10 +95,18 @@ export default class ConsentSdk {
       method: 'POST',
       body: builtConsent,
     });
+    const responseMessage = await response.json();
 
-    if (!response.ok) throw new Error('Invalid response');
+    if (!response.ok) {
+      if (ERROR_LIST.includes(responseMessage.code)) {
+        ConsentSdk.cleanupStorage();
+        return this.registerConsent(temporaryConsent);
+      }
 
-    const consent: ResponseConsent = await response.json();
+      throw new Error('Invalid response');
+    }
+
+    const consent: ResponseConsent = responseMessage;
 
     await ConsentSdk.checkConsent(consent, JSON.parse(builtConsent) as LocalConsent);
 
@@ -102,6 +118,12 @@ export default class ConsentSdk {
     ConsentSdk.storeConsent(consent);
 
     return JSON.parse(consent.data) as ConsentData;
+  }
+
+  private static cleanupStorage() {
+    localStorage.removeItem(PEM_RSA_STORAGE_KEY);
+    localStorage.removeItem(LOCAL_STORAGE_KEY);
+    PEMKEYPAIR.publicKeyHash = undefined;
   }
 
   private static async checkConsent(
@@ -295,7 +317,7 @@ export default class ConsentSdk {
   }
 
   private static async getPemKeyPair(): Promise<void> {
-    if (localStorage.getItem(PEM_RSA_STORAGE_KEY)) {
+    if (localStorage.getItem(PEM_RSA_STORAGE_KEY) !== null) {
       PEMKEYPAIR = JSON.parse(localStorage.getItem(PEM_RSA_STORAGE_KEY)!) as Rsa.PemKeyPair;
       return;
     }
