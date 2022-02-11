@@ -18,6 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Mep\WebToolkitBundle\Contract\Entity\TranslatableTrait;
+use Mep\WebToolkitBundle\Repository\PrivacyConsent\PrivacyConsentServiceRepository;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -26,7 +27,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: PrivacyConsentServiceRepository::class)]
 #[ORM\Table(name: 'mwt_privacy_consent_service')]
 class PrivacyConsentService implements TranslatableInterface, JsonSerializable
 {

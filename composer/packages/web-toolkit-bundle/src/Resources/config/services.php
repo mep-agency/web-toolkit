@@ -273,15 +273,20 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->tag('doctrine.repository_service')
     ;
     $services->set(
-        WebToolkitBundle::SERVICE_PRIVACY_CONSENT_CATEGORY_REPOSITORY,
+        // Doctrine repositories must be defined using the FQCN
         PrivacyConsentCategoryRepository::class,
     )
         ->autowire()
         ->tag('doctrine.repository_service')
+        ->alias(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_CATEGORY_REPOSITORY, PrivacyConsentCategoryRepository::class)
     ;
-    $services->set(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_SERVICE_REPOSITORY, PrivacyConsentServiceRepository::class)
+    $services->set(
+        // Doctrine repositories must be defined using the FQCN
+        PrivacyConsentServiceRepository::class,
+    )
         ->autowire()
         ->tag('doctrine.repository_service')
+        ->alias(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_SERVICE_REPOSITORY, PrivacyConsentServiceRepository::class)
     ;
     $services->set(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_MANAGER, PrivacyConsentManager::class)
         ->arg(0, env('PRIVACY_CONSENT_MANAGER_PRIVATE_KEY')->base64())
