@@ -27,7 +27,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $parameters = $containerConfigurator->parameters();
 
     // Set target PHP version
-    $parameters->set(Option::PHP_VERSION_FEATURES, PhpVersion::PHP_80);
+    $parameters->set(Option::PHP_VERSION_FEATURES, PhpVersion::PHP_81);
 
     // Sources
     $parameters->set(Option::PATHS, [
@@ -51,7 +51,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     ]);
 
     // Define what rule sets will be applied
-    $containerConfigurator->import(SetList::PHP_80);
+    $containerConfigurator->import(SetList::PHP_81);
     $containerConfigurator->import(SetList::DEAD_CODE);
     $containerConfigurator->import(SetList::CODE_QUALITY);
     $containerConfigurator->import(SymfonySetList::SYMFONY_CODE_QUALITY);

@@ -29,13 +29,23 @@ use Symfony\Component\Finder\Finder;
  * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 #[AsCommand(
-    name: 'app:create',
-    description: 'Creates a configuration folder for a new app',
+    name: self::NAME,
+    description: self::DESCRIPTION,
 )]
 class AppCreateCommand extends Command
 {
+    /**
+     * @var string
+     */
+    final public const NAME = 'app:create';
+
+    /**
+     * @var string
+     */
+    final public const DESCRIPTION = 'Creates a configuration folder for a new app';
+
     public function __construct(
-        private string $cwdPath,
+        private readonly string $cwdPath,
     ) {
         parent::__construct();
     }

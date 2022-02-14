@@ -32,15 +32,25 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 #[AsCommand(
-    name: 'super-user:get-config',
-    description: 'Generates a config file for the given super-user service account.',
+    name: self::NAME,
+    description: self::DESCRIPTION,
 )]
 class SuperUserGetConfigCommand extends AbstractK8sCommand
 {
+    /**
+     * @var string
+     */
+    final public const NAME = 'super-user:get-config';
+
+    /**
+     * @var string
+     */
+    final public const DESCRIPTION = 'Generates a config file for the given super-user service account.';
+
     public function __construct(
         KubernetesCluster $kubernetesCluster,
-        private K8sConfigGenerator $k8sConfigGenerator,
-        private string $defaultOutputPath,
+        private readonly K8sConfigGenerator $k8sConfigGenerator,
+        private readonly string $defaultOutputPath,
     ) {
         parent::__construct($kubernetesCluster);
     }

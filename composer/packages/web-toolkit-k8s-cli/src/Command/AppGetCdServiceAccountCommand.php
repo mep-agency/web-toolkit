@@ -30,16 +30,26 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 #[AsCommand(
-    name: 'app:get-cd-service-account',
-    description: 'Generates a config file for a service account associated with the given app (useful for continuous delivery).',
+    name: self::NAME,
+    description: self::DESCRIPTION,
 )]
 class AppGetCdServiceAccountCommand extends AbstractHelmCommand
 {
+    /**
+     * @var string
+     */
+    final public const NAME = 'app:get-cd-service-account';
+
+    /**
+     * @var string
+     */
+    final public const DESCRIPTION = 'Generates a config file for a service account associated with the given app (useful for continuous delivery).';
+
     public function __construct(
         KubernetesCluster $kubernetesCluster,
         HelmAppsManager $helmAppsManager,
-        private K8sConfigGenerator $k8sConfigGenerator,
-        private string $defaultOutputPath,
+        private readonly K8sConfigGenerator $k8sConfigGenerator,
+        private readonly string $defaultOutputPath,
     ) {
         parent::__construct($kubernetesCluster, $helmAppsManager, false);
     }

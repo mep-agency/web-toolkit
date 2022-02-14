@@ -26,13 +26,23 @@ use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
  * @author Marco Lipparini <developer@liarco.net>
  */
 #[AsCommand(
-    name: 'mwt:sessions:create-table',
-    description: 'Creates the database table for sessions persistence',
+    name: self::NAME,
+    description: self::DESCRIPTION,
 )]
 class SessionsCreateTableCommand extends Command
 {
+    /**
+     * @var string
+     */
+    final public const NAME = 'mwt:sessions:create-table';
+
+    /**
+     * @var string
+     */
+    final public const DESCRIPTION = 'Creates the database table for sessions persistence';
+
     public function __construct(
-        private ?PdoSessionHandler $pdoSessionHandler = null,
+        private readonly ?PdoSessionHandler $pdoSessionHandler = null,
     ) {
         parent::__construct();
     }

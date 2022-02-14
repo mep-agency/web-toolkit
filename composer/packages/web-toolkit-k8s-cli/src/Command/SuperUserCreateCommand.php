@@ -33,11 +33,21 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 #[AsCommand(
-    name: 'super-user:create',
-    description: 'Creates a super-user service account for the given namespace.',
+    name: self::NAME,
+    description: self::DESCRIPTION,
 )]
 class SuperUserCreateCommand extends AbstractK8sCommand
 {
+    /**
+     * @var string
+     */
+    final public const NAME = 'super-user:create';
+
+    /**
+     * @var string
+     */
+    final public const DESCRIPTION = 'Creates a super-user service account for the given namespace.';
+
     protected function configure(): void
     {
         $this->addArgument(Argument::SERVICE_ACCOUNT, InputArgument::REQUIRED, 'The service account name');

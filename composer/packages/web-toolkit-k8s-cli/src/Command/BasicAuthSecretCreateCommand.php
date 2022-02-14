@@ -32,14 +32,24 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 #[AsCommand(
-    name: 'basic-auth-secret:create',
-    description: 'Creates an HTTP Basic Auth secret associated with the given namespace.',
+    name: self::NAME,
+    description: self::DESCRIPTION,
 )]
 class BasicAuthSecretCreateCommand extends AbstractK8sCommand
 {
+    /**
+     * @var string
+     */
+    final public const NAME = 'basic-auth-secret:create';
+
+    /**
+     * @var string
+     */
+    final public const DESCRIPTION = 'Creates an HTTP Basic Auth secret associated with the given namespace.';
+
     public function __construct(
         KubernetesCluster $kubernetesCluster,
-        private K8sBasicAuthSecretGenerator $k8sBasicAuthSecretGenerator,
+        private readonly K8sBasicAuthSecretGenerator $k8sBasicAuthSecretGenerator,
     ) {
         parent::__construct($kubernetesCluster);
     }

@@ -3,12 +3,30 @@ parameters:
   paths:
     - composer
   ignoreErrors:
-    - message: '#Unable to resolve the template type T in call to method Doctrine\\Persistence\\ObjectManager::getRepository\(\)#'
-      path: composer/packages/web-toolkit-bundle/src/EventListener/ForceSingleInstanceEventListener.php
     - message: '#autowire\(\), autoconfigure\(\), and public\(\) are required in config service#'
       paths:
         - composer/packages/web-toolkit-k8s-cli/config/services.php
         - composer/packages/web-toolkit-bundle/src/Resources/config/services.php
+    - message: '#Attribute key "repositoryClass" cannot be used#'
+      paths:
+        - composer/packages/web-toolkit-bundle/src/Entity/PrivacyConsent/PrivacyConsentCategory.php
+        - composer/packages/web-toolkit-bundle/src/Entity/PrivacyConsent/PrivacyConsentService.php
+    - message: '#The command is missing \$this->setName\("\.\.\."\) in configure\(\) method#'
+      paths:
+        - composer/packages/web-toolkit-bundle/src/Command/FileStorage/GarbageCollectionCommand.php
+        - composer/packages/web-toolkit-bundle/src/Command/FileStorage/SessionsCreateTableCommand.php
+        - composer/packages/web-toolkit-k8s-cli/src/Command/AppCreateCommand.php
+        - composer/packages/web-toolkit-k8s-cli/src/Command/AppGetCdServiceAccountCommand.php
+        - composer/packages/web-toolkit-k8s-cli/src/Command/BasicAuthSecretCreateCommand.php
+        - composer/packages/web-toolkit-k8s-cli/src/Command/BasicAuthSecretDeleteCommand.php
+        - composer/packages/web-toolkit-k8s-cli/src/Command/ConfigCreateCommand.php
+        - composer/packages/web-toolkit-k8s-cli/src/Command/NamespaceCreateCommand.php
+        - composer/packages/web-toolkit-k8s-cli/src/Command/NamespaceDeleteCommand.php
+        - composer/packages/web-toolkit-k8s-cli/src/Command/PullSecretCreateCommand.php
+        - composer/packages/web-toolkit-k8s-cli/src/Command/PullSecretDeleteCommand.php
+        - composer/packages/web-toolkit-k8s-cli/src/Command/SuperUserCreateCommand.php
+        - composer/packages/web-toolkit-k8s-cli/src/Command/SuperUserDeleteCommand.php
+        - composer/packages/web-toolkit-k8s-cli/src/Command/SuperUserGetConfigCommand.php
   bootstrapFiles:
     # Fix class not found error for Symplify\MonorepoBuilder\Release\Contract\ReleaseWorker\ReleaseWorkerInterface
     - vendor/symplify/monorepo-builder/vendor/autoload.php

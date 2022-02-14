@@ -14,7 +14,7 @@
         }
     ],
     "require": {
-        "php": "^8.0",
+        "php": "^8.1",
         "ext-yaml": "*",
         "renoki-co/php-k8s": "^3.1",
         "symfony/config": "5.4.*",

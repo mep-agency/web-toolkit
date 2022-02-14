@@ -32,14 +32,24 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 #[AsCommand(
-    name: 'basic-auth-secret:delete',
-    description: 'Deletes a n HTTP Basic Auth secret associated to the given namespace.',
+    name: self::NAME,
+    description: self::DESCRIPTION,
 )]
 class BasicAuthSecretDeleteCommand extends AbstractK8sCommand
 {
+    /**
+     * @var string
+     */
+    final public const NAME = 'basic-auth-secret:delete';
+
+    /**
+     * @var string
+     */
+    final public const DESCRIPTION = 'Deletes a n HTTP Basic Auth secret associated to the given namespace.';
+
     public function __construct(
         KubernetesCluster $kubernetesCluster,
-        private K8sBasicAuthSecretGenerator $k8sBasicAuthSecretGenerator,
+        private readonly K8sBasicAuthSecretGenerator $k8sBasicAuthSecretGenerator,
     ) {
         parent::__construct($kubernetesCluster);
     }

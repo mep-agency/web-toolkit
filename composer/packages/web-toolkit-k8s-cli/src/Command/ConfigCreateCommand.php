@@ -29,14 +29,24 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 #[AsCommand(
-    name: 'config:create',
-    description: 'Creates a new local kubectl config file',
+    name: self::NAME,
+    description: self::DESCRIPTION,
 )]
 class ConfigCreateCommand extends Command
 {
+    /**
+     * @var string
+     */
+    final public const NAME = 'config:create';
+
+    /**
+     * @var string
+     */
+    final public const DESCRIPTION = 'Creates a new local kubectl config file';
+
     public function __construct(
-        private K8sConfigGenerator $k8sConfigGenerator,
-        private string $kubeConfigPath,
+        private readonly K8sConfigGenerator $k8sConfigGenerator,
+        private readonly string $kubeConfigPath,
     ) {
         parent::__construct();
     }

@@ -172,9 +172,17 @@
       <path value="$PROJECT_DIR$/vendor/paragonie/random_compat" />
       <path value="$PROJECT_DIR$/vendor/paragonie/constant_time_encoding" />
       <path value="$PROJECT_DIR$/vendor/phpseclib/phpseclib" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client-contracts" />
+      <path value="$PROJECT_DIR$/vendor/latte/latte" />
+      <path value="$PROJECT_DIR$/vendor/danielstjules/stringy" />
+      <path value="$PROJECT_DIR$/vendor/symplify/twig-phpstan-compiler" />
+      <path value="$PROJECT_DIR$/vendor/symplify/latte-phpstan-compiler" />
+      <path value="$PROJECT_DIR$/vendor/symplify/template-phpstan-compiler" />
+      <path value="$PROJECT_DIR$/vendor/symplify/console-package-builder" />
+      <path value="$PROJECT_DIR$/vendor/illuminate/conditionable" />
     </include_path>
   </component>
-  <component name="PhpProjectSharedConfiguration" php_language_level="8.0">
+  <component name="PhpProjectSharedConfiguration" php_language_level="8.1">
     <option name="suggestChangeDefaultLanguageLevel" value="false" />
   </component>
   <component name="PhpStan">

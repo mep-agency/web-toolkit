@@ -6,7 +6,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "php": "^8.0",
+        "php": "^8.1",
         "mep-agency/web-toolkit-k8s-cli": "^0.1"
     },
     "require-dev": {

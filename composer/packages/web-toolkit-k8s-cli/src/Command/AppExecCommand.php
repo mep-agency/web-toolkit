@@ -26,15 +26,25 @@ use Symfony\Component\Process\Process;
  * @author Marco Lipparini <developer@liarco.net>
  */
 #[AsCommand(
-    name: 'app:exec',
-    description: 'Opens a bash shell inside one pod of the given app',
+    name: self::NAME,
+    description: self::DESCRIPTION,
 )]
 class AppExecCommand extends AbstractHelmCommand
 {
+    /**
+     * @var string
+     */
+    final public const NAME = 'app:exec';
+
+    /**
+     * @var string
+     */
+    final public const DESCRIPTION = 'Opens a bash shell inside one pod of the given app';
+
     public function __construct(
         KubernetesCluster $kubernetesCluster,
         HelmAppsManager $helmAppsManager,
-        private string $kubeConfigPath,
+        private readonly string $kubeConfigPath,
     ) {
         parent::__construct($kubernetesCluster, $helmAppsManager, false);
     }

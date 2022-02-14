@@ -32,14 +32,24 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 #[AsCommand(
-    name: 'pull-secret:create',
-    description: 'Creates a Docker pull secret associated with the given namespace.',
+    name: self::NAME,
+    description: self::DESCRIPTION,
 )]
 class PullSecretCreateCommand extends AbstractK8sCommand
 {
+    /**
+     * @var string
+     */
+    final public const NAME = 'pull-secret:create';
+
+    /**
+     * @var string
+     */
+    final public const DESCRIPTION = 'Creates a Docker pull secret associated with the given namespace.';
+
     public function __construct(
         KubernetesCluster $kubernetesCluster,
-        private K8sPullSecretGenerator $k8sPullSecretGenerator,
+        private readonly K8sPullSecretGenerator $k8sPullSecretGenerator,
     ) {
         parent::__construct($kubernetesCluster);
     }

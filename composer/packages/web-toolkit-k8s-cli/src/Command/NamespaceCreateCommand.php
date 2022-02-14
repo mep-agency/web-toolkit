@@ -28,11 +28,21 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 #[AsCommand(
-    name: 'namespace:create',
-    description: 'Creates a new namespace for deploying apps',
+    name: self::NAME,
+    description: self::DESCRIPTION,
 )]
 class NamespaceCreateCommand extends AbstractK8sCommand
 {
+    /**
+     * @var string
+     */
+    final public const NAME = 'namespace:create';
+
+    /**
+     * @var string
+     */
+    final public const DESCRIPTION = 'Creates a new namespace for deploying apps';
+
     protected function configure(): void
     {
         $this->addArgument(
