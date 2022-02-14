@@ -14,12 +14,10 @@ import CategoryListComponent from './components/CategoryListComponent';
 import ServiceListComponent from './components/ServiceListComponent';
 import I18n from './I18n';
 import '../../../styles/ConsentManagement/index.scss';
-// TODO: insert in css
-// const CookieLogo = require('../../../images/cookie-logo.svg') as string;
 
 interface Props {
   container: HTMLElement,
-  activator: HTMLElement
+  cacheExpiration?: number,
 }
 
 interface State {
@@ -41,7 +39,7 @@ export default class ConsentBanner extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props);
-    this.sdk = new ConsentSdk(this.getEndpoints());
+    this.sdk = new ConsentSdk(this.getEndpoints(), this.props.cacheExpiration);
 
     this.state = {
       currentConsent: null,
@@ -66,7 +64,7 @@ export default class ConsentBanner extends React.Component<Props, State> {
       });
     }
 
-    this.props.activator.addEventListener('click', () => {
+    document.getElementById('consent-banner-trigger')!.addEventListener('click', () => {
       this.openPopup();
     });
   };
