@@ -43,7 +43,7 @@ final class TinifyProcessor implements ProcessorInterface
 
     public function __construct(
         ?string $apiKey,
-        private bool $dummyMode = false,
+        private readonly bool $dummyMode = false,
     ) {
         if (! $this->dummyMode) {
             if (null === $apiKey) {

@@ -12,7 +12,7 @@ use Symfony\Component\Security\Core\Exception\LogicException;
 class LoginCheckController extends AbstractController
 {
     #[Route('/login-check', name: RouteName::LOGIN_CHECK)]
-    public function __invoke(): void
+    public function __invoke(): never
     {
         throw new LogicException(
             'This method can be blank - it will be intercepted by the check_route key on your firewall.',

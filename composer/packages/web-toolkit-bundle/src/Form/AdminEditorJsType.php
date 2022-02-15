@@ -64,9 +64,9 @@ final class AdminEditorJsType extends AbstractType implements DataTransformerInt
     public const CSRF_TOKEN_ID = 'mwt_admin_editorjs_upload_api';
 
     public function __construct(
-        private AttachmentsAdminApiUrlGenerator $attachmentsAdminApiUrlGenerator,
-        private SerializerInterface $serializer,
-        private CsrfTokenManagerInterface $csrfTokenManager,
+        private readonly AttachmentsAdminApiUrlGenerator $attachmentsAdminApiUrlGenerator,
+        private readonly SerializerInterface $serializer,
+        private readonly CsrfTokenManagerInterface $csrfTokenManager,
     ) {
     }
 

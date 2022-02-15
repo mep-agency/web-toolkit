@@ -25,8 +25,8 @@ use Mep\WebToolkitBundle\Contract\Controller\Admin\AbstractCrudController;
 final class AttachmentsAdminApiUrlGenerator
 {
     public function __construct(
-        private AdminContextProvider $adminContextProvider,
-        private AdminUrlGenerator $adminUrlGenerator,
+        private readonly AdminContextProvider $adminContextProvider,
+        private readonly AdminUrlGenerator $adminUrlGenerator,
     ) {
     }
 

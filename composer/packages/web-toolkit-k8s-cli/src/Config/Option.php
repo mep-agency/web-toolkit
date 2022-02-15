@@ -21,25 +21,25 @@ class Option
     /**
      * @var string
      */
-    public const NAMESPACE = 'namespace';
+    public final const NAMESPACE = 'namespace';
 
     /**
      * @var string
      */
-    public const FORCE = 'force';
+    public final const FORCE = 'force';
 
     /**
      * @var string
      */
-    public const ALL_ENVIRONMENTS = 'all-environments';
+    public final const ALL_ENVIRONMENTS = 'all-environments';
 
     /**
      * @var string
      */
-    public const CERTIFICATE = 'certificate';
+    public final const CERTIFICATE = 'certificate';
 
     /**
      * @var string
      */
-    public const OUTPUT = 'output';
+    public final const OUTPUT = 'output';
 }

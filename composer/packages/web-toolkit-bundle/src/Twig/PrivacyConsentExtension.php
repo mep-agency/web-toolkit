@@ -49,7 +49,7 @@ class PrivacyConsentExtension extends AbstractExtension
     private const PUBLIC_KEY_HASH_PLACEHOLDER = '0000000000000000000000000000000000000000000000000000000000000000';
 
     public function __construct(
-        private UrlGeneratorInterface $urlGenerator,
+        private readonly UrlGeneratorInterface $urlGenerator,
     ) {
     }
 

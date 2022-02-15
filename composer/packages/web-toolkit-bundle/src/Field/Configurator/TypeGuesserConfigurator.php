@@ -26,7 +26,7 @@ use Symfony\Component\Form\FormTypeGuesserInterface;
 final class TypeGuesserConfigurator implements FieldConfiguratorInterface
 {
     public function __construct(
-        private FormRegistryInterface $formRegistry,
+        private readonly FormRegistryInterface $formRegistry,
     ) {
     }
 

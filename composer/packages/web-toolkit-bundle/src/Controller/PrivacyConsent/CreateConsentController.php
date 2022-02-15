@@ -28,9 +28,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class CreateConsentController extends AbstractMwtController
 {
     public function __construct(
-        private PrivacyConsentManager $privacyConsentManager,
-        private RequestStack $requestStack,
-        private TranslatorInterface $translator,
+        private readonly PrivacyConsentManager $privacyConsentManager,
+        private readonly RequestStack $requestStack,
+        private readonly TranslatorInterface $translator,
         ?SerializerInterface $serializer = null,
     ) {
         parent::__construct($serializer);

@@ -22,7 +22,7 @@ use RenokiCo\PhpK8s\KubernetesCluster;
 class K8sConfigGenerator
 {
     public function __construct(
-        private KubernetesCluster $kubernetesCluster,
+        private readonly KubernetesCluster $kubernetesCluster,
     ) {
     }
 

@@ -31,8 +31,8 @@ final class TranslatableFieldPreConfigurator extends AbstractTranslatableFieldCo
         protected LocaleProviderInterface $localeProvider,
         protected PropertyAccessorInterface $propertyAccessor,
         protected FormRegistryInterface $formRegistry,
-        private EntityFactory $entityFactory,
-        private TypeGuesserConfigurator $typeGuesserConfigurator,
+        private readonly EntityFactory $entityFactory,
+        private readonly TypeGuesserConfigurator $typeGuesserConfigurator,
     ) {
         parent::__construct($localeProvider, $propertyAccessor, $formRegistry);
     }

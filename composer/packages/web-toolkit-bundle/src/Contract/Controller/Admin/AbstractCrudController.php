@@ -65,12 +65,12 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
     /**
      * @var string
      */
-    public const ACTION_DELETE_TRANSLATION = 'deleteTranslation';
+    public final const ACTION_DELETE_TRANSLATION = 'deleteTranslation';
 
     /**
      * @var string
      */
-    public const ACTION_ATTACH_FILE = 'attachFile';
+    public final const ACTION_ATTACH_FILE = 'attachFile';
 
     public function __construct(
         protected LocaleProviderInterface $localeProvider,

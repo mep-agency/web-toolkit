@@ -54,9 +54,9 @@ class HelmAppsManager
     private string $chartPath = self::BUILT_IN_CHART_PATH;
 
     public function __construct(
-        private KubernetesCluster $kubernetesCluster,
-        private string $cwdPath,
-        private string $kubeConfigPath,
+        private readonly KubernetesCluster $kubernetesCluster,
+        private readonly string $cwdPath,
+        private readonly string $kubeConfigPath,
     ) {
         $customChartPath = implode('/', [$this->cwdPath, self::CUSTOM_CHART_PATH]);
 

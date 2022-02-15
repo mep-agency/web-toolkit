@@ -23,7 +23,7 @@ use Twig\TwigFunction;
 class EditorJsExtension extends AbstractExtension
 {
     public function __construct(
-        private Environment $environment,
+        private readonly Environment $environment,
     ) {
     }
 

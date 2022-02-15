@@ -27,13 +27,13 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 final class LocalDriver implements DriverInterface
 {
-    private Filesystem $filesystem;
+    private readonly Filesystem $filesystem;
 
     public function __construct(
-        private string $storagePath,
-        private string $publicUrlPathPrefix,
-        private RequestStack $requestStack,
-        private ?string $publicUrlPrefix = null,
+        private readonly string $storagePath,
+        private readonly string $publicUrlPathPrefix,
+        private readonly RequestStack $requestStack,
+        private readonly ?string $publicUrlPrefix = null,
     ) {
         $this->filesystem = new Filesystem();
     }

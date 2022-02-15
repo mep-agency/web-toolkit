@@ -24,7 +24,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 class GetSpecsController extends AbstractMwtController
 {
     public function __construct(
-        private PrivacyConsentManager $privacyConsentManager,
+        private readonly PrivacyConsentManager $privacyConsentManager,
         ?SerializerInterface $serializer = null,
     ) {
         parent::__construct($serializer);

@@ -26,8 +26,8 @@ use Twig\TwigFunction;
 final class AttachmentExtension extends AbstractExtension
 {
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private FileStorageManager $fileStorageManager,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly FileStorageManager $fileStorageManager,
     ) {
     }
 

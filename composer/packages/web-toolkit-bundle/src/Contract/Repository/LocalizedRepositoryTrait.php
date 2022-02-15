@@ -25,7 +25,7 @@ use Symfony\Contracts\Service\Attribute\Required;
  */
 trait LocalizedRepositoryTrait
 {
-    private LocaleProviderInterface $localeProvider;
+    private readonly LocaleProviderInterface $localeProvider;
 
     /**
      * @return class-string<TranslatableInterface>

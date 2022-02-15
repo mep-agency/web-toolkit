@@ -41,7 +41,7 @@ final class TwigTemplateProvider implements TemplateProviderInterface
     public const TEXT_TEMPLATE_NAME = 'text_body.html.twig';
 
     public function __construct(
-        private Environment $environment,
+        private readonly Environment $environment,
     ) {
     }
 

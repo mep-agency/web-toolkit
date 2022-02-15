@@ -27,7 +27,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 class GetConsentController extends AbstractMwtController
 {
     public function __construct(
-        private PrivacyConsentRepository $privacyConsentRepository,
+        private readonly PrivacyConsentRepository $privacyConsentRepository,
         ?SerializerInterface $serializer = null,
     ) {
         parent::__construct($serializer);

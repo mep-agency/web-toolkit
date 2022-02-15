@@ -22,30 +22,30 @@ class RouteName
     /**
      * @var string
      */
-    public const LOGIN = 'login';
+    public final const LOGIN = 'login';
 
     /**
      * @var string
      */
-    public const PRIVACY_CONSENT_CREATE = 'privacy_consent_create';
+    public final const PRIVACY_CONSENT_CREATE = 'privacy_consent_create';
 
     /**
      * @var string
      */
-    public const PRIVACY_CONSENT_UPDATE = 'privacy_consent_update';
+    public final const PRIVACY_CONSENT_UPDATE = 'privacy_consent_update';
 
     /**
      * @var string
      */
-    public const PRIVACY_CONSENT_GET_SPECS = 'privacy_consent_get_specs';
+    public final const PRIVACY_CONSENT_GET_SPECS = 'privacy_consent_get_specs';
 
     /**
      * @var string
      */
-    public const PRIVACY_CONSENT_GET = 'privacy_consent_get';
+    public final const PRIVACY_CONSENT_GET = 'privacy_consent_get';
 
     /**
      * @var string
      */
-    public const PRIVACY_CONSENT_GET_HISTORY = 'privacy_consent_get_history';
+    public final const PRIVACY_CONSENT_GET_HISTORY = 'privacy_consent_get_history';
 }

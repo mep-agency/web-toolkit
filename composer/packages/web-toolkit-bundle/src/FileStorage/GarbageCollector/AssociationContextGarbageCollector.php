@@ -32,7 +32,7 @@ use Mep\WebToolkitBundle\Entity\Attachment;
 final class AssociationContextGarbageCollector implements GarbageCollectorInterface
 {
     public function __construct(
-        private Configuration $configuration,
+        private readonly Configuration $configuration,
     ) {
     }
 

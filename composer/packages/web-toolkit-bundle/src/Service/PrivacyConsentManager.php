@@ -100,12 +100,12 @@ class PrivacyConsentManager
     private array $specs = [];
 
     public function __construct(
-        private string $privateKey,
-        private int $timestampTolerance,
-        private PrivacyConsentRepository $privacyConsentRepository,
-        private PrivacyConsentCategoryRepository $privacyConsentCategoryRepository,
-        private PrivacyConsentServiceRepository $privacyConsentServiceRepository,
-        private EntityManagerInterface $entityManager,
+        private readonly string $privateKey,
+        private readonly int $timestampTolerance,
+        private readonly PrivacyConsentRepository $privacyConsentRepository,
+        private readonly PrivacyConsentCategoryRepository $privacyConsentCategoryRepository,
+        private readonly PrivacyConsentServiceRepository $privacyConsentServiceRepository,
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 

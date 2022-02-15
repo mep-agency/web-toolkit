@@ -36,7 +36,7 @@ class K8sBasicAuthSecretGenerator
     private const BASIC_AUTH_SECRET_DATA_KEYS = ['auth'];
 
     public function __construct(
-        private KubernetesCluster $kubernetesCluster,
+        private readonly KubernetesCluster $kubernetesCluster,
     ) {
     }
 

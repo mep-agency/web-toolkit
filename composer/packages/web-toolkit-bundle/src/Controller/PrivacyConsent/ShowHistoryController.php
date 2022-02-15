@@ -26,8 +26,8 @@ use Symfony\Component\Serializer\SerializerInterface;
 class ShowHistoryController extends AbstractMwtController
 {
     public function __construct(
-        private PrivacyConsentRepository $privacyConsentRepository,
-        private RequestStack $requestStack,
+        private readonly PrivacyConsentRepository $privacyConsentRepository,
+        private readonly RequestStack $requestStack,
         ?SerializerInterface $serializer = null,
     ) {
         parent::__construct($serializer);
