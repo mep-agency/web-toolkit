@@ -283,10 +283,6 @@ class PrivacyConsentManager
      */
     private function validateTimestamp(array $data, ?array $latestConsentData): void
     {
-        if (! isset($data[self::JSON_KEY_TIMESTAMP])) {
-            throw new InvalidUserConsentDataException(InvalidUserConsentDataException::UNSET_TIMESTAMP);
-        }
-
         if (! is_int($data[self::JSON_KEY_TIMESTAMP])) {
             throw new InvalidUserConsentDataException(InvalidUserConsentDataException::TIMESTAMP_IS_NOT_INTEGER);
         }

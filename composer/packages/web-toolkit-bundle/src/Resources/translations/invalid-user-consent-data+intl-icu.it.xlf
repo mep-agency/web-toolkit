@@ -49,12 +49,6 @@
         <target>L'hash del consenso precedente non corrisponde.</target>
       </segment>
     </unit>
-    <unit id="unset_timestamp" name="unset_timestamp">
-      <segment state="translated">
-        <source>unset_timestamp</source>
-        <target>Timestamp non settato.</target>
-      </segment>
-    </unit>
     <unit id="timestamp_is_not_integer" name="timestamp_is_not_integer">
       <segment state="translated">
         <source>timestamp_is_not_integer</source>

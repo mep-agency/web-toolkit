@@ -65,11 +65,6 @@ final class InvalidUserConsentDataException extends Exception
     /**
      * @var string
      */
-    public const UNSET_TIMESTAMP = 'unset_timestamp';
-
-    /**
-     * @var string
-     */
     public const TIMESTAMP_IS_NOT_INTEGER = 'timestamp_is_not_integer';
 
     /**

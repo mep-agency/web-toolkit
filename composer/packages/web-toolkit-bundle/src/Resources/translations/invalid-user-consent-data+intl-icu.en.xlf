@@ -49,12 +49,6 @@
         <target>Previous consent hash does not match.</target>
       </segment>
     </unit>
-    <unit id="unset_timestamp" name="unset_timestamp">
-      <segment>
-        <source>unset_timestamp</source>
-        <target>Unset timestamp.</target>
-      </segment>
-    </unit>
     <unit id="timestamp_is_not_integer" name="timestamp_is_not_integer">
       <segment>
         <source>timestamp_is_not_integer</source>

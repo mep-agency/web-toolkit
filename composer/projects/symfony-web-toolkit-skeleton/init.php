@@ -3,6 +3,7 @@
 
 require_once __DIR__.'/vendor/autoload.php';
 
+use phpseclib3\Crypt\RSA;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\SingleCommandApplication;
@@ -74,6 +75,24 @@ function init_removeInitFile(SymfonyStyle $io): void
     file_put_contents(__DIR__.'/composer.json', $composerJsonContent);
 }
 
+function generateRsaPrivateKeyInDotEnv(SymfonyStyle $io): void
+{
+    $io->note('Generating RSA private key...');
+
+    $rsaPrivateKey = RSA::createKey(2048);
+    $base64RsaPrivateKey = base64_encode($rsaPrivateKey->toString('PKCS8'));
+    $dotEnvFile = file_get_contents(__DIR__.'/.env');
+
+    if (false === $dotEnvFile) {
+        throw new RuntimeException('Unable to read .env');
+    }
+
+    $privateKeyPlaceholderRegex = '#MWT_PRIVACY_CONSENT_MANAGER_PRIVATE_KEY_PLACEHOLDER#';
+    $dotEnvFile = preg_replace($privateKeyPlaceholderRegex, $base64RsaPrivateKey, $dotEnvFile,);
+
+    file_put_contents(__DIR__.'/.env', $dotEnvFile);
+}
+
 $application = (new SingleCommandApplication())
     ->setCode(function (InputInterface $input, OutputInterface $output) {
         $io = new SymfonyStyle($input, $output);
@@ -82,6 +101,7 @@ $application = (new SingleCommandApplication())
 
         // Run tasks
         webpackEncore_removeUnusedFiles($io);
+        generateRsaPrivateKeyInDotEnv($io);
         runCommandWithMessageOrFail(
             $io,
             'Creating development SQLite DB...',
