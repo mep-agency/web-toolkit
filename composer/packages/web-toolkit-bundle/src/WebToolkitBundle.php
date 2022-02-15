@@ -237,4 +237,14 @@ final class WebToolkitBundle extends Bundle
      * @var string
      */
     public const SERVICE_PRIVACY_SHOW_HISTORY_CONTROLLER = self::REFERENCE_PREFIX.'privacy_show_history_controller';
+
+    /**
+     * @var string
+     */
+    public const SERVICE_PRIVACY_CONSENT_CATEGORY_CRUD_CONTROLLER = self::REFERENCE_PREFIX.'privacy_consent_category_crud_controller';
+
+    /**
+     * @var string
+     */
+    public const SERVICE_PRIVACY_CONSENT_SERVICE_CRUD_CONTROLLER = self::REFERENCE_PREFIX.'privacy_consent_service_crud_controller';
 }

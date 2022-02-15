@@ -22,6 +22,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface;
 use Mep\WebToolkitBundle\Command\FileStorage\GarbageCollectionCommand;
 use Mep\WebToolkitBundle\Command\FileStorage\SessionsCreateTableCommand;
+use Mep\WebToolkitBundle\Controller\Admin\PrivacyConsentCategoryCrudController;
+use Mep\WebToolkitBundle\Controller\Admin\PrivacyConsentServiceCrudController;
 use Mep\WebToolkitBundle\Controller\PrivacyConsent\CreateConsentController;
 use Mep\WebToolkitBundle\Controller\PrivacyConsent\GetConsentController;
 use Mep\WebToolkitBundle\Controller\PrivacyConsent\GetSpecsController;
@@ -322,5 +324,21 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->arg(0, new Reference(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_REPOSITORY))
         ->arg(1, new Reference(RequestStack::class))
         ->arg(2, new Reference(SerializerInterface::class))
+    ;
+    $services->set(PrivacyConsentCategoryCrudController::class)
+        ->autoconfigure()
+        ->autowire()
+        ->alias(
+            WebToolkitBundle::SERVICE_PRIVACY_CONSENT_CATEGORY_CRUD_CONTROLLER,
+            PrivacyConsentCategoryCrudController::class,
+        )
+    ;
+    $services->set(PrivacyConsentServiceCrudController::class)
+        ->autoconfigure()
+        ->autowire()
+        ->alias(
+            WebToolkitBundle::SERVICE_PRIVACY_CONSENT_SERVICE_CRUD_CONTROLLER,
+            PrivacyConsentServiceCrudController::class,
+        )
     ;
 };

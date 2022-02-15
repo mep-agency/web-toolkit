@@ -11,6 +11,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Contracts\Menu\MenuItemInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Iterator;
+use Mep\WebToolkitBundle\Entity\PrivacyConsent\PrivacyConsentCategory;
+use Mep\WebToolkitBundle\Entity\PrivacyConsent\PrivacyConsentService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -41,5 +43,8 @@ class DashboardController extends AbstractDashboardController
     {
         // yield MenuItem::linktoDashboard('Dashboard', 'fa fa-home');
         yield MenuItem::linkToCrud('User', 'fas fa-user', User::class);
+        yield MenuItem::section('Privacy consent', 'fas fa-cookie-bite');
+        yield MenuItem::linkToCrud('Category', 'fas fa-tag', PrivacyConsentCategory::class);
+        yield MenuItem::linkToCrud('Service', 'fas fa-check-square', PrivacyConsentService::class);
     }
 }
