@@ -21,25 +21,25 @@ class Argument
     /**
      * @var string
      */
-    public final const NAMESPACE = Option::NAMESPACE;
+    final public const NAMESPACE = Option::NAMESPACE;
 
     /**
      * @var string
      */
-    public final const GENERIC_NAME = 'name';
+    final public const GENERIC_NAME = 'name';
 
     /**
      * @var string
      */
-    public final const SERVICE_ACCOUNT = 'service-account';
+    final public const SERVICE_ACCOUNT = 'service-account';
 
     /**
      * @var string
      */
-    public final const APP_NAME = 'app-name';
+    final public const APP_NAME = 'app-name';
 
     /**
      * @var string
      */
-    public final const ENVIRONMENT = 'environment';
+    final public const ENVIRONMENT = 'environment';
 }

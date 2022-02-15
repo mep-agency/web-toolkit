@@ -48,7 +48,7 @@ abstract class Block implements JsonSerializable, Stringable
     /**
      * @var array<string, class-string<Block>>
      */
-    public final const BLOCKS_MAPPING = [
+    final public const BLOCKS_MAPPING = [
         'paragraph' => Paragraph::class,
         'header' => Header::class,
         'list' => NestedList::class,

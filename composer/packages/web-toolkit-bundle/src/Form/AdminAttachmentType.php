@@ -41,32 +41,32 @@ class AdminAttachmentType extends AbstractType implements DataTransformerInterfa
     /**
      * @var string
      */
-    public final const CONTEXT = 'context';
+    final public const CONTEXT = 'context';
 
     /**
      * @var string
      */
-    public final const MAX_SIZE = 'max_size';
+    final public const MAX_SIZE = 'max_size';
 
     /**
      * @var string
      */
-    public final const ALLOWED_MIME_TYPES = 'allowed_mime_types';
+    final public const ALLOWED_MIME_TYPES = 'allowed_mime_types';
 
     /**
      * @var string
      */
-    public final const ALLOWED_NAME_PATTERN = 'allowed_name_pattern';
+    final public const ALLOWED_NAME_PATTERN = 'allowed_name_pattern';
 
     /**
      * @var string
      */
-    public final const METADATA = 'metadata';
+    final public const METADATA = 'metadata';
 
     /**
      * @var string
      */
-    public final const PROCESSORS_OPTIONS = 'processors_options';
+    final public const PROCESSORS_OPTIONS = 'processors_options';
 
     /**
      * @var string

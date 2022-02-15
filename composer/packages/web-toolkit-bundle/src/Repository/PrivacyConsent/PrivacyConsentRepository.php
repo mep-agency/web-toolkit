@@ -35,7 +35,7 @@ class PrivacyConsentRepository extends ServiceEntityRepository
     /**
      * @var int
      */
-    public final const MAX_PRIVACY_CONSENT_PER_PAGE = 6;
+    final public const MAX_PRIVACY_CONSENT_PER_PAGE = 6;
 
     public function __construct(ManagerRegistry $managerRegistry)
     {

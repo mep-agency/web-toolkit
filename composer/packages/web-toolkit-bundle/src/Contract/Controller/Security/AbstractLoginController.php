@@ -35,12 +35,12 @@ abstract class AbstractLoginController extends AbstractController implements Aut
     /**
      * @var string
      */
-    public final const CSRF_TOKEN_INTENTION = 'mwt-authenticate';
+    final public const CSRF_TOKEN_INTENTION = 'mwt-authenticate';
 
     /**
      * @var string
      */
-    public final const LOGIN_TWIG_TEMPLATE = '@EasyAdmin/page/login.html.twig';
+    final public const LOGIN_TWIG_TEMPLATE = '@EasyAdmin/page/login.html.twig';
 
     #[Route('/login', name: RouteName::LOGIN)]
     public function __invoke(Request $request, LoginLinkHandlerInterface $loginLinkHandler): Response
