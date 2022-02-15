@@ -28,7 +28,7 @@ jobs:
   php-ci:
     uses: mep-agency/web-toolkit-workflows/.github/workflows/php-ci.yaml@main
     #with:
-    #  php_version: 8.0
+    #  php_version: 8.1
     #  php_extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite
     secrets:
       composer_auth_token: ${{ secrets.GITHUB_TOKEN }}
