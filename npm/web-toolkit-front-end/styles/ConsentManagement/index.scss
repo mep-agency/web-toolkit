@@ -34,7 +34,7 @@
       z-index: 9999999;
       margin: 0 auto;
       width: auto;
-      height: 100%;
+      height: calc(100vh - 4em);
       padding: 2em 1em;
       display: grid;
       grid-template:
@@ -71,7 +71,7 @@
             width: 0;
             height: 2.5em;
             display: block;
-            border-left: 3px solid dodgerblue;
+            border-left: 3px solid black;
           }
 
           &::before {
@@ -80,11 +80,6 @@
 
           &::after {
             transform: rotate(-45deg);
-          }
-
-          &:hover::before,
-          &:hover::after {
-            border-left: 3px solid blue;
           }
         }
       }
@@ -98,16 +93,6 @@
           display: flex;
           gap: 1em;
           align-content: flex-start;
-
-          & > a {
-            color: dodgerblue;
-            text-decoration: none;
-
-            &:hover {
-              color: blue;
-              text-decoration: underline;
-            }
-          }
         }
       }
 
@@ -121,22 +106,11 @@
           width: 100%;
           height: 3em;
           padding: 0.5em 1em;
-          border: none;
           border-radius: 5px;
-          box-shadow: 0 1px 2px black;
           font-weight: bold;
 
           &:hover {
             cursor: pointer;
-          }
-        }
-
-        & > .accept-all {
-          background-color: #0a387d;
-          color: white;
-
-          &:hover {
-            background-color: #214f96;
           }
         }
       }
@@ -150,22 +124,14 @@
         & > .service-button {
           width: 50%;
           height: 100%;
-          border: none;
-          border-bottom: 1.5px solid lightgray;
-          background-color: transparent;
           font-weight: bold;
-          color: lightgray;
 
           &:hover {
-            border-bottom: 1.5px solid blue;
-            background-color: transparent;
-            color: blue;
+            cursor: pointer;
           }
 
           &:disabled {
-            border-bottom: 1.5px solid dodgerblue;
-            background-color: transparent;
-            color: dodgerblue;
+            cursor: default;
           }
         }
       }
@@ -173,13 +139,12 @@
       & > dl {
         grid-area: service-list;
         margin-top: 0;
+        margin-bottom: 2em;
         padding: 1em;
         overflow-y: scroll;
-        scrollbar-color: black white;
 
         & > dt {
           padding-top: 0.5em;
-          border-top: 1px solid grey;
           font-weight: bold;
 
           &:first-of-type {
@@ -193,10 +158,6 @@
           display: flex;
           flex-direction: row;
           justify-content: space-between;
-
-          & > .text-container > .half-category-text {
-            color: red;
-          }
         }
       }
     }
@@ -215,7 +176,6 @@
         "illustration"
         "message" 1fr
         "buttons" min-content;
-      border-radius: 5px;
       background-color: white;
 
       & > .illustration {
@@ -254,18 +214,10 @@
         gap: 0.5em;
         justify-content: space-between;
 
-        & > button.accept-all {
-          background-color: #0a387d;
-          color: white;
-        }
-
         & > button.preferences,
         & > button.accept-required,
         & > button.accept-all {
           padding: 1em 1.5em;
-          border: none;
-          border-radius: 5px;
-          box-shadow: 0 1px 2px black;
           font-weight: bold;
 
           &:hover {
@@ -287,15 +239,14 @@
       & > .docked-window {
         margin-right: auto;
         margin-left: 2vw;
-        width: max-content;
-        max-width: 50vw;
-        height: max-content;
+        width: 45em;
+        height: 15em;
         grid-template:
           "illustration message"
           "illustration buttons";
 
         & > .illustration {
-          width: 15vw;
+          width: 15em;
           height: 100%;
           border-right: 1px solid black;
           border-bottom: none;
@@ -311,7 +262,7 @@
         }
 
         & > .body {
-          width: calc(100% - 3.5em);
+          width: calc(100% - 2.4em);
           padding: 1.2em;
 
           & > .preferences {
@@ -321,16 +272,12 @@
 
         & > .button-list {
           width: calc(100% - 3em);
-          padding: 0 1.2em 1.2em;
+          padding: 0 1.2em;
           justify-content: right;
 
           & > button {
             height: min-content;
             padding: 1em 1.5em;
-          }
-
-          & > .accept-all:hover {
-            background-color: #214f96;
           }
 
           & > .preferences {
@@ -355,6 +302,7 @@
 
         & > .button-list {
           flex-direction: row;
+          align-items: center;
         }
       }
     }

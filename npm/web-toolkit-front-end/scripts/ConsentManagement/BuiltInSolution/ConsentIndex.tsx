@@ -9,13 +9,16 @@
 
 import ReactDOM from 'react-dom';
 import ConsentBanner from './ConsentBanner';
+import '../../../styles/ConsentManagement/colors.scss';
 
-function ConsentIndex(cacheExpirationMs?: number) {
+function ConsentIndex(defaultStyle: boolean = true, cacheExpirationMs?: number) {
   document.addEventListener('DOMContentLoaded', () => {
     const bannerContainer = document.getElementById('consent-banner-container')!;
+
     ReactDOM.render(
             <ConsentBanner container={bannerContainer}
                            cacheExpiration={cacheExpirationMs || undefined}
+                           defaultStyle={defaultStyle}
             />, bannerContainer);
   });
 }

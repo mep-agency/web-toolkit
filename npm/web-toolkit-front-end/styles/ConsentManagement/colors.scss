@@ -1,0 +1,193 @@
+/*
+ * This file is part of the MEP Web Toolkit package.
+ *
+ * (c) Marco Lipparini <developer@liarco.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+$main-text: white;
+$secondary-text: black;
+$danger-text: red;
+$main-border: black;
+$secondary-border: lightgray;
+$main-color: dodgerblue;
+$secondary-color: #214f96;
+$main-hover: blue;
+$main-shadow: black;
+
+#consent-banner-container {
+  .consent-body.mwt-default-style {
+    & > .floating-window {
+      & > .navigation > .close-button {
+        &::before,
+        &::after {
+          border-left: 3px solid $main-color;
+        }
+
+        &:hover::before,
+        &:hover::after {
+          border-left: 3px solid $main-hover;
+        }
+      }
+
+      & > .banner-header > .privacy-links > a {
+        color: $main-color;
+        text-decoration: none;
+
+        &:hover {
+          color: $main-hover;
+          text-decoration: underline;
+        }
+      }
+
+      & > .button-list {
+        & > button {
+          border: none;
+          box-shadow: 0 1px 2px $main-shadow;
+        }
+
+        & > .accept-all {
+          background-color: $main-color;
+          color: $main-text;
+
+          &:hover {
+            background-color: $main-hover;
+          }
+        }
+      }
+
+      & > .banner-status-buttons {
+        & > .category-button,
+        & > .service-button {
+          border: none;
+          border-bottom: 1.5px solid $secondary-border;
+          background-color: transparent;
+          color: $secondary-border;
+
+          &:hover {
+            background-color: transparent;
+          }
+
+          &:disabled {
+            border-bottom: 1.5px solid $main-color;
+            background-color: transparent;
+            color: $main-color;
+          }
+        }
+      }
+
+      & > dl {
+        border-bottom: 1.5px solid $secondary-border;
+        scrollbar-color: $main-color $main-text;
+
+        & > dt {
+          border-top: 1px solid grey;
+
+          &:first-of-type {
+            border-top: none;
+          }
+        }
+
+        & > dd {
+          & > .text-container > .half-category-text {
+            color: $danger-text;
+          }
+        }
+      }
+    }
+
+    & > .docked-window {
+      border-radius: 5px;
+
+      & > .button-list {
+        & > button.accept-all {
+          background-color: $main-color;
+          color: $main-text;
+        }
+
+        & > button.preferences,
+        & > button.accept-required,
+        & > button.accept-all {
+          border: none;
+          border-radius: 5px;
+          box-shadow: 0 1px 2px $main-shadow;
+        }
+      }
+    }
+
+    & input[type="checkbox"] {
+      position: relative;
+      margin: 0;
+      width: 1.2em;
+      height: 1.2em;
+      display: grid;
+      border: 0.15em solid $main-color;
+      border-radius: 0.15em;
+      background-color: transparent;
+      font: inherit;
+      color: $secondary-text;
+      transform: translateY(-0.075em);
+      appearance: none;
+      place-content: center;
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: 0.1em;
+        left: 0.1em;
+        width: 0.7em;
+        height: 0.7em;
+        box-shadow: inset 1em 1em $main-text;
+        transition: 120ms transform ease-in-out;
+        transform: scale(0);
+        transform-origin: bottom left;
+        clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+      }
+
+      &::after {
+        content: "";
+        position: absolute;
+        top: 0.15em;
+        left: 0.15em;
+        width: 0.6em;
+        height: 0.6em;
+        box-shadow: inset 1em 1em $main-color;
+        transition: 120ms transform ease-in-out;
+        transform: scale(0);
+      }
+
+      &:checked {
+        border-color: $main-color;
+        background-color: $main-color;
+
+        &::before {
+          transform: scale(1);
+        }
+      }
+
+      &:indeterminate {
+        border-color: $main-color;
+
+        &::after {
+          transform: scale(1);
+        }
+      }
+
+      &:disabled {
+        border-color: $secondary-border;
+        background-color: $secondary-border;
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+
+@media (min-width: 980px) {
+  #consent-banner-container {
+    .consent-body.mwt-default-style > .docked-window > .button-list > .accept-all:hover {
+      background-color: $secondary-color;
+    }
+  }
+}

@@ -17,6 +17,7 @@ import '../../../styles/ConsentManagement/index.scss';
 
 interface Props {
   container: HTMLElement,
+  defaultStyle: boolean,
   cacheExpiration?: number,
 }
 
@@ -147,11 +148,10 @@ export default class ConsentBanner extends React.Component<Props, State> {
     return (
       <>
         {!this.state.isOpen ? ''
-          : <div className="consent-body">
+          : <div className={`consent-body${this.props.defaultStyle ? ' mwt-default-style' : ''}`}>
               {this.state.enableTab !== BannerStatus.DEFAULT
                 ? <div className="floating-window">
                   <div className="navigation">
-                    <button className="back-arrow" onClick={() => this.chooseBannerStatus(BannerStatus.DEFAULT)}/>
                     <button className="close-button" onClick={() => this.saveConsent()}/>
                   </div>
                   <div className="banner-header">

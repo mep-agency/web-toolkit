@@ -55,6 +55,7 @@ const CategoryListComponent = (props: ConsentProps) => {
                     checkIfChecked(category.id) === undefined && <p className="half-category-text">{I18n.half_check_category}</p>
                   }
                 </div>
+                <label>
                   <input type="checkbox"
                      ref={(input) => {
                        const inputEl = input;
@@ -69,6 +70,7 @@ const CategoryListComponent = (props: ConsentProps) => {
                      disabled={category.required}
                      onChange={(e) => handleCheck(e, category.id)}
                   />
+                </label>
               </dd>
           </React.Fragment>
       ))}
