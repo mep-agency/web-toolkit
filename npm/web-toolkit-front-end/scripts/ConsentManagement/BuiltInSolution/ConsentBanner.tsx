@@ -140,6 +140,14 @@ export default class ConsentBanner extends React.Component<Props, State> {
     this.saveConsent();
   }
 
+  private async closeAndSave(): Promise<void> {
+    const consent: ConsentData = await this.sdk.getCurrentConsent();
+    this.setState({
+      currentConsent: consent,
+    });
+    await this.saveConsent();
+  }
+
   private chooseBannerStatus(newType: BannerStatus): void {
     this.setState({ enableTab: newType });
   }
@@ -152,7 +160,7 @@ export default class ConsentBanner extends React.Component<Props, State> {
               {this.state.enableTab !== BannerStatus.DEFAULT
                 ? <div className="floating-window">
                   <div className="navigation">
-                    <button className="close-button" onClick={() => this.saveConsent()}/>
+                    <button className="close-button" onClick={() => this.closeAndSave()}/>
                   </div>
                   <div className="banner-header">
                     <p>{I18n.body}</p>
@@ -205,29 +213,30 @@ export default class ConsentBanner extends React.Component<Props, State> {
                         </>
                   }
                   <div className="button-list">
-                    <button className="save-button" onClick={() => this.saveConsent()}>{I18n.save}</button>
-                    <button className="accept-required" onClick={() => this.acceptRequired()}>{I18n.accept_required}</button>
                     <button className="accept-all" onClick={() => this.acceptAllConsent()}>{I18n.accept_all}</button>
+                    <button className="accept-required" onClick={() => this.acceptRequired()}>{I18n.accept_required}</button>
+                    <button className="save-button" onClick={() => this.saveConsent()}>{I18n.save}</button>
                   </div>
                 </div>
                 : <div className="docked-window">
-                  <div className="illustration">
-                    <div className="cookie-element"/>
+                    <button className="close-button" onClick={() => this.closeAndSave()}/>
+                    <div className="illustration">
+                      <div className="cookie-element"/>
+                    </div>
+                    <div className="body">
+                      <p className="privacy-body">{I18n.body}</p>
+                      <button className="preferences" onClick={() => this.chooseBannerStatus(BannerStatus.CATEGORY)}>
+                        {I18n.open_pref}
+                      </button>
+                    </div>
+                    <div className="button-list">
+                      <button className="preferences" onClick={() => this.chooseBannerStatus(BannerStatus.CATEGORY)}>
+                        {I18n.open_pref}
+                      </button>
+                      <button className="accept-required" onClick={() => this.acceptRequired()}>{I18n.accept_required}</button>
+                      <button className="accept-all" onClick={() => this.acceptAllConsent()}>{I18n.accept_all}</button>
+                    </div>
                   </div>
-                  <div className="body">
-                    <p>{I18n.body}</p>
-                    <button className="preferences" onClick={() => this.chooseBannerStatus(BannerStatus.CATEGORY)}>
-                      {I18n.open_pref}
-                    </button>
-                  </div>
-                  <div className="button-list">
-                    <button className="preferences" onClick={() => this.chooseBannerStatus(BannerStatus.CATEGORY)}>
-                      {I18n.open_pref}
-                    </button>
-                    <button className="accept-required" onClick={() => this.acceptRequired()}>{I18n.accept_required}</button>
-                    <button className="accept-all" onClick={() => this.acceptAllConsent()}>{I18n.accept_all}</button>
-                  </div>
-                </div>
               }
             </div>
         }

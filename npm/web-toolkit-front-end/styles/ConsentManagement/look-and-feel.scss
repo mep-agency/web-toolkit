@@ -9,17 +9,21 @@
 
 $main-text: white;
 $secondary-text: black;
-$danger-text: red;
+$danger-text: orange;
 $main-border: black;
 $secondary-border: lightgray;
 $main-color: dodgerblue;
 $secondary-color: #214f96;
-$main-hover: blue;
 $main-shadow: black;
+$main-outline: red;
 
 #consent-banner-container {
+  font-family: sans-serif;
+
   .consent-body.mwt-default-style {
     & > .floating-window {
+      line-height: 1.25em;
+
       & > .navigation > .close-button {
         &::before,
         &::after {
@@ -28,7 +32,12 @@ $main-shadow: black;
 
         &:hover::before,
         &:hover::after {
-          border-left: 3px solid $main-hover;
+          border-left: 3px solid $secondary-color;
+        }
+
+        &:focus {
+          outline: 2px solid $main-outline;
+          outline-offset: 3px;
         }
       }
 
@@ -37,15 +46,25 @@ $main-shadow: black;
         text-decoration: none;
 
         &:hover {
-          color: $main-hover;
+          color: $secondary-color;
           text-decoration: underline;
+        }
+
+        &:focus {
+          outline: 2px solid $main-outline;
+          outline-offset: 3px;
         }
       }
 
       & > .button-list {
         & > button {
           border: none;
-          box-shadow: 0 1px 2px $main-shadow;
+          box-shadow: 0 0 1px $main-shadow;
+
+          &:focus {
+            outline: 2px solid $main-outline;
+            outline-offset: 3px;
+          }
         }
 
         & > .accept-all {
@@ -53,7 +72,7 @@ $main-shadow: black;
           color: $main-text;
 
           &:hover {
-            background-color: $main-hover;
+            background-color: $secondary-color;
           }
         }
       }
@@ -75,24 +94,29 @@ $main-shadow: black;
             background-color: transparent;
             color: $main-color;
           }
+
+          &:focus {
+            outline: 2px solid $main-outline;
+            outline-offset: 3px;
+          }
         }
       }
 
       & > dl {
         border-bottom: 1.5px solid $secondary-border;
-        scrollbar-color: $main-color $main-text;
 
-        & > dt {
+        & > .list-element {
           border-top: 1px solid grey;
 
           &:first-of-type {
             border-top: none;
           }
-        }
 
-        & > dd {
-          & > .text-container > .half-category-text {
-            color: $danger-text;
+          & > dd {
+            & > p.half-category-text {
+              font-size: 0.8em;
+              color: $danger-text;
+            }
           }
         }
       }
@@ -100,6 +124,33 @@ $main-shadow: black;
 
     & > .docked-window {
       border-radius: 5px;
+      line-height: 1.25em;
+
+      & > button.close-button {
+        &::before,
+        &::after {
+          border-left: 2px solid $main-border;
+        }
+
+        &:hover::before,
+        &:hover::after {
+          border-left: 2px solid $main-color;
+        }
+      }
+
+      & > .body > .preferences {
+        padding-left: 0;
+        border: none;
+        background: transparent;
+        font-size: 0.85em;
+        color: $main-color;
+
+        &:hover {
+          color: $secondary-color;
+          text-decoration: underline;
+          cursor: pointer;
+        }
+      }
 
       & > .button-list {
         & > button.accept-all {
@@ -107,12 +158,12 @@ $main-shadow: black;
           color: $main-text;
         }
 
-        & > button.preferences,
         & > button.accept-required,
         & > button.accept-all {
+          width: 50%;
           border: none;
           border-radius: 5px;
-          box-shadow: 0 1px 2px $main-shadow;
+          box-shadow: 0 0 1px $main-shadow;
         }
       }
     }
@@ -180,14 +231,75 @@ $main-shadow: black;
         background-color: $secondary-border;
         cursor: not-allowed;
       }
+
+      &:focus {
+        outline: 2px solid $main-outline;
+        outline-offset: 3px;
+      }
     }
   }
 }
 
 @media (min-width: 980px) {
   #consent-banner-container {
-    .consent-body.mwt-default-style > .docked-window > .button-list > .accept-all:hover {
-      background-color: $secondary-color;
+    .consent-body.mwt-default-style {
+      & > .docked-window {
+        & > .close-button {
+          top: 0.5em;
+          right: 0.5em;
+
+          &:focus {
+            outline: 2px solid $main-outline;
+            outline-offset: 3px;
+          }
+        }
+
+        & > .body {
+          display: flex;
+          align-items: center;
+        }
+
+        & > .button-list {
+          & > .preferences {
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 0 1px $main-shadow;
+          }
+
+          & > button.accept-required,
+          & > button.accept-all,
+          & > button.preferences {
+            width: 30%;
+            height: 4em;
+            padding: 0.5em 1.2em;
+
+            &:focus {
+              outline: 2px solid $main-outline;
+              outline-offset: 3px;
+            }
+          }
+
+          & > .accept-all:hover {
+            background-color: $secondary-color;
+          }
+        }
+      }
+
+      & > .floating-window {
+        & > .navigation {
+          & > .close-button {
+            width: 2.5em;
+            height: 2.5em;
+            padding: 0;
+
+            &::after,
+            &::before {
+              top: 0;
+              left: calc(50% - 1px);
+            }
+          }
+        }
+      }
     }
   }
 }

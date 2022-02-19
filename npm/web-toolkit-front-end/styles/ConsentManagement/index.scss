@@ -34,8 +34,8 @@
       z-index: 9999999;
       margin: 0 auto;
       width: auto;
-      height: calc(100vh - 4em);
-      padding: 2em 1em;
+      height: calc(100vh - 2em);
+      padding: 1em;
       display: grid;
       grid-template:
         "navigation" 3em
@@ -89,10 +89,11 @@
         margin-bottom: 2em;
 
         & > .privacy-links {
-          margin-top: 1em;
+          margin-top: 2em;
           display: flex;
           gap: 1em;
           align-content: flex-start;
+          font-size: 0.85em;
         }
       }
 
@@ -107,7 +108,7 @@
           height: 3em;
           padding: 0.5em 1em;
           border-radius: 5px;
-          font-weight: bold;
+          font-weight: 600;
 
           &:hover {
             cursor: pointer;
@@ -124,7 +125,7 @@
         & > .service-button {
           width: 50%;
           height: 100%;
-          font-weight: bold;
+          font-weight: 600;
 
           &:hover {
             cursor: pointer;
@@ -139,25 +140,49 @@
       & > dl {
         grid-area: service-list;
         margin-top: 0;
-        margin-bottom: 2em;
+        margin-bottom: 1em;
         padding: 1em;
         overflow-y: scroll;
 
-        & > dt {
-          padding-top: 0.5em;
-          font-weight: bold;
+        & .list-element {
+          padding-top: 1.5em;
+          padding-bottom: 1.5em;
+          display: grid;
+          grid-template:
+            "title checkbox"
+            "body  checkbox" / auto 1.2em;
+          column-gap: 1.2em;
+
+          & > dt {
+            grid-area: title;
+            font-weight: 600;
+          }
 
           &:first-of-type {
+            padding-top: 0.5em;
             border-top: none;
           }
-        }
 
-        & > dd {
-          margin-left: 0;
-          width: 100%;
-          display: flex;
-          flex-direction: row;
-          justify-content: space-between;
+          &:last-of-type {
+            padding-bottom: 0.5em;
+          }
+
+          & > dd {
+            grid-area: body;
+            margin-left: 0;
+            width: 100%;
+
+            & > .text-container,
+            & > p {
+              margin-bottom: 0;
+            }
+          }
+
+          & > label {
+            grid-area: checkbox;
+            display: flex;
+            align-items: center;
+          }
         }
       }
     }
@@ -177,6 +202,37 @@
         "message" 1fr
         "buttons" min-content;
       background-color: white;
+
+      & > button.close-button {
+        position: absolute;
+        top: 1em;
+        right: 1em;
+        width: 1.5em;
+        height: 1.5em;
+        border: none;
+        background-color: transparent;
+
+        &::before,
+        &::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: calc(50% - 1px);
+          z-index: 10;
+          width: 0;
+          height: 1.5em;
+          display: block;
+          border-left: 2px solid black;
+        }
+
+        &::before {
+          transform: rotate(45deg);
+        }
+
+        &::after {
+          transform: rotate(-45deg);
+        }
+      }
 
       & > .illustration {
         grid-area: illustration;
@@ -205,20 +261,28 @@
       & > .body {
         grid-area: message;
         padding: 1.5em;
+
+        & > .privacy-body {
+          margin: 0;
+        }
+
+        & > .preferences {
+          margin-top: 1.5em;
+        }
       }
 
       & > .button-list {
         grid-area: buttons;
         padding: 1.5em;
         display: flex;
-        gap: 0.5em;
+        gap: 1.5em;
         justify-content: space-between;
 
         & > button.preferences,
         & > button.accept-required,
         & > button.accept-all {
           padding: 1em 1.5em;
-          font-weight: bold;
+          font-weight: 600;
 
           &:hover {
             cursor: pointer;
@@ -239,7 +303,7 @@
       & > .docked-window {
         margin-right: auto;
         margin-left: 2vw;
-        width: 45em;
+        width: 50em;
         height: 15em;
         grid-template:
           "illustration message"
@@ -265,19 +329,24 @@
           width: calc(100% - 2.4em);
           padding: 1.2em;
 
+          & > p {
+            margin: 1em 0;
+          }
+
           & > .preferences {
             display: none;
           }
         }
 
         & > .button-list {
-          width: calc(100% - 3em);
+          width: calc(100% - 2.4em);
           padding: 0 1.2em;
           justify-content: right;
 
           & > button {
-            height: min-content;
-            padding: 1em 1.5em;
+            width: 30%;
+            height: 4em;
+            padding: 0.5em 1.2em;
           }
 
           & > .preferences {
@@ -288,21 +357,35 @@
 
       & > .floating-window {
         width: 40vw;
-        padding: 3em;
+        height: calc(100vh - 4em);
+        padding: 2em;
         grid-template:
           "navigation" 3em
           "banner-header" 1fr
           "view-buttons" max-content
-          "service-list" 4fr
-          "action-buttons" 1fr;
+          "service-list" 6fr
+          "action-buttons" 3.5em;
 
-        & > .banner-header > .privacy-links {
-          margin-top: 2.5em;
+        & > .banner-header {
+          margin-bottom: 1.5em;
+
+          & > .privacy-links {
+            margin-top: 2em;
+          }
+        }
+
+        & > dl {
+          margin-bottom: 2em;
         }
 
         & > .button-list {
+          height: 3.5em;
           flex-direction: row;
           align-items: center;
+
+          & > button {
+            height: 3.5em;
+          }
         }
       }
     }

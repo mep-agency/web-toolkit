@@ -44,19 +44,18 @@ const CategoryListComponent = (props: ConsentProps) => {
   return (
     <dl key="category-list">
       {props.consent.categories.map((category) => (
-          <React.Fragment key={category.id}>
+          <div className="list-element" key={category.id}>
               <dt>
                   {category.name}{category.required ? ' - REQUIRED' : null}
               </dt>
               <dd>
-                <div className="text-container">
-                  <p>{category.description}</p>
+                  <p className="text-container">{category.description}</p>
                   {
                     checkIfChecked(category.id) === undefined && <p className="half-category-text">{I18n.half_check_category}</p>
                   }
-                </div>
-                <label>
-                  <input type="checkbox"
+              </dd>
+            <label>
+              <input type="checkbox"
                      ref={(input) => {
                        const inputEl = input;
                        if (inputEl) {
@@ -69,10 +68,9 @@ const CategoryListComponent = (props: ConsentProps) => {
                      }}
                      disabled={category.required}
                      onChange={(e) => handleCheck(e, category.id)}
-                  />
-                </label>
-              </dd>
-          </React.Fragment>
+              />
+            </label>
+          </div>
       ))}
     </dl>
   );

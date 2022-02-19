@@ -9,7 +9,7 @@
 
 import ReactDOM from 'react-dom';
 import ConsentBanner from './ConsentBanner';
-import '../../../styles/ConsentManagement/colors.scss';
+import '../../../styles/ConsentManagement/look-and-feel.scss';
 
 function ConsentIndex(defaultStyle: boolean = true, cacheExpirationMs?: number) {
   document.addEventListener('DOMContentLoaded', () => {
