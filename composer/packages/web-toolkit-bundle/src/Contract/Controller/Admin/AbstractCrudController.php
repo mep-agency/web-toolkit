@@ -26,6 +26,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Option\EA;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController as OriginalAbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\FilterDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Event\AfterCrudActionEvent;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeCrudActionEvent;
@@ -312,6 +314,10 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
         return parent::createEditFormBuilder($entityDto, $keyValueStore, $adminContext);
     }
 
+    /**
+     * @param FieldCollection<FieldDto>   $fieldCollection
+     * @param FilterCollection<FilterDto> $filterCollection
+     */
     public function createIndexQueryBuilder(
         SearchDto $searchDto,
         EntityDto $entityDto,
