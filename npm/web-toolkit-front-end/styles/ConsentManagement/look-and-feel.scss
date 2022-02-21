@@ -15,7 +15,7 @@ $secondary-border: lightgray;
 $main-color: dodgerblue;
 $secondary-color: #214f96;
 $main-shadow: black;
-$main-outline: red;
+$main-outline: blue;
 
 #consent-banner-container {
   font-family: sans-serif;
@@ -35,7 +35,7 @@ $main-outline: red;
           border-left: 3px solid $secondary-color;
         }
 
-        &:focus {
+        &:focus-visible {
           outline: 2px solid $main-outline;
           outline-offset: 3px;
         }
@@ -50,7 +50,7 @@ $main-outline: red;
           text-decoration: underline;
         }
 
-        &:focus {
+        &:focus-visible {
           outline: 2px solid $main-outline;
           outline-offset: 3px;
         }
@@ -61,7 +61,7 @@ $main-outline: red;
           border: none;
           box-shadow: 0 0 1px $main-shadow;
 
-          &:focus {
+          &:focus-visible {
             outline: 2px solid $main-outline;
             outline-offset: 3px;
           }
@@ -95,7 +95,7 @@ $main-outline: red;
             color: $main-color;
           }
 
-          &:focus {
+          &:focus-visible {
             outline: 2px solid $main-outline;
             outline-offset: 3px;
           }
@@ -129,12 +129,12 @@ $main-outline: red;
       & > button.close-button {
         &::before,
         &::after {
-          border-left: 2px solid $main-border;
+          border-left: 1px solid $main-border;
         }
 
         &:hover::before,
         &:hover::after {
-          border-left: 2px solid $main-color;
+          border-left: 1px solid $main-color;
         }
       }
 
@@ -232,7 +232,7 @@ $main-outline: red;
         cursor: not-allowed;
       }
 
-      &:focus {
+      &:focus-visible {
         outline: 2px solid $main-outline;
         outline-offset: 3px;
       }
@@ -248,18 +248,15 @@ $main-outline: red;
           top: 0.5em;
           right: 0.5em;
 
-          &:focus {
+          &:focus-visible {
             outline: 2px solid $main-outline;
             outline-offset: 3px;
           }
         }
 
-        & > .body {
-          display: flex;
-          align-items: center;
-        }
-
         & > .button-list {
+          gap: 1.2em;
+
           & > .preferences {
             border: none;
             border-radius: 5px;
@@ -269,11 +266,11 @@ $main-outline: red;
           & > button.accept-required,
           & > button.accept-all,
           & > button.preferences {
-            width: 30%;
+            width: 100%;
             height: 4em;
             padding: 0.5em 1.2em;
 
-            &:focus {
+            &:focus-visible {
               outline: 2px solid $main-outline;
               outline-offset: 3px;
             }
@@ -296,6 +293,7 @@ $main-outline: red;
             &::before {
               top: 0;
               left: calc(50% - 1px);
+              border-left: 1.5px solid $main-color;
             }
           }
         }

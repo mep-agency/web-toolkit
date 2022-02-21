@@ -181,7 +181,7 @@
           & > label {
             grid-area: checkbox;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
           }
         }
       }
@@ -328,6 +328,8 @@
         & > .body {
           width: calc(100% - 2.4em);
           padding: 1.2em;
+          display: flex;
+          align-items: center;
 
           & > p {
             margin: 1em 0;
@@ -341,10 +343,11 @@
         & > .button-list {
           width: calc(100% - 2.4em);
           padding: 0 1.2em;
-          justify-content: right;
+          align-items: center;
+          justify-content: center;
 
           & > button {
-            width: 30%;
+            width: 100%;
             height: 4em;
             padding: 0.5em 1.2em;
           }
@@ -371,6 +374,7 @@
 
           & > .privacy-links {
             margin-top: 2em;
+            gap: 2em;
           }
         }
 
