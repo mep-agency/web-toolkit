@@ -42,11 +42,28 @@ const CategoryListComponent = (props: ConsentProps) => {
   };
 
   return (
-    <dl key="category-list">
-      {props.consent.categories.map((category) => (
-          <div className="list-element" key={category.id}>
+      <dl key="category-list">
+        {props.consent.categories.map((category) => (
+            <div className="list-element" key={category.id}>
               <dt>
+                <label htmlFor={category.id}>
                   {category.name}{category.required ? ' - REQUIRED' : null}
+                </label>
+                  <input id={category.id}
+                         type="checkbox"
+                         ref={(input) => {
+                           const inputEl = input;
+                           if (inputEl) {
+                             if (checkIfChecked(category.id) !== undefined) {
+                               inputEl.checked = checkIfChecked(category.id)!;
+                             } else {
+                               inputEl.indeterminate = true;
+                             }
+                           }
+                         }}
+                         disabled={category.required}
+                         onChange={(e) => handleCheck(e, category.id)}
+                  />
               </dt>
               <dd>
                   <p className="text-container">{category.description}</p>
@@ -54,25 +71,10 @@ const CategoryListComponent = (props: ConsentProps) => {
                     checkIfChecked(category.id) === undefined && <p className="half-category-text">{I18n.half_check_category}</p>
                   }
               </dd>
-            <label>
-              <input type="checkbox"
-                     ref={(input) => {
-                       const inputEl = input;
-                       if (inputEl) {
-                         if (checkIfChecked(category.id) !== undefined) {
-                           inputEl.checked = checkIfChecked(category.id)!;
-                         } else {
-                           inputEl.indeterminate = true;
-                         }
-                       }
-                     }}
-                     disabled={category.required}
-                     onChange={(e) => handleCheck(e, category.id)}
-              />
-            </label>
-          </div>
-      ))}
-    </dl>
+
+            </div>
+        ))}
+      </dl>
   );
 };
 

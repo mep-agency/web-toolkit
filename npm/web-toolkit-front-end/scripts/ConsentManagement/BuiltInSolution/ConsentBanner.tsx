@@ -160,7 +160,7 @@ export default class ConsentBanner extends React.Component<Props, State> {
               {this.state.enableTab !== BannerStatus.DEFAULT
                 ? <div className="floating-window">
                   <div className="navigation">
-                    <button className="close-button" onClick={() => this.closeAndSave()}/>
+                    <button aria-label={I18n.close_banner} className="close-button" onClick={() => this.closeAndSave()}/>
                   </div>
                   <div className="banner-header">
                     <p>{I18n.body}</p>
@@ -219,7 +219,7 @@ export default class ConsentBanner extends React.Component<Props, State> {
                   </div>
                 </div>
                 : <div className="docked-window">
-                    <button className="close-button" onClick={() => this.closeAndSave()}/>
+                    <button aria-label={I18n.close_banner} className="close-button" onClick={() => this.closeAndSave()}/>
                     <div className="illustration">
                       <div className="cookie-element"/>
                     </div>

@@ -23,17 +23,20 @@ const ListItem = (props: ListItemProps) => {
 
   return (
     <div className="list-element">
-        <dt>{props.name}{props.callback === null ? ' - REQUIRED' : null}</dt>
-        <dd>
-            <p>{props.description}</p>
-        </dd>
-        <label>
-            <input type="checkbox"
+        <dt>
+            <label htmlFor={props.id}>
+                {props.name}{props.callback === null ? ' - REQUIRED' : null}
+            </label>
+            <input id={props.id}
+                   type="checkbox"
                    defaultChecked={props.checked}
                    disabled={props.callback === null}
                    onChange={(e) => handleCheck(e)}
             />
-        </label>
+        </dt>
+        <dd>
+            <p>{props.description}</p>
+        </dd>
     </div>
   );
 };

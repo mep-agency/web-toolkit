@@ -89,11 +89,11 @@
         margin-bottom: 2em;
 
         & > .privacy-links {
-          margin-top: 2em;
+          margin-top: 1em;
           display: flex;
           gap: 1em;
           align-content: flex-start;
-          font-size: 0.85em;
+          font-size: 0.9em;
         }
       }
 
@@ -119,13 +119,14 @@
       & > .banner-status-buttons {
         grid-area: view-buttons;
         width: 100%;
-        height: 2em;
+        height: 2.5em;
 
         & > .category-button,
         & > .service-button {
           width: 50%;
           height: 100%;
           font-weight: 600;
+          font-size: 1em;
 
           &:hover {
             cursor: pointer;
@@ -147,15 +148,16 @@
         & .list-element {
           padding-top: 1.5em;
           padding-bottom: 1.5em;
-          display: grid;
-          grid-template:
-            "title checkbox"
-            "body  checkbox" / auto 1.2em;
-          column-gap: 1.2em;
 
           & > dt {
-            grid-area: title;
+            display: flex;
+            justify-content: space-between;
             font-weight: 600;
+
+            & > input {
+              display: flex;
+              align-items: flex-start;
+            }
           }
 
           &:first-of-type {
@@ -168,20 +170,14 @@
           }
 
           & > dd {
-            grid-area: body;
             margin-left: 0;
             width: 100%;
 
             & > .text-container,
             & > p {
+              margin-top: 0.5em;
               margin-bottom: 0;
             }
-          }
-
-          & > label {
-            grid-area: checkbox;
-            display: flex;
-            align-items: flex-start;
           }
         }
       }
@@ -205,8 +201,8 @@
 
       & > button.close-button {
         position: absolute;
-        top: 1em;
-        right: 1em;
+        top: 1.5em;
+        right: 1.5em;
         width: 1.5em;
         height: 1.5em;
         border: none;
@@ -370,10 +366,10 @@
           "action-buttons" 3.5em;
 
         & > .banner-header {
-          margin-bottom: 1.5em;
+          margin-bottom: 2em;
 
           & > .privacy-links {
-            margin-top: 2em;
+            margin-top: 1em;
             gap: 2em;
           }
         }

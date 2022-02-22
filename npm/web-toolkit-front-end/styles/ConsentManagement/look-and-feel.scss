@@ -11,16 +11,42 @@ $main-text: white;
 $secondary-text: black;
 $danger-text: orange;
 $main-border: black;
-$secondary-border: lightgray;
+$secondary-border: rgb(148 163 184);
+$main-disabled-color: lightgray;
 $main-color: dodgerblue;
 $secondary-color: #214f96;
-$main-shadow: black;
+$main-shadow: 0 1.5px 2px 1px rgb(0 0 0 / 20%);
+$active-shadow: 0 0 2px 1px rgb(0 0 0 / 20%);
 $main-outline: blue;
 
 #consent-banner-container {
   font-family: sans-serif;
 
   .consent-body.mwt-default-style {
+    & .button-list > .accept-required,
+    & .button-list > .accept-all,
+    & .button-list > .preferences {
+      background-color: rgb(203 213 225);
+      color: black;
+
+      &:hover {
+        background-color: rgb(100 116 139);
+        color: white;
+      }
+
+      &:active {
+        box-shadow: $active-shadow !important;
+        transform: translateY(1.5px);
+      }
+    }
+
+    & .button-list > .save-button {
+      &:active {
+        box-shadow: $active-shadow !important;
+        transform: translateY(1.5px);
+      }
+    }
+
     & > .floating-window {
       line-height: 1.25em;
 
@@ -30,9 +56,13 @@ $main-outline: blue;
           border-left: 3px solid $main-color;
         }
 
-        &:hover::before,
-        &:hover::after {
-          border-left: 3px solid $secondary-color;
+        &:hover {
+          cursor: pointer;
+
+          &::before,
+          &::after {
+            border-left: 3px solid $secondary-color;
+          }
         }
 
         &:focus-visible {
@@ -41,25 +71,29 @@ $main-outline: blue;
         }
       }
 
-      & > .banner-header > .privacy-links > a {
-        color: $main-color;
-        text-decoration: none;
+      & > .banner-header {
+        font-size: 0.9em;
 
-        &:hover {
-          color: $secondary-color;
-          text-decoration: underline;
-        }
+        & > .privacy-links > a {
+          color: $main-color;
+          text-decoration: none;
 
-        &:focus-visible {
-          outline: 2px solid $main-outline;
-          outline-offset: 3px;
+          &:hover {
+            color: $secondary-color;
+            text-decoration: underline;
+          }
+
+          &:focus-visible {
+            outline: 2px solid $main-outline;
+            outline-offset: 3px;
+          }
         }
       }
 
       & > .button-list {
         & > button {
           border: none;
-          box-shadow: 0 0 1px $main-shadow;
+          box-shadow: $main-shadow;
 
           &:focus-visible {
             outline: 2px solid $main-outline;
@@ -67,7 +101,7 @@ $main-outline: blue;
           }
         }
 
-        & > .accept-all {
+        & > .save-button {
           background-color: $main-color;
           color: $main-text;
 
@@ -106,13 +140,15 @@ $main-outline: blue;
         border-bottom: 1.5px solid $secondary-border;
 
         & > .list-element {
-          border-top: 1px solid grey;
+          border-top: 1px solid $secondary-border;
 
           &:first-of-type {
             border-top: none;
           }
 
           & > dd {
+            font-size: 0.9em;
+
             & > p.half-category-text {
               font-size: 0.8em;
               color: $danger-text;
@@ -153,17 +189,12 @@ $main-outline: blue;
       }
 
       & > .button-list {
-        & > button.accept-all {
-          background-color: $main-color;
-          color: $main-text;
-        }
-
         & > button.accept-required,
         & > button.accept-all {
           width: 50%;
           border: none;
           border-radius: 5px;
-          box-shadow: 0 0 1px $main-shadow;
+          box-shadow: $main-shadow;
         }
       }
     }
@@ -227,14 +258,18 @@ $main-outline: blue;
       }
 
       &:disabled {
-        border-color: $secondary-border;
-        background-color: $secondary-border;
+        border-color: $main-disabled-color;
+        background-color: $main-disabled-color;
         cursor: not-allowed;
       }
 
       &:focus-visible {
         outline: 2px solid $main-outline;
         outline-offset: 3px;
+      }
+
+      &:hover:not(:disabled) {
+        cursor: pointer;
       }
     }
   }
@@ -260,7 +295,7 @@ $main-outline: blue;
           & > .preferences {
             border: none;
             border-radius: 5px;
-            box-shadow: 0 0 1px $main-shadow;
+            box-shadow: $main-shadow;
           }
 
           & > button.accept-required,
@@ -274,10 +309,6 @@ $main-outline: blue;
               outline: 2px solid $main-outline;
               outline-offset: 3px;
             }
-          }
-
-          & > .accept-all:hover {
-            background-color: $secondary-color;
           }
         }
       }
