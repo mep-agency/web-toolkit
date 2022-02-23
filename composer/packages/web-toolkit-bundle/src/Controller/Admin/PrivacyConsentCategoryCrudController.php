@@ -48,7 +48,7 @@ class PrivacyConsentCategoryCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            TextField::new('id'),
+            TextField::new('stringId'),
             TextField::new('name'),
             TextField::new('description'),
             BooleanField::new('required')

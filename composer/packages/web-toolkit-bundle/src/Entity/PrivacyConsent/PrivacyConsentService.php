@@ -19,6 +19,7 @@ use JsonSerializable;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Mep\WebToolkitBundle\Contract\Entity\TranslatableTrait;
 use Mep\WebToolkitBundle\Repository\PrivacyConsent\PrivacyConsentServiceRepository;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -34,11 +35,14 @@ class PrivacyConsentService implements TranslatableInterface, JsonSerializable
     use TranslatableTrait;
 
     #[ORM\Id]
+    #[ORM\Column(type: 'uuid')]
+    private Uuid $id;
+
     #[ORM\Column(type: Types::STRING, length: 32, unique: true)]
     #[Assert\Length(max: 32)]
     #[Assert\NotNull]
     #[Assert\NotBlank]
-    private string $id;
+    private string $stringId;
 
     #[ORM\Column(type: Types::SMALLINT, options: [
         'default' => 10,
@@ -50,14 +54,24 @@ class PrivacyConsentService implements TranslatableInterface, JsonSerializable
     #[ORM\JoinColumn(nullable: false)]
     private PrivacyConsentCategory $category;
 
-    public function getId(): string
+    public function __construct()
+    {
+        $this->id = Uuid::v6();
+    }
+
+    public function getId(): Uuid
     {
         return $this->id;
     }
 
-    public function setId(string $id): self
+    public function getStringId(): string
     {
-        $this->id = $id;
+        return $this->stringId;
+    }
+
+    public function setStringId(string $stringId): self
+    {
+        $this->stringId = $stringId;
 
         return $this;
     }
@@ -92,10 +106,10 @@ class PrivacyConsentService implements TranslatableInterface, JsonSerializable
     public function jsonSerialize(): array
     {
         return [
-            'id' => $this->id,
+            'id' => $this->getStringId(),
             'name' => $this->getName(),
             'description' => $this->getDescription(),
-            'category' => $this->category->getId(),
+            'category' => $this->category->getStringId(),
         ];
     }
 }

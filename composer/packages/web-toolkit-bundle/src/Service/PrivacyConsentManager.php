@@ -215,7 +215,7 @@ class PrivacyConsentManager
 
         $specsServices = [];
         foreach ($services as $service) {
-            $specsServices[] = $service->getId();
+            $specsServices[] = $service->getStringId();
         }
 
         /** @var array<string, bool> $preferencesArray */
@@ -228,7 +228,7 @@ class PrivacyConsentManager
 
         // Required check
         foreach ($this->privacyConsentServiceRepository->findRequired() as $requiredPrivacyConsentService) {
-            if (! $preferencesArray[$requiredPrivacyConsentService->getId()]) {
+            if (! $preferencesArray[$requiredPrivacyConsentService->getStringId()]) {
                 throw new InvalidUserConsentDataException(
                     InvalidUserConsentDataException::INVALID_REQUIRED_PREFERENCES,
                 );
