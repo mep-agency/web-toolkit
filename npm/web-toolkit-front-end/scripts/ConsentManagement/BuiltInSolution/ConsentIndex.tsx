@@ -11,7 +11,7 @@ import ReactDOM from 'react-dom';
 import ConsentBanner from './ConsentBanner';
 import '../../../styles/ConsentManagement/look-and-feel.scss';
 
-function ConsentIndex(defaultStyle: boolean = true, cacheExpirationMs?: number) {
+function ConsentIndex({ defaultStyle = true, defaultIcon = true }, cacheExpirationMs?: number) {
   document.addEventListener('DOMContentLoaded', () => {
     const bannerContainer = document.getElementById('consent-banner-container')!;
 
@@ -19,6 +19,7 @@ function ConsentIndex(defaultStyle: boolean = true, cacheExpirationMs?: number) 
             <ConsentBanner container={bannerContainer}
                            cacheExpiration={cacheExpirationMs || undefined}
                            defaultStyle={defaultStyle}
+                           defaultIcon={defaultIcon}
             />, bannerContainer);
   });
 }

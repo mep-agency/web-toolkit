@@ -12,9 +12,9 @@ $secondary-text: black;
 $danger-text: orange;
 $main-border: black;
 $secondary-border: rgb(148 163 184);
-$main-disabled-color: lightgray;
+$main-disabled-color: #e0e0e0;
 $main-color: dodgerblue;
-$secondary-color: #214f96;
+$secondary-color: #007af5;
 $main-shadow: 0 1.5px 2px 1px rgb(0 0 0 / 20%);
 $active-shadow: 0 0 2px 1px rgb(0 0 0 / 20%);
 $main-outline: blue;
@@ -26,12 +26,11 @@ $main-outline: blue;
     & .button-list > .accept-required,
     & .button-list > .accept-all,
     & .button-list > .preferences {
-      background-color: rgb(203 213 225);
-      color: black;
+      background-color: rgb(226 232 240);
+      color: rgb(30 41 59);
 
       &:hover {
-        background-color: rgb(100 116 139);
-        color: white;
+        background-color: rgb(203 213 225);
       }
 
       &:active {
@@ -151,7 +150,7 @@ $main-outline: blue;
 
             & > p.half-category-text {
               font-size: 0.8em;
-              color: $danger-text;
+              color: $main-color;
             }
           }
         }

@@ -18,6 +18,7 @@ import '../../../styles/ConsentManagement/index.scss';
 interface Props {
   container: HTMLElement,
   defaultStyle: boolean,
+  defaultIcon: boolean,
   cacheExpiration?: number,
 }
 
@@ -74,7 +75,7 @@ export default class ConsentBanner extends React.Component<Props, State> {
   };
 
   openPopup(): void {
-    this.setState({ isOpen: !this.state.isOpen });
+    this.setState({ isOpen: !this.state.isOpen, enableTab: BannerStatus.DEFAULT });
   }
 
   private getEndpoints(): EndpointList {
@@ -221,7 +222,7 @@ export default class ConsentBanner extends React.Component<Props, State> {
                 : <div className="docked-window">
                     <button aria-label={I18n.close_banner} className="close-button" onClick={() => this.closeAndSave()}/>
                     <div className="illustration">
-                      <div className="cookie-element"/>
+                      <div className={this.props.defaultIcon ? 'default-cookie' : 'cookie-element'}/>
                     </div>
                     <div className="body">
                       <p className="privacy-body">{I18n.body}</p>

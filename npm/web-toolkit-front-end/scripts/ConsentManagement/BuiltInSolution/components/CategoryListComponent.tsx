@@ -45,7 +45,7 @@ const CategoryListComponent = (props: ConsentProps) => {
       <dl key="category-list">
         {props.consent.categories.map((category) => (
             <div className="list-element" key={category.id}>
-              <dt>
+              <dt className={checkIfChecked(category.id) === true ? 'checked' : undefined }>
                 <label htmlFor={category.id}>
                   {category.name}{category.required ? ' - REQUIRED' : null}
                 </label>

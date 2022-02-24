@@ -23,7 +23,7 @@ const ListItem = (props: ListItemProps) => {
 
   return (
     <div className="list-element">
-        <dt>
+        <dt className={props.callback === null ? 'checked' : undefined}>
             <label htmlFor={props.id}>
                 {props.name}{props.callback === null ? ' - REQUIRED' : null}
             </label>

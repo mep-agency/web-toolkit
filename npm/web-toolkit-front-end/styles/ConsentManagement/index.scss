@@ -125,14 +125,20 @@
         & > .service-button {
           width: 50%;
           height: 100%;
+          border: none;
+          border-bottom: 1.5px solid black;
+          background-color: transparent;
           font-weight: 600;
           font-size: 1em;
+          color: black;
 
           &:hover {
             cursor: pointer;
           }
 
           &:disabled {
+            border-bottom: 1.5px solid blue;
+            color: blue;
             cursor: default;
           }
         }
@@ -154,6 +160,11 @@
             justify-content: space-between;
             font-weight: 600;
 
+            &:not(.checked),
+            &:not(.checked) > label {
+              cursor: pointer;
+            }
+
             & > input {
               display: flex;
               align-items: flex-start;
@@ -171,12 +182,16 @@
 
           & > dd {
             margin-left: 0;
-            width: 100%;
+            width: calc(100% - 1.5em);
 
             & > .text-container,
             & > p {
-              margin-top: 0.5em;
+              margin-top: 0.2em;
               margin-bottom: 0;
+            }
+
+            & > .half-category-text {
+              line-height: 1.3em;
             }
           }
         }
@@ -241,15 +256,16 @@
         align-items: center;
         justify-content: center;
         object-fit: contain;
-        border-bottom: 1px solid black;
-        background-color: #a1a1a1;
+        border-bottom: 1px solid #e6e6e6;
+        border-radius: 5px 5px 0 0;
+        background: linear-gradient(180deg, #fafafa 0, #f8f8f8 80%);
 
-        & > .cookie-element {
+        & > .default-cookie {
           content: "";
-          width: 60%;
-          height: 60%;
+          width: 90%;
+          height: 90%;
           display: block;
-          background: url("../../images/cookie-logo.svg") no-repeat center;
+          background: url("../../images/cookie-jar.svg") no-repeat center;
           background-size: contain;
         }
       }
@@ -308,15 +324,16 @@
         & > .illustration {
           width: 15em;
           height: 100%;
-          border-right: 1px solid black;
+          border-right: 1px solid #e6e6e6;
           border-bottom: none;
+          border-radius: 5px 0 0 5px;
 
-          & > .cookie-element {
+          & > .default-cookie {
             content: "";
-            width: 60%;
-            height: 60%;
+            width: 70%;
+            height: 70%;
             display: block;
-            background: url("../../images/cookie-logo.svg") no-repeat center;
+            background: url("../../images/cookie-jar.svg") no-repeat center;
             background-size: contain;
           }
         }
@@ -355,7 +372,8 @@
       }
 
       & > .floating-window {
-        width: 40vw;
+        width: 30em;
+        max-width: 45vw;
         height: calc(100vh - 4em);
         padding: 2em;
         grid-template:

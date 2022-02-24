@@ -13,5 +13,5 @@ import ConsentIndex from '@mep-agency/web-toolkit-front-end/scripts/ConsentManag
 // The following line imports some useful tools with a default configuration
 // import '@mep-agency/web-toolkit-front-end';
 
-// The following line initializes the BuiltIn consent manager with a default cache timeout of 30000ms (5 minutes).
-ConsentIndex();
+// The following line initializes the BuiltIn consent manager with default styling and a default cache timeout of 30000ms (5 minutes).
+ConsentIndex({defaultStyle: true, defaultIcon: true}, 30000);
