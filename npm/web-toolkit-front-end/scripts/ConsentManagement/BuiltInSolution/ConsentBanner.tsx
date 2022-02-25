@@ -39,6 +39,8 @@ export default class ConsentBanner extends React.Component<Props, State> {
 
   private readonly requiredCategories: string[] = [];
 
+  private changedAlert: boolean = false;
+
   constructor(props: Props) {
     super(props);
     this.sdk = new ConsentSdk(this.getEndpoints(), this.props.cacheExpiration);
@@ -64,11 +66,12 @@ export default class ConsentBanner extends React.Component<Props, State> {
     this.createRequiredList();
 
     if (this.state.currentConsent?.timestamp === null) {
+      this.changedAlert = true;
       this.setState({
         isOpen: true,
+        enableTab: BannerStatus.SERVICE,
       });
     }
-
     document.getElementById('consent-banner-trigger')!.addEventListener('click', () => {
       this.openPopup();
     });
@@ -164,10 +167,16 @@ export default class ConsentBanner extends React.Component<Props, State> {
                     <button aria-label={I18n.close_banner} className="close-button" onClick={() => this.closeAndSave()}/>
                   </div>
                   <div className="banner-header">
+                    {
+                      this.changedAlert
+                        ? <p className="changed-alert">{I18n.changed_notice}</p>
+                        : null
+                    }
                     <p>{I18n.body}</p>
                     <div className="privacy-links">
-                      <a href="#">{I18n.privacy_policy}</a>
-                      <a href="#">{I18n.cookie_policy}</a>
+                      {/* TODO: Add environment variable */}
+                      <a href="#" target="_blank">{I18n.privacy_policy}</a>
+                      <a href="#" target="_blank">{I18n.cookie_policy}</a>
                     </div>
                   </div>
                   <div className="banner-status-buttons">
@@ -226,6 +235,11 @@ export default class ConsentBanner extends React.Component<Props, State> {
                     </div>
                     <div className="body">
                       <p className="privacy-body">{I18n.body}</p>
+                      <div className="privacy-links">
+                        {/* TODO: Add environment variable */}
+                        <a href="#" target="_blank">{I18n.privacy_policy}</a>
+                        <a href="#" target="_blank">{I18n.cookie_policy}</a>
+                      </div>
                       <button className="preferences" onClick={() => this.chooseBannerStatus(BannerStatus.CATEGORY)}>
                         {I18n.open_pref}
                       </button>

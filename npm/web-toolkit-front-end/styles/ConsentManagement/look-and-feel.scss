@@ -59,6 +59,32 @@ $active-shadow: 0 0 0.4px 0.3px rgb(0 0 0 / 20%);
       }
     }
 
+    & .privacy-links > a {
+      font-size: 0.85em;
+      color: $secondary-color;
+      text-decoration: none;
+
+      &:first-child::after {
+        content: "\B7";
+        margin: 0 0.5em;
+        color: $secondary-text;
+      }
+
+      &:hover {
+        text-decoration: underline;
+
+        &::after {
+          display: inline-block;
+          text-decoration: none;
+        }
+      }
+
+      &:focus-visible {
+        outline: 2px solid $main-outline;
+        outline-offset: 3px;
+      }
+    }
+
     & > .floating-window {
       line-height: 1.25em;
 
@@ -84,24 +110,8 @@ $active-shadow: 0 0 0.4px 0.3px rgb(0 0 0 / 20%);
       }
 
       & > .banner-header {
-        & > .privacy-links > a {
+        & > .changed-alert {
           color: $secondary-color;
-          text-decoration: none;
-
-          &:first-child::after {
-            content: "\B7";
-            margin: 0 0.5em;
-            color: $secondary-text;
-          }
-
-          &:hover {
-            text-decoration: underline;
-          }
-
-          &:focus-visible {
-            outline: 2px solid $main-outline;
-            outline-offset: 3px;
-          }
         }
       }
 
@@ -209,10 +219,9 @@ $active-shadow: 0 0 0.4px 0.3px rgb(0 0 0 / 20%);
           border: none;
           background: transparent;
           font-size: 0.85em;
-          color: $main-color;
+          color: $secondary-color;
 
           &:hover {
-            color: $secondary-color;
             text-decoration: underline;
             cursor: pointer;
           }

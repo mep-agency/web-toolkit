@@ -93,6 +93,10 @@
           align-content: flex-start;
           font-size: 0.9em;
         }
+
+        & > .changed-alert {
+          font-size: 1em;
+        }
       }
 
       & > .button-list {
@@ -271,13 +275,17 @@
       & > .body {
         grid-area: message;
         padding: 1.5em;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
 
         & > .privacy-body {
           margin: 0;
         }
 
         & > .preferences {
-          margin-top: 1.5em;
+          margin-top: 0;
+          width: max-content;
         }
       }
 
@@ -339,11 +347,14 @@
         & > .body {
           width: calc(100% - 2.4em);
           padding: 1.2em;
-          display: flex;
           align-items: center;
 
           & > p {
             margin: 1em 0;
+          }
+
+          & > .privacy-links {
+            width: 100%;
           }
 
           & > .preferences {

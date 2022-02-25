@@ -11,7 +11,6 @@ import sha256 from 'crypto-js/sha256';
 import * as Rsa from '../../Util/Rsa';
 
 import {
-  CategorySpecs,
   ConsentData,
   ConsentLocalData,
   ConsentSpecs,
@@ -22,7 +21,7 @@ import {
   ServiceSpecs,
 } from './ConsentInterfaces';
 
-const DEFAULT_EXPIRATION_DELAY = 300000; // Five minutes expiration delay in ms
+const DEFAULT_EXPIRATION_DELAY = 0; // Five minutes expiration delay in ms300000
 const LOCAL_STORAGE_KEY = 'mwt_privacy_consent';
 const PEM_RSA_STORAGE_KEY = 'mwt_privacy_consent_rsa_pem';
 const HASH_PLACEHOLDER = '0000000000000000000000000000000000000000000000000000000000000000';
@@ -170,8 +169,6 @@ export default class ConsentSdk {
     const consentSpecs = consentData.specs;
     const consentPreferences = consentData.preferences;
     let changedServices: ServiceSpecs[] = [];
-    let changedCategories: CategorySpecs[] = [];
-
     const requiredCategories: string[] = [];
 
     remoteSpecs.categories.forEach((categorySpecs) => {
@@ -194,28 +191,6 @@ export default class ConsentSdk {
           consentPreferences[el.id] = false;
         }
       });
-    }
-
-    if (JSON.stringify(consentSpecs.categories) !== JSON.stringify(remoteSpecs.categories)) {
-      changedCategories = remoteSpecs.categories.filter(
-        (remoteCategory) => (consentSpecs.categories.findIndex(
-          (consentCategory) => consentCategory.id === remoteCategory.id
-            && consentCategory.name === remoteCategory.name
-            && consentCategory.description === remoteCategory.description
-            && consentCategory.required === remoteCategory.required,
-        ) < 0));
-
-      changedCategories.forEach(
-        (category) => {
-          remoteSpecs.services.forEach(
-            (service) => {
-              if (!category.required && service.category === category.id) {
-                consentPreferences[service.id] = false;
-              }
-            },
-          );
-        },
-      );
     }
 
     return {
