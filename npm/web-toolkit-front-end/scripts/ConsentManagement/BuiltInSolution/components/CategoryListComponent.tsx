@@ -47,7 +47,7 @@ const CategoryListComponent = (props: ConsentProps) => {
             <div className="list-element" key={category.id}>
               <dt className={checkIfChecked(category.id) === true ? 'checked' : undefined }>
                 <label htmlFor={category.id}>
-                  {category.name}{category.required ? ' - REQUIRED' : null}
+                  {category.name}{category.required ? <> <span className="required">({I18n.required_message})</span></> : null}
                 </label>
                   <input id={category.id}
                          type="checkbox"

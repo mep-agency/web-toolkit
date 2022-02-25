@@ -43,7 +43,6 @@
         "view-buttons" max-content
         "service-list" 2fr
         "action-buttons" 1fr;
-      border-radius: 5px;
       background-color: white;
 
       & > .navigation {
@@ -91,7 +90,6 @@
         & > .privacy-links {
           margin-top: 1em;
           display: flex;
-          gap: 1em;
           align-content: flex-start;
           font-size: 0.9em;
         }
@@ -182,7 +180,7 @@
 
           & > dd {
             margin-left: 0;
-            width: calc(100% - 1.5em);
+            width: calc(100% - 2.7em);
 
             & > .text-container,
             & > p {
@@ -319,7 +317,7 @@
         height: 15em;
         grid-template:
           "illustration message"
-          "illustration buttons";
+          "illustration buttons" 5em;
 
         & > .illustration {
           width: 15em;
@@ -388,7 +386,6 @@
 
           & > .privacy-links {
             margin-top: 1em;
-            gap: 2em;
           }
         }
 

@@ -22,6 +22,7 @@ interface Localization extends LocalizationData {
       services: string;
       categories: string;
       half_check_category: string;
+      required_message: string;
       privacy_policy: string;
       cookie_policy: string;
     }
@@ -41,7 +42,8 @@ const i18n: Localization = {
       open_pref: 'Apri preferenze',
       services: 'Servizi',
       categories: 'Categorie',
-      half_check_category: 'Attenzione, esistono elementi selezionati in questa categoria! Per controllare quali sono attivi, andare sulla scheda "Servizi".',
+      half_check_category: 'Uno o più servizi in questa categoria sono stati selezionati manualmente.',
+      required_message: 'obbligatorio',
       privacy_policy: 'Privacy policy',
       cookie_policy: 'Cookie policy',
     },
@@ -55,7 +57,8 @@ const i18n: Localization = {
       open_pref: 'Open preferences',
       services: 'Services',
       categories: 'Categories',
-      half_check_category: 'Attention, there are selected items in this category! To check which are active, go to the "Services" tab.',
+      half_check_category: 'One or more services in this category have been selected manually.',
+      required_message: 'required',
       privacy_policy: 'Privacy policy',
       cookie_policy: 'Cookie policy',
     },

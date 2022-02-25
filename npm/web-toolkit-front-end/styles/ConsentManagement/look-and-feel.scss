@@ -7,27 +7,40 @@
  * file that was distributed with this source code.
  */
 
-$main-text: white;
-$secondary-text: black;
-$danger-text: orange;
-$main-border: black;
-$secondary-border: rgb(148 163 184);
-$main-disabled-color: #e0e0e0;
-$main-color: dodgerblue;
-$secondary-color: #007af5;
-$main-shadow: 0 1.5px 2px 1px rgb(0 0 0 / 20%);
-$active-shadow: 0 0 2px 1px rgb(0 0 0 / 20%);
-$main-outline: blue;
+$main-text: rgb(248 250 252); // bg-slate-50
+$secondary-text: rgb(51 65 85); // bg-slate-700
+$main-border: rgb(30 41 59); // bg-slate-800
+$secondary-border: rgb(148 163 184); // bg-slate-400
+$main-disabled-color: rgb(203 213 225); // bg-slate-300
+$main-color: rgb(56 189 248); // bg-sky-400
+$secondary-color: rgb(14 165 233); // bg-sky-500
+$main-outline: rgb(125 211 252); // bg-sky-300
+$main-shadow: 0 1px 0.4px 0.3px rgb(0 0 0 / 20%);
+$active-shadow: 0 0 0.4px 0.3px rgb(0 0 0 / 20%);
 
 #consent-banner-container {
-  font-family: sans-serif;
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    "Noto Sans",
+    sans-serif,
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Segoe UI Symbol",
+    "Noto Color Emoji";
 
   .consent-body.mwt-default-style {
     & .button-list > .accept-required,
     & .button-list > .accept-all,
     & .button-list > .preferences {
       background-color: rgb(226 232 240);
-      color: rgb(30 41 59);
+      color: $secondary-text;
 
       &:hover {
         background-color: rgb(203 213 225);
@@ -52,7 +65,7 @@ $main-outline: blue;
       & > .navigation > .close-button {
         &::before,
         &::after {
-          border-left: 3px solid $main-color;
+          border-left: 2px solid $secondary-text;
         }
 
         &:hover {
@@ -60,7 +73,7 @@ $main-outline: blue;
 
           &::before,
           &::after {
-            border-left: 3px solid $secondary-color;
+            border-left: 2px solid $main-color;
           }
         }
 
@@ -71,14 +84,17 @@ $main-outline: blue;
       }
 
       & > .banner-header {
-        font-size: 0.9em;
-
         & > .privacy-links > a {
-          color: $main-color;
+          color: $secondary-color;
           text-decoration: none;
 
+          &:first-child::after {
+            content: "\B7";
+            margin: 0 0.5em;
+            color: $secondary-text;
+          }
+
           &:hover {
-            color: $secondary-color;
             text-decoration: underline;
           }
 
@@ -123,9 +139,9 @@ $main-outline: blue;
           }
 
           &:disabled {
-            border-bottom: 1.5px solid $main-color;
+            border-bottom: 1.5px solid $secondary-color;
             background-color: transparent;
-            color: $main-color;
+            color: $secondary-color;
           }
 
           &:focus-visible {
@@ -145,12 +161,22 @@ $main-outline: blue;
             border-top: none;
           }
 
+          & > dt > label > .required {
+            font-weight: 400;
+            color: $secondary-color;
+          }
+
           & > dd {
             font-size: 0.9em;
 
+            & > p.text-container {
+              color: $secondary-text;
+            }
+
             & > p.half-category-text {
-              font-size: 0.8em;
-              color: $main-color;
+              margin-top: 0.4em;
+              font-size: 0.9em;
+              color: $secondary-color;
             }
           }
         }
@@ -164,26 +190,32 @@ $main-outline: blue;
       & > button.close-button {
         &::before,
         &::after {
-          border-left: 1px solid $main-border;
+          border-left: 2px solid $secondary-text;
         }
 
         &:hover::before,
         &:hover::after {
-          border-left: 1px solid $main-color;
+          border-left: 2px solid $main-color;
         }
       }
 
-      & > .body > .preferences {
-        padding-left: 0;
-        border: none;
-        background: transparent;
-        font-size: 0.85em;
-        color: $main-color;
+      & > .body {
+        & > .privacy-body {
+          color: $secondary-text;
+        }
 
-        &:hover {
-          color: $secondary-color;
-          text-decoration: underline;
-          cursor: pointer;
+        & > .preferences {
+          padding-left: 0;
+          border: none;
+          background: transparent;
+          font-size: 0.85em;
+          color: $main-color;
+
+          &:hover {
+            color: $secondary-color;
+            text-decoration: underline;
+            cursor: pointer;
+          }
         }
       }
 
@@ -230,8 +262,8 @@ $main-outline: blue;
       &::after {
         content: "";
         position: absolute;
-        top: 0.15em;
-        left: 0.15em;
+        top: 2.5px;
+        left: 2.5px;
         width: 0.6em;
         height: 0.6em;
         box-shadow: inset 1em 1em $main-color;
@@ -279,8 +311,12 @@ $main-outline: blue;
     .consent-body.mwt-default-style {
       & > .docked-window {
         & > .close-button {
-          top: 0.5em;
-          right: 0.5em;
+          top: 1.2em;
+          right: 1.2em;
+
+          &:hover {
+            cursor: pointer;
+          }
 
           &:focus-visible {
             outline: 2px solid $main-outline;
@@ -288,7 +324,12 @@ $main-outline: blue;
           }
         }
 
+        & > .body {
+          padding-bottom: 0;
+        }
+
         & > .button-list {
+          height: 4em;
           gap: 1.2em;
 
           & > .preferences {
@@ -323,7 +364,13 @@ $main-outline: blue;
             &::before {
               top: 0;
               left: calc(50% - 1px);
-              border-left: 1.5px solid $main-color;
+              border-left: 2px solid $secondary-text;
+            }
+
+            &:hover::after,
+            &:hover::before {
+              border-left: 2px solid $main-color;
+              cursor: pointer;
             }
           }
         }

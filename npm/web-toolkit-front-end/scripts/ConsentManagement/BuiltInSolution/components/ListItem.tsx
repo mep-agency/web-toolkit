@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
  */
 import React from 'react';
+import I18n from '../I18n';
 
 interface ListItemProps {
   id: string;
@@ -25,7 +26,7 @@ const ListItem = (props: ListItemProps) => {
     <div className="list-element">
         <dt className={props.callback === null ? 'checked' : undefined}>
             <label htmlFor={props.id}>
-                {props.name}{props.callback === null ? ' - REQUIRED' : null}
+                {props.name}{props.callback === null ? <> <span className="required">({I18n.required_message})</span></> : null}
             </label>
             <input id={props.id}
                    type="checkbox"
@@ -35,7 +36,7 @@ const ListItem = (props: ListItemProps) => {
             />
         </dt>
         <dd>
-            <p>{props.description}</p>
+            <p className="text-container">{props.description}</p>
         </dd>
     </div>
   );
