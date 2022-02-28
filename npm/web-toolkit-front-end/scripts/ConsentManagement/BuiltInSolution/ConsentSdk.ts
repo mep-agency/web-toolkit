@@ -21,7 +21,7 @@ import {
   ServiceSpecs,
 } from './ConsentInterfaces';
 
-const DEFAULT_EXPIRATION_DELAY = 0; // Five minutes expiration delay in ms300000
+const DEFAULT_EXPIRATION_DELAY = 300000; // Five minutes expiration delay in ms
 const LOCAL_STORAGE_KEY = 'mwt_privacy_consent';
 const PEM_RSA_STORAGE_KEY = 'mwt_privacy_consent_rsa_pem';
 const HASH_PLACEHOLDER = '0000000000000000000000000000000000000000000000000000000000000000';

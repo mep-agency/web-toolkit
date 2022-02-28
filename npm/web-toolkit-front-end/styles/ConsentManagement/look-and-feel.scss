@@ -7,16 +7,18 @@
  * file that was distributed with this source code.
  */
 
-$main-text: rgb(248 250 252); // bg-slate-50
-$secondary-text: rgb(51 65 85); // bg-slate-700
-$main-border: rgb(30 41 59); // bg-slate-800
-$secondary-border: rgb(148 163 184); // bg-slate-400
-$main-disabled-color: rgb(203 213 225); // bg-slate-300
-$main-color: rgb(56 189 248); // bg-sky-400
-$secondary-color: rgb(14 165 233); // bg-sky-500
-$main-outline: rgb(125 211 252); // bg-sky-300
-$main-shadow: 0 1px 0.4px 0.3px rgb(0 0 0 / 20%);
-$active-shadow: 0 0 0.4px 0.3px rgb(0 0 0 / 20%);
+$primary-light-color: rgb(56 189 248); // bg-sky-400
+$primary-dark-color: rgb(14 165 233); // bg-sky-500
+
+$secondary-light-color: rgb(248 250 252); // bg-slate-50
+$secondary-dark-color: rgb(51 65 85); // bg-slate-700
+
+$primary-dark-border: rgb(148 163 184); // bg-slate-400
+$primary-light-outline: rgb(125 211 252); // bg-sky-300
+
+$primary-dark-shadow: 0 1px 0.4px 0.3px rgb(0 0 0 / 20%);
+$active-dark-shadow: 0 0 0.4px 0.3px rgb(0 0 0 / 20%);
+$disabled-color: rgb(203 213 225); // bg-slate-300
 
 #consent-banner-container {
   font-family:
@@ -40,34 +42,32 @@ $active-shadow: 0 0 0.4px 0.3px rgb(0 0 0 / 20%);
     & .button-list > .accept-all,
     & .button-list > .preferences {
       background-color: rgb(226 232 240);
-      color: $secondary-text;
+      color: $secondary-dark-color;
 
       &:hover {
         background-color: rgb(203 213 225);
       }
 
       &:active {
-        box-shadow: $active-shadow !important;
+        box-shadow: $active-dark-shadow !important;
         transform: translateY(1.5px);
       }
     }
 
     & .button-list > .save-button {
       &:active {
-        box-shadow: $active-shadow !important;
+        box-shadow: $active-dark-shadow !important;
         transform: translateY(1.5px);
       }
     }
 
     & .privacy-links > a {
       font-size: 0.85em;
-      color: $secondary-color;
+      color: $primary-dark-color;
       text-decoration: none;
 
       &:first-child::after {
-        content: "\B7";
-        margin: 0 0.5em;
-        color: $secondary-text;
+        color: $secondary-dark-color;
       }
 
       &:hover {
@@ -80,7 +80,7 @@ $active-shadow: 0 0 0.4px 0.3px rgb(0 0 0 / 20%);
       }
 
       &:focus-visible {
-        outline: 2px solid $main-outline;
+        outline: 2px solid $primary-light-outline;
         outline-offset: 3px;
       }
     }
@@ -91,7 +91,7 @@ $active-shadow: 0 0 0.4px 0.3px rgb(0 0 0 / 20%);
       & > .navigation > .close-button {
         &::before,
         &::after {
-          border-left: 2px solid $secondary-text;
+          border-left: 2px solid $secondary-dark-color;
         }
 
         &:hover {
@@ -99,39 +99,39 @@ $active-shadow: 0 0 0.4px 0.3px rgb(0 0 0 / 20%);
 
           &::before,
           &::after {
-            border-left: 2px solid $main-color;
+            border-left: 2px solid $primary-light-color;
           }
         }
 
         &:focus-visible {
-          outline: 2px solid $main-outline;
+          outline: 2px solid $primary-light-outline;
           outline-offset: 3px;
         }
       }
 
       & > .banner-header {
         & > .changed-alert {
-          color: $secondary-color;
+          color: $primary-dark-color;
         }
       }
 
       & > .button-list {
         & > button {
           border: none;
-          box-shadow: $main-shadow;
+          box-shadow: $primary-dark-shadow;
 
           &:focus-visible {
-            outline: 2px solid $main-outline;
+            outline: 2px solid $primary-light-outline;
             outline-offset: 3px;
           }
         }
 
         & > .save-button {
-          background-color: $main-color;
-          color: $main-text;
+          background-color: $primary-light-color;
+          color: $secondary-light-color;
 
           &:hover {
-            background-color: $secondary-color;
+            background-color: $primary-dark-color;
           }
         }
       }
@@ -140,32 +140,32 @@ $active-shadow: 0 0 0.4px 0.3px rgb(0 0 0 / 20%);
         & > .category-button,
         & > .service-button {
           border: none;
-          border-bottom: 1.5px solid $secondary-border;
+          border-bottom: 1.5px solid $primary-dark-border;
           background-color: transparent;
-          color: $secondary-border;
+          color: $primary-dark-border;
 
           &:hover {
             background-color: transparent;
           }
 
           &:disabled {
-            border-bottom: 1.5px solid $secondary-color;
+            border-bottom: 1.5px solid $primary-dark-color;
             background-color: transparent;
-            color: $secondary-color;
+            color: $primary-dark-color;
           }
 
           &:focus-visible {
-            outline: 2px solid $main-outline;
+            outline: 2px solid $primary-light-outline;
             outline-offset: 3px;
           }
         }
       }
 
       & > dl {
-        border-bottom: 1.5px solid $secondary-border;
+        border-bottom: 1.5px solid $primary-dark-border;
 
         & > .list-element {
-          border-top: 1px solid $secondary-border;
+          border-top: 1px solid $primary-dark-border;
 
           &:first-of-type {
             border-top: none;
@@ -173,20 +173,20 @@ $active-shadow: 0 0 0.4px 0.3px rgb(0 0 0 / 20%);
 
           & > dt > label > .required {
             font-weight: 400;
-            color: $secondary-color;
+            color: $primary-dark-color;
           }
 
           & > dd {
             font-size: 0.9em;
 
             & > p.text-container {
-              color: $secondary-text;
+              color: $secondary-dark-color;
             }
 
             & > p.half-category-text {
               margin-top: 0.4em;
               font-size: 0.9em;
-              color: $secondary-color;
+              color: $primary-dark-color;
             }
           }
         }
@@ -197,21 +197,23 @@ $active-shadow: 0 0 0.4px 0.3px rgb(0 0 0 / 20%);
       border-radius: 5px;
       line-height: 1.25em;
 
+      @apply bg-red-500;
+
       & > button.close-button {
         &::before,
         &::after {
-          border-left: 2px solid $secondary-text;
+          border-left: 2px solid $secondary-dark-color;
         }
 
         &:hover::before,
         &:hover::after {
-          border-left: 2px solid $main-color;
+          border-left: 2px solid $primary-light-color;
         }
       }
 
       & > .body {
         & > .privacy-body {
-          color: $secondary-text;
+          color: $secondary-dark-color;
         }
 
         & > .preferences {
@@ -219,7 +221,7 @@ $active-shadow: 0 0 0.4px 0.3px rgb(0 0 0 / 20%);
           border: none;
           background: transparent;
           font-size: 0.85em;
-          color: $secondary-color;
+          color: $primary-dark-color;
 
           &:hover {
             text-decoration: underline;
@@ -234,7 +236,7 @@ $active-shadow: 0 0 0.4px 0.3px rgb(0 0 0 / 20%);
           width: 50%;
           border: none;
           border-radius: 5px;
-          box-shadow: $main-shadow;
+          box-shadow: $primary-dark-shadow;
         }
       }
     }
@@ -245,11 +247,11 @@ $active-shadow: 0 0 0.4px 0.3px rgb(0 0 0 / 20%);
       width: 1.2em;
       height: 1.2em;
       display: grid;
-      border: 0.15em solid $main-color;
+      border: 0.15em solid $primary-light-color;
       border-radius: 0.15em;
       background-color: transparent;
       font: inherit;
-      color: $secondary-text;
+      color: $secondary-dark-color;
       transform: translateY(-0.075em);
       appearance: none;
       place-content: center;
@@ -261,7 +263,7 @@ $active-shadow: 0 0 0.4px 0.3px rgb(0 0 0 / 20%);
         left: 0.1em;
         width: 0.7em;
         height: 0.7em;
-        box-shadow: inset 1em 1em $main-text;
+        box-shadow: inset 1em 1em $secondary-light-color;
         transition: 120ms transform ease-in-out;
         transform: scale(0);
         transform-origin: bottom left;
@@ -275,14 +277,14 @@ $active-shadow: 0 0 0.4px 0.3px rgb(0 0 0 / 20%);
         left: 2.5px;
         width: 0.6em;
         height: 0.6em;
-        box-shadow: inset 1em 1em $main-color;
+        box-shadow: inset 1em 1em $primary-light-color;
         transition: 120ms transform ease-in-out;
         transform: scale(0);
       }
 
       &:checked {
-        border-color: $main-color;
-        background-color: $main-color;
+        border-color: $primary-light-color;
+        background-color: $primary-light-color;
 
         &::before {
           transform: scale(1);
@@ -290,7 +292,7 @@ $active-shadow: 0 0 0.4px 0.3px rgb(0 0 0 / 20%);
       }
 
       &:indeterminate {
-        border-color: $main-color;
+        border-color: $primary-light-color;
 
         &::after {
           transform: scale(1);
@@ -298,13 +300,13 @@ $active-shadow: 0 0 0.4px 0.3px rgb(0 0 0 / 20%);
       }
 
       &:disabled {
-        border-color: $main-disabled-color;
-        background-color: $main-disabled-color;
+        border-color: $disabled-color;
+        background-color: $disabled-color;
         cursor: not-allowed;
       }
 
       &:focus-visible {
-        outline: 2px solid $main-outline;
+        outline: 2px solid $primary-light-outline;
         outline-offset: 3px;
       }
 
@@ -328,7 +330,7 @@ $active-shadow: 0 0 0.4px 0.3px rgb(0 0 0 / 20%);
           }
 
           &:focus-visible {
-            outline: 2px solid $main-outline;
+            outline: 2px solid $primary-light-outline;
             outline-offset: 3px;
           }
         }
@@ -344,7 +346,7 @@ $active-shadow: 0 0 0.4px 0.3px rgb(0 0 0 / 20%);
           & > .preferences {
             border: none;
             border-radius: 5px;
-            box-shadow: $main-shadow;
+            box-shadow: $primary-dark-shadow;
           }
 
           & > button.accept-required,
@@ -355,7 +357,7 @@ $active-shadow: 0 0 0.4px 0.3px rgb(0 0 0 / 20%);
             padding: 0.5em 1.2em;
 
             &:focus-visible {
-              outline: 2px solid $main-outline;
+              outline: 2px solid $primary-light-outline;
               outline-offset: 3px;
             }
           }
@@ -373,12 +375,12 @@ $active-shadow: 0 0 0.4px 0.3px rgb(0 0 0 / 20%);
             &::before {
               top: 0;
               left: calc(50% - 1px);
-              border-left: 2px solid $secondary-text;
+              border-left: 2px solid $secondary-dark-color;
             }
 
             &:hover::after,
             &:hover::before {
-              border-left: 2px solid $main-color;
+              border-left: 2px solid $primary-light-color;
               cursor: pointer;
             }
           }
