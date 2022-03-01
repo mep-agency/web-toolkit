@@ -244,8 +244,8 @@ $disabled-color: rgb(203 213 225); // bg-slate-300
     & input[type="checkbox"] {
       position: relative;
       margin: 0;
-      width: 1.2em;
-      height: 1.2em;
+      width: 20px;
+      height: 20px;
       display: grid;
       border: 0.15em solid $primary-light-color;
       border-radius: 0.15em;
@@ -259,8 +259,8 @@ $disabled-color: rgb(203 213 225); // bg-slate-300
       &::before {
         content: "";
         position: absolute;
-        top: 0.1em;
-        left: 0.1em;
+        top: 2.5px;
+        left: 2.5px;
         width: 0.7em;
         height: 0.7em;
         box-shadow: inset 1em 1em $secondary-light-color;
@@ -273,10 +273,10 @@ $disabled-color: rgb(203 213 225); // bg-slate-300
       &::after {
         content: "";
         position: absolute;
-        top: 2.5px;
-        left: 2.5px;
-        width: 0.6em;
-        height: 0.6em;
+        top: 3px;
+        left: 3px;
+        width: 10px;
+        height: 10px;
         box-shadow: inset 1em 1em $primary-light-color;
         transition: 120ms transform ease-in-out;
         transform: scale(0);
