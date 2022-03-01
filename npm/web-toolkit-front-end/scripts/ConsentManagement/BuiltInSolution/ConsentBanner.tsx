@@ -66,6 +66,11 @@ export default class ConsentBanner extends React.Component<Props, State> {
     this.createRequiredList();
 
     if (this.state.currentConsent?.timestamp === null) {
+      this.setState({
+        isOpen: true,
+        enableTab: BannerStatus.DEFAULT,
+      });
+    } else if (this.state.currentConsent?.timestamp === -1) {
       this.changedAlert = true;
       this.setState({
         isOpen: true,

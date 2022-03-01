@@ -166,6 +166,7 @@ export default class ConsentSdk {
   }
 
   private static updateConsent(consentData: ConsentData, remoteSpecs: ConsentSpecs): ConsentData {
+    let timestampValue = null;
     const consentSpecs = consentData.specs;
     const consentPreferences = consentData.preferences;
     let changedServices: ServiceSpecs[] = [];
@@ -178,6 +179,7 @@ export default class ConsentSdk {
     });
 
     if (JSON.stringify(consentSpecs.services) !== JSON.stringify(remoteSpecs.services)) {
+      timestampValue = -1;
       changedServices = remoteSpecs.services.filter(
         (remoteService) => (consentSpecs.services.findIndex(
           (consentService) => (consentService.id === remoteService.id
@@ -194,7 +196,7 @@ export default class ConsentSdk {
     }
 
     return {
-      timestamp: null,
+      timestamp: timestampValue,
       previousConsentDataHash: consentData.previousConsentDataHash,
       preferences: consentPreferences,
       specs: remoteSpecs,
