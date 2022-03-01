@@ -197,8 +197,6 @@ $disabled-color: rgb(203 213 225); // bg-slate-300
       border-radius: 5px;
       line-height: 1.25em;
 
-      @apply bg-red-500;
-
       & > button.close-button {
         &::before,
         &::after {
