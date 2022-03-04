@@ -9,95 +9,78 @@
 
 #consent-banner-container {
   .consent-body {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 9999999;
-    width: 100vw;
-    height: 100vh;
+    @apply fixed top-0 left-0 w-screen h-screen z-50;
 
     &::before {
       content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: block;
+
+      @apply absolute top-0 left-0;
+      @apply block w-full h-full;
+
       background-color: rgb(0 0 0 / 50%);
     }
 
     & .privacy-links > a {
       &:first-child::after {
         content: "\B7";
-        margin: 0 0.5em;
+
+        @apply my-0 mx-2;
       }
     }
 
     & > .floating-window {
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 9999999;
-      margin: 0 auto;
-      width: auto;
+      @apply absolute top-0 left-0 w-auto my-0 mx-auto p-4 z-50;
+
       height: calc(100vh - 2em);
-      padding: 1em;
-      display: grid;
+
+      @apply grid;
+
       grid-template:
         "navigation" 3em
         "banner-header" max-content
         "view-buttons" max-content
         "service-list" 2fr
         "action-buttons" 1fr;
-      background-color: white;
+
+      @apply bg-white;
 
       & > .navigation {
         grid-area: navigation;
-        width: 100%;
-        height: 3em;
-        display: flex;
-        justify-content: flex-end;
+
+        @apply w-full h-12 flex justify-end;
 
         & > button {
-          position: relative;
-          width: 3em;
-          height: 3em;
-          border: none;
-          background-color: transparent;
+          @apply relative w-12 h-12 bg-transparent border-none;
         }
 
         & > .close-button {
           &::before,
           &::after {
             content: "";
-            position: absolute;
-            top: 0.5em;
-            left: 50%;
-            width: 0;
-            height: 2.5em;
-            display: block;
+
+            @apply absolute block top-2 left-1/2 w-0 h-10;
+
             border-left: 3px solid black;
           }
 
           &::before {
-            transform: rotate(45deg);
+            @apply rotate-45;
           }
 
           &::after {
-            transform: rotate(-45deg);
+            @apply -rotate-45;
           }
         }
       }
 
       & > .banner-header {
         grid-area: banner-header;
-        margin-bottom: 2em;
+
+        @apply mb-8;
 
         & > .privacy-links {
-          margin-top: 1em;
-          display: flex;
-          align-content: flex-start;
+          @apply flex content-start mt-4;
+
           font-size: 0.9em;
         }
 
@@ -108,99 +91,93 @@
 
       & > .button-list {
         grid-area: action-buttons;
-        display: flex;
-        flex-direction: column;
-        gap: 1em;
+
+        @apply flex flex-col gap-4;
 
         & > button {
-          width: 100%;
-          height: 3em;
-          padding: 0.5em 1em;
-          border-radius: 5px;
-          font-weight: 600;
+          @apply w-full h-12 py-2 px-4 rounded-md;
+          @apply font-semibold;
 
           &:hover {
-            cursor: pointer;
+            @apply cursor-pointer;
           }
         }
       }
 
       & > .banner-status-buttons {
         grid-area: view-buttons;
-        width: 100%;
-        height: 2.5em;
+
+        @apply w-full h-10;
 
         & > .category-button,
         & > .service-button {
-          width: 50%;
-          height: 100%;
-          border: none;
+          @apply w-2/4 h-full border-none;
+
           border-bottom: 1.5px solid black;
-          background-color: transparent;
-          font-weight: 600;
+
+          @apply bg-transparent;
+          @apply font-semibold;
+
           font-size: 1em;
-          color: black;
+
+          @apply text-black;
 
           &:hover {
-            cursor: pointer;
+            @apply cursor-pointer;
           }
 
           &:disabled {
             border-bottom: 1.5px solid blue;
             color: blue;
-            cursor: default;
+
+            @apply cursor-default;
           }
         }
       }
 
       & > dl {
         grid-area: service-list;
-        margin-top: 0;
-        margin-bottom: 1em;
-        padding: 1em;
-        overflow-y: scroll;
+
+        @apply mt-0 mb-4 p-4 overflow-y-scroll;
 
         & .list-element {
-          padding-top: 1.5em;
-          padding-bottom: 1.5em;
+          @apply py-6;
 
           & > dt {
-            display: flex;
-            justify-content: space-between;
-            font-weight: 600;
+            @apply flex justify-between font-semibold;
 
             &:not(.checked),
             &:not(.checked) > label {
-              cursor: pointer;
+              @apply cursor-pointer;
             }
 
             & > input {
-              display: flex;
-              align-items: flex-start;
+              @apply flex items-start;
             }
           }
 
           &:first-of-type {
-            padding-top: 0.5em;
+            @apply pt-2;
+
             border-top: none;
           }
 
           &:last-of-type {
-            padding-bottom: 0.5em;
+            @apply pb-2;
           }
 
           & > dd {
-            margin-left: 0;
+            @apply ml-0;
+
             width: calc(100% - 2.7em);
 
             & > .text-container,
             & > p {
-              margin-top: 0.2em;
-              margin-bottom: 0;
+              @apply mt-1 mb-0;
             }
 
             & > .half-category-text {
-              line-height: 1.3em;
+              @apply leading-5;
             }
           }
         }
@@ -208,72 +185,61 @@
     }
 
     & > .docked-window {
-      position: absolute;
-      right: 0;
+      @apply grid absolute right-0 left-0 my-0 mx-auto z-50;
+      @apply bg-white;
+
       bottom: 2vh;
-      left: 0;
-      z-index: 9999999;
-      margin: 0 auto;
       width: 90vw;
       height: 70vh;
-      display: grid;
       grid-template:
         "illustration"
         "message" 1fr
         "buttons" min-content;
-      background-color: white;
 
       & > button.close-button {
-        position: absolute;
-        top: 1.5em;
-        right: 1.5em;
-        width: 1.5em;
-        height: 1.5em;
-        border: none;
-        background-color: transparent;
+        @apply absolute top-6 right-6 w-5 h-5;
+        @apply bg-transparent border-none;
 
         &::before,
         &::after {
           content: "";
-          position: absolute;
-          top: 0;
+
+          @apply absolute block top-0 z-10 w-0 h-5;
+
           left: calc(50% - 1px);
-          z-index: 10;
-          width: 0;
-          height: 1.5em;
-          display: block;
           border-left: 2px solid black;
         }
 
         &::before {
-          transform: rotate(45deg);
+          @apply rotate-45;
         }
 
         &::after {
-          transform: rotate(-45deg);
+          @apply -rotate-45;
         }
       }
 
       & > .illustration {
         grid-area: illustration;
-        position: relative;
-        margin-right: auto;
-        margin-left: auto;
-        width: 100%;
+
+        @apply relative ml-auto mr-auto;
+        @apply w-full;
+
         height: 12.5em;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        object-fit: contain;
+
+        @apply flex items-center justify-center object-contain;
+
         border-bottom: 1px solid #e6e6e6;
-        border-radius: 5px 5px 0 0;
+
+        @apply rounded-t-md;
+
         background: linear-gradient(180deg, #fafafa 0, #f8f8f8 80%);
 
         & > .default-cookie {
           content: "";
-          width: 90%;
-          height: 90%;
-          display: block;
+
+          @apply block w-5/6 h-5/6;
+
           background: url("../../images/cookie-jar.svg") no-repeat center;
           background-size: contain;
         }
@@ -281,41 +247,36 @@
 
       & > .body {
         grid-area: message;
-        padding: 1.5em;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-evenly;
+
+        @apply flex p-6 flex-col justify-evenly;
 
         & > .privacy-body {
-          margin: 0;
+          @apply m-0;
         }
 
         & > .preferences {
-          margin-top: 0;
-          width: max-content;
+          @apply mt-0 w-max;
         }
       }
 
       & > .button-list {
         grid-area: buttons;
-        padding: 1.5em;
-        display: flex;
-        gap: 1.5em;
-        justify-content: space-between;
+
+        @apply flex p-6 gap-6 justify-between;
 
         & > button.preferences,
         & > button.accept-required,
         & > button.accept-all {
-          padding: 1em 1.5em;
-          font-weight: 600;
+          @apply py-4 px-6;
+          @apply font-semibold;
 
           &:hover {
-            cursor: pointer;
+            @apply cursor-pointer;
           }
         }
 
         & > .preferences {
-          display: none;
+          @apply hidden;
         }
       }
     }
@@ -326,7 +287,8 @@
   #consent-banner-container {
     .consent-body {
       & > .docked-window {
-        margin-right: auto;
+        @apply mr-auto;
+
         margin-left: 2vw;
         width: 50em;
         height: 15em;
@@ -335,17 +297,18 @@
           "illustration buttons" 5em;
 
         & > .illustration {
-          width: 15em;
-          height: 100%;
+          @apply w-60 h-full;
+
           border-right: 1px solid #e6e6e6;
           border-bottom: none;
-          border-radius: 5px 0 0 5px;
+
+          @apply rounded-l-md;
 
           & > .default-cookie {
             content: "";
-            width: 70%;
-            height: 70%;
-            display: block;
+
+            @apply block w-3/4 h-3/4;
+
             background: url("../../images/cookie-jar.svg") no-repeat center;
             background-size: contain;
           }
@@ -353,45 +316,47 @@
 
         & > .body {
           width: calc(100% - 2.4em);
-          padding: 1.2em;
-          align-items: center;
+
+          @apply p-5 items-center;
 
           & > p {
-            margin: 1em 0;
+            @apply my-4 mx-0;
+          }
+
+          & > .privacy-body {
+            @apply pr-1;
           }
 
           & > .privacy-links {
-            width: 100%;
+            @apply w-full;
           }
 
           & > .preferences {
-            display: none;
+            @apply hidden;
           }
         }
 
         & > .button-list {
           width: calc(100% - 2.4em);
-          padding: 0 1.2em;
-          align-items: center;
-          justify-content: center;
+
+          @apply py-0 px-5 items-center justify-center;
 
           & > button {
-            width: 100%;
-            height: 4em;
-            padding: 0.5em 1.2em;
+            @apply w-full h-16 py-2 px-5;
           }
 
           & > .preferences {
-            display: block;
+            @apply block;
           }
         }
       }
 
       & > .floating-window {
+        @apply p-8;
+
         width: 30em;
         max-width: 45vw;
         height: calc(100vh - 4em);
-        padding: 2em;
         grid-template:
           "navigation" 3em
           "banner-header" 1fr
@@ -400,24 +365,23 @@
           "action-buttons" 3.5em;
 
         & > .banner-header {
-          margin-bottom: 2em;
+          @apply mb-8;
 
           & > .privacy-links {
-            margin-top: 1em;
+            @apply mt-4;
           }
         }
 
         & > dl {
-          margin-bottom: 2em;
+          @apply mb-8;
         }
 
         & > .button-list {
-          height: 3.5em;
-          flex-direction: row;
-          align-items: center;
+          @apply h-14;
+          @apply flex-row items-center;
 
           & > button {
-            height: 3.5em;
+            @apply h-14;
           }
         }
       }

@@ -7,86 +7,73 @@
  * file that was distributed with this source code.
  */
 
-$primary-light-color: rgb(56 189 248); // bg-sky-400
-$primary-dark-color: rgb(14 165 233); // bg-sky-500
-
-$secondary-light-color: rgb(248 250 252); // bg-slate-50
-$secondary-dark-color: rgb(51 65 85); // bg-slate-700
-
-$primary-dark-border: rgb(148 163 184); // bg-slate-400
-$primary-light-outline: rgb(125 211 252); // bg-sky-300
-
+$primary-light-color: theme("colors.sky.400");
+$primary-dark-color: theme("colors.sky.500");
+$secondary-light-color: theme("colors.slate.50");
+$secondary-dark-color: theme("colors.slate.700");
+$primary-light-button: theme("colors.slate.200");
+$primary-dark-button: theme("colors.slate.300");
+$primary-dark-border: theme("colors.slate.400");
+$primary-light-outline: theme("colors.sky.300");
 $primary-dark-shadow: 0 1px 0.4px 0.3px rgb(0 0 0 / 20%);
 $active-dark-shadow: 0 0 0.4px 0.3px rgb(0 0 0 / 20%);
-$disabled-color: rgb(203 213 225); // bg-slate-300
+$disabled-color: theme("colors.slate.300");
 
 #consent-banner-container {
-  font-family:
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    "Helvetica Neue",
-    Arial,
-    "Noto Sans",
-    sans-serif,
-    "Apple Color Emoji",
-    "Segoe UI Emoji",
-    "Segoe UI Symbol",
-    "Noto Color Emoji";
+  @apply font-sans;
 
   .consent-body.mwt-default-style {
     & .button-list > .accept-required,
     & .button-list > .accept-all,
     & .button-list > .preferences {
-      background-color: rgb(226 232 240);
+      background-color: $primary-light-button;
       color: $secondary-dark-color;
 
       &:hover {
-        background-color: rgb(203 213 225);
+        background-color: $primary-dark-button;
       }
 
       &:active {
         box-shadow: $active-dark-shadow !important;
-        transform: translateY(1.5px);
+
+        @apply translate-y-px;
       }
     }
 
     & .button-list > .save-button {
       &:active {
         box-shadow: $active-dark-shadow !important;
-        transform: translateY(1.5px);
+
+        @apply translate-y-px;
       }
     }
 
     & .privacy-links > a {
-      font-size: 0.85em;
+      @apply text-sm no-underline;
+
       color: $primary-dark-color;
-      text-decoration: none;
 
       &:first-child::after {
         color: $secondary-dark-color;
       }
 
       &:hover {
-        text-decoration: underline;
+        @apply underline;
 
         &::after {
-          display: inline-block;
-          text-decoration: none;
+          @apply inline-block no-underline;
         }
       }
 
       &:focus-visible {
         outline: 2px solid $primary-light-outline;
-        outline-offset: 3px;
+
+        @apply outline-offset-2;
       }
     }
 
     & > .floating-window {
-      line-height: 1.25em;
+      @apply leading-5;
 
       & > .navigation > .close-button {
         &::before,
@@ -95,7 +82,7 @@ $disabled-color: rgb(203 213 225); // bg-slate-300
         }
 
         &:hover {
-          cursor: pointer;
+          @apply cursor-pointer;
 
           &::before,
           &::after {
@@ -105,7 +92,8 @@ $disabled-color: rgb(203 213 225); // bg-slate-300
 
         &:focus-visible {
           outline: 2px solid $primary-light-outline;
-          outline-offset: 3px;
+
+          @apply outline-offset-2;
         }
       }
 
@@ -117,12 +105,14 @@ $disabled-color: rgb(203 213 225); // bg-slate-300
 
       & > .button-list {
         & > button {
-          border: none;
+          @apply border-none;
+
           box-shadow: $primary-dark-shadow;
 
           &:focus-visible {
             outline: 2px solid $primary-light-outline;
-            outline-offset: 3px;
+
+            @apply outline-offset-2;
           }
         }
 
@@ -139,24 +129,27 @@ $disabled-color: rgb(203 213 225); // bg-slate-300
       & > .banner-status-buttons {
         & > .category-button,
         & > .service-button {
-          border: none;
+          @apply border-none bg-transparent;
+
           border-bottom: 1.5px solid $primary-dark-border;
-          background-color: transparent;
           color: $primary-dark-border;
 
           &:hover {
-            background-color: transparent;
+            @apply bg-transparent;
           }
 
           &:disabled {
             border-bottom: 1.5px solid $primary-dark-color;
-            background-color: transparent;
+
+            @apply bg-transparent;
+
             color: $primary-dark-color;
           }
 
           &:focus-visible {
             outline: 2px solid $primary-light-outline;
-            outline-offset: 3px;
+
+            @apply outline-offset-2;
           }
         }
       }
@@ -172,7 +165,8 @@ $disabled-color: rgb(203 213 225); // bg-slate-300
           }
 
           & > dt > label > .required {
-            font-weight: 400;
+            @apply font-normal;
+
             color: $primary-dark-color;
           }
 
@@ -194,8 +188,7 @@ $disabled-color: rgb(203 213 225); // bg-slate-300
     }
 
     & > .docked-window {
-      border-radius: 5px;
-      line-height: 1.25em;
+      @apply rounded-md leading-5;
 
       & > button.close-button {
         &::before,
@@ -215,15 +208,13 @@ $disabled-color: rgb(203 213 225); // bg-slate-300
         }
 
         & > .preferences {
-          padding-left: 0;
-          border: none;
-          background: transparent;
-          font-size: 0.85em;
+          @apply pl-0 border-none bg-transparent text-sm;
+
           color: $primary-dark-color;
 
           &:hover {
-            text-decoration: underline;
-            cursor: pointer;
+            @apply underline;
+            @apply cursor-pointer;
           }
         }
       }
@@ -231,53 +222,48 @@ $disabled-color: rgb(203 213 225); // bg-slate-300
       & > .button-list {
         & > button.accept-required,
         & > button.accept-all {
-          width: 50%;
-          border: none;
-          border-radius: 5px;
+          @apply w-2/4 border-none rounded-md;
+
           box-shadow: $primary-dark-shadow;
         }
       }
     }
 
     & input[type="checkbox"] {
-      position: relative;
-      margin: 0;
-      width: 20px;
-      height: 20px;
-      display: grid;
+      @apply relative grid w-5 h-5 m-0 bg-transparent rounded-sm;
+
       border: 0.15em solid $primary-light-color;
-      border-radius: 0.15em;
-      background-color: transparent;
-      font: inherit;
       color: $secondary-dark-color;
       transform: translateY(-0.075em);
-      appearance: none;
-      place-content: center;
+
+      @apply appearance-none place-content-center;
 
       &::before {
         content: "";
-        position: absolute;
+
+        @apply absolute;
+
         top: 2.5px;
         left: 2.5px;
         width: 0.7em;
         height: 0.7em;
         box-shadow: inset 1em 1em $secondary-light-color;
-        transition: 120ms transform ease-in-out;
-        transform: scale(0);
-        transform-origin: bottom left;
+
+        @apply transition-transform scale-0 origin-bottom-left;
+
         clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
       }
 
       &::after {
         content: "";
-        position: absolute;
+
+        @apply absolute w-2.5 h-2.5;
+
         top: 3px;
         left: 3px;
-        width: 10px;
-        height: 10px;
         box-shadow: inset 1em 1em $primary-light-color;
-        transition: 120ms transform ease-in-out;
-        transform: scale(0);
+
+        @apply transition-transform scale-0;
       }
 
       &:checked {
@@ -285,7 +271,7 @@ $disabled-color: rgb(203 213 225); // bg-slate-300
         background-color: $primary-light-color;
 
         &::before {
-          transform: scale(1);
+          @apply scale-100;
         }
       }
 
@@ -293,23 +279,25 @@ $disabled-color: rgb(203 213 225); // bg-slate-300
         border-color: $primary-light-color;
 
         &::after {
-          transform: scale(1);
+          @apply scale-100;
         }
       }
 
       &:disabled {
         border-color: $disabled-color;
         background-color: $disabled-color;
-        cursor: not-allowed;
+
+        @apply cursor-not-allowed;
       }
 
       &:focus-visible {
         outline: 2px solid $primary-light-outline;
-        outline-offset: 3px;
+
+        @apply outline-offset-2;
       }
 
       &:hover:not(:disabled) {
-        cursor: pointer;
+        @apply cursor-pointer;
       }
     }
   }
@@ -320,43 +308,41 @@ $disabled-color: rgb(203 213 225); // bg-slate-300
     .consent-body.mwt-default-style {
       & > .docked-window {
         & > .close-button {
-          top: 1.2em;
-          right: 1.2em;
+          @apply top-5 right-5;
 
           &:hover {
-            cursor: pointer;
+            @apply cursor-pointer;
           }
 
           &:focus-visible {
             outline: 2px solid $primary-light-outline;
-            outline-offset: 3px;
+
+            @apply outline-offset-2;
           }
         }
 
         & > .body {
-          padding-bottom: 0;
+          @apply pb-0;
         }
 
         & > .button-list {
-          height: 4em;
-          gap: 1.2em;
+          @apply h-16 gap-5;
 
           & > .preferences {
-            border: none;
-            border-radius: 5px;
+            @apply border-none rounded-md;
+
             box-shadow: $primary-dark-shadow;
           }
 
           & > button.accept-required,
           & > button.accept-all,
           & > button.preferences {
-            width: 100%;
-            height: 4em;
-            padding: 0.5em 1.2em;
+            @apply w-full h-16 py-2 px-5;
 
             &:focus-visible {
               outline: 2px solid $primary-light-outline;
-              outline-offset: 3px;
+
+              @apply outline-offset-2;
             }
           }
         }
@@ -365,13 +351,12 @@ $disabled-color: rgb(203 213 225); // bg-slate-300
       & > .floating-window {
         & > .navigation {
           & > .close-button {
-            width: 2.5em;
-            height: 2.5em;
-            padding: 0;
+            @apply w-8 h-8 p-0;
 
             &::after,
             &::before {
-              top: 0;
+              @apply top-0 h-8;
+
               left: calc(50% - 1px);
               border-left: 2px solid $secondary-dark-color;
             }
@@ -379,7 +364,8 @@ $disabled-color: rgb(203 213 225); // bg-slate-300
             &:hover::after,
             &:hover::before {
               border-left: 2px solid $primary-light-color;
-              cursor: pointer;
+
+              @apply cursor-pointer;
             }
           }
         }
