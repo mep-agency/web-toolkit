@@ -16,8 +16,7 @@
 
       @apply absolute top-0 left-0;
       @apply block w-full h-full;
-
-      background-color: rgb(0 0 0 / 50%);
+      @apply bg-black/50;
     }
 
     & .privacy-links > a {
@@ -63,13 +62,7 @@
             border-left: 3px solid black;
           }
 
-          &::before {
-            @apply rotate-45;
-          }
-
-          &::after {
-            @apply -rotate-45;
-          }
+          @apply before:rotate-45 after:-rotate-45;
         }
       }
 
@@ -97,10 +90,7 @@
         & > button {
           @apply w-full h-12 py-2 px-4 rounded-md;
           @apply font-semibold;
-
-          &:hover {
-            @apply cursor-pointer;
-          }
+          @apply hover:cursor-pointer;
         }
       }
 
@@ -121,10 +111,7 @@
           font-size: 1em;
 
           @apply text-black;
-
-          &:hover {
-            @apply cursor-pointer;
-          }
+          @apply hover:cursor-pointer;
 
           &:disabled {
             border-bottom: 1.5px solid blue;
@@ -138,7 +125,7 @@
       & > dl {
         grid-area: service-list;
 
-        @apply mt-0 mb-4 p-4 overflow-y-scroll;
+        @apply mt-0 mb-4 p-4 overflow-y-scroll overscroll-contain;
 
         & .list-element {
           @apply py-6;
@@ -210,23 +197,14 @@
           border-left: 2px solid black;
         }
 
-        &::before {
-          @apply rotate-45;
-        }
-
-        &::after {
-          @apply -rotate-45;
-        }
+        @apply before:rotate-45 after:-rotate-45;
       }
 
       & > .illustration {
         grid-area: illustration;
 
         @apply relative ml-auto mr-auto;
-        @apply w-full;
-
-        height: 12.5em;
-
+        @apply w-full h-48;
         @apply flex items-center justify-center object-contain;
 
         border-bottom: 1px solid #e6e6e6;
@@ -269,10 +247,7 @@
         & > button.accept-all {
           @apply py-4 px-6;
           @apply font-semibold;
-
-          &:hover {
-            @apply cursor-pointer;
-          }
+          @apply hover:cursor-pointer;
         }
 
         & > .preferences {

@@ -134,9 +134,7 @@ $disabled-color: theme("colors.slate.300");
           border-bottom: 1.5px solid $primary-dark-border;
           color: $primary-dark-border;
 
-          &:hover {
-            @apply bg-transparent;
-          }
+          @apply hover:bg-transparent;
 
           &:disabled {
             border-bottom: 1.5px solid $primary-dark-color;
@@ -212,10 +210,7 @@ $disabled-color: theme("colors.slate.300");
 
           color: $primary-dark-color;
 
-          &:hover {
-            @apply underline;
-            @apply cursor-pointer;
-          }
+          @apply hover:underline hover:cursor-pointer;
         }
       }
 
@@ -243,8 +238,8 @@ $disabled-color: theme("colors.slate.300");
 
         @apply absolute;
 
-        top: 2.5px;
-        left: 2.5px;
+        top: 3px;
+        left: 3px;
         width: 0.7em;
         height: 0.7em;
         box-shadow: inset 1em 1em $secondary-light-color;
@@ -309,10 +304,7 @@ $disabled-color: theme("colors.slate.300");
       & > .docked-window {
         & > .close-button {
           @apply top-5 right-5;
-
-          &:hover {
-            @apply cursor-pointer;
-          }
+          @apply hover:cursor-pointer;
 
           &:focus-visible {
             outline: 2px solid $primary-light-outline;
