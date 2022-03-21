@@ -25,8 +25,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 final class AttachmentLifecycleEventListener
 {
     public function __construct(
-        private DriverInterface $fileStorageDriver,
-        private ValidatorInterface $validator,
+        private readonly DriverInterface $fileStorageDriver,
+        private readonly ValidatorInterface $validator,
     ) {
     }
 

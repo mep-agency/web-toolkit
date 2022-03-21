@@ -52,7 +52,7 @@ class TwigFunctionsExtension extends AbstractExtension
      */
     private const MATCH_ASSETS_PATH_PREFIX_REGEX = '#^build#';
 
-    private string $projectDir;
+    private readonly string $projectDir;
 
     public function __construct(
         protected AdapterInterface $adapter,

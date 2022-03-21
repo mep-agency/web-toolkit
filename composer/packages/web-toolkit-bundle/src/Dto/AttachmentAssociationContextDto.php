@@ -51,7 +51,7 @@ final class AttachmentAssociationContextDto implements Stringable
     {
         $matches = [];
 
-        if (1 !== preg_match(self::MATCH_FQCN_AND_FIELD_NAME_FROM_CONTEXT_REGEX, $context, $matches,)) {
+        if (1 !== preg_match(self::MATCH_FQCN_AND_FIELD_NAME_FROM_CONTEXT_REGEX, $context, $matches)) {
             return null;
         }
 

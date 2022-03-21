@@ -9,12 +9,26 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Menu\MenuItemInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
+use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Iterator;
+use Mep\WebToolkitBundle\Entity\PrivacyConsent\PrivacyConsentCategory;
+use Mep\WebToolkitBundle\Entity\PrivacyConsent\PrivacyConsentService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 #[IsGranted('ROLE_USER')]
 class DashboardController extends AbstractDashboardController
 {
+    #[Route('/admin')]
+    public function index(): Response
+    {
+        /** @var AdminUrlGenerator $adminUrlGenerator */
+        $adminUrlGenerator = $this->container->get(AdminUrlGenerator::class);
+
+        return $this->redirect($adminUrlGenerator->setController(UserCrudController::class)->generateUrl());
+    }
+
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
@@ -27,8 +41,10 @@ class DashboardController extends AbstractDashboardController
      */
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linktoDashboard('Dashboard', 'fa fa-home');
-//        yield MenuItem::linkToCrud('Article', 'fas fa-edit', Article::class);
+        // yield MenuItem::linktoDashboard('Dashboard', 'fa fa-home');
         yield MenuItem::linkToCrud('User', 'fas fa-user', User::class);
+        yield MenuItem::section('Privacy consent', 'fas fa-cookie-bite');
+        yield MenuItem::linkToCrud('Category', 'fas fa-tag', PrivacyConsentCategory::class);
+        yield MenuItem::linkToCrud('Service', 'fas fa-check-square', PrivacyConsentService::class);
     }
 }

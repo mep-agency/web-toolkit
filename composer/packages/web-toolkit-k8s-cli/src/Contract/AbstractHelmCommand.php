@@ -35,7 +35,7 @@ abstract class AbstractHelmCommand extends AbstractK8sCommand
     public function __construct(
         KubernetesCluster $kubernetesCluster,
         protected HelmAppsManager $helmAppsManager,
-        private bool $supportsAllEnvironmentsFlag = true,
+        private readonly bool $supportsAllEnvironmentsFlag = true,
     ) {
         parent::__construct($kubernetesCluster);
 

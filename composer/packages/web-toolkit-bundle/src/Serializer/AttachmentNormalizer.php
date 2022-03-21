@@ -28,8 +28,8 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 final class AttachmentNormalizer implements NormalizerInterface, DenormalizerInterface
 {
     public function __construct(
-        private FileStorageManager $fileStorageManager,
-        private EntityManagerInterface $entityManager,
+        private readonly FileStorageManager $fileStorageManager,
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 

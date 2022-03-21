@@ -37,12 +37,12 @@ class EditorJsContent implements JsonSerializable, Stringable
     private Uuid $id;
 
     /**
-     * @var Collection<int, Block>
+     * @var Block[]|Collection<int, Block>
      */
-    #[ORM\OneToMany(targetEntity: Block::class, mappedBy: 'parent', orphanRemoval: true, cascade: [
+    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: Block::class, cascade: [
         'persist',
         'remove',
-    ], fetch: 'EAGER')]
+    ], fetch: 'EAGER', orphanRemoval: true)]
     #[ORM\OrderBy([
         'uuid' => 'ASC',
     ])]

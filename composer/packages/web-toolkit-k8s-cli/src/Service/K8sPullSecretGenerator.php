@@ -28,15 +28,15 @@ class K8sPullSecretGenerator
     /**
      * @var string
      */
-    public const PULL_SECRET_TYPE = 'kubernetes.io/dockerconfigjson';
+    final public const PULL_SECRET_TYPE = 'kubernetes.io/dockerconfigjson';
 
     /**
      * @var string[]
      */
-    public const PULL_SECRET_DATA_KEYS = ['.dockerconfigjson'];
+    final public const PULL_SECRET_DATA_KEYS = ['.dockerconfigjson'];
 
     public function __construct(
-        private KubernetesCluster $kubernetesCluster,
+        private readonly KubernetesCluster $kubernetesCluster,
     ) {
     }
 

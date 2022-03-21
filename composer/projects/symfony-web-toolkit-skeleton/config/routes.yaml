@@ -1,0 +1,7 @@
+#index:
+#    path: /
+#    controller: App\Controller\DefaultController::index
+
+web_toolkit_bundle:
+  resource: '@WebToolkitBundle/Resources/config/routes.php'
+  prefix: /api

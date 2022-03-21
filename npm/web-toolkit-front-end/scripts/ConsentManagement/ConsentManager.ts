@@ -14,11 +14,19 @@ import DriverConsentStatusChangedEvent from './DriverConsentStatusChangedEvent';
 import ConsentManagerInterface from './ConsentManagerInterface';
 
 class ConsentManager implements ConsentManagerInterface {
+  private consentManagementDriver!: ConsentManagementDriverInterface;
+
   private events: EventTarget = document.createElement('div');
 
   private consentStatusByService: Map<string, boolean> = new Map<string, boolean>();
 
-  constructor(private consentManagementDriver: ConsentManagementDriverInterface) {
+  public registerDriver(consentManagementDriver: ConsentManagementDriverInterface) {
+    if (this.consentManagementDriver !== undefined) {
+      throw new Error('Driver already registered.');
+    }
+
+    this.consentManagementDriver = consentManagementDriver;
+
     this.consentManagementDriver.events.addEventListener(
       this.consentManagementDriver.STATUS_UPDATE_EVENT_NAME,
       {
@@ -36,6 +44,8 @@ class ConsentManager implements ConsentManagerInterface {
     callback: ConsentStatusChangedCallbackType,
     options?: AddEventListenerOptions | boolean,
   ) {
+    this.checkDriverOrThrow();
+
     this.events.addEventListener(ConsentManager.buildEventKey(serviceName), {
       handleEvent(event: ServiceConsentStatusChangedEvent) {
         callback(event.detail.value, event.detail.isInit);
@@ -49,11 +59,23 @@ class ConsentManager implements ConsentManagerInterface {
   }
 
   public async openPreferencesPanel() {
-    (await this.consentManagementDriver).openPreferencesPanel();
+    await this.getConsentManagementDriver().openPreferencesPanel();
   }
 
   public async closePreferencesPanel() {
-    (await this.consentManagementDriver).closePreferencesPanel();
+    await this.getConsentManagementDriver().closePreferencesPanel();
+  }
+
+  private getConsentManagementDriver(): ConsentManagementDriverInterface {
+    this.checkDriverOrThrow();
+
+    return this.consentManagementDriver;
+  }
+
+  private checkDriverOrThrow(): void {
+    if (this.consentManagementDriver === undefined) {
+      throw new Error('You can\'t use the consent manager before registering a driver.');
+    }
   }
 
   private static buildEventKey(service: string) {
@@ -83,16 +105,4 @@ class ConsentManager implements ConsentManagerInterface {
   }
 }
 
-let alreadyInitialized = false;
-
-export default function createConsentManager(
-  consentManagementDriver: ConsentManagementDriverInterface,
-) {
-  if (alreadyInitialized) {
-    throw new Error('This function must be called once, please store the returned object');
-  }
-
-  alreadyInitialized = true;
-
-  return new ConsentManager(consentManagementDriver);
-}
+export default new ConsentManager();

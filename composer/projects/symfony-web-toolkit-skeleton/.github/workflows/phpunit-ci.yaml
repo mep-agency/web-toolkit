@@ -18,7 +18,7 @@ jobs:
   phpunit-ci:
     uses: mep-agency/web-toolkit-workflows/.github/workflows/phpunit-ci.yaml@main
     #with:
-    #  php_version: 8.0
+    #  php_version: 8.1
     #  php_extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite
     #  yarn_always_auth: true
     #  yarn_registry_url: https://npm.pkg.github.com

@@ -167,11 +167,14 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/symplify/rule-doc-generator-contracts" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symplify/smart-file-system" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symplify/easy-testing" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symplify/simple-php-doc-parser" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symplify/composer-json-manipulator" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symplify/symplify-kernel" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symplify/astral" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpstan/extension-installer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/paragonie/random_compat" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/paragonie/constant_time_encoding" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phpseclib/phpseclib" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/illuminate/conditionable" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

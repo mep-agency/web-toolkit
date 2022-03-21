@@ -21,10 +21,10 @@ class CommandOption
     /**
      * @var string
      */
-    public const DRY_RUN = 'dry-run';
+    final public const DRY_RUN = 'dry-run';
 
     /**
      * @var string
      */
-    public const IGNORE_MISSING_PDO_SESSION_HANDLER = 'ignore-missing-pdo-session-handler';
+    final public const IGNORE_MISSING_PDO_SESSION_HANDLER = 'ignore-missing-pdo-session-handler';
 }

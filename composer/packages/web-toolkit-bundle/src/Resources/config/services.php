@@ -11,6 +11,8 @@
 
 declare(strict_types=1);
 
+namespace Symfony\Component\DependencyInjection\Loader\Configurator;
+
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\DependencyInjection\EasyAdminExtension;
 use EasyCorp\Bundle\EasyAdminBundle\Factory\EntityFactory;
@@ -20,6 +22,12 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface;
 use Mep\WebToolkitBundle\Command\FileStorage\GarbageCollectionCommand;
 use Mep\WebToolkitBundle\Command\FileStorage\SessionsCreateTableCommand;
+use Mep\WebToolkitBundle\Controller\Admin\PrivacyConsentCategoryCrudController;
+use Mep\WebToolkitBundle\Controller\Admin\PrivacyConsentServiceCrudController;
+use Mep\WebToolkitBundle\Controller\PrivacyConsent\CreateConsentController;
+use Mep\WebToolkitBundle\Controller\PrivacyConsent\GetConsentController;
+use Mep\WebToolkitBundle\Controller\PrivacyConsent\GetSpecsController;
+use Mep\WebToolkitBundle\Controller\PrivacyConsent\ShowHistoryController;
 use Mep\WebToolkitBundle\Entity\Attachment;
 use Mep\WebToolkitBundle\EventListener\AttachmentLifecycleEventListener;
 use Mep\WebToolkitBundle\EventListener\ForceSingleInstanceEventListener;
@@ -39,27 +47,33 @@ use Mep\WebToolkitBundle\Form\TypeGuesser\AdminEditorJsTypeGuesser;
 use Mep\WebToolkitBundle\Mail\TemplateProvider\DummyTemplateProvider;
 use Mep\WebToolkitBundle\Mail\TemplateProvider\TwigTemplateProvider;
 use Mep\WebToolkitBundle\Mail\TemplateRenderer;
+use Mep\WebToolkitBundle\Repository\PrivacyConsent\PrivacyConsentCategoryRepository;
+use Mep\WebToolkitBundle\Repository\PrivacyConsent\PrivacyConsentRepository;
+use Mep\WebToolkitBundle\Repository\PrivacyConsent\PrivacyConsentServiceRepository;
 use Mep\WebToolkitBundle\Router\AttachmentsAdminApiUrlGenerator;
 use Mep\WebToolkitBundle\Serializer\AttachmentNormalizer;
 use Mep\WebToolkitBundle\Serializer\EditorJsContentNormalizer;
+use Mep\WebToolkitBundle\Service\PrivacyConsentManager;
 use Mep\WebToolkitBundle\Twig\AttachmentExtension;
 use Mep\WebToolkitBundle\Twig\EditorJsExtension;
+use Mep\WebToolkitBundle\Twig\PrivacyConsentExtension;
 use Mep\WebToolkitBundle\Twig\TwigFunctionsExtension;
 use Mep\WebToolkitBundle\WebToolkitBundle;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
-use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Form\FormRegistryInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
 /**
@@ -253,5 +267,78 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->arg(1, new Reference(Packages::class))
         ->arg(2, new Reference(KernelInterface::class))
         ->tag('twig.extension')
+    ;
+
+    // Privacy consent
+    $services->set(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_REPOSITORY, PrivacyConsentRepository::class)
+        ->autowire()
+        ->tag('doctrine.repository_service')
+    ;
+    $services->set(
+        // Doctrine repositories must be defined using the FQCN
+        PrivacyConsentCategoryRepository::class,
+    )
+        ->autowire()
+        ->tag('doctrine.repository_service')
+        ->alias(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_CATEGORY_REPOSITORY, PrivacyConsentCategoryRepository::class)
+    ;
+    $services->set(
+        // Doctrine repositories must be defined using the FQCN
+        PrivacyConsentServiceRepository::class,
+    )
+        ->autowire()
+        ->tag('doctrine.repository_service')
+        ->alias(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_SERVICE_REPOSITORY, PrivacyConsentServiceRepository::class)
+    ;
+    $services->set(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_MANAGER, PrivacyConsentManager::class)
+        ->arg(0, env('PRIVACY_CONSENT_MANAGER_PRIVATE_KEY')->base64())
+        ->arg(1, env('PRIVACY_CONSENT_MANAGER_TIMESTAMP_TOLERANCE')->int())
+        ->arg(2, new Reference(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_REPOSITORY))
+        ->arg(3, new Reference(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_CATEGORY_REPOSITORY))
+        ->arg(4, new Reference(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_SERVICE_REPOSITORY))
+        ->arg(5, new Reference(EntityManagerInterface::class))
+    ;
+    $services->set(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_EXTENSION, PrivacyConsentExtension::class)
+        ->arg(0, new Reference(UrlGeneratorInterface::class))
+        ->tag('twig.extension')
+    ;
+    $services->set(WebToolkitBundle::SERVICE_PRIVACY_CREATE_CONSENT_CONTROLLER, CreateConsentController::class)
+        ->public()
+        ->arg(0, new Reference(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_MANAGER))
+        ->arg(1, new Reference(RequestStack::class))
+        ->arg(2, new Reference(TranslatorInterface::class))
+        ->arg(3, new Reference(SerializerInterface::class))
+    ;
+    $services->set(WebToolkitBundle::SERVICE_PRIVACY_GET_CONSENT_CONTROLLER, GetConsentController::class)
+        ->public()
+        ->arg(0, new Reference(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_REPOSITORY))
+        ->arg(1, new Reference(SerializerInterface::class))
+    ;
+    $services->set(WebToolkitBundle::SERVICE_PRIVACY_GET_SPECS_CONTROLLER, GetSpecsController::class)
+        ->public()
+        ->arg(0, new Reference(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_MANAGER))
+        ->arg(1, new Reference(SerializerInterface::class))
+    ;
+    $services->set(WebToolkitBundle::SERVICE_PRIVACY_SHOW_HISTORY_CONTROLLER, ShowHistoryController::class)
+        ->public()
+        ->arg(0, new Reference(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_REPOSITORY))
+        ->arg(1, new Reference(RequestStack::class))
+        ->arg(2, new Reference(SerializerInterface::class))
+    ;
+    $services->set(PrivacyConsentCategoryCrudController::class)
+        ->autoconfigure()
+        ->autowire()
+        ->alias(
+            WebToolkitBundle::SERVICE_PRIVACY_CONSENT_CATEGORY_CRUD_CONTROLLER,
+            PrivacyConsentCategoryCrudController::class,
+        )
+    ;
+    $services->set(PrivacyConsentServiceCrudController::class)
+        ->autoconfigure()
+        ->autowire()
+        ->alias(
+            WebToolkitBundle::SERVICE_PRIVACY_CONSENT_SERVICE_CRUD_CONTROLLER,
+            PrivacyConsentServiceCrudController::class,
+        )
     ;
 };

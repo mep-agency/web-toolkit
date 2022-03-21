@@ -21,7 +21,7 @@ use Mep\WebToolkitBundle\Contract\Mail\TemplateIdentifierInterface;
 final class TwigTemplate implements TemplateIdentifierInterface
 {
     public function __construct(
-        private string $templatesFolder,
+        private readonly string $templatesFolder,
     ) {
     }
 

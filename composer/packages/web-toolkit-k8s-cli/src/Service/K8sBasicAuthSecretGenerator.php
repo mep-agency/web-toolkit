@@ -36,11 +36,11 @@ class K8sBasicAuthSecretGenerator
     private const BASIC_AUTH_SECRET_DATA_KEYS = ['auth'];
 
     public function __construct(
-        private KubernetesCluster $kubernetesCluster,
+        private readonly KubernetesCluster $kubernetesCluster,
     ) {
     }
 
-    public function generate(string $name, string $username, string $password, string $namespace,): K8sSecret
+    public function generate(string $name, string $username, string $password, string $namespace): K8sSecret
     {
         return $this->kubernetesCluster
             ->secret()

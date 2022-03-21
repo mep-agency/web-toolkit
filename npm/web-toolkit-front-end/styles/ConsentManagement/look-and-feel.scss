@@ -1,0 +1,367 @@
+/*
+ * This file is part of the MEP Web Toolkit package.
+ *
+ * (c) Marco Lipparini <developer@liarco.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+$primary-light-color: theme("colors.sky.400");
+$primary-dark-color: theme("colors.sky.500");
+$secondary-light-color: theme("colors.slate.50");
+$secondary-dark-color: theme("colors.slate.700");
+$primary-light-button: theme("colors.slate.200");
+$primary-dark-button: theme("colors.slate.300");
+$primary-dark-border: theme("colors.slate.400");
+$primary-light-outline: theme("colors.sky.300");
+$primary-dark-shadow: 0 1px 0.4px 0.3px rgb(0 0 0 / 20%);
+$active-dark-shadow: 0 0 0.4px 0.3px rgb(0 0 0 / 20%);
+$disabled-color: theme("colors.slate.300");
+
+#consent-banner-container {
+  @apply font-sans;
+
+  .consent-body.mwt-default-style {
+    & .button-list > .accept-required,
+    & .button-list > .accept-all,
+    & .button-list > .preferences {
+      background-color: $primary-light-button;
+      color: $secondary-dark-color;
+
+      &:hover {
+        background-color: $primary-dark-button;
+      }
+
+      &:active {
+        box-shadow: $active-dark-shadow !important;
+
+        @apply translate-y-px;
+      }
+    }
+
+    & .button-list > .save-button {
+      &:active {
+        box-shadow: $active-dark-shadow !important;
+
+        @apply translate-y-px;
+      }
+    }
+
+    & .privacy-links > a {
+      @apply text-sm no-underline;
+
+      color: $primary-dark-color;
+
+      &:first-child::after {
+        color: $secondary-dark-color;
+      }
+
+      &:hover {
+        @apply underline;
+
+        &::after {
+          @apply inline-block no-underline;
+        }
+      }
+
+      &:focus-visible {
+        outline: 2px solid $primary-light-outline;
+
+        @apply outline-offset-2;
+      }
+    }
+
+    & > .floating-window {
+      @apply leading-5;
+
+      & > .navigation > .close-button {
+        &::before,
+        &::after {
+          border-left: 2px solid $secondary-dark-color;
+        }
+
+        &:hover {
+          @apply cursor-pointer;
+
+          &::before,
+          &::after {
+            border-left: 2px solid $primary-light-color;
+          }
+        }
+
+        &:focus-visible {
+          outline: 2px solid $primary-light-outline;
+
+          @apply outline-offset-2;
+        }
+      }
+
+      & > .banner-header {
+        & > .changed-alert {
+          color: $primary-dark-color;
+        }
+      }
+
+      & > .button-list {
+        & > button {
+          @apply border-none;
+
+          box-shadow: $primary-dark-shadow;
+
+          &:focus-visible {
+            outline: 2px solid $primary-light-outline;
+
+            @apply outline-offset-2;
+          }
+        }
+
+        & > .save-button {
+          background-color: $primary-light-color;
+          color: $secondary-light-color;
+
+          &:hover {
+            background-color: $primary-dark-color;
+          }
+        }
+      }
+
+      & > .banner-status-buttons {
+        & > .category-button,
+        & > .service-button {
+          @apply border-none bg-transparent;
+
+          border-bottom: 1.5px solid $primary-dark-border;
+          color: $primary-dark-border;
+
+          @apply hover:bg-transparent;
+
+          &:disabled {
+            border-bottom: 1.5px solid $primary-dark-color;
+
+            @apply bg-transparent;
+
+            color: $primary-dark-color;
+          }
+
+          &:focus-visible {
+            outline: 2px solid $primary-light-outline;
+
+            @apply outline-offset-2;
+          }
+        }
+      }
+
+      & > dl {
+        border-bottom: 1.5px solid $primary-dark-border;
+
+        & > .list-element {
+          border-top: 1px solid $primary-dark-border;
+
+          &:first-of-type {
+            border-top: none;
+          }
+
+          & > dt > label > .required {
+            @apply font-normal;
+
+            color: $primary-dark-color;
+          }
+
+          & > dd {
+            font-size: 0.9em;
+
+            & > p.text-container {
+              color: $secondary-dark-color;
+            }
+
+            & > p.half-category-text {
+              margin-top: 0.4em;
+              font-size: 0.9em;
+              color: $primary-dark-color;
+            }
+          }
+        }
+      }
+    }
+
+    & > .docked-window {
+      @apply rounded-md leading-5;
+
+      & > button.close-button {
+        &::before,
+        &::after {
+          border-left: 2px solid $secondary-dark-color;
+        }
+
+        &:hover::before,
+        &:hover::after {
+          border-left: 2px solid $primary-light-color;
+        }
+      }
+
+      & > .body {
+        & > .privacy-body {
+          color: $secondary-dark-color;
+        }
+
+        & > .preferences {
+          @apply pl-0 border-none bg-transparent text-sm;
+
+          color: $primary-dark-color;
+
+          @apply hover:underline hover:cursor-pointer;
+        }
+      }
+
+      & > .button-list {
+        & > button.accept-required,
+        & > button.accept-all {
+          @apply w-2/4 border-none rounded-md;
+
+          box-shadow: $primary-dark-shadow;
+        }
+      }
+    }
+
+    & input[type="checkbox"] {
+      @apply relative grid w-5 h-5 m-0 bg-transparent rounded-sm;
+
+      border: 0.15em solid $primary-light-color;
+      color: $secondary-dark-color;
+      transform: translateY(-0.075em);
+
+      @apply appearance-none place-content-center;
+
+      &::before {
+        content: "";
+
+        @apply absolute;
+
+        top: 3px;
+        left: 3px;
+        width: 0.7em;
+        height: 0.7em;
+        box-shadow: inset 1em 1em $secondary-light-color;
+
+        @apply transition-transform scale-0 origin-bottom-left;
+
+        clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+      }
+
+      &::after {
+        content: "";
+
+        @apply absolute w-2.5 h-2.5;
+
+        top: 3px;
+        left: 3px;
+        box-shadow: inset 1em 1em $primary-light-color;
+
+        @apply transition-transform scale-0;
+      }
+
+      &:checked {
+        border-color: $primary-light-color;
+        background-color: $primary-light-color;
+
+        &::before {
+          @apply scale-100;
+        }
+      }
+
+      &:indeterminate {
+        border-color: $primary-light-color;
+
+        &::after {
+          @apply scale-100;
+        }
+      }
+
+      &:disabled {
+        border-color: $disabled-color;
+        background-color: $disabled-color;
+
+        @apply cursor-not-allowed;
+      }
+
+      &:focus-visible {
+        outline: 2px solid $primary-light-outline;
+
+        @apply outline-offset-2;
+      }
+
+      &:hover:not(:disabled) {
+        @apply cursor-pointer;
+      }
+    }
+  }
+}
+
+@media (min-width: 980px) {
+  #consent-banner-container {
+    .consent-body.mwt-default-style {
+      & > .docked-window {
+        & > .close-button {
+          @apply top-5 right-5;
+          @apply hover:cursor-pointer;
+
+          &:focus-visible {
+            outline: 2px solid $primary-light-outline;
+
+            @apply outline-offset-2;
+          }
+        }
+
+        & > .body {
+          @apply pb-0;
+        }
+
+        & > .button-list {
+          @apply h-16 gap-5;
+
+          & > .preferences {
+            @apply border-none rounded-md;
+
+            box-shadow: $primary-dark-shadow;
+          }
+
+          & > button.accept-required,
+          & > button.accept-all,
+          & > button.preferences {
+            @apply w-full h-16 py-2 px-5;
+
+            &:focus-visible {
+              outline: 2px solid $primary-light-outline;
+
+              @apply outline-offset-2;
+            }
+          }
+        }
+      }
+
+      & > .floating-window {
+        & > .navigation {
+          & > .close-button {
+            @apply w-8 h-8 p-0;
+
+            &::after,
+            &::before {
+              @apply top-0 h-8;
+
+              left: calc(50% - 1px);
+              border-left: 2px solid $secondary-dark-color;
+            }
+
+            &:hover::after,
+            &:hover::before {
+              border-left: 2px solid $primary-light-color;
+
+              @apply cursor-pointer;
+            }
+          }
+        }
+      }
+    }
+  }
+}

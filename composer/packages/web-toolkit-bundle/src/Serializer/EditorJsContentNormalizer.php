@@ -27,7 +27,7 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 final class EditorJsContentNormalizer implements DenormalizerInterface
 {
     public function __construct(
-        private ObjectNormalizer $objectNormalizer,
+        private readonly ObjectNormalizer $objectNormalizer,
     ) {
     }
 

@@ -31,9 +31,9 @@ final class FileStorageManager
      * @param iterable<ProcessorInterface> $processors
      */
     public function __construct(
-        private DriverInterface $fileStorageDriver,
-        private EntityManagerInterface $entityManager,
-        private iterable $processors,
+        private readonly DriverInterface $fileStorageDriver,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly iterable $processors,
     ) {
     }
 

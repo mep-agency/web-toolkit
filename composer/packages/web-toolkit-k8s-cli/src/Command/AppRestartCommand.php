@@ -24,11 +24,21 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * @author Marco Lipparini <developer@liarco.net>
  */
 #[AsCommand(
-    name: 'app:restart',
-    description: 'Restarts an app',
+    name: self::NAME,
+    description: self::DESCRIPTION,
 )]
 class AppRestartCommand extends AbstractHelmCommand
 {
+    /**
+     * @var string
+     */
+    final public const NAME = 'app:restart';
+
+    /**
+     * @var string
+     */
+    final public const DESCRIPTION = 'Restarts an app';
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $symfonyStyle = new SymfonyStyle($input, $output);

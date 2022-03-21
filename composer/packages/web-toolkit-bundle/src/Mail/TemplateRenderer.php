@@ -27,7 +27,7 @@ final class TemplateRenderer
      * @param iterable<TemplateProviderInterface> $templateProviders
      */
     public function __construct(
-        private iterable $templateProviders,
+        private readonly iterable $templateProviders,
     ) {
     }
 

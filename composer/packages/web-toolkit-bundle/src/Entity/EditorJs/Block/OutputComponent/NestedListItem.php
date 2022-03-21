@@ -38,19 +38,21 @@ class NestedListItem implements JsonSerializable, Stringable
     private Uuid $uuid;
 
     /**
+     * @noRector
+     *
      * @var Collection<int, NestedListItem>
      */
-    #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'parent', orphanRemoval: true, cascade: [
+    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class, cascade: [
         'persist',
         'remove',
-    ], fetch: 'EAGER')]
+    ], fetch: 'EAGER', orphanRemoval: true)]
     #[ORM\OrderBy([
         'uuid' => 'ASC',
     ])]
     private Collection $items;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'items')]
-    #[ORM\JoinColumn(referencedColumnName: 'uuid', nullable: true)]
+    #[ORM\JoinColumn(referencedColumnName: 'uuid')]
     #[Ignore]
     private ?self $parent;
 

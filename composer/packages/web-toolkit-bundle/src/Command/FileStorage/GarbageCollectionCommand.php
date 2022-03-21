@@ -29,18 +29,28 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 #[AsCommand(
-    name: 'mwt:storage:garbage-collection',
-    description: 'Removes unused attachments',
+    name: self::NAME,
+    description: self::DESCRIPTION,
 )]
 class GarbageCollectionCommand extends Command
 {
     /**
+     * @var string
+     */
+    final public const NAME = 'mwt:storage:garbage-collection';
+
+    /**
+     * @var string
+     */
+    final public const DESCRIPTION = 'Removes unused attachments';
+
+    /**
      * @param iterable<GarbageCollectorInterface> $garbageCollectors
      */
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private FileStorageManager $fileStorageManager,
-        private iterable $garbageCollectors,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly FileStorageManager $fileStorageManager,
+        private readonly iterable $garbageCollectors,
     ) {
         parent::__construct();
     }

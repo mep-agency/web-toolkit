@@ -24,11 +24,21 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * @author Marco Lipparini <developer@liarco.net>
  */
 #[AsCommand(
-    name: 'app:uninstall',
-    description: 'Uninstalls an app using Helm',
+    name: self::NAME,
+    description: self::DESCRIPTION,
 )]
 class AppUninstallCommand extends AbstractHelmCommand
 {
+    /**
+     * @var string
+     */
+    final public const NAME = 'app:uninstall';
+
+    /**
+     * @var string
+     */
+    final public const DESCRIPTION = 'Uninstalls an app using Helm';
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $symfonyStyle = new SymfonyStyle($input, $output);

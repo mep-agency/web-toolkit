@@ -26,26 +26,26 @@ class K8sCli
     /**
      * @var string
      */
-    public const K8S_DEFAULT_NAMESPACE = 'mwt-apps';
+    final public const K8S_DEFAULT_NAMESPACE = 'mwt-apps';
 
     /**
      * @var string
      */
-    public const K8S_CREATED_BY_LABEL_NAME = 'app.kubernetes.io/created-by';
+    final public const K8S_CREATED_BY_LABEL_NAME = 'app.kubernetes.io/created-by';
 
     /**
      * @var string
      */
-    public const K8S_CREATED_BY_LABEL_VALUE = 'web-toolkit-k8s-cli';
+    final public const K8S_CREATED_BY_LABEL_VALUE = 'web-toolkit-k8s-cli';
 
     /**
      * @var array<string, string>
      */
-    public const K8S_MINIMUM_NEW_RESOURCE_LABELS = [
+    final public const K8S_MINIMUM_NEW_RESOURCE_LABELS = [
         self::K8S_CREATED_BY_LABEL_NAME => self::K8S_CREATED_BY_LABEL_VALUE,
     ];
 
-    private ContainerBuilder $containerBuilder;
+    private readonly ContainerBuilder $containerBuilder;
 
     public function __construct()
     {

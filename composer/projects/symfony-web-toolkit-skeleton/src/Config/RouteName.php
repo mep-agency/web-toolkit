@@ -9,10 +9,10 @@ class RouteName
     /**
      * @var string
      */
-    public const LOGIN_CHECK = 'login_check';
+    final public const LOGIN_CHECK = 'login_check';
 
     /**
      * @var string
      */
-    public const LOGOUT = 'logout';
+    final public const LOGOUT = 'logout';
 }

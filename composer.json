@@ -19,7 +19,8 @@
         "meteo-concept/hcaptcha-bundle": "^3.0",
         "nette/utils": "^3.2",
         "nyholm/psr7": "^1.4",
-        "php": "^8.0",
+        "php": "^8.1",
+        "phpseclib/phpseclib": "~3.0",
         "renoki-co/php-helm": "^1.6",
         "renoki-co/php-k8s": "^3.1",
         "symfony/config": "5.4.*",
@@ -30,6 +31,7 @@
         "symfony/process": "5.4.*",
         "symfony/security-bundle": "5.4.*",
         "symfony/serializer": "5.4.*",
+        "symfony/translation": "5.4.*",
         "symfony/validator": "5.4.*",
         "tinify/tinify": "^1.5"
     },

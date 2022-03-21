@@ -99,7 +99,7 @@ let alreadyInitialized = false;
 
 export default function createBrowserUiDriver(startHidden?: boolean, settingsId?: string) {
   if (alreadyInitialized) {
-    throw new Error('This function must be called once, please store the returned object');
+    throw new Error('This function must be called once, please store the returned object.');
   }
 
   alreadyInitialized = true;

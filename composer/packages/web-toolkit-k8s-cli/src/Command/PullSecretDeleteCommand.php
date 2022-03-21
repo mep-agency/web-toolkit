@@ -32,14 +32,24 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 #[AsCommand(
-    name: 'pull-secret:delete',
-    description: 'Deletes a Docker pull secret associated to the given namespace.',
+    name: self::NAME,
+    description: self::DESCRIPTION,
 )]
 class PullSecretDeleteCommand extends AbstractK8sCommand
 {
+    /**
+     * @var string
+     */
+    final public const NAME = 'pull-secret:delete';
+
+    /**
+     * @var string
+     */
+    final public const DESCRIPTION = 'Deletes a Docker pull secret associated to the given namespace.';
+
     public function __construct(
         KubernetesCluster $kubernetesCluster,
-        private K8sPullSecretGenerator $k8sPullSecretGenerator,
+        private readonly K8sPullSecretGenerator $k8sPullSecretGenerator,
     ) {
         parent::__construct($kubernetesCluster);
     }

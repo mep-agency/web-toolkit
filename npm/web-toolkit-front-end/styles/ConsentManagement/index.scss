@@ -1,0 +1,365 @@
+/*
+ * This file is part of the MEP Web Toolkit package.
+ *
+ * (c) Marco Lipparini <developer@liarco.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+#consent-banner-container {
+  .consent-body {
+    @apply fixed top-0 left-0 w-screen h-screen z-50;
+
+    &::before {
+      content: "";
+
+      @apply absolute top-0 left-0;
+      @apply block w-full h-full;
+      @apply bg-black/50;
+    }
+
+    & .privacy-links > a {
+      &:first-child::after {
+        content: "\B7";
+
+        @apply my-0 mx-2;
+      }
+    }
+
+    & > .floating-window {
+      @apply absolute top-0 left-0 w-auto my-0 mx-auto p-4 z-50;
+
+      height: calc(100vh - 2em);
+
+      @apply grid;
+
+      grid-template:
+        "navigation" 3em
+        "banner-header" max-content
+        "view-buttons" max-content
+        "service-list" 2fr
+        "action-buttons" 1fr;
+
+      @apply bg-white;
+
+      & > .navigation {
+        grid-area: navigation;
+
+        @apply w-full h-12 flex justify-end;
+
+        & > button {
+          @apply relative w-12 h-12 bg-transparent border-none;
+        }
+
+        & > .close-button {
+          &::before,
+          &::after {
+            content: "";
+
+            @apply absolute block top-2 left-1/2 w-0 h-10;
+
+            border-left: 3px solid black;
+          }
+
+          @apply before:rotate-45 after:-rotate-45;
+        }
+      }
+
+      & > .banner-header {
+        grid-area: banner-header;
+
+        @apply mb-8;
+
+        & > .privacy-links {
+          @apply flex content-start mt-4;
+
+          font-size: 0.9em;
+        }
+
+        & > .changed-alert {
+          font-size: 1em;
+        }
+      }
+
+      & > .button-list {
+        grid-area: action-buttons;
+
+        @apply flex flex-col gap-4;
+
+        & > button {
+          @apply w-full h-12 py-2 px-4 rounded-md;
+          @apply font-semibold;
+          @apply hover:cursor-pointer;
+        }
+      }
+
+      & > .banner-status-buttons {
+        grid-area: view-buttons;
+
+        @apply w-full h-10;
+
+        & > .category-button,
+        & > .service-button {
+          @apply w-2/4 h-full border-none;
+
+          border-bottom: 1.5px solid black;
+
+          @apply bg-transparent;
+          @apply font-semibold;
+
+          font-size: 1em;
+
+          @apply text-black;
+          @apply hover:cursor-pointer;
+
+          &:disabled {
+            border-bottom: 1.5px solid blue;
+            color: blue;
+
+            @apply cursor-default;
+          }
+        }
+      }
+
+      & > dl {
+        grid-area: service-list;
+
+        @apply mt-0 mb-4 p-4 overflow-y-scroll overscroll-contain;
+
+        & .list-element {
+          @apply py-6;
+
+          & > dt {
+            @apply flex justify-between font-semibold;
+
+            &:not(.checked),
+            &:not(.checked) > label {
+              @apply cursor-pointer;
+            }
+
+            & > input {
+              @apply flex items-start;
+            }
+          }
+
+          &:first-of-type {
+            @apply pt-2;
+
+            border-top: none;
+          }
+
+          &:last-of-type {
+            @apply pb-2;
+          }
+
+          & > dd {
+            @apply ml-0;
+
+            width: calc(100% - 2.7em);
+
+            & > .text-container,
+            & > p {
+              @apply mt-1 mb-0;
+            }
+
+            & > .half-category-text {
+              @apply leading-5;
+            }
+          }
+        }
+      }
+    }
+
+    & > .docked-window {
+      @apply grid absolute right-0 left-0 my-0 mx-auto z-50;
+      @apply bg-white;
+
+      bottom: 2vh;
+      width: 90vw;
+      height: 70vh;
+      grid-template:
+        "illustration"
+        "message" 1fr
+        "buttons" min-content;
+
+      & > button.close-button {
+        @apply absolute top-6 right-6 w-5 h-5;
+        @apply bg-transparent border-none;
+
+        &::before,
+        &::after {
+          content: "";
+
+          @apply absolute block top-0 z-10 w-0 h-5;
+
+          left: calc(50% - 1px);
+          border-left: 2px solid black;
+        }
+
+        @apply before:rotate-45 after:-rotate-45;
+      }
+
+      & > .illustration {
+        grid-area: illustration;
+
+        @apply relative ml-auto mr-auto;
+        @apply w-full h-48;
+        @apply flex items-center justify-center object-contain;
+
+        border-bottom: 1px solid #e6e6e6;
+
+        @apply rounded-t-md;
+
+        background: linear-gradient(180deg, #fafafa 0, #f8f8f8 80%);
+
+        & > .default-cookie {
+          content: "";
+
+          @apply block w-5/6 h-5/6;
+
+          background: url("../../images/cookie-jar.svg") no-repeat center;
+          background-size: contain;
+        }
+      }
+
+      & > .body {
+        grid-area: message;
+
+        @apply flex p-6 flex-col justify-evenly;
+
+        & > .privacy-body {
+          @apply m-0;
+        }
+
+        & > .preferences {
+          @apply mt-0 w-max;
+        }
+      }
+
+      & > .button-list {
+        grid-area: buttons;
+
+        @apply flex p-6 gap-6 justify-between;
+
+        & > button.preferences,
+        & > button.accept-required,
+        & > button.accept-all {
+          @apply py-4 px-6;
+          @apply font-semibold;
+          @apply hover:cursor-pointer;
+        }
+
+        & > .preferences {
+          @apply hidden;
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 980px) {
+  #consent-banner-container {
+    .consent-body {
+      & > .docked-window {
+        @apply mr-auto;
+
+        margin-left: 2vw;
+        width: 50em;
+        height: 15em;
+        grid-template:
+          "illustration message"
+          "illustration buttons" 5em;
+
+        & > .illustration {
+          @apply w-60 h-full;
+
+          border-right: 1px solid #e6e6e6;
+          border-bottom: none;
+
+          @apply rounded-l-md;
+
+          & > .default-cookie {
+            content: "";
+
+            @apply block w-3/4 h-3/4;
+
+            background: url("../../images/cookie-jar.svg") no-repeat center;
+            background-size: contain;
+          }
+        }
+
+        & > .body {
+          width: calc(100% - 2.4em);
+
+          @apply p-5 items-center;
+
+          & > p {
+            @apply my-4 mx-0;
+          }
+
+          & > .privacy-body {
+            @apply pr-1;
+          }
+
+          & > .privacy-links {
+            @apply w-full;
+          }
+
+          & > .preferences {
+            @apply hidden;
+          }
+        }
+
+        & > .button-list {
+          width: calc(100% - 2.4em);
+
+          @apply py-0 px-5 items-center justify-center;
+
+          & > button {
+            @apply w-full h-16 py-2 px-5;
+          }
+
+          & > .preferences {
+            @apply block;
+          }
+        }
+      }
+
+      & > .floating-window {
+        @apply p-8;
+
+        width: 30em;
+        max-width: 45vw;
+        height: calc(100vh - 4em);
+        grid-template:
+          "navigation" 3em
+          "banner-header" 1fr
+          "view-buttons" max-content
+          "service-list" 6fr
+          "action-buttons" 3.5em;
+
+        & > .banner-header {
+          @apply mb-8;
+
+          & > .privacy-links {
+            @apply mt-4;
+          }
+        }
+
+        & > dl {
+          @apply mb-8;
+        }
+
+        & > .button-list {
+          @apply h-14;
+          @apply flex-row items-center;
+
+          & > button {
+            @apply h-14;
+          }
+        }
+      }
+    }
+  }
+}

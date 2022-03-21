@@ -7,13 +7,13 @@
  * file that was distributed with this source code.
  */
 
-import ConsentManagerInterface from '../../ConsentManagement/ConsentManagerInterface';
+import ConsentManager from '../../ConsentManagement/ConsentManager';
 
 export default class HCaptcha {
   private isInitialized = false;
 
-  public init(consentManager: ConsentManagerInterface, serviceName: string = 'hCaptcha', reloadOnDisable: boolean = true) {
-    consentManager.addConsentStatusListener(
+  public init(serviceName: string = 'hCaptcha', reloadOnDisable: boolean = true) {
+    ConsentManager.addConsentStatusListener(
       serviceName,
       (newValue, isInit) => {
         if (newValue) {

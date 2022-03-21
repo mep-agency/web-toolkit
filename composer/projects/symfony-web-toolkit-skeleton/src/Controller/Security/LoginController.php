@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 class LoginController extends AbstractLoginController
 {
     public function __construct(
-        private EntityManagerInterface $entityManager,
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 

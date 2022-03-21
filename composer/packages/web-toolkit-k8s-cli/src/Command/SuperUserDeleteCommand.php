@@ -32,11 +32,21 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 #[AsCommand(
-    name: 'super-user:delete',
-    description: 'Deletes a super-user service account from the given namespace.',
+    name: self::NAME,
+    description: self::DESCRIPTION,
 )]
 class SuperUserDeleteCommand extends AbstractK8sCommand
 {
+    /**
+     * @var string
+     */
+    final public const NAME = 'super-user:delete';
+
+    /**
+     * @var string
+     */
+    final public const DESCRIPTION = 'Deletes a super-user service account from the given namespace.';
+
     protected function configure(): void
     {
         $this->addArgument(Argument::SERVICE_ACCOUNT, InputArgument::REQUIRED, 'The service account name');

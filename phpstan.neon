@@ -3,8 +3,6 @@ parameters:
   paths:
     - composer
   ignoreErrors:
-    - message: '#Unable to resolve the template type T in call to method Doctrine\\Persistence\\ObjectManager::getRepository\(\)#'
-      path: composer/packages/web-toolkit-bundle/src/EventListener/ForceSingleInstanceEventListener.php
     - message: '#autowire\(\), autoconfigure\(\), and public\(\) are required in config service#'
       paths:
         - composer/packages/web-toolkit-k8s-cli/config/services.php

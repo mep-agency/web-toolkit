@@ -28,11 +28,21 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
 #[AsCommand(
-    name: 'namespace:delete',
-    description: 'Deletes a the given namespace',
+    name: self::NAME,
+    description: self::DESCRIPTION,
 )]
 class NamespaceDeleteCommand extends AbstractK8sCommand
 {
+    /**
+     * @var string
+     */
+    final public const NAME = 'namespace:delete';
+
+    /**
+     * @var string
+     */
+    final public const DESCRIPTION = 'Deletes a the given namespace';
+
     protected function configure(): void
     {
         $this->addArgument(Option::NAMESPACE, InputArgument::REQUIRED, 'The namespace name');

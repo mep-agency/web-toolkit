@@ -7,6 +7,19 @@
   "author": "Marco Lipparini <developer@liarco.net>",
   "license": "MIT",
   "dependencies": {
+    "@types/crypto-js": "^4.1.0",
+    "@types/js-cookie": "^3.0.1",
+    "@types/react": "^17.0.39",
+    "@types/react-dom": "^17.0.11",
+    "crypto-js": "^4.1.1",
+    "js-cookie": "^3.0.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "tailwindcss": "^3.0.23",
     "typebase.css": "^0.5.1"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.0",
+    "postcss-loader": "^6.0.0"
   }
 }

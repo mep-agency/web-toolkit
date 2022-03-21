@@ -41,32 +41,32 @@ class AdminAttachmentType extends AbstractType implements DataTransformerInterfa
     /**
      * @var string
      */
-    public const CONTEXT = 'context';
+    final public const CONTEXT = 'context';
 
     /**
      * @var string
      */
-    public const MAX_SIZE = 'max_size';
+    final public const MAX_SIZE = 'max_size';
 
     /**
      * @var string
      */
-    public const ALLOWED_MIME_TYPES = 'allowed_mime_types';
+    final public const ALLOWED_MIME_TYPES = 'allowed_mime_types';
 
     /**
      * @var string
      */
-    public const ALLOWED_NAME_PATTERN = 'allowed_name_pattern';
+    final public const ALLOWED_NAME_PATTERN = 'allowed_name_pattern';
 
     /**
      * @var string
      */
-    public const METADATA = 'metadata';
+    final public const METADATA = 'metadata';
 
     /**
      * @var string
      */
-    public const PROCESSORS_OPTIONS = 'processors_options';
+    final public const PROCESSORS_OPTIONS = 'processors_options';
 
     /**
      * @var string
@@ -74,9 +74,9 @@ class AdminAttachmentType extends AbstractType implements DataTransformerInterfa
     protected const CSRF_TOKEN_ID = 'mwt_admin_attachment_upload_api';
 
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private AttachmentsAdminApiUrlGenerator $attachmentsAdminApiUrlGenerator,
-        private CsrfTokenManagerInterface $csrfTokenManager,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly AttachmentsAdminApiUrlGenerator $attachmentsAdminApiUrlGenerator,
+        private readonly CsrfTokenManagerInterface $csrfTokenManager,
     ) {
     }
 

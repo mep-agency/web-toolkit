@@ -25,6 +25,9 @@ use Symfony\Contracts\Service\Attribute\Required;
  */
 trait LocalizedRepositoryTrait
 {
+    /**
+     * @noRector Rector\Php81\Rector\Property\ReadOnlyPropertyRector
+     */
     private LocaleProviderInterface $localeProvider;
 
     /**
@@ -47,7 +50,7 @@ trait LocalizedRepositoryTrait
     }
 
     #[Required]
-    public function setLocaleProvider(LocaleProviderInterface $localeProvider): void
+    public function autowire(LocaleProviderInterface $localeProvider): void
     {
         $this->localeProvider = $localeProvider;
     }

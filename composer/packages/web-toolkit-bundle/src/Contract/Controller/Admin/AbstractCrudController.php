@@ -26,6 +26,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Option\EA;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController as OriginalAbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\FilterDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Event\AfterCrudActionEvent;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeCrudActionEvent;
@@ -65,12 +67,12 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
     /**
      * @var string
      */
-    public const ACTION_DELETE_TRANSLATION = 'deleteTranslation';
+    final public const ACTION_DELETE_TRANSLATION = 'deleteTranslation';
 
     /**
      * @var string
      */
-    public const ACTION_ATTACH_FILE = 'attachFile';
+    final public const ACTION_ATTACH_FILE = 'attachFile';
 
     public function __construct(
         protected LocaleProviderInterface $localeProvider,
@@ -250,7 +252,7 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
         /** @var array<string, mixed> $options */
         $options = $adminContext->getRequest()->get(EA::ROUTE_PARAMS);
 
-        $form = $this->createForm(AdminAttachmentUploadApiType::class, null, $options,);
+        $form = $this->createForm(AdminAttachmentUploadApiType::class, null, $options);
         $form->handleRequest($adminContext->getRequest());
 
         if (! $form->isSubmitted()) {
@@ -293,7 +295,7 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
         ;
 
         $attachment = $this->fileStorageManager
-            ->store($formData->file, $context, $metadata, $processorsOptions,)
+            ->store($formData->file, $context, $metadata, $processorsOptions)
         ;
 
         return new JsonResponse($this->normalizer->normalize($attachment, 'json'));
@@ -312,6 +314,10 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
         return parent::createEditFormBuilder($entityDto, $keyValueStore, $adminContext);
     }
 
+    /**
+     * @param FieldCollection<FieldDto>   $fieldCollection
+     * @param FilterCollection<FilterDto> $filterCollection
+     */
     public function createIndexQueryBuilder(
         SearchDto $searchDto,
         EntityDto $entityDto,

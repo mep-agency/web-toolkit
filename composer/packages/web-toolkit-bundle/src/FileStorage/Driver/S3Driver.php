@@ -25,17 +25,17 @@ use Symfony\Component\HttpFoundation\File\File;
  */
 final class S3Driver implements DriverInterface
 {
-    private S3Client $s3Client;
+    private readonly S3Client $s3Client;
 
     public function __construct(
-        private string $region,
-        private string $endpointUrl,
-        private string $key,
-        private string $secret,
-        private string $bucketName,
-        private string $cdnUrl,
-        private string $objectsKeyPrefix = '',
-        private int $cdnCacheMaxAge = 604800,
+        private readonly string $region,
+        private readonly string $endpointUrl,
+        private readonly string $key,
+        private readonly string $secret,
+        private readonly string $bucketName,
+        private readonly string $cdnUrl,
+        private readonly string $objectsKeyPrefix = '',
+        private readonly int $cdnCacheMaxAge = 604800,
     ) {
         $this->s3Client = new S3Client([
             'version' => 'latest',
