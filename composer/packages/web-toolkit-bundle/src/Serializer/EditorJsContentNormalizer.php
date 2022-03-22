@@ -33,17 +33,21 @@ final class EditorJsContentNormalizer implements DenormalizerInterface
 
     /**
      * @param array<string, mixed> $context
-     * @param array<string, mixed> $data
+     * @param array<string, int|array<string, mixed>[]> $data
      */
     public function denormalize($data, string $type, string $format = null, array $context = []): object
     {
-        /** @var int $time */
-        $time = $data['time'];
-        $data['time'] = (string) $time;
-        /** @var array<string, mixed>[] $blocks */
-        $blocks = $data['blocks'];
+        if (! is_int($data['time'])) {
+            throw new LogicException('Data is not of the correct type.');
+        }
 
-        foreach ($blocks as &$block) {
+        $data['time'] = (string) $data['time'];
+
+        if (! is_array($data['blocks'])) {
+            throw new LogicException('Data is not of the correct type.');
+        }
+
+        foreach ($data['blocks'] as &$block) {
             if (! is_iterable($block['data'])) {
                 throw new LogicException('Data is not of the correct type.');
             }
