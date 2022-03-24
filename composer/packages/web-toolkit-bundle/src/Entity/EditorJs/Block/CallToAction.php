@@ -33,9 +33,9 @@ class CallToAction extends Block
         private string $buttonText,
         #[ORM\Column(type: Types::TEXT, length: 255)]
         private string $buttonUrl,
-        #[ORM\Column(type: Types::TEXT, length: 128)]
+        #[ORM\Column(type: Types::TEXT, length: 128, nullable: true)]
         private ?string $additionalText = null,
-        #[ORM\Column(type: Types::STRING, length: 64)]
+        #[ORM\Column(type: Types::STRING, length: 64, nullable: true)]
         private ?string $cssPreset = null,
     ) {
         parent::__construct($id);
