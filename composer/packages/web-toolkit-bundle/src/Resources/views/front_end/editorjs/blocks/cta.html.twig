@@ -1,0 +1,8 @@
+{# @var \Mep\WebToolkitBundle\Entity\EditorJs\Block\Cta block #}
+
+<form {% if block.cssPreset is defined %}class="{{ block.cssPreset }}"{% endif %} action="{{ block.buttonUrl }}" target="_blank" rel="noopener">
+    {% if block.additionalText is defined %}
+        <p>{{ block.additionalText }}</p>
+    {% endif %}
+    <button type="submit">{{ block.buttonText|raw }}</button>
+</form>

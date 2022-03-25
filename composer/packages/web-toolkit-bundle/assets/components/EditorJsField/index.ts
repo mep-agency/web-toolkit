@@ -12,6 +12,7 @@ import './editorjs-field.scss';
 import EditorJS, { ToolConstructable, ToolSettings, LogLevels } from '@editorjs/editorjs';
 import FieldsManager, { Field } from '../../scripts/FieldsManager';
 import CustomImageTool from './Tool/CustomImageTool';
+import CustomCTA from '../CallToActionField/index';
 
 const HeaderTool = require('@editorjs/header');
 const NestedListTool = require('@editorjs/nested-list');
@@ -114,6 +115,11 @@ const TOOLS_CONFIG_NORMALIZERS: {
   }),
   warning: (config) => ({
     class: WarningTool,
+    inlineToolbar: true,
+    config,
+  }),
+  cta: (config) => ({
+    class: CustomCTA,
     inlineToolbar: true,
     config,
   }),

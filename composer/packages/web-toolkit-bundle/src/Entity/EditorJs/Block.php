@@ -16,6 +16,7 @@ namespace Mep\WebToolkitBundle\Entity\EditorJs;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
+use Mep\WebToolkitBundle\Entity\EditorJs\Block\Attaches;
 use Mep\WebToolkitBundle\Entity\EditorJs\Block\CallToAction;
 use Mep\WebToolkitBundle\Entity\EditorJs\Block\Delimiter;
 use Mep\WebToolkitBundle\Entity\EditorJs\Block\Embed;
@@ -60,7 +61,7 @@ abstract class Block implements JsonSerializable, Stringable
         'embed' => Embed::class,
         'table' => Table::class,
         // TODO: Implement attaches block (EditorJs)
-        //'attaches' => Block\Attaches::class,
+        'attaches' => Attaches::class,
         'raw' => Raw::class,
         'cta' => CallToAction::class,
     ];
