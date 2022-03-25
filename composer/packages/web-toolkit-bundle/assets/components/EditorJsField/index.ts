@@ -12,6 +12,7 @@ import './editorjs-field.scss';
 import EditorJS, { ToolConstructable, ToolSettings, LogLevels } from '@editorjs/editorjs';
 import FieldsManager, { Field } from '../../scripts/FieldsManager';
 import CustomImageTool from './Tool/CustomImageTool';
+import CustomAttachesTool from './Tool/CustomAttachesTool';
 import CustomCTA from '../CallToActionField/index';
 
 const HeaderTool = require('@editorjs/header');
@@ -19,7 +20,6 @@ const NestedListTool = require('@editorjs/nested-list');
 const QuoteTool = require('@editorjs/quote');
 const DelimiterTool = require('@editorjs/delimiter');
 const EmbedTool = require('@editorjs/embed');
-const AttachesTool = require('@editorjs/attaches');
 const RawTool = require('@editorjs/raw');
 const TableTool = require('@editorjs/table');
 const WarningTool = require('@editorjs/warning');
@@ -100,8 +100,7 @@ const TOOLS_CONFIG_NORMALIZERS: {
     },
   }),
   attaches: (config) => ({
-    // TODO: This is a temporary implementation...
-    class: AttachesTool,
+    class: CustomAttachesTool,
     config,
   }),
   raw: (config) => ({

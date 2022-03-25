@@ -60,7 +60,6 @@ abstract class Block implements JsonSerializable, Stringable
         'image' => Image::class,
         'embed' => Embed::class,
         'table' => Table::class,
-        // TODO: Implement attaches block (EditorJs)
         'attaches' => Attaches::class,
         'raw' => Raw::class,
         'cta' => CallToAction::class,
