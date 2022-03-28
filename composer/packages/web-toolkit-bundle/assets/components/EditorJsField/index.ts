@@ -13,7 +13,7 @@ import EditorJS, { ToolConstructable, ToolSettings, LogLevels } from '@editorjs/
 import FieldsManager, { Field } from '../../scripts/FieldsManager';
 import CustomImageTool from './Tool/CustomImageTool';
 import CustomAttachesTool from './Tool/CustomAttachesTool';
-import CustomCTA from '../CallToActionField/index';
+import CallToAction from '../CallToActionField/index';
 
 const HeaderTool = require('@editorjs/header');
 const NestedListTool = require('@editorjs/nested-list');
@@ -118,7 +118,7 @@ const TOOLS_CONFIG_NORMALIZERS: {
     config,
   }),
   cta: (config) => ({
-    class: CustomCTA,
+    class: CallToAction,
     inlineToolbar: true,
     config,
   }),

@@ -15,7 +15,7 @@ import {
 
 import './call-to-action.scss';
 
-interface CustomCTAData {
+interface CallToActionData {
   buttonText: string;
   buttonUrl: string;
   additionalText?: string;
@@ -28,10 +28,10 @@ interface CustomConfigData {
   config: {
     validCssPresets: string[] | null;
   },
-  data: CustomCTAData;
+  data: CallToActionData;
 }
 
-class CustomCTA implements BlockTool {
+class CallToAction implements BlockTool {
   public data: CustomConfigData;
 
   constructor(params: CustomConfigData) {
@@ -57,7 +57,7 @@ class CustomCTA implements BlockTool {
     const buttonName = document.createElement('input');
     buttonName.classList.add('mwt-cta-button-name');
     buttonName.classList.add(this.data.api.styles.input);
-    buttonName.value = CustomCTA.validateData(this.data.data.buttonText);
+    buttonName.value = CallToAction.validateData(this.data.data.buttonText);
 
     const buttonLinkLabel = document.createElement('label');
     buttonLinkLabel.classList.add('mwt-cta-button-link-label');
@@ -66,7 +66,7 @@ class CustomCTA implements BlockTool {
     const buttonLink = document.createElement('input');
     buttonLink.classList.add('mwt-cta-button-link');
     buttonLink.classList.add(this.data.api.styles.input);
-    buttonLink.value = CustomCTA.validateData(this.data.data.buttonUrl);
+    buttonLink.value = CallToAction.validateData(this.data.data.buttonUrl);
 
     const additionalTextLabel = document.createElement('label');
     additionalTextLabel.classList.add('mwt-cta-add-text-label');
@@ -77,7 +77,7 @@ class CustomCTA implements BlockTool {
     additionalText.classList.add(this.data.api.styles.input);
 
     if (this.data.data.additionalText !== undefined) {
-      additionalText.value = CustomCTA.validateData(this.data.data.additionalText);
+      additionalText.value = CallToAction.validateData(this.data.data.additionalText);
     }
 
     const presetListLabel = document.createElement('label');
@@ -85,8 +85,10 @@ class CustomCTA implements BlockTool {
     presetListLabel.innerText = 'Style Preset';
 
     const presetList = document.createElement('select');
-    presetList.classList.add('mwt-cta-preset-list');
-    presetList.classList.add(this.data.api.styles.button);
+
+    const presetInputBox = document.createElement('input');
+    presetInputBox.type = 'hidden';
+    presetInputBox.classList.add('mwt-cta-preset-list');
 
     if (this.data.config.validCssPresets !== null) {
       Object.entries(this.data.config.validCssPresets).forEach((e) => {
@@ -96,6 +98,7 @@ class CustomCTA implements BlockTool {
 
         if (this.data.data.cssPreset === e[0]) {
           newEntry.selected = true;
+          presetInputBox.value = e[0] as string;
         }
 
         presetList.appendChild(newEntry);
@@ -105,6 +108,10 @@ class CustomCTA implements BlockTool {
       presetListLabel.hidden = true;
     }
 
+    presetList.addEventListener('change', () => {
+      presetInputBox.value = presetList.selectedIndex.toString();
+    });
+
     container.appendChild(buttonNameLabel);
     container.appendChild(buttonName);
     container.appendChild(buttonLinkLabel);
@@ -113,6 +120,7 @@ class CustomCTA implements BlockTool {
     container.appendChild(additionalText);
     container.appendChild(presetListLabel);
     container.appendChild(presetList);
+    container.appendChild(presetInputBox);
 
     return container;
   }
@@ -124,18 +132,15 @@ class CustomCTA implements BlockTool {
     return '';
   }
 
-  // TODO: fix saving and temp eslint disable
-  // eslint-disable-next-line class-methods-use-this
+  /* eslint class-methods-use-this: ["error", { "exceptMethods": ["save"] }] */
   save(block: HTMLElement): BlockToolData {
-    const cssPresets = block.querySelector('select.mwt-cta-preset-list') as HTMLSelectElement;
-
     return {
       buttonText: (block.querySelector('input.mwt-cta-button-name') as HTMLInputElement).value,
       buttonUrl: (block.querySelector('input.mwt-cta-button-link') as HTMLInputElement).value,
       additionalText: (block.querySelector('textarea.mwt-cta-add-text') as HTMLInputElement).value,
-      cssPreset: cssPresets.options[cssPresets.selectedIndex].value,
+      cssPreset: (block.querySelector('input.mwt-cta-preset-list') as HTMLInputElement).value,
     };
   }
 }
 
-export default CustomCTA as unknown as BlockToolConstructable;
+export default CallToAction as unknown as BlockToolConstructable;
