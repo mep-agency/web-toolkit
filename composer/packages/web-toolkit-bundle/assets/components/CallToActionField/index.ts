@@ -26,7 +26,7 @@ interface CustomConfigData {
   api: any;
   block: Object;
   config: {
-    validCssPresets: string[] | null;
+    cssPresetChoices: string[] | null;
   },
   data: CallToActionData;
 }
@@ -41,7 +41,7 @@ class CallToAction implements BlockTool {
   static get toolbox() {
     return {
       title: 'Call To Action',
-      icon: '<svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 512 512" width="20"><path d="m237.102 366v-90.018h-90c-11.046 0-20-8.954-20-20s8.954-20 20-20h90v-90.982c0-11.046 8.954-20 20-20s20 8.954 20 20v90.982h90c11.046 0 20 8.954 20 20s-8.954 20-20 20h-90v90.018c0 11.046-8.954 20-20 20s-20-8.954-20-20zm254.898-15c11.046 0 20-8.954 20-20v-251c0-44.112-35.888-80-80-80h-352c-44.112 0-80 35.888-80 80v352c0 44.112 35.888 80 80 80h352c44.112 0 80-35.888 80-80 0-11.046-8.954-20-20-20s-20 8.954-20 20c0 22.056-17.944 40-40 40h-352c-22.056 0-40-17.944-40-40v-352c0-22.056 17.944-40 40-40h352c22.056 0 40 17.944 40 40v251c0 11.046 8.954 20 20 20z"/></svg>',
+      icon: '<svg height="100%" stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" viewBox="0 0 21 21" width="100%" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"><g opacity="1"><path d="M16.5 14.5L16.5 6.5C16.5 5.39543 15.6046 4.5 14.5 4.5L6.5 4.5C5.39543 4.5 4.5 5.39543 4.5 6.5L4.5 14.5C4.5 15.6046 5.39543 16.5 6.5 16.5L14.5 16.5C15.6046 16.5 16.5 15.6046 16.5 14.5Z" fill="none" fill-rule="evenodd" opacity="1" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/><path d="M10.5 7.5L10.5 13.556" fill="none" fill-rule="evenodd" opacity="1" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/><path d="M13.5 10.5L7.5 10.5" fill="none" fill-rule="evenodd" opacity="1" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/></g></svg>',
     };
   }
 
@@ -90,8 +90,8 @@ class CallToAction implements BlockTool {
     presetInputBox.type = 'hidden';
     presetInputBox.classList.add('mwt-cta-preset-list');
 
-    if (this.data.config.validCssPresets !== null) {
-      Object.entries(this.data.config.validCssPresets).forEach((e) => {
+    if (this.data.config.cssPresetChoices !== null && this.data.config.cssPresetChoices.length > 0) {
+      Object.entries(this.data.config.cssPresetChoices).forEach((e) => {
         const newEntry = document.createElement('option');
         newEntry.value = e[0] as string;
         newEntry.text = e[1] as string;
