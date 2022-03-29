@@ -235,7 +235,7 @@ final class EditorJs extends Constraint
 
                     break;
                 case CallToAction::class:
-                    $optionsResolver->define('validCssPresets')
+                    $optionsResolver->define('cssPresetChoices')
                         ->default(null)
                         ->allowedTypes('array', 'null')
                     ;
