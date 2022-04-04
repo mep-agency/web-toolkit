@@ -89,9 +89,9 @@ class CallToAction implements BlockTool {
     const presetInputBox = document.createElement('input');
     presetInputBox.type = 'hidden';
     presetInputBox.classList.add('mwt-cta-preset-list');
-
-    if (this.data.config.cssPresetChoices !== null && this.data.config.cssPresetChoices.length > 0) {
-      Object.entries(this.data.config.cssPresetChoices).forEach((e) => {
+    const { cssPresetChoices } = this.data.config;
+    if (cssPresetChoices !== null && cssPresetChoices.length > 0) {
+      Object.entries(cssPresetChoices).forEach((e) => {
         const newEntry = document.createElement('option');
         newEntry.value = e[0] as string;
         newEntry.text = e[1] as string;

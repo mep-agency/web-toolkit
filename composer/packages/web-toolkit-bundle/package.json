@@ -5,6 +5,7 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
+    "@codexteam/ajax": "^4.2.0",
     "@editorjs/attaches": "^1.2.1",
     "@editorjs/delimiter": "^1.2.0",
     "@editorjs/editorjs": "^2.23.2",
