@@ -48,6 +48,16 @@ class PrivacyConsentExtension extends AbstractExtension
      */
     private const PUBLIC_KEY_HASH_PLACEHOLDER = '0000000000000000000000000000000000000000000000000000000000000000';
 
+    /**
+     * @var string
+     */
+    private const PRIVACY_POLICY_ENV_KEY = 'PRIVACY_POLICY_URL';
+
+    /**
+     * @var string
+     */
+    private const COOKIE_POLICY_ENV_KEY = 'COOKIE_POLICY_URL';
+
     public function __construct(
         private readonly UrlGeneratorInterface $urlGenerator,
     ) {
@@ -61,6 +71,12 @@ class PrivacyConsentExtension extends AbstractExtension
         return [
             new TwigFunction('privacy_consent_endpoints', function (): array {
                 return $this->getPrivacyConsentEndpoint();
+            }),
+            new TwigFunction('get_privacy_policy', function (): string {
+                return $this->getPrivacyPolicyUrl();
+            }),
+            new TwigFunction('get_cookie_policy', function (): string {
+                return $this->getCookiePolicyUrl();
             }),
         ];
     }
@@ -96,5 +112,15 @@ class PrivacyConsentExtension extends AbstractExtension
                 UrlGeneratorInterface::ABSOLUTE_URL,
             ),
         ];
+    }
+
+    public function getPrivacyPolicyUrl(): string
+    {
+        return $_ENV[self::PRIVACY_POLICY_ENV_KEY];
+    }
+
+    public function getCookiePolicyUrl(): string
+    {
+        return $_ENV[self::COOKIE_POLICY_ENV_KEY];
     }
 }
