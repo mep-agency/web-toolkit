@@ -89,18 +89,21 @@ class CallToAction implements BlockTool {
     const presetInputBox = document.createElement('input');
     presetInputBox.type = 'hidden';
     presetInputBox.classList.add('mwt-cta-preset-list');
+
     const { cssPresetChoices } = this.data.config;
     if (cssPresetChoices !== null && cssPresetChoices.length > 0) {
+      let selectedFlag = false;
       Object.entries(cssPresetChoices).forEach((e) => {
         const newEntry = document.createElement('option');
-        newEntry.value = e[0] as string;
-        newEntry.text = e[1] as string;
-
-        if (this.data.data.cssPreset === e[0]) {
-          newEntry.selected = true;
-          presetInputBox.value = e[0] as string;
+        newEntry.value = e[1] as string;
+        newEntry.text = newEntry.value;
+        if (!selectedFlag) {
+          if (this.data.data.cssPreset === e[1] || this.data.data.cssPreset === '') {
+            newEntry.selected = true;
+            presetInputBox.value = e[1] as string;
+            selectedFlag = true;
+          }
         }
-
         presetList.appendChild(newEntry);
       });
     } else {
@@ -109,7 +112,7 @@ class CallToAction implements BlockTool {
     }
 
     presetList.addEventListener('change', () => {
-      presetInputBox.value = presetList.selectedIndex.toString();
+      presetInputBox.value = presetList.value;
     });
 
     container.appendChild(buttonNameLabel);

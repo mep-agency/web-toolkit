@@ -39,7 +39,7 @@ export default class CustomUploader {
     this.onError = onError;
   }
 
-  uploadSelectedFile(onPreview: Function) {
+  uploadSelectedFile({ onPreview }: any) {
     ajax.transport({
       url: this.config.endpoint || '',
       accept: this.config.types || '*',

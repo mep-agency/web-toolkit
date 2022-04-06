@@ -1,8 +1,14 @@
 {# @var \Mep\WebToolkitBundle\Entity\EditorJs\Block\Cta block #}
 
-<form {% if block.cssPreset is defined %}class="{{ block.cssPreset }}"{% endif %} action="{{ block.buttonUrl }}" target="_blank" rel="noopener">
+{% set classes = ['cta'] %}
+
+{% if block.cssPreset is defined %}
+    {% set classes = classes|merge([block.cssPreset]) %}
+{% endif %}
+
+<form class="{{ classes|join(' ') }}" action="{{ block.buttonUrl }}" target="_blank" rel="noopener">
     {% if block.additionalText is defined %}
-        <p>{{ block.additionalText }}</p>
+        <p>{{ block.additionalText|raw }}</p>
     {% endif %}
     <button type="submit">{{ block.buttonText|raw }}</button>
 </form>

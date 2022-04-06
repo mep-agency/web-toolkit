@@ -1,4 +1,16 @@
 {# @var \Mep\WebToolkitBundle\Entity\EditorJs\Block\Attaches block #}
 
-{# TODO: Implement block #}
-{{ dump(block) }}
+{% set classes = ['attaches'] %}
+
+{% if block.title|split('.')|last is same as 'pdf' %}
+    {% set classes = classes|merge(['document']) %}
+{% endif %}
+
+<div class="{{ classes|join(' ') }}">
+    <p>{{ block.title|raw }}</p>
+    {% if block.title|split('.')|last is same as 'pdf' %}
+        <a href="{{ attachment_public_url(block.attachment) }}" target="_blank">DOWNLOAD</a>
+    {% else %}
+        <img src="{{ attachment_public_url(block.attachment) }}" alt="{{ block.title|raw }}">
+    {% endif %}
+</div>
