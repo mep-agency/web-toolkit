@@ -247,4 +247,15 @@ final class WebToolkitBundle extends Bundle
      * @var string
      */
     public const SERVICE_PRIVACY_CONSENT_SERVICE_CRUD_CONTROLLER = self::REFERENCE_PREFIX.'privacy_consent_service_crud_controller';
+
+    // Content metadata
+    /**
+     * @var string
+     */
+    public const SERVICE_CONTENT_METADATA_MANAGER = self::REFERENCE_PREFIX.'content_metadata_manager';
+
+    /**
+     * @var string
+     */
+    public const SERVICE_CONTENT_METADATA_EXTENSION = self::REFERENCE_PREFIX.'content_metadata_extension';
 }
