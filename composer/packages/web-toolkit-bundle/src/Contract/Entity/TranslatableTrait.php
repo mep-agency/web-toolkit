@@ -46,14 +46,16 @@ trait TranslatableTrait
      */
     public function __call(string $name, array $arguments): mixed
     {
+        /** @var TranslationInterface $firstTranslation */
+        $firstTranslation = $this->getTranslations()->first();
+
         if (is_string($this->currentLocale)) {
-            return PropertyAccess::createPropertyAccessor()->getValue(
-                $this->getTranslations()
-                    ->get($this->currentLocale),
-                $name,
-            );
+            /** @var TranslationInterface $translationEntity */
+            $translationEntity = $this->getTranslations()->get($this->currentLocale) ?? $firstTranslation;
+
+            return PropertyAccess::createPropertyAccessor()->getValue($translationEntity, $name);
         }
 
-        return PropertyAccess::createPropertyAccessor()->getValue($this->getTranslations()->first(), $name);
+        return PropertyAccess::createPropertyAccessor()->getValue($firstTranslation, $name);
     }
 }
