@@ -174,7 +174,6 @@
     }
   }
 
-  // TODO: Finish implementation
   .cta {
     margin-top: 1.5em;
     margin-bottom: 1.5em;
@@ -183,6 +182,7 @@
 
     & p {
       margin-top: 0;
+      font-size: 1.1em;
       text-align: center;
     }
 
@@ -192,52 +192,46 @@
       min-width: 5em;
       height: max-content;
       min-height: 3em;
-      padding: 0.25em 0.5em;
+      padding: 0.25em 1.25em;
       display: block;
-      border: 2px solid var(--borders-color);
+      border: 1px solid var(--borders-color);
       background-color: var(--secondary-background);
       font-size: 0.85em;
 
       &:hover {
+        box-shadow: 0 0 2px 0.4px var(--borders-color);
         cursor: pointer;
       }
     }
   }
 
-  // TODO: Fix image attaches
   .attaches {
-    width: 100%;
+    width: calc(100% - 1em);
     padding: 0.5em;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: space-between;
 
     & p {
+      align-self: center;
       margin-top: 0;
       height: min-content;
-    }
-
-    &.document {
-      flex-direction: row;
-
-      & p {
-        align-self: center;
-      }
-    }
-
-    & img {
-      max-width: 100%;
+      text-decoration: underline;
     }
 
     & a {
       width: max-content;
       height: min-content;
-      padding: 0.15em 0.25em;
+      padding: 0.15em 1em;
       display: block;
-      border: 2px solid var(--borders-color);
+      border: 1px solid var(--borders-color);
       background-color: var(--secondary-background);
       color: var(--text-color);
       text-decoration: none;
+
+      &:hover {
+        box-shadow: 0 0 2px 0.4px var(--borders-color);
+      }
     }
   }
 
