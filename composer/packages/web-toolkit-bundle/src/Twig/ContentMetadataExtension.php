@@ -13,7 +13,10 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Twig;
 
+use LogicException;
 use Mep\WebToolkitBundle\Service\ContentMetadataManager;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -24,6 +27,7 @@ class ContentMetadataExtension extends AbstractExtension
 {
     public function __construct(
         private readonly ContentMetadataManager $contentMetadataManager,
+        private readonly RequestStack $requestStack,
     ) {
     }
 
@@ -33,18 +37,47 @@ class ContentMetadataExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('content_metadata', function (): string {
-                return $this->getContentMetadata();
+            new TwigFunction('content_metadata', function (Environment $env, bool $isSuccessResponse): string {
+                return $this->getContentMetadata($env, $isSuccessResponse);
             }, [
+                'needs_environment' => true,
                 'is_safe' => ['html'],
             ]),
         ];
     }
 
-    public function getContentMetadata(): string
+    public function getContentMetadata(Environment $environment, bool $isSuccessResponse): string
     {
-        return '<meta name="description" content="'.$this->contentMetadataManager->getContentDescription().'">
-<meta name="og:title" content="'.$this->contentMetadataManager->getTitle().'">
-<meta name="og:image" content="'.$this->contentMetadataManager->getImage().'">';
+        $metadata = '<title>'.$this->contentMetadataManager->getTitle().'</title>
+<meta name="description" content="'.twig_escape_filter(
+            $environment,
+            $this->contentMetadataManager->getContentDescription(),
+            'html_attr',
+        ).'">';
+
+        if ($isSuccessResponse) {
+            $url = $this->requestStack->getMainRequest()?->getUri() ??
+                throw new LogicException('URL not valid.');
+
+            $metadata .= '
+<meta name="og:title" content="'.twig_escape_filter(
+                $environment,
+                $this->contentMetadataManager->getTitle(),
+                'html_attr',
+            ).'">
+<meta name="og:type" content="'.twig_escape_filter(
+                $environment,
+                $this->contentMetadataManager->getType(),
+                'html_attr',
+            ).'">
+<meta name="og:image" content="'.twig_escape_filter(
+                $environment,
+                $this->contentMetadataManager->getImage(),
+                'html_attr',
+            ).'">
+<meta name="og:url" content="'.twig_escape_filter($environment, $url, 'html_attr',).'">';
+        }
+
+        return $metadata;
     }
 }

@@ -18,6 +18,8 @@ namespace Mep\WebToolkitBundle\Service;
  */
 class ContentMetadataManager
 {
+    private string $type = 'website';
+
     public function __construct(
         private string $pageTitlePrefix,
         private string $pageTitleSuffix,
@@ -29,7 +31,7 @@ class ContentMetadataManager
 
     public function getTitle(): string
     {
-        return $this->pageTitlePrefix.'_'.$this->contentTitle.'_'.$this->pageTitleSuffix;
+        return $this->pageTitlePrefix.$this->contentTitle.$this->pageTitleSuffix;
     }
 
     public function setPageTitlePrefix(string $pageTitlePrefix): void
@@ -65,5 +67,15 @@ class ContentMetadataManager
     public function setImage(string $image): void
     {
         $this->image = $image;
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): void
+    {
+        $this->type = $type;
     }
 }

@@ -355,6 +355,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     ;
     $services->set(WebToolkitBundle::SERVICE_CONTENT_METADATA_EXTENSION, ContentMetadataExtension::class)
         ->arg(0, new Reference(WebToolkitBundle::SERVICE_CONTENT_METADATA_MANAGER))
+        ->arg(1, new Reference(RequestStack::class))
         ->tag('twig.extension')
     ;
 };
