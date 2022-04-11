@@ -12,6 +12,9 @@ parameters:
     - vendor/symplify/monorepo-builder/vendor/autoload.php
     # Fix class not found errors for PhpCsFixer
     - vendor/symplify/easy-coding-standard/vendor/autoload.php
+  scanFiles:
+    # Allows to use this function in the global scope
+    - vendor/twig/twig/src/Extension/EscaperExtension.php
 
 includes:
   # TODO: include more rule-sets
