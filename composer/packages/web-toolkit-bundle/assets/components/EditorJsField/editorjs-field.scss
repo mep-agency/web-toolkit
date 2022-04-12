@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
  */
 
+/* stylelint-disable selector-class-pattern */
 .mwt-editorjs-wrapper {
   padding: 0;
 
@@ -19,7 +20,6 @@
   }
 
   .codex-editor {
-    /* stylelint-disable-next-line selector-class-pattern */
     .codex-editor__redactor {
       padding-top: 3em;
     }
@@ -34,5 +34,55 @@
         padding-top: 0;
       }
     }
+  }
+}
+
+body.ea-dark-scheme .mwt-editorjs-wrapper {
+  border: 1px solid var(--border-secondary-color);
+  background-color: var(--body-bg);
+  color: var(--text-primary-color);
+
+  &:focus-within {
+    box-shadow: 0 0 0 4px var(--primary-bg);
+  }
+
+  .cdx-attaches {
+    background-color: var(--body-bg);
+    color: var(--text-primary-color);
+  }
+
+  .ce-block--selected .ce-block__content {
+    background-color: var(--primary-bg);
+  }
+
+  .ce-toolbox *,
+  .ce-toolbar__actions * {
+    fill: var(--text-primary-color);
+
+    &.ce-settings__button:hover,
+    &.cdx-settings-button:hover {
+      background-color: var(--text-primary-color);
+
+      & * {
+        fill: var(--tertiary-bg);
+      }
+    }
+
+    &.ce-toolbox__button:hover {
+      background-color: var(--secondary-bg);
+      fill: var(--secondary-text-color);
+    }
+  }
+
+  .ce-toolbar {
+    .ce-toolbar__settings-btn:hover,
+    .ce-toolbar__plus:hover {
+      background-color: var(--secondary-bg);
+    }
+  }
+
+  .ce-settings--opened {
+    border-color: var(--border-secondary-color);
+    background-color: var(--secondary-bg);
   }
 }
