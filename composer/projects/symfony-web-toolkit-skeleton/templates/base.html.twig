@@ -4,6 +4,8 @@
         <meta charset="UTF-8">
         <title>{% block title %}Welcome!{% endblock %}</title>
 
+        {{ content_metadata(block('omit_og_metadata') is not defined) }}
+
         {% block stylesheets %}
             {{ encore_entry_link_tags('main') }}
         {% endblock %}

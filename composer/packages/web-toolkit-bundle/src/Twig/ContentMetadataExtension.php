@@ -75,7 +75,7 @@ class ContentMetadataExtension extends AbstractExtension
                 $this->contentMetadataManager->getImage(),
                 'html_attr',
             ).'">
-<meta name="og:url" content="'.twig_escape_filter($environment, $url, 'html_attr',).'">';
+<meta name="og:url" content="'.twig_escape_filter($environment, $url, 'html_attr').'">';
         }
 
         return $metadata;
