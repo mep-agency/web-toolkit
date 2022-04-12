@@ -38,6 +38,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Provider\AdminContextProvider;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use EasyCorp\Bundle\EasyAdminBundle\Security\Permission;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
+use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
 use Knp\DoctrineBehaviors\Contract\Provider\LocaleProviderInterface;
 use Mep\WebToolkitBundle\Contract\Repository\AbstractSingleInstanceRepository;
 use Mep\WebToolkitBundle\Contract\Repository\LocalizedRepositoryInterface;
@@ -202,6 +203,7 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
             }
 
             $translations = $instance->getTranslations();
+            /** @var null|TranslationInterface $currentTranslation */
             $currentTranslation = $translations->get($currentLocale);
 
             if ($translations->count() <= 1) {
