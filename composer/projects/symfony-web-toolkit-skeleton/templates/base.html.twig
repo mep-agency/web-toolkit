@@ -18,10 +18,14 @@
         {#
         The built-in consent manager root element.
         'data-endpoints' - retrieve the endpoints for the banner
+        'data-privacy' - retrieve the privacy policy url for the banner
+        'data-cookie' - retrieve the cookie policy url for the banner
         'consent-banner-trigger' - element with attached listener to open the banner
         #}
         <div id="consent-banner-container"
-             data-endpoints="{{ privacy_consent_endpoints()|json_encode|e('html_attr') }}">
+             data-endpoints="{{ privacy_consent_endpoints()|json_encode|e('html_attr') }}"
+             data-privacy="{{ get_privacy_policy()|e('html_attr') }}"
+             data-cookie="{{ get_cookie_policy()|e('html_attr') }}">
         </div>
         <button id="consent-banner-trigger">Open</button>
     </body>
