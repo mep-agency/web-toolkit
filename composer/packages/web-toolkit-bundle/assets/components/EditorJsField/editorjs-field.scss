@@ -74,6 +74,12 @@ body.ea-dark-scheme .mwt-editorjs-wrapper {
     }
   }
 
+  @media (min-width: 651px) {
+    .codex-editor--narrow .ce-toolbox {
+      background: none;
+    }
+  }
+
   .ce-toolbar {
     .ce-toolbar__settings-btn:hover,
     .ce-toolbar__plus:hover {
