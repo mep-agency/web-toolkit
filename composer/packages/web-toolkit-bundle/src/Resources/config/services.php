@@ -53,8 +53,10 @@ use Mep\WebToolkitBundle\Repository\PrivacyConsent\PrivacyConsentServiceReposito
 use Mep\WebToolkitBundle\Router\AttachmentsAdminApiUrlGenerator;
 use Mep\WebToolkitBundle\Serializer\AttachmentNormalizer;
 use Mep\WebToolkitBundle\Serializer\EditorJsContentNormalizer;
+use Mep\WebToolkitBundle\Service\ContentMetadataManager;
 use Mep\WebToolkitBundle\Service\PrivacyConsentManager;
 use Mep\WebToolkitBundle\Twig\AttachmentExtension;
+use Mep\WebToolkitBundle\Twig\ContentMetadataExtension;
 use Mep\WebToolkitBundle\Twig\EditorJsExtension;
 use Mep\WebToolkitBundle\Twig\PrivacyConsentExtension;
 use Mep\WebToolkitBundle\Twig\TwigFunctionsExtension;
@@ -340,5 +342,20 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             WebToolkitBundle::SERVICE_PRIVACY_CONSENT_SERVICE_CRUD_CONTROLLER,
             PrivacyConsentServiceCrudController::class,
         )
+    ;
+
+    // Content metadata
+    $services->set(WebToolkitBundle::SERVICE_CONTENT_METADATA_MANAGER, ContentMetadataManager::class)
+        ->arg(0, env('CONTENT_METADATA_MANAGER_PAGE_TITLE_PREFIX'))
+        ->arg(1, env('CONTENT_METADATA_MANAGER_PAGE_TITLE_SUFFIX'))
+        ->arg(2, env('CONTENT_METADATA_MANAGER_CONTENT_TITLE'))
+        ->arg(3, env('CONTENT_METADATA_MANAGER_CONTENT_DESCRIPTION'))
+        ->arg(4, env('CONTENT_METADATA_MANAGER_IMAGE'))
+        ->alias(ContentMetadataManager::class, WebToolkitBundle::SERVICE_CONTENT_METADATA_MANAGER)
+    ;
+    $services->set(WebToolkitBundle::SERVICE_CONTENT_METADATA_EXTENSION, ContentMetadataExtension::class)
+        ->arg(0, new Reference(WebToolkitBundle::SERVICE_CONTENT_METADATA_MANAGER))
+        ->arg(1, new Reference(RequestStack::class))
+        ->tag('twig.extension')
     ;
 };

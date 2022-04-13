@@ -62,7 +62,13 @@
             border-left: 3px solid black;
           }
 
-          @apply before:rotate-45 after:-rotate-45;
+          &::before {
+            transform: rotate(45deg);
+          }
+
+          &::after {
+            transform: rotate(-45deg);
+          }
         }
       }
 
@@ -197,7 +203,13 @@
           border-left: 2px solid black;
         }
 
-        @apply before:rotate-45 after:-rotate-45;
+        &::before {
+          transform: rotate(45deg);
+        }
+
+        &::after {
+          transform: rotate(-45deg);
+        }
       }
 
       & > .illustration {

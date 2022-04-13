@@ -90,6 +90,14 @@ export default class ConsentBanner extends React.Component<Props, State> {
     return JSON.parse(this.props.container.getAttribute('data-endpoints')!);
   }
 
+  private getPrivacyPolicy(): string {
+    return this.props.container.getAttribute('data-privacy')!;
+  }
+
+  private getCookiePolicy(): string {
+    return this.props.container.getAttribute('data-cookie')!;
+  }
+
   private updatePreferences(serviceName: string, newValue: boolean): void {
     const consent = this.state.currentConsent!;
 
@@ -179,9 +187,8 @@ export default class ConsentBanner extends React.Component<Props, State> {
                     }
                     <p>{I18n.body}</p>
                     <div className="privacy-links">
-                      {/* TODO: Add environment variable */}
-                      <a href="#" target="_blank">{I18n.privacy_policy}</a>
-                      <a href="#" target="_blank">{I18n.cookie_policy}</a>
+                      <a href={this.getPrivacyPolicy()} target="_blank">{I18n.privacy_policy}</a>
+                      <a href={this.getCookiePolicy()} target="_blank">{I18n.cookie_policy}</a>
                     </div>
                   </div>
                   <div className="banner-status-buttons">
@@ -241,9 +248,8 @@ export default class ConsentBanner extends React.Component<Props, State> {
                     <div className="body">
                       <p className="privacy-body">{I18n.body}</p>
                       <div className="privacy-links">
-                        {/* TODO: Add environment variable */}
-                        <a href="#" target="_blank">{I18n.privacy_policy}</a>
-                        <a href="#" target="_blank">{I18n.cookie_policy}</a>
+                        <a href={this.getPrivacyPolicy()} target="_blank">{I18n.privacy_policy}</a>
+                        <a href={this.getCookiePolicy()} target="_blank">{I18n.cookie_policy}</a>
                       </div>
                       <button className="preferences" onClick={() => this.chooseBannerStatus(BannerStatus.CATEGORY)}>
                         {I18n.open_pref}

@@ -58,7 +58,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $containerConfigurator->import(DoctrineSetList::DOCTRINE_CODE_QUALITY);
     $containerConfigurator->import(SetList::CODING_STYLE);
     $containerConfigurator->import(SetList::NAMING);
-    $containerConfigurator->import(SetList::ORDER);
     $containerConfigurator->import(SetList::TYPE_DECLARATION);
 
     // Custom configuration

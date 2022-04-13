@@ -12,21 +12,23 @@ parameters:
     - vendor/symplify/monorepo-builder/vendor/autoload.php
     # Fix class not found errors for PhpCsFixer
     - vendor/symplify/easy-coding-standard/vendor/autoload.php
+  scanFiles:
+    # Allows to use this function in the global scope
+    - vendor/twig/twig/src/Extension/EscaperExtension.php
 
 includes:
   # TODO: include more rule-sets
   ##- vendor/symplify/phpstan-rules/config/array-rules.neon
-  #- vendor/symplify/phpstan-rules/config/code-complexity-rules.neon
   ##- vendor/symplify/phpstan-rules/config/doctrine-rules.neon
   ##- vendor/symplify/phpstan-rules/config/forbidden-static-rules.neon
   ##- vendor/symplify/phpstan-rules/config/naming-rules.neon
   - vendor/symplify/phpstan-rules/config/regex-rules.neon
   - vendor/symplify/phpstan-rules/config/services-rules.neon
   ##- vendor/symplify/phpstan-rules/config/static-rules.neon
-  - vendor/symplify/phpstan-rules/config/size-rules.neon
   - vendor/symplify/phpstan-rules/config/string-to-constant-rules.neon
-  - vendor/symplify/phpstan-rules/config/symfony-rules.neon
   - vendor/symplify/phpstan-rules/config/test-rules.neon
+  #- vendor/symplify/phpstan-rules/packages/cognitive-complexity/config/cognitive-complexity-rules.neon
+  - vendor/symplify/phpstan-rules/packages/symfony/config/symfony-rules.neon
   - vendor/knplabs/doctrine-behaviors/phpstan-extension.neon
 
 services:
