@@ -16,6 +16,7 @@ namespace Mep\WebToolkitBundle\Validator\EditorJs;
 use Attribute;
 use Mep\WebToolkitBundle\Entity\EditorJs\Block;
 use Mep\WebToolkitBundle\Entity\EditorJs\Block\Attaches;
+use Mep\WebToolkitBundle\Entity\EditorJs\Block\CallToAction;
 use Mep\WebToolkitBundle\Entity\EditorJs\Block\Header;
 use Mep\WebToolkitBundle\Entity\EditorJs\Block\Image;
 use Mep\WebToolkitBundle\Entity\EditorJs\Block\Paragraph;
@@ -230,6 +231,13 @@ final class EditorJs extends Constraint
                     $optionsResolver->define('placeholder')
                         ->default(null)
                         ->allowedTypes('string', 'null')
+                    ;
+
+                    break;
+                case CallToAction::class:
+                    $optionsResolver->define('cssPresetChoices')
+                        ->default(null)
+                        ->allowedTypes('array', 'null')
                     ;
 
                     break;

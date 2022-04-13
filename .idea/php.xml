@@ -179,6 +179,7 @@
       <path value="$PROJECT_DIR$/vendor/symplify/latte-phpstan-compiler" />
       <path value="$PROJECT_DIR$/vendor/symplify/template-phpstan-compiler" />
       <path value="$PROJECT_DIR$/vendor/symplify/console-package-builder" />
+      <path value="$PROJECT_DIR$/vendor/symplify/simple-php-doc-parser" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1">

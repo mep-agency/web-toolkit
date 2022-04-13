@@ -174,6 +174,67 @@
     }
   }
 
+  .cta {
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
+    width: 100%;
+    padding: 0.5em;
+
+    & p {
+      margin-top: 0;
+      font-size: 1.1em;
+      text-align: center;
+    }
+
+    & button {
+      margin: 1.5em auto 0;
+      width: max-content;
+      min-width: 5em;
+      height: max-content;
+      min-height: 3em;
+      padding: 0.25em 1.25em;
+      display: block;
+      border: 1px solid var(--borders-color);
+      background-color: var(--secondary-background);
+      font-size: 0.85em;
+
+      &:hover {
+        box-shadow: 0 0 2px 0.4px var(--borders-color);
+        cursor: pointer;
+      }
+    }
+  }
+
+  .attaches {
+    width: calc(100% - 1em);
+    padding: 0.5em;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    & p {
+      align-self: center;
+      margin-top: 0;
+      height: min-content;
+      text-decoration: underline;
+    }
+
+    & a {
+      width: max-content;
+      height: min-content;
+      padding: 0.15em 1em;
+      display: block;
+      border: 1px solid var(--borders-color);
+      background-color: var(--secondary-background);
+      color: var(--text-color);
+      text-decoration: none;
+
+      &:hover {
+        box-shadow: 0 0 2px 0.4px var(--borders-color);
+      }
+    }
+  }
+
   .image {
     & img {
       max-width: 100%;

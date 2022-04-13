@@ -1,0 +1,59 @@
+/*
+ * This file is part of the MEP Web Toolkit package.
+ *
+ * (c) Marco Lipparini <developer@liarco.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+.mwt-cta-container {
+  width: 100%;
+  padding: 1.5em;
+  display: grid;
+  grid-template-areas:
+    "namelabel addtextlabel"
+    "name      addtext"
+    "linklabel addtext"
+    "link      addtext"
+    "presetlabel addtext"
+    "preset      addtext";
+  grid-column-gap: 1.5em;
+  border: 1px solid grey;
+  border-radius: 4px;
+
+  & > .mwt-cta-button-name-label {
+    grid-area: namelabel;
+  }
+
+  & > .mwt-cta-button-name {
+    grid-area: name;
+    margin-bottom: 1em;
+  }
+
+  & > .mwt-cta-button-link-label {
+    grid-area: linklabel;
+  }
+
+  & > .mwt-cta-button-link {
+    grid-area: link;
+    margin-bottom: 1em;
+  }
+
+  & > .mwt-cta-preset-list-label {
+    grid-area: presetlabel;
+  }
+
+  & > .mwt-cta-preset-list {
+    grid-area: preset;
+  }
+
+  & > .mwt-cta-add-text-label {
+    grid-area: addtextlabel;
+  }
+
+  & > .mwt-cta-add-text {
+    grid-area: addtext;
+    min-height: 27px;
+  }
+}

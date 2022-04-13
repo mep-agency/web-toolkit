@@ -32,6 +32,16 @@ use Symfony\Component\Validator\Constraints\Valid;
 #[ORM\HasLifecycleCallbacks]
 class EditorJsContent implements JsonSerializable, Stringable
 {
+    /**
+     * @var string
+     */
+    private const CURRENT_TIME_PLACEHOLDER = 'NOW()';
+
+    /**
+     * @var string
+     */
+    private const EDITORJS_LIB_VERSION = '2.22.2';
+
     #[ORM\Id]
     #[ORM\Column(type: 'uuid', unique: true)]
     private Uuid $id;
@@ -54,12 +64,16 @@ class EditorJsContent implements JsonSerializable, Stringable
 
     public function __construct(
         #[ORM\Column(type: Types::BIGINT)]
-        private string $time,
+        private string $time = self::CURRENT_TIME_PLACEHOLDER,
         #[ORM\Column(type: Types::STRING, length: 255)]
-        private string $version,
+        private string $version = self::EDITORJS_LIB_VERSION,
     ) {
         $this->id = Uuid::v6();
         $this->blocks = new ArrayCollection();
+
+        if (self::CURRENT_TIME_PLACEHOLDER === $this->time) {
+            $this->time = microtime();
+        }
     }
 
     public function __toString(): string
