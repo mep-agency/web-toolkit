@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.0" srcLang="it" trgLang="it">
+  <file id="back-office.it">
+
+    <!-- Menu elements [START] -->
+
+    <unit id="WORIhey" name="menu.content">
+      <segment>
+        <source>menu.content</source>
+        <target>Contenuto</target>
+      </segment>
+    </unit>
+    <unit id="Q0QKn5D" name="menu.content.user">
+      <segment>
+        <source>menu.content.user</source>
+        <target>Utenti</target>
+      </segment>
+    </unit>
+    <unit id="NmSCPdL" name="menu.privacy_consent">
+      <segment>
+        <source>menu.privacy_consent</source>
+        <target>Configurazioni Privacy</target>
+      </segment>
+    </unit>
+    <unit id="IrDaice" name="menu.privacy_consent.category">
+      <segment>
+        <source>menu.privacy_consent.category</source>
+        <target>Categorie</target>
+      </segment>
+    </unit>
+    <unit id="WcArSxa" name="menu.privacy_consent.service">
+      <segment>
+        <source>menu.privacy_consent.service</source>
+        <target>Servizi</target>
+      </segment>
+    </unit>
+
+    <!-- Menu elements [END] -->
+
+    <!-- Entity names [START] -->
+
+    <unit id="tRLZfny" name="User">
+      <segment>
+        <source>User</source>
+        <target>Utente</target>
+      </segment>
+    </unit>
+    <unit id="C2z4jAr" name="PrivacyConsentCategory">
+      <segment>
+        <source>PrivacyConsentCategory</source>
+        <target>Categoria privacy</target>
+      </segment>
+    </unit>
+    <unit id="wdHsQEk" name="PrivacyConsentService">
+      <segment>
+        <source>PrivacyConsentService</source>
+        <target>Servizio privacy</target>
+      </segment>
+    </unit>
+
+    <!-- Entity names [END] -->
+
+    <!-- Properties [START] -->
+
+    <unit id=".x7SSlD" name="user.role.user">
+      <segment>
+        <source>user.role.user</source>
+        <target>Utente base</target>
+      </segment>
+    </unit>
+    <unit id="i5uszea" name="user.role.editor">
+      <segment>
+        <source>user.role.editor</source>
+        <target>Editor</target>
+      </segment>
+    </unit>
+    <unit id="WG_UUFK" name="user.role.admin">
+      <segment>
+        <source>user.role.admin</source>
+        <target>Admin</target>
+      </segment>
+    </unit>
+    <unit id="ucA4IpM" name="String Id">
+      <segment>
+        <source>String Id</source>
+        <target>Id (stringa)</target>
+      </segment>
+    </unit>
+    <unit id="3NHVIj9" name="Name">
+      <segment>
+        <source>Name</source>
+        <target>Nome</target>
+      </segment>
+    </unit>
+    <unit id="Um4Ah8w" name="Description">
+      <segment>
+        <source>Description</source>
+        <target>Descrizione</target>
+      </segment>
+    </unit>
+    <unit id="SFCxdLc" name="Required">
+      <segment>
+        <source>Required</source>
+        <target>Richiesto</target>
+      </segment>
+    </unit>
+    <unit id="1g27oHk" name="Priority">
+      <segment>
+        <source>Priority</source>
+        <target>Priorità</target>
+      </segment>
+    </unit>
+    <unit id="KSwG8AR" name="Category">
+      <segment>
+        <source>Category</source>
+        <target>Categoria</target>
+      </segment>
+    </unit>
+
+    <!-- Properties [END] -->
+
+  </file>
+</xliff>
