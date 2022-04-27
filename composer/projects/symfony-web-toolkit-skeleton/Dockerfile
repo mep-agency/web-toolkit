@@ -25,7 +25,7 @@ RUN cd /app \
     && rm -rf ./var
 
 # Build the app image
-FROM ghcr.io/mep-agency/symfony-app-runtime:8.0-apache
+FROM ghcr.io/mep-agency/symfony-app-runtime:8.1-apache
 
 # Copy source code
 COPY --from=composer /app/ /var/www/html/
