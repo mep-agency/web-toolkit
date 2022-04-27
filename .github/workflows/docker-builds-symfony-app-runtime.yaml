@@ -2,14 +2,17 @@ name: Docker builds (symfony-app-runtime)
 
 on:
   push:
-    branches:
-      - main
+#    branches:
+#      - main
     paths:
       - .github/workflows/docker-builds-symfony-app-runtime.yaml
       - docker/symfony-app-runtime/**
 
 jobs:
-  symfony-app-runtime_80_apache:
+  symfony-app-runtime_build:
+    strategy:
+      matrix:
+        php-version: [ '8.0', '8.1' ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -36,14 +39,18 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./docker/symfony-app-runtime
-          file: ./docker/symfony-app-runtime/8.0-apache/Dockerfile
+          file: ./docker/symfony-app-runtime/${{ matrix.php-version }}-apache/Dockerfile
           push: true
           tags: |
-            mepagency/symfony-app-runtime:8.0-apache
-            ghcr.io/${{ github.repository_owner }}/symfony-app-runtime:8.0-apache
-          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/symfony-app-runtime:8.0-apache
+            mepagency/symfony-app-runtime:${{ matrix.php-version }}-apache
+            ghcr.io/${{ github.repository_owner }}/symfony-app-runtime:${{ matrix.php-version }}-apache
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/symfony-app-runtime:${{ matrix.php-version }}-apache
           cache-to: type=inline
 
+  symfony-app-runtime_cleanup:
+    needs: [symfony-app-runtime_build]
+    runs-on: ubuntu-latest
+    steps:
       # The following step needs an access token with permission to delete packages
       - name: Untagged versions cleanup
         uses: actions/github-script@v3
