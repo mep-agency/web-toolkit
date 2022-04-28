@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Twig;
 
+use Psr\Cache\CacheItemPoolInterface;
 use Psr\Cache\InvalidArgumentException;
 use RuntimeException;
 use Symfony\Component\Asset\Packages;
-use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -55,7 +55,7 @@ class TwigFunctionsExtension extends AbstractExtension
     private readonly string $projectDir;
 
     public function __construct(
-        protected AdapterInterface $adapter,
+        protected CacheItemPoolInterface $cacheItemPool,
         protected Packages $packages,
         KernelInterface $kernel,
     ) {
@@ -88,7 +88,7 @@ class TwigFunctionsExtension extends AbstractExtension
         $mTime = $file->getMTime();
 
         try {
-            $cacheItem = $this->adapter->getItem('mwt_svg_file_'.md5($filePath));
+            $cacheItem = $this->cacheItemPool->getItem('mwt_svg_file_'.md5($filePath));
         } catch (InvalidArgumentException) {
             throw new RuntimeException('Unexpected error managing inline SVG cache: bad key argument');
         }
@@ -117,7 +117,7 @@ class TwigFunctionsExtension extends AbstractExtension
                 'data' => $matches[0],
             ]);
 
-            $this->adapter->save($cacheItem);
+            $this->cacheItemPool->save($cacheItem);
         }
 
         /** @var array<string, int|string> $cacheItemArray */
