@@ -61,8 +61,8 @@ use Mep\WebToolkitBundle\Twig\EditorJsExtension;
 use Mep\WebToolkitBundle\Twig\PrivacyConsentExtension;
 use Mep\WebToolkitBundle\Twig\TwigFunctionsExtension;
 use Mep\WebToolkitBundle\WebToolkitBundle;
+use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Asset\Packages;
-use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Form\FormRegistryInterface;
@@ -265,7 +265,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     // Extra Twig functions
     $services->set(WebToolkitBundle::SERVICE_TWIG_FUNCTIONS_EXTENSION, TwigFunctionsExtension::class)
-        ->arg(0, new Reference(AdapterInterface::class))
+        ->arg(0, new Reference(CacheItemPoolInterface::class))
         ->arg(1, new Reference(Packages::class))
         ->arg(2, new Reference(KernelInterface::class))
         ->tag('twig.extension')

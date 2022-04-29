@@ -158,7 +158,7 @@ class AdminAttachmentType extends AbstractType implements DataTransformerInterfa
         return TextType::class;
     }
 
-    public function transform($data)
+    public function transform($data): mixed
     {
         // Model data should not be transformed
         return $data;

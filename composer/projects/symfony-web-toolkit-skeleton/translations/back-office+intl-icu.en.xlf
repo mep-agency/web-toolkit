@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.0" srcLang="en" trgLang="en">
+  <file id="back-office.en">
+
+    <!-- Menu elements [START] -->
+
+    <unit id="WORIhey" name="menu.content">
+      <segment>
+        <source>menu.content</source>
+        <target>Contenut</target>
+      </segment>
+    </unit>
+    <unit id="Q0QKn5D" name="menu.content.user">
+      <segment>
+        <source>menu.content.user</source>
+        <target>User</target>
+      </segment>
+    </unit>
+    <unit id="NmSCPdL" name="menu.privacy_consent">
+      <segment>
+        <source>menu.privacy_consent</source>
+        <target>Privacy consent</target>
+      </segment>
+    </unit>
+    <unit id="IrDaice" name="menu.privacy_consent.category">
+      <segment>
+        <source>menu.privacy_consent.category</source>
+        <target>Category</target>
+      </segment>
+    </unit>
+    <unit id="WcArSxa" name="menu.privacy_consent.service">
+      <segment>
+        <source>menu.privacy_consent.service</source>
+        <target>Service</target>
+      </segment>
+    </unit>
+
+    <!-- Menu elements [END] -->
+
+    <!-- Entity names [START] -->
+
+    <unit id="tRLZfny" name="User">
+      <segment>
+        <source>User</source>
+        <target>User</target>
+      </segment>
+    </unit>
+    <unit id="C2z4jAr" name="PrivacyConsentCategory">
+      <segment>
+        <source>PrivacyConsentCategory</source>
+        <target>Privacy Consent Category</target>
+      </segment>
+    </unit>
+    <unit id="wdHsQEk" name="PrivacyConsentService">
+      <segment>
+        <source>PrivacyConsentService</source>
+        <target>Privacy Consent Service</target>
+      </segment>
+    </unit>
+
+    <!-- Entity names [END] -->
+
+  </file>
+</xliff>

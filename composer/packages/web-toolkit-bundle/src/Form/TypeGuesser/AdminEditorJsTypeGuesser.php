@@ -23,6 +23,7 @@ use ReflectionUnionType;
 use Symfony\Component\Form\FormTypeGuesserInterface;
 use Symfony\Component\Form\Guess\Guess;
 use Symfony\Component\Form\Guess\TypeGuess;
+use Symfony\Component\Form\Guess\ValueGuess;
 
 /**
  * @author Marco Lipparini <developer@liarco.net>
@@ -72,17 +73,17 @@ final class AdminEditorJsTypeGuesser implements FormTypeGuesserInterface
         );
     }
 
-    public function guessRequired(string $class, string $property)
+    public function guessRequired(string $class, string $property): ?ValueGuess
     {
         return null;
     }
 
-    public function guessMaxLength(string $class, string $property)
+    public function guessMaxLength(string $class, string $property): ?ValueGuess
     {
         return null;
     }
 
-    public function guessPattern(string $class, string $property)
+    public function guessPattern(string $class, string $property): ?ValueGuess
     {
         return null;
     }
