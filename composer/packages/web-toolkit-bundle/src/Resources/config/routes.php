@@ -21,7 +21,7 @@ use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 return function (RoutingConfigurator $routingConfigurator) {
     $privacyConsentUrlPrefix = '/privacy-consent';
 
-    $routingConfigurator->add(RouteName::PRIVACY_CONSENT_CREATE, $privacyConsentUrlPrefix.'/')
+    $routingConfigurator->add(RouteName::PRIVACY_CONSENT_CREATE, $privacyConsentUrlPrefix.'/{_locale}')
         ->controller(WebToolkitBundle::SERVICE_PRIVACY_CREATE_CONSENT_CONTROLLER)
         ->methods([Request::METHOD_POST])
     ;
@@ -31,7 +31,7 @@ return function (RoutingConfigurator $routingConfigurator) {
         ->methods([Request::METHOD_GET])
     ;
 
-    $routingConfigurator->add(RouteName::PRIVACY_CONSENT_GET_SPECS, $privacyConsentUrlPrefix.'/specs/')
+    $routingConfigurator->add(RouteName::PRIVACY_CONSENT_GET_SPECS, $privacyConsentUrlPrefix.'/specs/{_locale}')
         ->controller(WebToolkitBundle::SERVICE_PRIVACY_GET_SPECS_CONTROLLER)
         ->methods([Request::METHOD_GET])
     ;
