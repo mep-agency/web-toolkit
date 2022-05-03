@@ -235,30 +235,28 @@ $disabled-color: theme("colors.slate.300");
 
       &::before {
         content: "";
-
-        @apply absolute;
-
         top: 3px;
         left: 3px;
         width: 0.7em;
         height: 0.7em;
         box-shadow: inset 1em 1em $secondary-light-color;
-
-        @apply transition-transform scale-0 origin-bottom-left;
-
+        transition: transform;
+        transform: scale(0);
+        transform-origin: bottom left;
         clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+
+        @apply absolute;
       }
 
       &::after {
         content: "";
-
-        @apply absolute w-2.5 h-2.5;
-
         top: 3px;
         left: 3px;
         box-shadow: inset 1em 1em $primary-light-color;
+        transition: transform;
+        transform: scale(0);
 
-        @apply transition-transform scale-0;
+        @apply absolute w-2.5 h-2.5;
       }
 
       &:checked {
@@ -266,7 +264,8 @@ $disabled-color: theme("colors.slate.300");
         background-color: $primary-light-color;
 
         &::before {
-          @apply scale-100;
+          background: white;
+          transform: scale(1);
         }
       }
 
@@ -274,7 +273,8 @@ $disabled-color: theme("colors.slate.300");
         border-color: $primary-light-color;
 
         &::after {
-          @apply scale-100;
+          background-color: $primary-light-color;
+          transform: scale(1);
         }
       }
 
