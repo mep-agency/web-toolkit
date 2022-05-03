@@ -157,11 +157,13 @@ export default class ConsentSdk {
     });
     const consent: ResponseConsent = await response.json();
     const remoteSpecs = await this.getSpecs();
-    ConsentSdk.storeConsent(consent);
 
     if (JSON.stringify(JSON.parse(consent.data).specs) !== JSON.stringify(remoteSpecs)) {
       return ConsentSdk.updateConsent(JSON.parse(consent.data), remoteSpecs);
     }
+
+    ConsentSdk.storeConsent(consent);
+
     return undefined;
   }
 
