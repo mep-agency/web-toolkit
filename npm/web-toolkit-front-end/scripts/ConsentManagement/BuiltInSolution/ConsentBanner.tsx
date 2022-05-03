@@ -57,7 +57,20 @@ export default class ConsentBanner extends React.Component<Props, State> {
 
     if (consent === null) throw new Error('Couldn\'t get consent!');
 
-    if (consent.specs.services.length === 0) return;
+    if (consent.specs.services.length === 0) {
+      if (document.getElementById('consent-banner-trigger') !== null) {
+        document.getElementById('consent-banner-trigger')!.hidden = true;
+      }
+
+      return;
+    }
+
+    if (document.getElementById('consent-banner-trigger') === null) {
+      const newNode = document.createElement('button');
+      newNode.id = 'consent-banner-trigger';
+      newNode.innerText = 'Open';
+      this.props.container.parentNode!.insertBefore(newNode, this.props.container.nextSibling);
+    }
 
     this.setState({
       currentConsent: consent,
