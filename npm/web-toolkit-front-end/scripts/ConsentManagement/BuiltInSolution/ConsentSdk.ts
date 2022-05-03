@@ -180,14 +180,15 @@ export default class ConsentSdk {
       }
     });
 
+    // TODO: Check if script still works
     if (JSON.stringify(consentSpecs.services) !== JSON.stringify(remoteSpecs.services)) {
       timestampValue = -1;
       changedServices = remoteSpecs.services.filter(
         (remoteService) => (consentSpecs.services.findIndex(
           (consentService) => (consentService.id === remoteService.id
             && consentService.category === remoteService.category
-            && consentService.name === remoteService.name
-            && consentService.description === remoteService.description),
+            && consentService.names === remoteService.names
+            && consentService.descriptions === remoteService.descriptions),
         ) < 0));
 
       changedServices.forEach((el) => {

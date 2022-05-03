@@ -26,6 +26,7 @@ interface State {
   currentConsent: ConsentData | null,
   isOpen: boolean,
   enableTab: BannerStatus,
+  locale: string,
 }
 
 enum BannerStatus {
@@ -49,6 +50,7 @@ export default class ConsentBanner extends React.Component<Props, State> {
       currentConsent: null,
       isOpen: false,
       enableTab: BannerStatus.DEFAULT,
+      locale: document.documentElement.lang,
     };
   }
 
@@ -223,6 +225,7 @@ export default class ConsentBanner extends React.Component<Props, State> {
                             checkIfRequired={
                               (categoryName: string) => this.checkIfRequired(categoryName)
                             }
+                            locale={this.state.locale}
                             callback={
                               (serviceName: string, newValue: boolean) => this.updatePreferences(
                                 serviceName,
@@ -238,6 +241,7 @@ export default class ConsentBanner extends React.Component<Props, State> {
                             checkIfRequired={
                               (categoryName: string) => this.checkIfRequired(categoryName)
                             }
+                            locale={this.state.locale}
                             callback={
                               (serviceName: string, newValue: boolean) => this.updatePreferences(
                                 serviceName,
