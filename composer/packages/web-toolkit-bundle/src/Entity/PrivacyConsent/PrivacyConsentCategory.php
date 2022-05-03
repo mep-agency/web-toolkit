@@ -109,14 +109,25 @@ class PrivacyConsentCategory implements TranslatableInterface, Stringable, JsonS
     }
 
     /**
-     * @return array<string, bool|string>
+     * @return array<string, array<string, string>|bool|string>
      */
     public function jsonSerialize(): array
     {
+        $names = [];
+        $descriptions = [];
+
+        foreach ($this->getTranslations() as $translation) {
+            $names[$translation->getLocale()] = $translation->getName();
+            $descriptions[$translation->getLocale()] = $translation->getDescription();
+        }
+
+        ksort($names);
+        ksort($descriptions);
+
         return [
             'id' => $this->stringId,
-            'name' => $this->getName(),
-            'description' => $this->getDescription(),
+            'names' => $names,
+            'descriptions' => $descriptions,
             'required' => $this->required,
         ];
     }
