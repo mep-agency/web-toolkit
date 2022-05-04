@@ -51,15 +51,15 @@ export interface ConsentLocalData {
 
 export interface CategorySpecs {
   id: string;
-  names: LanguageElement[];
-  descriptions: LanguageElement[];
+  names: LanguageElement;
+  descriptions: LanguageElement;
   required: boolean;
 }
 
 export interface ServiceSpecs {
   id: string;
-  names: LanguageElement[];
-  descriptions: LanguageElement[];
+  names: LanguageElement;
+  descriptions: LanguageElement;
   category: string;
 }
 

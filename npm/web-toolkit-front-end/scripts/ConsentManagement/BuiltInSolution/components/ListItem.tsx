@@ -8,12 +8,11 @@
  */
 import React from 'react';
 import I18n from '../I18n';
-import { LanguageElement } from '../ConsentInterfaces';
 
 interface ListItemProps {
   id: string;
-  name: LanguageElement;
-  description: LanguageElement;
+  name: string;
+  description: string;
   checked: boolean;
   callback: ((serviceName: string, newValue: boolean) => void) | null
 }

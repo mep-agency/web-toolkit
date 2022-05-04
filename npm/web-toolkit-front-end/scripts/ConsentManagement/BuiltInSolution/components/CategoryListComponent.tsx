@@ -48,7 +48,7 @@ const CategoryListComponent = (props: ConsentProps) => {
             <div className="list-element" key={category.id}>
               <dt className={checkIfChecked(category.id) === true ? 'checked' : undefined }>
                 <label htmlFor={category.id}>
-                  {category.names[props.locale as any]}{category.required ? <> <span className="required">({I18n.required_message})</span></> : null}
+                  {category.names[props.locale]}{category.required ? <> <span className="required">({I18n.required_message})</span></> : null}
                 </label>
                   <input id={category.id}
                          type="checkbox"
@@ -67,7 +67,7 @@ const CategoryListComponent = (props: ConsentProps) => {
                   />
               </dt>
               <dd>
-                  <p className="text-container">{category.descriptions[props.locale as any]}</p>
+                  <p className="text-container">{category.descriptions[props.locale]}</p>
                   {
                     checkIfChecked(category.id) === undefined && <p className="half-category-text">{I18n.half_check_category}</p>
                   }
