@@ -24,8 +24,8 @@ const ServiceListComponent = (props: ConsentProps) => (
             <ListItem
                 key={index}
                 id={service.id}
-                name={service.names[props.locale]}
-                description={service.descriptions[props.locale]}
+                name={service.names[props.locale as any]}
+                description={service.descriptions[props.locale as any]}
                 checked={props.preferencesStatus[service.id]}
                 callback={
                     props.checkIfRequired(service.category)

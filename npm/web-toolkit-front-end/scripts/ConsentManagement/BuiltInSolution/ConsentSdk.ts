@@ -180,15 +180,11 @@ export default class ConsentSdk {
       }
     });
 
-    // TODO: Check if script still works
     if (JSON.stringify(consentSpecs.services) !== JSON.stringify(remoteSpecs.services)) {
       timestampValue = -1;
       changedServices = remoteSpecs.services.filter(
         (remoteService) => (consentSpecs.services.findIndex(
-          (consentService) => (consentService.id === remoteService.id
-            && consentService.category === remoteService.category
-            && consentService.names === remoteService.names
-            && consentService.descriptions === remoteService.descriptions),
+          (consentService) => this.checkEquality(consentService, remoteService),
         ) < 0));
 
       changedServices.forEach((el) => {
@@ -204,6 +200,13 @@ export default class ConsentSdk {
       preferences: consentPreferences,
       specs: remoteSpecs,
     };
+  }
+
+  private static checkEquality(consentService: ServiceSpecs, remoteService: ServiceSpecs): boolean {
+    return consentService.id === remoteService.id
+      && consentService.category === remoteService.category
+      && JSON.stringify(consentService.names) === JSON.stringify(remoteService.names)
+      && JSON.stringify(consentService.descriptions) === JSON.stringify(remoteService.descriptions);
   }
 
   private async getSpecs(): Promise<ConsentSpecs> {
