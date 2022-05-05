@@ -14,6 +14,7 @@ interface ConsentProps {
   consent: ConsentSpecs;
   checkIfRequired: (categoryName: string) => boolean;
   preferencesStatus: PreferencesStatus;
+  locale: string;
   callback: (serviceName: string, newValue: boolean) => void
 }
 
@@ -23,8 +24,8 @@ const ServiceListComponent = (props: ConsentProps) => (
             <ListItem
                 key={index}
                 id={service.id}
-                name={service.name}
-                description={service.description}
+                name={service.names[props.locale]}
+                description={service.descriptions[props.locale]}
                 checked={props.preferencesStatus[service.id]}
                 callback={
                     props.checkIfRequired(service.category)

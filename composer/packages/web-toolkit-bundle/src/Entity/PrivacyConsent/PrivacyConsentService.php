@@ -101,14 +101,25 @@ class PrivacyConsentService implements TranslatableInterface, JsonSerializable
     }
 
     /**
-     * @return array<string, string>
+     * @return array<string, array<string, string>|string>
      */
     public function jsonSerialize(): array
     {
+        $names = [];
+        $descriptions = [];
+
+        foreach ($this->getTranslations() as $translation) {
+            $names[$translation->getLocale()] = $translation->getName();
+            $descriptions[$translation->getLocale()] = $translation->getDescription();
+        }
+
+        ksort($names);
+        ksort($descriptions);
+
         return [
             'id' => $this->getStringId(),
-            'name' => $this->getName(),
-            'description' => $this->getDescription(),
+            'names' => $names,
+            'descriptions' => $descriptions,
             'category' => $this->category->getStringId(),
         ];
     }
