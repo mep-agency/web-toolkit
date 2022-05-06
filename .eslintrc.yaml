@@ -48,10 +48,6 @@ rules:
     - selector: WithStatement
       message: '`with` is disallowed in strict mode because it makes code impossible to predict and optimize.'
 
-ignorePatterns:
-  # This file imports "bootstrap.js" which is added by a Flex recipe on project creation, skip to avoid errors
-  - /composer/projects/symfony-web-toolkit-skeleton/assets/scripts/main.ts
-
 overrides:
   - files: [./composer/projects/symfony-web-toolkit-skeleton/**]
     rules:
