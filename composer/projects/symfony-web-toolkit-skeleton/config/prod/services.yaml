@@ -4,11 +4,10 @@ services:
   mep_web_toolkit.file_storage_driver:
     class: Mep\WebToolkitBundle\FileStorage\Driver\S3Driver
     arguments:
-      # TODO: Complete storage configuration...
-      $region: ''
-      $endpointUrl: ''
-      $key: ''
-      $secret: ''
-      $bucketName: ''
-      $cdnUrl: ''
-      $objectsKeyPrefix: ''
+      $region: '%env(string:STORAGE_REGION)%'
+      $endpointUrl: '%env(string:STORAGE_ENDPOINT_URL)%'
+      $key: '%env(string:STORAGE_KEY)%'
+      $secret: '%env(string:STORAGE_SECRET)%'
+      $bucketName: '%env(string:STORAGE_BUCKET_NAME)%'
+      $cdnUrl: '%env(string:STORAGE_CDN_URL)%'
+      $objectsKeyPrefix: '%env(string:STORAGE_OBJECT_KEY_PREFIX)%'
