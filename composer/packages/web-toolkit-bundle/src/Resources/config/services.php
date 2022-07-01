@@ -31,7 +31,6 @@ use Mep\WebToolkitBundle\Controller\PrivacyConsent\ShowHistoryController;
 use Mep\WebToolkitBundle\Entity\Attachment;
 use Mep\WebToolkitBundle\EventListener\AttachmentLifecycleEventListener;
 use Mep\WebToolkitBundle\EventListener\ForceSingleInstanceEventListener;
-use Mep\WebToolkitBundle\Field\Configurator\AttachmentConfigurator;
 use Mep\WebToolkitBundle\Field\Configurator\TranslatableBooleanConfigurator;
 use Mep\WebToolkitBundle\Field\Configurator\TranslatableFieldConfigurator;
 use Mep\WebToolkitBundle\Field\Configurator\TranslatableFieldPreConfigurator;
@@ -216,12 +215,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->arg(0, new Reference(EntityManagerInterface::class))
         ->arg(1, new Reference(WebToolkitBundle::SERVICE_FILE_STORAGE_MANAGER))
         ->tag('twig.extension')
-    ;
-    $services->set(WebToolkitBundle::SERVICE_ATTACHMENT_CONFIGURATOR, AttachmentConfigurator::class)
-        ->arg(0, new Reference(LocaleProviderInterface::class))
-        ->arg(1, new Reference(PropertyAccessorInterface::class))
-        ->arg(2, new Reference(FormRegistryInterface::class))
-        ->tag(EasyAdminExtension::TAG_FIELD_CONFIGURATOR)
     ;
 
     // File storage garbage collectors
