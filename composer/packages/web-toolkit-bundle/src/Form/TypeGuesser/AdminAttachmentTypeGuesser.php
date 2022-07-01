@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Form\TypeGuesser;
 
+use Mep\WebToolkitBundle\Dto\AttachmentAssociationContextDto;
 use Mep\WebToolkitBundle\Entity\Attachment;
 use Mep\WebToolkitBundle\Form\AdminAttachmentType;
 use Mep\WebToolkitBundle\Validator\AttachmentFile;
@@ -71,6 +72,7 @@ final class AdminAttachmentTypeGuesser implements FormTypeGuesserInterface
                 AdminAttachmentType::ALLOWED_NAME_PATTERN => $validAttachmentAttribute->allowedNamePattern,
                 AdminAttachmentType::METADATA => $validAttachmentAttribute->metadata,
                 AdminAttachmentType::PROCESSORS_OPTIONS => $validAttachmentAttribute->processorsOptions,
+                AdminAttachmentType::CONTEXT => (string) new AttachmentAssociationContextDto($class, $property),
             ] : [],
             Guess::VERY_HIGH_CONFIDENCE,
         );
