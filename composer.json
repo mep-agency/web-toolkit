@@ -58,6 +58,11 @@
         "mep-agency/web-toolkit-bundle": "self.version",
         "mep-agency/web-toolkit-k8s-cli": "self.version"
     },
+    "config": {
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        }
+    },
     "scripts": {
         "check": [
             "@rector",
