@@ -1,1 +1,1 @@
-.mwt-widget-wrapper:focus,.mwt-widget-wrapper:focus-within{border-color:var(--gray-400);box-shadow:0 0 0 4px var(--gray-100);outline:0}
+.mwt-widget-wrapper:focus,.mwt-widget-wrapper:focus-within{border-color:var(--form-input-hover-border-color);box-shadow:var(--form-input-hover-shadow);outline:0}
