@@ -20,6 +20,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Asset;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Option\EA;
@@ -148,6 +150,20 @@ abstract class AbstractCrudController extends OriginalAbstractCrudController
         }
 
         return $actionsConfiguration;
+    }
+
+    public function configureAssets(Assets $assets): Assets
+    {
+        $assets
+            // Add assets for AttachmentFields
+            ->addCssFile(Asset::new('bundles/webtoolkit/attachment-field.css')->onlyOnForms())
+            ->addJsFile(Asset::new('bundles/webtoolkit/attachment-field.js')->onlyOnForms())
+            // Add assets for EditorJsFields
+            ->addCssFile(Asset::new('bundles/webtoolkit/editorjs-field.css')->onlyOnForms())
+            ->addJsFile(Asset::new('bundles/webtoolkit/editorjs-field.js')->onlyOnForms())
+        ;
+
+        return $assets;
     }
 
     /**

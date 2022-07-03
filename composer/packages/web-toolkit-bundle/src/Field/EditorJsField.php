@@ -35,8 +35,6 @@ final class EditorJsField implements FieldInterface
             ->setFormType(AdminEditorJsType::class)
             ->setDefaultColumns('col-md-9 col-xxl-7')
             ->addCssClass('mwt-editorjs-field')
-            ->addCssFiles('bundles/webtoolkit/editorjs-field.css')
-            ->addJsFiles('bundles/webtoolkit/editorjs-field.js')
             ;
     }
 }

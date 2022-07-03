@@ -36,8 +36,6 @@ final class AttachmentField implements FieldInterface
             ->setTemplatePath('@WebToolkit/admin/crud/field/attachment.html.twig')
             ->setDefaultColumns('col-md-6 col-xxl-5')
             ->addCssClass('mwt-attachment-field')
-            ->addCssFiles('bundles/webtoolkit/attachment-field.css')
-            ->addJsFiles('bundles/webtoolkit/attachment-field.js')
             ;
     }
 }
