@@ -19,16 +19,20 @@
     "preview metadata" auto
     "preview actions " auto / 45% minmax(0, 2fr);
   grid-gap: 1em;
+  border-color: var(--form-input-group-text-border-color);
+  background-color: var(--form-input-group-text-bg);
 
   .metadata {
     grid-area: metadata;
     width: 100%;
     padding: 1em;
-    background-color: var(--fieldset-bg);
+    border-color: var(--form-input-border-color);
+    background-color: var(--form-control-bg);
     font-size: var(--font-size-xs);
 
     & > div {
       display: flex;
+      gap: 1ch;
       color: var(--text-color);
 
       & > span {
@@ -47,7 +51,8 @@
     height: auto;
     padding: 0;
     display: flex;
-    background-color: var(--fieldset-bg);
+    border-color: var(--form-input-border-color);
+    background-color: var(--form-control-bg);
 
     & > a {
       align-self: center;

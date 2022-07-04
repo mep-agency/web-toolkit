@@ -10,7 +10,7 @@
 // see /vendor/easycorp/easyadmin-bundle/assets/css/form-type-text-editor.css@10
 .mwt-widget-wrapper:focus,
 .mwt-widget-wrapper:focus-within {
-  border-color: var(--gray-400);
-  box-shadow: 0 0 0 4px var(--gray-100);
+  border-color: var(--form-input-hover-border-color);
+  box-shadow: var(--form-input-hover-shadow);
   outline: 0;
 }
