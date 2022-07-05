@@ -18,7 +18,7 @@ class AttachmentField implements Field {
 
   private readonly fileInput: HTMLInputElement;
 
-  private readonly uploadButton: HTMLInputElement;
+  private readonly uploadInput: HTMLInputElement;
 
   private readonly deleteButton: HTMLButtonElement;
 
@@ -42,7 +42,7 @@ class AttachmentField implements Field {
     this.input = input;
     this.widget = document.getElementById(`${input.id}__mwt-upload-widget`) as HTMLElement;
     this.fileInput = document.getElementById(`${input.id}__file`) as HTMLInputElement;
-    this.uploadButton = this.widget.querySelector('.upload-button') as HTMLInputElement;
+    this.uploadInput = this.widget.querySelector('.upload-input') as HTMLInputElement;
     this.deleteButton = this.widget.querySelector('.delete-button') as HTMLButtonElement;
     this.errorButton = this.widget.querySelector('.error-button') as HTMLElement;
     this.errorList = this.widget.querySelector('.error-list') as HTMLElement;
@@ -58,7 +58,7 @@ class AttachmentField implements Field {
       this.passFileData();
     }
 
-    this.uploadButton.addEventListener('change', (e) => {
+    this.uploadInput.addEventListener('change', (e) => {
       e.preventDefault();
 
       const formData = new FormData();
