@@ -171,6 +171,10 @@ class AdminAttachmentType extends AbstractType implements DataTransformerInterfa
         }
 
         if (is_string($data)) {
+            if ('' === $data) {
+                return null;
+            }
+
             try {
                 $data = Uuid::fromString($data);
             } catch (InvalidArgumentException $invalidArgumentException) {
