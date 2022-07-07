@@ -20,7 +20,6 @@ use Mep\WebToolkitBundle\Entity\EditorJs\Block\Attaches;
 use Mep\WebToolkitBundle\Entity\EditorJs\Block\Image;
 use Mep\WebToolkitBundle\Entity\EditorJs\EditorJsContent;
 use Mep\WebToolkitBundle\Router\AttachmentsAdminApiUrlGenerator;
-use Mep\WebToolkitBundle\Validator\EditorJs\EditorJsNotEmpty;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -177,23 +176,15 @@ final class AdminEditorJsType extends AbstractType implements DataTransformerInt
             'compound' => false,
             'constraints' => [new Valid()],
             self::TOOLS_OPTIONS => [],
+            'is_empty_callback' => static function (EditorJsContent $value): bool {
+                return $value->getBlocks()->isEmpty();
+            },
         ]);
 
         $optionsResolver->setRequired([self::ENABLED_TOOLS]);
 
         $optionsResolver->setAllowedTypes(self::TOOLS_OPTIONS, 'array');
         $optionsResolver->setAllowedTypes(self::ENABLED_TOOLS, ['array']);
-
-        $optionsResolver->addNormalizer(
-            'constraints',
-            function (Options $options, $value): mixed {
-                if ($options->offsetGet('required')) {
-                    $value[] = new EditorJsNotEmpty();
-                }
-
-                return $value;
-            },
-        );
     }
 
     public function getBlockPrefix(): string

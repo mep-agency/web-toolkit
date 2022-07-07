@@ -1,3 +1,6 @@
 # Assets
 .stylelintcache
 .eslintcache
+
+# Dev storage
+/public/storage
