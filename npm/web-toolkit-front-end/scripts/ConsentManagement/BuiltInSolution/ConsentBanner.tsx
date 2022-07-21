@@ -84,16 +84,18 @@ export default class ConsentBanner
     if (consent === null) throw new Error('Couldn\'t get consent!');
 
     if (consent.specs.services.length === 0) {
-      if (document.getElementById('consent-banner-trigger') !== null) {
-        document.getElementById('consent-banner-trigger')!.hidden = true;
+      if (document.querySelectorAll('[data-consent-banner-trigger]').length !== 0) {
+        for (const element of document.querySelectorAll('[data-consent-banner-trigger]') as NodeListOf<HTMLElement>) {
+          element.hidden = true;
+        }
       }
 
       return;
     }
 
-    if (document.getElementById('consent-banner-trigger') === null) {
+    if (document.querySelectorAll('[data-consent-banner-trigger]').length === 0) {
       const newNode = document.createElement('button');
-      newNode.id = 'consent-banner-trigger';
+      newNode.dataset.consentBannerTrigger = 'main-trigger';
       newNode.innerText = 'Open';
       this.props.container.parentNode!.insertBefore(newNode, this.props.container.nextSibling);
     }
@@ -118,9 +120,12 @@ export default class ConsentBanner
         enableTab: BannerStatus.SERVICE,
       });
     }
-    document.getElementById('consent-banner-trigger')!.addEventListener('click', () => {
-      this.openPopup();
-    });
+
+    for (const element of document.querySelectorAll('[data-consent-banner-trigger]') as NodeListOf<HTMLElement>) {
+      element.addEventListener('click', () => {
+        this.openPopup();
+      });
+    }
   };
 
   openPopup(): void {

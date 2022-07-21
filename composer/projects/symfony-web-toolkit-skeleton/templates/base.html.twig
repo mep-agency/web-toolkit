@@ -30,9 +30,11 @@
         </div>
 
         {#
-        The built-in consent manager requires an element with id 'consent-banner-trigger'.
+        The built-in consent manager requires an element
+        with data attribute 'data-consent-banner-trigger'.
+        You can add yours or leave this one by default.
         If the element is not detected, it will be added automatically.
         #}
-        <button id="consent-banner-trigger">Open</button>
+        <button data-consent-banner-trigger="main-trigger">Open</button>
     </body>
 </html>
