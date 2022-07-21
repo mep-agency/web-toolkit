@@ -8,6 +8,9 @@
  */
 
 import React from 'react';
+import ConsentManager from '../ConsentManager';
+import ConsentManagementDriverInterface from '../ConsentManagementDriverInterface';
+import DriverConsentStatusChangedEvent from '../DriverConsentStatusChangedEvent';
 import { EndpointList, PreferencesStatus, ConsentData } from './ConsentInterfaces';
 import ConsentSdk from './ConsentSdk';
 import CategoryListComponent from './components/CategoryListComponent';
@@ -35,7 +38,13 @@ enum BannerStatus {
   SERVICE,
 }
 
-export default class ConsentBanner extends React.Component<Props, State> {
+export default class ConsentBanner
+  extends React.Component<Props, State>
+  implements ConsentManagementDriverInterface {
+  public readonly STATUS_UPDATE_EVENT_NAME = 'consent_status';
+
+  public readonly events: EventTarget = document.createElement('div');
+
   private readonly sdk!: ConsentSdk;
 
   private readonly requiredCategories: string[] = [];
@@ -54,7 +63,22 @@ export default class ConsentBanner extends React.Component<Props, State> {
     };
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  init(): void {
+    // Nothing to do here...
+  }
+
+  async openPreferencesPanel(): Promise<void> {
+    this.openPopup();
+  }
+
+  async closePreferencesPanel(): Promise<void> {
+    this.closeAndSave();
+  }
+
   componentDidMount = async () => {
+    ConsentManager.registerDriver(this);
+
     const consent = await this.sdk.getCurrentConsent();
 
     if (consent === null) throw new Error('Couldn\'t get consent!');
@@ -77,6 +101,8 @@ export default class ConsentBanner extends React.Component<Props, State> {
     this.setState({
       currentConsent: consent,
     });
+
+    this.dispatchConsentStatusUpdate(consent);
 
     this.createRequiredList();
 
@@ -146,10 +172,31 @@ export default class ConsentBanner extends React.Component<Props, State> {
 
   private async saveConsent(): Promise<void> {
     const response: ConsentData = await this.sdk.registerConsent(this.state.currentConsent!);
+
     this.setState({
       currentConsent: response,
       isOpen: false,
     });
+
+    this.dispatchConsentStatusUpdate(response);
+  }
+
+  private dispatchConsentStatusUpdate(newConsentData: ConsentData): void {
+    const newConsentStatus = Object.keys(newConsentData.preferences)
+      .reduce((map, currentService) => {
+        map.set(currentService, newConsentData.preferences[currentService]);
+
+        return map;
+      }, new Map<string, boolean>());
+
+    this.events.dispatchEvent(new DriverConsentStatusChangedEvent(
+      this.STATUS_UPDATE_EVENT_NAME,
+      {
+        detail: {
+          newConsentStatus,
+        },
+      },
+    ));
   }
 
   private acceptAllConsent(): void {
