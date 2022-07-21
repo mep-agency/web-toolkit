@@ -2,7 +2,6 @@
   "name": "@mep-agency/web-toolkit-front-end",
   "version": "0.0.1",
   "description": "A set of tools to create new websites easily",
-  "main": "scripts/index.ts",
   "repository": "git@github.com:mep-agency/web-toolkit-package.git",
   "author": "Marco Lipparini <developer@liarco.net>",
   "license": "MIT",
