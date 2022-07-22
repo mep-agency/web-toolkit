@@ -20,7 +20,6 @@ import '../../../styles/ConsentManagement/index.scss';
 
 interface Props {
   container: HTMLElement,
-  defaultStyle: boolean,
   defaultIcon: boolean,
   cacheExpiration?: number,
 }
@@ -178,12 +177,12 @@ export default class ConsentBanner
   private async saveConsent(): Promise<void> {
     const response: ConsentData = await this.sdk.registerConsent(this.state.currentConsent!);
 
+    this.dispatchConsentStatusUpdate(response);
+
     this.setState({
       currentConsent: response,
       isOpen: false,
     });
-
-    this.dispatchConsentStatusUpdate(response);
   }
 
   private dispatchConsentStatusUpdate(newConsentData: ConsentData): void {
@@ -240,7 +239,7 @@ export default class ConsentBanner
     return (
       <>
         {!this.state.isOpen ? ''
-          : <div className={`consent-body${this.props.defaultStyle ? ' mwt-default-style' : ''}`}>
+          : <div className="consent-body">
               {this.state.enableTab !== BannerStatus.DEFAULT
                 ? <div className="floating-window">
                   <div className="navigation">

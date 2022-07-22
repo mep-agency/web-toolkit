@@ -23,7 +23,7 @@
         'data-privacy' - retrieve the privacy policy url for the banner
         'data-cookie' - retrieve the cookie policy url for the banner
         #}
-        <div id="consent-banner-container"
+        <div id="mwt-consent-banner-container"
              data-endpoints="{{ privacy_consent_endpoints()|json_encode|e('html_attr') }}"
              data-privacy="{{ get_privacy_policy()|e('html_attr') }}"
              data-cookie="{{ get_cookie_policy()|e('html_attr') }}">

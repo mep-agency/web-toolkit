@@ -8,14 +8,19 @@
  */
 
 import ConsentManager from '../../ConsentManagement/ConsentManager';
+import PrivacyEnabledElement from '../../ConsentManagement/PrivacyEnabledElement';
 
 export default class HCaptcha {
   private isInitialized = false;
 
-  public init(serviceName: string = 'hCaptcha', reloadOnDisable: boolean = true) {
+  public init(serviceName: string = 'h-captcha', reloadOnDisable: boolean = true, toggleDisableParentForm: boolean = true) {
     ConsentManager.addConsentStatusListener(
       serviceName,
       (newValue, isInit) => {
+        if (toggleDisableParentForm) {
+          HCaptcha.toggleDisableForm(newValue);
+        }
+
         if (newValue) {
           if (this.isInitialized) {
             throw new Error('Cannot initialize multiple times!');
@@ -36,5 +41,23 @@ export default class HCaptcha {
         }
       },
     );
+  }
+
+  private static toggleDisableForm(isCaptchaEnabled: boolean) {
+    const hCaptchaWidget = document.getElementsByClassName('h-captcha')[0];
+
+    if (hCaptchaWidget) {
+      const parentForm = hCaptchaWidget.closest('form');
+
+      if (parentForm) {
+        const formFieldSet = parentForm.querySelector('fieldset:only-of-type') as HTMLFieldSetElement;
+
+        if (formFieldSet) {
+          formFieldSet.disabled = !isCaptchaEnabled;
+          // eslint-disable-next-line no-new
+          new PrivacyEnabledElement(parentForm, 'h-captcha');
+        }
+      }
+    }
   }
 }

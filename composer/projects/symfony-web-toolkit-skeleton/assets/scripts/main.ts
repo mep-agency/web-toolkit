@@ -8,7 +8,7 @@
 // any CSS you import will output into a single css file (app.css in this case)
 import '../styles/main.scss';
 
-import ConsentIndex from '@mep-agency/web-toolkit-front-end/scripts/ConsentManagement/BuiltInSolution/ConsentIndex';
+import BuiltInSolution from '@mep-agency/web-toolkit-front-end/scripts/ConsentManagement/BuiltInSolution';
 
 // The following line initializes the built-in consent manager with default styling and settings.
-ConsentIndex({ defaultStyle: true, defaultIcon: true }, 30000);
+BuiltInSolution({ defaultIcon: true }, 30000);
