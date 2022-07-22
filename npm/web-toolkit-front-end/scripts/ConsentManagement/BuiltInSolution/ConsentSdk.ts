@@ -173,6 +173,7 @@ export default class ConsentSdk {
     const consentPreferences = consentData.preferences;
     let changedServices: ServiceSpecs[] = [];
     const requiredCategories: string[] = [];
+    let newConsentPreferences: PreferencesStatus = {};
 
     remoteSpecs.categories.forEach((categorySpecs) => {
       if (categorySpecs.required) {
@@ -180,8 +181,13 @@ export default class ConsentSdk {
       }
     });
 
+    if (JSON.stringify(consentSpecs.categories) !== JSON.stringify(remoteSpecs.categories)) {
+      timestampValue = -1;
+    }
+
     if (JSON.stringify(consentSpecs.services) !== JSON.stringify(remoteSpecs.services)) {
       timestampValue = -1;
+
       changedServices = remoteSpecs.services.filter(
         (remoteService) => (consentSpecs.services.findIndex(
           (consentService) => this.checkEquality(consentService, remoteService),
@@ -192,17 +198,31 @@ export default class ConsentSdk {
           consentPreferences[el.id] = false;
         }
       });
+
+      remoteSpecs.services.forEach((el) => {
+        if (consentPreferences[el.id] === undefined) {
+          newConsentPreferences[el.id] = false;
+          return;
+        }
+
+        newConsentPreferences[el.id] = consentPreferences[el.id];
+      });
+    } else {
+      newConsentPreferences = consentPreferences;
     }
 
     return {
       timestamp: timestampValue,
       previousConsentDataHash: consentData.previousConsentDataHash,
-      preferences: consentPreferences,
+      preferences: newConsentPreferences,
       specs: remoteSpecs,
     };
   }
 
-  private static checkEquality(consentService: ServiceSpecs, remoteService: ServiceSpecs): boolean {
+  private static checkEquality(
+    consentService: ServiceSpecs,
+    remoteService: ServiceSpecs,
+  ): boolean {
     return consentService.id === remoteService.id
       && consentService.category === remoteService.category
       && JSON.stringify(consentService.names) === JSON.stringify(remoteService.names)
