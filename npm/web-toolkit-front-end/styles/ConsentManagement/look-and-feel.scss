@@ -362,6 +362,12 @@ $disabled-color: theme("colors.slate.300");
           }
         }
       }
+
+      & input[type="checkbox"] {
+        &::before {
+          left: 2px;
+        }
+      }
     }
   }
 }
