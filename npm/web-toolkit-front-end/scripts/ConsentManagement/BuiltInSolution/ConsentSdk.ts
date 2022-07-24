@@ -181,11 +181,10 @@ export default class ConsentSdk {
       }
     });
 
-    if (JSON.stringify(consentSpecs.categories) !== JSON.stringify(remoteSpecs.categories)) {
-      timestampValue = -1;
-    }
-
-    if (JSON.stringify(consentSpecs.services) !== JSON.stringify(remoteSpecs.services)) {
+    if (
+      (JSON.stringify(consentSpecs.categories) !== JSON.stringify(remoteSpecs.categories))
+      || (JSON.stringify(consentSpecs.services) !== JSON.stringify(remoteSpecs.services))
+    ) {
       timestampValue = -1;
 
       changedServices = remoteSpecs.services.filter(
@@ -193,15 +192,13 @@ export default class ConsentSdk {
           (consentService) => this.checkEquality(consentService, remoteService),
         ) < 0));
 
-      changedServices.forEach((el) => {
-        if (!requiredCategories.includes(el.category)) {
-          consentPreferences[el.id] = false;
-        }
-      });
-
       remoteSpecs.services.forEach((el) => {
-        if (consentPreferences[el.id] === undefined) {
-          newConsentPreferences[el.id] = false;
+        if (
+          consentPreferences[el.id] === undefined
+          || changedServices.includes(el)
+          || requiredCategories.includes(el.category)
+        ) {
+          newConsentPreferences[el.id] = requiredCategories.includes(el.category);
           return;
         }
 
