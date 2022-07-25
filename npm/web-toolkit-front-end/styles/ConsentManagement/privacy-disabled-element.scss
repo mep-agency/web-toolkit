@@ -1,0 +1,50 @@
+/*
+ * This file is part of the MEP Web Toolkit package.
+ *
+ * (c) Marco Lipparini <developer@liarco.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+.mwt-disabled-by-privacy-preferences {
+  --dark-stroke: rgb(0 0 0 / 60%);
+  --light-stroke: rgb(0 0 0 / 0%);
+
+  position: relative;
+
+  .mwt-privacy-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    padding: 2em 1em;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    background-image:
+      repeating-linear-gradient(
+        0.4turn,
+        var(--dark-stroke) 0,
+        var(--dark-stroke) 0.5px,
+        var(--light-stroke) 1px,
+        var(--light-stroke) 8px,
+        var(--dark-stroke) 9px
+      );
+    text-shadow: none;
+
+    & > div.message {
+      padding: 1em;
+      display: inline-block;
+      border-radius: 0.5em;
+      background-color: rgb(255 255 255 / 100%) !important;
+      color: #000 !important;
+
+      a[onclick]:hover {
+        cursor: pointer;
+      }
+    }
+  }
+}

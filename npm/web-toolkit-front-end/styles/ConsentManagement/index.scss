@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-#consent-banner-container {
+#mwt-consent-banner-container {
   .consent-body {
     @apply fixed top-0 left-0 w-screen h-screen z-50;
 
@@ -271,7 +271,7 @@
 }
 
 @media (min-width: 980px) {
-  #consent-banner-container {
+  #mwt-consent-banner-container {
     .consent-body {
       & > .docked-window {
         @apply mr-auto;

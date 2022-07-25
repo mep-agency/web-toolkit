@@ -19,10 +19,10 @@ $primary-dark-shadow: 0 1px 0.4px 0.3px rgb(0 0 0 / 20%);
 $active-dark-shadow: 0 0 0.4px 0.3px rgb(0 0 0 / 20%);
 $disabled-color: theme("colors.slate.300");
 
-#consent-banner-container {
+#mwt-consent-banner-container {
   @apply font-sans;
 
-  .consent-body.mwt-default-style {
+  .consent-body {
     & .button-list > .accept-required,
     & .button-list > .accept-all,
     & .button-list > .preferences {
@@ -299,8 +299,8 @@ $disabled-color: theme("colors.slate.300");
 }
 
 @media (min-width: 980px) {
-  #consent-banner-container {
-    .consent-body.mwt-default-style {
+  #mwt-consent-banner-container {
+    .consent-body {
       & > .docked-window {
         & > .close-button {
           @apply top-5 right-5;
@@ -360,6 +360,12 @@ $disabled-color: theme("colors.slate.300");
               @apply cursor-pointer;
             }
           }
+        }
+      }
+
+      & input[type="checkbox"] {
+        &::before {
+          left: 2px;
         }
       }
     }
