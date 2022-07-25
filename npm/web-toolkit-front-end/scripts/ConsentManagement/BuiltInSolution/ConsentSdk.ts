@@ -11,6 +11,7 @@ import sha256 from 'crypto-js/sha256';
 import * as Rsa from '../../Util/Rsa';
 
 import {
+  CategorySpecs,
   ConsentData,
   ConsentLocalData,
   ConsentSpecs,
@@ -172,14 +173,23 @@ export default class ConsentSdk {
     const consentSpecs = consentData.specs;
     const consentPreferences = consentData.preferences;
     let changedServices: ServiceSpecs[] = [];
+    let changedCategories: CategorySpecs[] = [];
     const requiredCategories: string[] = [];
     let newConsentPreferences: PreferencesStatus = {};
 
-    remoteSpecs.categories.forEach((categorySpecs) => {
-      if (categorySpecs.required) {
-        requiredCategories.push(categorySpecs.id);
-      }
-    });
+    if (JSON.stringify(consentSpecs.categories) !== JSON.stringify(remoteSpecs.categories)) {
+      changedCategories = remoteSpecs.categories.filter(
+        (remoteCategory) => (consentSpecs.categories.findIndex(
+          (consentCategory) => this.checkCategoryEquality(remoteCategory, consentCategory),
+        ) < 0));
+    }
+
+    if (JSON.stringify(consentSpecs.services) !== JSON.stringify(remoteSpecs.services)) {
+      changedServices = remoteSpecs.services.filter(
+        (remoteService) => (consentSpecs.services.findIndex(
+          (consentService) => this.checkServiceEquality(consentService, remoteService),
+        ) < 0));
+    }
 
     if (
       (JSON.stringify(consentSpecs.categories) !== JSON.stringify(remoteSpecs.categories))
@@ -187,15 +197,17 @@ export default class ConsentSdk {
     ) {
       timestampValue = -1;
 
-      changedServices = remoteSpecs.services.filter(
-        (remoteService) => (consentSpecs.services.findIndex(
-          (consentService) => this.checkEquality(consentService, remoteService),
-        ) < 0));
+      remoteSpecs.categories.forEach((categorySpecs) => {
+        if (categorySpecs.required) {
+          requiredCategories.push(categorySpecs.id);
+        }
+      });
 
       remoteSpecs.services.forEach((el) => {
         if (
           consentPreferences[el.id] === undefined
           || changedServices.includes(el)
+          || changedCategories.filter((cat) => cat.id === el.category).length === 1
           || requiredCategories.includes(el.category)
         ) {
           newConsentPreferences[el.id] = requiredCategories.includes(el.category);
@@ -216,7 +228,7 @@ export default class ConsentSdk {
     };
   }
 
-  private static checkEquality(
+  private static checkServiceEquality(
     consentService: ServiceSpecs,
     remoteService: ServiceSpecs,
   ): boolean {
@@ -224,6 +236,16 @@ export default class ConsentSdk {
       && consentService.category === remoteService.category
       && JSON.stringify(consentService.names) === JSON.stringify(remoteService.names)
       && JSON.stringify(consentService.descriptions) === JSON.stringify(remoteService.descriptions);
+  }
+
+  private static checkCategoryEquality(
+    consentCat: CategorySpecs,
+    remoteCat: CategorySpecs,
+  ): boolean {
+    return consentCat.id === remoteCat.id
+      && consentCat.required === remoteCat.required
+      && JSON.stringify(consentCat.names) === JSON.stringify(remoteCat.names)
+      && JSON.stringify(consentCat.descriptions) === JSON.stringify(remoteCat.descriptions);
   }
 
   private async getSpecs(): Promise<ConsentSpecs> {
