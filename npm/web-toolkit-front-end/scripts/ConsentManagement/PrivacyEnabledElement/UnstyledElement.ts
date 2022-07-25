@@ -18,7 +18,7 @@ export default class PrivacyEnabledElement {
 
     ConsentManager.addConsentStatusListener(
       serviceName,
-      (newValue, isInit) => {
+      (newValue) => {
         if (newValue) {
           this.enable();
           return;
