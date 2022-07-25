@@ -33,7 +33,7 @@ export default class PrivacyEnabledElement {
     this.element.classList.add('mwt-disabled-by-privacy-preferences');
 
     const privacyOverlay = document.createElement('div');
-    privacyOverlay.className = 'privacy-overlay';
+    privacyOverlay.className = 'mwt-privacy-overlay';
     const messageElement = document.createElement('div');
     messageElement.className = 'message';
     messageElement.innerHTML = I18n.feature_is_disabled;
