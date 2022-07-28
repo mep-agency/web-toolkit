@@ -103,7 +103,18 @@ export default class ConsentSdk {
         return this.registerConsent(temporaryConsent);
       }
 
-      throw new Error('Invalid response');
+      // The response is not in the manageable list of errors
+      // so the local consent remain untouched and force
+      // a refresh through the Banner.
+      return {
+        preferences: {},
+        previousConsentDataHash: null,
+        specs: {
+          categories: [],
+          services: [],
+        },
+        timestamp: -1,
+      };
     }
 
     const consent: ResponseConsent = responseMessage;

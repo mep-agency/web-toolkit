@@ -8,7 +8,7 @@
  */
 import React from 'react';
 import I18n from '../I18n';
-import { ConsentSpecs, PreferencesStatus } from '../ConsentInterfaces';
+import { CategorySpecs, ConsentSpecs, PreferencesStatus } from '../ConsentInterfaces';
 
 interface ConsentProps {
   consent: ConsentSpecs;
@@ -27,9 +27,13 @@ const CategoryListComponent = (props: ConsentProps) => {
     });
   };
 
-  const checkIfChecked = (categoryId: string): boolean | undefined => {
+  const checkIfChecked = (category: CategorySpecs): boolean | undefined => {
+    if (category.required) {
+      return true;
+    }
+
     const valueArray = props.consent.services.map((service) => {
-      if (service.category === categoryId) {
+      if (service.category === category.id) {
         return props.preferencesStatus[service.id];
       }
       return undefined;
@@ -46,7 +50,7 @@ const CategoryListComponent = (props: ConsentProps) => {
       <dl key="category-list">
         {props.consent.categories.map((category) => (
             <div className="list-element" key={category.id}>
-              <dt className={checkIfChecked(category.id) === true ? 'checked' : undefined }>
+              <dt className={checkIfChecked(category) === true ? 'checked' : undefined }>
                 <label htmlFor={category.id}>
                   {category.names[props.locale]}{category.required ? <> <span className="required">({I18n.required_message})</span></> : null}
                 </label>
@@ -55,8 +59,10 @@ const CategoryListComponent = (props: ConsentProps) => {
                          ref={(input) => {
                            const inputEl = input;
                            if (inputEl) {
-                             if (checkIfChecked(category.id) !== undefined) {
-                               inputEl.checked = checkIfChecked(category.id)!;
+                             const isCategoryChecked = checkIfChecked(category);
+
+                             if (isCategoryChecked !== undefined) {
+                               inputEl.checked = isCategoryChecked!;
                              } else {
                                inputEl.indeterminate = true;
                              }
@@ -69,7 +75,7 @@ const CategoryListComponent = (props: ConsentProps) => {
               <dd>
                   <p className="text-container">{category.descriptions[props.locale]}</p>
                   {
-                    checkIfChecked(category.id) === undefined && <p className="half-category-text">{I18n.half_check_category}</p>
+                    checkIfChecked(category) === undefined && <p className="half-category-text">{I18n.half_check_category}</p>
                   }
               </dd>
 
