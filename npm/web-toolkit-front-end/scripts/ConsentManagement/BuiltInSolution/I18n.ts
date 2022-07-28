@@ -26,6 +26,7 @@ interface Localization extends LocalizationData {
       privacy_policy: string;
       cookie_policy: string;
       changed_notice: string;
+      consent_issue: string;
     }
   }
 }
@@ -48,6 +49,7 @@ const i18n: Localization = {
       privacy_policy: 'Privacy policy',
       cookie_policy: 'Cookie policy',
       changed_notice: 'Abbiamo apportato delle modifiche ai servizi utilizzati da questo sito, ti preghiamo di confermare le preferenze selezionate.',
+      consent_issue: 'Non è stato possibile aggiornare il consenso a causa di un errore. La pagina verrà ricaricata, si prega di riprovare.',
     },
     en: {
       body: 'This site uses its own and third-party cookies and other technologies to offer you a better user experience. Please accept the use of these technologies to proceed.',
@@ -64,6 +66,7 @@ const i18n: Localization = {
       privacy_policy: 'Privacy policy',
       cookie_policy: 'Cookie policy',
       changed_notice: 'We made changes to the services used by this site, please confirm your preferences.',
+      consent_issue: 'There has been a problem and the consent could not be updated. The page will be refreshed, please try again.',
     },
   },
 };

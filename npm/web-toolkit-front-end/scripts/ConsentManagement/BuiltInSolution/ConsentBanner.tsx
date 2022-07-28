@@ -177,6 +177,15 @@ export default class ConsentBanner
   private async saveConsent(): Promise<void> {
     const response: ConsentData = await this.sdk.registerConsent(this.state.currentConsent!);
 
+    if ((response.timestamp === null || response.timestamp < 0)
+      && (response.specs.categories.length === 0 && response.specs.services.length === 0)
+      && Object.keys(response.preferences).length === 0) {
+      // eslint-disable-next-line no-alert
+      alert(I18n.consent_issue);
+
+      document.location.reload();
+    }
+
     this.dispatchConsentStatusUpdate(response);
 
     this.setState({
