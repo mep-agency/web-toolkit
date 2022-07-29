@@ -4,7 +4,7 @@
     "license": "UNLICENSED",
     "private": true,
     "dependencies": {
-        "@mep-agency/web-toolkit-front-end": "0.0.1",
+        "@mep-agency/web-toolkit-front-end": "mep-agency/web-toolkit-front-end",
         "tailwindcss": "^3.0.5"
     },
     "devDependencies": {
