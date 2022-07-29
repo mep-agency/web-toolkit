@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Mep\WebToolkitBundle\Entity\PrivacyConsent;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
@@ -57,9 +59,16 @@ class PrivacyConsentCategory implements TranslatableInterface, Stringable, JsonS
     #[Assert\NotNull]
     private bool $required = false;
 
+    /**
+     * @var Collection<int, PrivacyConsentService>
+     */
+    #[ORM\OneToMany(mappedBy: 'category', targetEntity: PrivacyConsentService::class, orphanRemoval: true)]
+    private Collection $services;
+
     public function __construct()
     {
         $this->id = Uuid::v6();
+        $this->services = new ArrayCollection();
     }
 
     public function __toString()
@@ -104,6 +113,31 @@ class PrivacyConsentCategory implements TranslatableInterface, Stringable, JsonS
     public function setRequired(bool $required): self
     {
         $this->required = $required;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PrivacyConsentService>
+     */
+    public function getServices(): Collection
+    {
+        return $this->services;
+    }
+
+    public function addService(PrivacyConsentService $privacyConsentService): self
+    {
+        if (! $this->services->contains($privacyConsentService)) {
+            $this->services->add($privacyConsentService);
+            $privacyConsentService->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeService(PrivacyConsentService $privacyConsentService): self
+    {
+        $this->services->removeElement($privacyConsentService);
 
         return $this;
     }
