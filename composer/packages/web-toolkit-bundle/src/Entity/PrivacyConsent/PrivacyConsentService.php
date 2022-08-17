@@ -50,7 +50,7 @@ class PrivacyConsentService implements TranslatableInterface, JsonSerializable
     #[Assert\NotNull]
     private int $priority = 10;
 
-    #[ORM\ManyToOne(targetEntity: PrivacyConsentCategory::class)]
+    #[ORM\ManyToOne(targetEntity: PrivacyConsentCategory::class, inversedBy: 'services')]
     #[ORM\JoinColumn(nullable: false)]
     private PrivacyConsentCategory $category;
 
