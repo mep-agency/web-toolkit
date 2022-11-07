@@ -82,6 +82,7 @@ export async function exportToPem(keyPair: CryptoKeyPair): Promise<PemKeyPair> {
   if (keyPair.privateKey === undefined || keyPair.publicKey === undefined) {
     throw new Error('Keys not defined!');
   }
+
   return {
     privateKey: `-----BEGIN PRIVATE KEY-----\n${uint8ArrayToBase64(
       new Uint8Array(
@@ -112,6 +113,7 @@ export async function sign(privateKey: CryptoKey, message: string): Promise<stri
     privateKey,
     base64ToUint8Array(message),
   );
+
   return uint8ArrayToBase64(new Uint8Array(signature));
 }
 

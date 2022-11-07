@@ -10,6 +10,7 @@
 import sha256 from 'crypto-js/sha256';
 import * as Rsa from '../../Util/Rsa';
 
+import * as Base64 from '../../Util/Base64';
 import {
   CategorySpecs,
   ConsentData,
@@ -145,8 +146,8 @@ export default class ConsentSdk {
 
     if (sentConsent.data !== remoteConsent.data) throw new Error('Data not match!');
 
-    if (window
-      .atob(remoteConsent.userPublicKey)
+    if (Base64
+      .decode(remoteConsent.userPublicKey)
       .includes(
         PEMKEYPAIR
           .publicKey
@@ -155,9 +156,9 @@ export default class ConsentSdk {
     ) throw new Error('User public keys not match!');
 
     const systemVerify = await Rsa.verify(
-      await Rsa.importPublicPem(window.atob(remoteConsent.systemPublicKey)),
+      await Rsa.importPublicPem(Base64.decode(remoteConsent.systemPublicKey)),
       remoteConsent.systemSignature,
-      window.btoa(remoteConsent.data),
+      Base64.encode(remoteConsent.data),
     );
 
     if (!systemVerify) throw new Error('System signature not valid!');
@@ -309,6 +310,7 @@ export default class ConsentSdk {
       consent,
       lastCheck: ConsentSdk.getCurrentTime(),
     };
+
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newConsentLocalData));
   }
 
@@ -339,7 +341,10 @@ export default class ConsentSdk {
       specs: consent.specs,
       preferences: consent.preferences,
     };
-    const signature = await Rsa.sign(cryptoKeyPair.privateKey!, window.btoa(JSON.stringify(data)));
+    const signature = await Rsa.sign(
+      cryptoKeyPair.privateKey!,
+      Base64.encode(JSON.stringify(data)),
+    );
 
     return JSON.stringify({
       data: JSON.stringify(data),
