@@ -262,14 +262,14 @@
         & > button.preferences,
         & > button.accept-required,
         & > button.accept-all {
-          @apply flex items-center;
+          @apply flex justify-center;
           @apply py-4 px-6;
           @apply font-semibold;
           @apply hover:cursor-pointer;
         }
 
         & > .preferences {
-          @apply hidden;
+          display: none !important;
         }
       }
     }
@@ -330,8 +330,7 @@
         }
 
         & > .button-list {
-          width: calc(100% - 2.4em);
-
+          @apply w-full;
           @apply py-0 px-5 items-center justify-center;
 
           & > button {
