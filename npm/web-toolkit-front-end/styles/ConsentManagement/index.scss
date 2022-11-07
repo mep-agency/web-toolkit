@@ -9,7 +9,10 @@
 
 #mwt-consent-banner-container {
   .consent-body {
-    @apply fixed top-0 left-0 w-screen h-screen z-50;
+    @apply fixed top-0 left-0 w-screen h-screen;
+
+    z-index: 999 !important;
+    font-size: 16px !important;
 
     &::before {
       content: "";
@@ -101,6 +104,8 @@
       }
 
       & > .banner-status-buttons {
+        @apply flex;
+
         grid-area: view-buttons;
 
         @apply w-full h-10;
@@ -190,7 +195,7 @@
         "buttons" min-content;
 
       & > button.close-button {
-        @apply absolute top-6 right-6 w-5 h-5;
+        @apply absolute top-6 right-6 w-5 h-full;
         @apply bg-transparent border-none;
 
         &::before,
@@ -257,6 +262,7 @@
         & > button.preferences,
         & > button.accept-required,
         & > button.accept-all {
+          @apply flex items-center;
           @apply py-4 px-6;
           @apply font-semibold;
           @apply hover:cursor-pointer;
@@ -343,7 +349,7 @@
 
         width: 30em;
         max-width: 45vw;
-        height: calc(100vh - 4em);
+        height: 100vh;
         grid-template:
           "navigation" 3em
           "banner-header" 1fr
