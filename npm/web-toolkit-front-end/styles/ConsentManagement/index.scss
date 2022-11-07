@@ -188,7 +188,8 @@
 
       bottom: 2vh;
       width: 90vw;
-      height: 70vh;
+      height: auto;
+      min-height: 70vh;
       grid-template:
         "illustration"
         "message" 1fr
@@ -262,14 +263,14 @@
         & > button.preferences,
         & > button.accept-required,
         & > button.accept-all {
-          @apply flex justify-center;
+          @apply flex justify-center items-center;
           @apply py-4 px-6;
           @apply font-semibold;
           @apply hover:cursor-pointer;
         }
 
-        & > .preferences {
-          display: none !important;
+        & > button.preferences {
+          display: none;
         }
       }
     }
@@ -285,6 +286,7 @@
         margin-left: 2vw;
         width: 50em;
         height: 15em;
+        min-height: auto;
         grid-template:
           "illustration message"
           "illustration buttons" 5em;
@@ -337,8 +339,8 @@
             @apply w-full h-16 py-2 px-5;
           }
 
-          & > .preferences {
-            @apply block;
+          & > button.preferences {
+            @apply flex;
           }
         }
       }
