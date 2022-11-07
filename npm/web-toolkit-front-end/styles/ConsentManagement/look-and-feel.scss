@@ -343,7 +343,7 @@ $disabled-color: theme("colors.slate.300");
       & > .floating-window {
         & > .navigation {
           & > .close-button {
-            @apply w-8 h-8 p-0;
+            @apply w-8 h-full p-0;
 
             &::after,
             &::before {
