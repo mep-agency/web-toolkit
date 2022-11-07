@@ -10,7 +10,7 @@
 import sha256 from 'crypto-js/sha256';
 import * as Rsa from '../../Util/Rsa';
 
-import * as Base64 from "../../Util/Base64";
+import * as Base64 from '../../Util/Base64';
 import {
   CategorySpecs,
   ConsentData,
@@ -341,7 +341,10 @@ export default class ConsentSdk {
       specs: consent.specs,
       preferences: consent.preferences,
     };
-    const signature = await Rsa.sign(cryptoKeyPair.privateKey!, Base64.encode(JSON.stringify(data)));
+    const signature = await Rsa.sign(
+      cryptoKeyPair.privateKey!,
+      Base64.encode(JSON.stringify(data)),
+    );
 
     return JSON.stringify({
       data: JSON.stringify(data),
