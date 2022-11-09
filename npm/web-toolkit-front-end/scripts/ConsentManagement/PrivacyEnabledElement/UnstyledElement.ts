@@ -13,11 +13,11 @@ import ConsentManager from '../ConsentManager';
 export default class PrivacyEnabledElement {
   protected readonly element: HTMLElement;
 
-  public constructor(element: HTMLElement, serviceName: string) {
+  public constructor(element: HTMLElement, serviceNameOrNames: string | string[]) {
     this.element = element;
 
     ConsentManager.addConsentStatusListener(
-      serviceName,
+      serviceNameOrNames,
       (newValue) => {
         if (newValue) {
           this.enable();
