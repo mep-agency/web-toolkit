@@ -40,21 +40,38 @@ class ConsentManager implements ConsentManagerInterface {
   }
 
   public addConsentStatusListener(
-    serviceName: string,
+    serviceNameOrNames: string | string[],
     callback: ConsentStatusChangedCallbackType,
     options?: AddEventListenerOptions | boolean,
   ) {
     this.checkDriverOrThrow();
 
-    this.events.addEventListener(ConsentManager.buildEventKey(serviceName), {
-      handleEvent(event: ServiceConsentStatusChangedEvent) {
-        callback(event.detail.value, event.detail.isInit);
-      },
-    }, options);
+    const serviceNames: string[] = typeof serviceNameOrNames === 'string' ? [serviceNameOrNames] : serviceNameOrNames;
+    const servicesStatus = new Map<string, boolean>(serviceNames.map((key) => [key, false]));
+    const areAllEnabled = () => Array
+      .from(servicesStatus.values())
+      .reduce((value, newValue) => value && newValue, true);
+
+    let thereIsAtLeastOneAvailable = false;
+    serviceNames.forEach((serviceName) => {
+      if (this.consentStatusByService.has(serviceName)) {
+        thereIsAtLeastOneAvailable = true;
+
+        servicesStatus.set(serviceName, this.consentStatusByService.get(serviceName)!);
+      }
+
+      this.events.addEventListener(ConsentManager.buildEventKey(serviceName), {
+        handleEvent(event: ServiceConsentStatusChangedEvent) {
+          servicesStatus.set(serviceName, event.detail.value);
+
+          callback(areAllEnabled(), event.detail.isInit);
+        },
+      }, options);
+    });
 
     // Run the callback if the status is already available...
-    if (this.consentStatusByService.has(serviceName)) {
-      callback(this.consentStatusByService.get(serviceName)!, true);
+    if (thereIsAtLeastOneAvailable) {
+      callback(areAllEnabled(), true);
     }
   }
 

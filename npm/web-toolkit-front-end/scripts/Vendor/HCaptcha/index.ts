@@ -13,12 +13,12 @@ import PrivacyEnabledElement from '../../ConsentManagement/PrivacyEnabledElement
 export default class HCaptcha {
   private isInitialized = false;
 
-  public init(serviceName: string = 'h-captcha', reloadOnDisable: boolean = true, toggleDisableParentForm: boolean = true) {
+  public init(serviceNameOrNames: string | string[] = 'h-captcha', reloadOnDisable: boolean = true, toggleDisableParentForm: boolean = true) {
     ConsentManager.addConsentStatusListener(
-      serviceName,
+      serviceNameOrNames,
       (newValue, isInit) => {
         if (toggleDisableParentForm) {
-          HCaptcha.toggleDisableForm(newValue);
+          HCaptcha.toggleDisableForm(newValue, serviceNameOrNames);
         }
 
         if (newValue) {
@@ -43,7 +43,10 @@ export default class HCaptcha {
     );
   }
 
-  private static toggleDisableForm(isCaptchaEnabled: boolean) {
+  private static toggleDisableForm(
+    isCaptchaEnabled: boolean,
+    serviceNameOrNames: string | string[],
+  ) {
     const hCaptchaWidget = document.getElementsByClassName('h-captcha')[0];
 
     if (hCaptchaWidget) {
@@ -55,7 +58,7 @@ export default class HCaptcha {
         if (formFieldSet) {
           formFieldSet.disabled = !isCaptchaEnabled;
           // eslint-disable-next-line no-new
-          new PrivacyEnabledElement(parentForm, 'h-captcha');
+          new PrivacyEnabledElement(parentForm, serviceNameOrNames);
         }
       }
     }
