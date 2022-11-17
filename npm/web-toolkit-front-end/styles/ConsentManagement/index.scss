@@ -332,7 +332,6 @@
         }
 
         & > .button-list {
-          @apply w-full;
           @apply py-0 px-5 items-center justify-center;
 
           & > button {
@@ -350,7 +349,7 @@
 
         width: 30em;
         max-width: 45vw;
-        height: 100vh;
+        height: calc(100vh - 4rem);
         grid-template:
           "navigation" 3em
           "banner-header" 1fr
