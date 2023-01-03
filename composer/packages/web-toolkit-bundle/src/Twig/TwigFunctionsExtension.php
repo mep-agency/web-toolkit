@@ -100,7 +100,7 @@ class TwigFunctionsExtension extends AbstractExtension
         /** @var array<string, int|string> $cacheItemArray */
         $cacheItemArray = $cacheItem->get();
         /** @var int $cachedMTime */
-        $cachedMTime = $cacheItemArray['mtime'];
+        $cachedMTime = isset($cacheItemArray['mtime']) ? $cacheItemArray['mtime'] : 0;
 
         // Check cache
         if (! $cacheItem->isHit() || $cachedMTime < $mTime) {
