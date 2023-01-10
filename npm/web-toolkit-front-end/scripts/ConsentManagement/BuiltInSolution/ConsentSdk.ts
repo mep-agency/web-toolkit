@@ -96,6 +96,7 @@ export default class ConsentSdk {
       method: 'POST',
       body: builtConsent,
     });
+
     const responseMessage = await response.json();
 
     if (!response.ok) {
@@ -168,6 +169,13 @@ export default class ConsentSdk {
     const response = await fetch(ConsentSdk.generateUrl(this.apiUrls.consentGet), {
       method: 'GET',
     });
+
+    if (!response.ok) {
+      // TODO: fix this
+      ConsentSdk.cleanupStorage();
+      return undefined;
+    }
+
     const consent: ResponseConsent = await response.json();
     const remoteSpecs = await this.getSpecs();
 
