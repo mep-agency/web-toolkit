@@ -31,7 +31,7 @@ class PublicKey
     private string $hash;
 
     public function __construct(
-        #[ORM\Column(type: Types::TEXT, name: '`integer`')]
+        #[ORM\Column(type: Types::TEXT, name: '`key`')]
         private string $key,
     ) {
         $this->hash = hash('sha256', $this->key);
