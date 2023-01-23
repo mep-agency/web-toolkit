@@ -19,24 +19,7 @@
             'data-csrf-token': api_token,
             'data-public-url': publicUrl,
         }}) }}
-
-        {% if valid and data is not empty %}
-            <button type="button"
-                    class="btn btn-secondary"
-                    onclick="javascript:document.getElementById('{{ id }}__metadata').classList.toggle('visually-hidden')">
-                <i class="fas fa-list" style="padding-right: 2px;"></i>
-            </button>
-
-            <a class="btn btn-primary"
-               style="height: 28px; margin-top: 1px;"
-               href="{{ attachment_public_url(data) }}"
-               target="_blank">Preview <i class="fas fa-external-link-alt"></i></a>
-        {% endif %}
     </div>
-
-    {% if valid and data is not empty %}
-        <div id="{{ id }}__metadata" class="mt-3 visually-hidden">{{ dump(data.metadata) }}</div>
-    {% endif %}
 
     <div class="mwt-upload-widget form-control" id="{{ id }}__mwt-upload-widget">
         <div class="display form-control"></div>
