@@ -111,7 +111,11 @@ class AttachmentField implements Field {
   }
 
   async fetchFileData(fileData:any) {
-    const response = await fetch(fileData.fileURL, {
+    const fileURL = new URL(fileData.fileURL);
+    // Fix broken CORS when asset is already cached...
+    fileURL.searchParams.set('mwt', 'attachment');
+
+    const response = await fetch(fileURL.toString(), {
       method: 'HEAD',
     });
 
