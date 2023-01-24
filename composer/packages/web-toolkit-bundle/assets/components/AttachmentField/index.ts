@@ -11,8 +11,6 @@ import './attachment-field.scss';
 
 import FieldsManager, { Field } from '../../scripts/FieldsManager';
 
-// TODO: This is a temporary implementation...
-
 class AttachmentField implements Field {
   private readonly input: HTMLInputElement;
 
