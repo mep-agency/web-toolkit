@@ -25,10 +25,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
 /**
  * @author Marco Lipparini <developer@liarco.net>
  */
-#[AsCommand(
-    name: self::NAME,
-    description: self::DESCRIPTION,
-)]
+#[AsCommand(name: self::NAME, description: self::DESCRIPTION)]
 class SessionsCreateTableCommand extends Command
 {
     /**

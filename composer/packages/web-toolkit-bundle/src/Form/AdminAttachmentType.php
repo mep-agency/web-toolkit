@@ -150,10 +150,7 @@ class AdminAttachmentType extends AbstractType implements DataTransformerInterfa
         return 'mwt_admin_attachment';
     }
 
-    /**
-     * @return class-string<TextType>
-     */
-    public function getParent()
+    public function getParent(): string
     {
         return TextType::class;
     }

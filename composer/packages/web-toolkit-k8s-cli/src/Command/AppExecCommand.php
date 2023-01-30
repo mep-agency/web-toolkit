@@ -25,10 +25,7 @@ use Symfony\Component\Process\Process;
 /**
  * @author Marco Lipparini <developer@liarco.net>
  */
-#[AsCommand(
-    name: self::NAME,
-    description: self::DESCRIPTION,
-)]
+#[AsCommand(name: self::NAME, description: self::DESCRIPTION)]
 class AppExecCommand extends AbstractHelmCommand
 {
     /**

@@ -32,10 +32,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * @author Marco Lipparini <developer@liarco.net>
  * @author Alessandro Foschi <alessandro.foschi5@gmail.com>
  */
-#[AsCommand(
-    name: self::NAME,
-    description: self::DESCRIPTION,
-)]
+#[AsCommand(name: self::NAME, description: self::DESCRIPTION)]
 class SuperUserCreateCommand extends AbstractK8sCommand
 {
     /**

@@ -11,9 +11,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 
-function runCommandWithMessageOrFail(SymfonyStyle $io, string $message, string $command): bool
+function runCommandWithMessageOrFail(SymfonyStyle $symfonyStyle, string $message, string $command): bool
 {
-    $io->note($message);
+    $symfonyStyle->note($message);
 
     $process = Process::fromShellCommandline($command);
     $process->mustRun();
@@ -21,11 +21,11 @@ function runCommandWithMessageOrFail(SymfonyStyle $io, string $message, string $
     return $process->isSuccessful();
 }
 
-function webpackEncore_removeUnusedFiles(SymfonyStyle $io): void
+function webpackEncore_removeUnusedFiles(SymfonyStyle $symfonyStyle): void
 {
     $filesystem = new Filesystem();
 
-    $io->note('Removing unused files from Webpack Encore...');
+    $symfonyStyle->note('Removing unused files from Webpack Encore...');
 
     $filesystem->remove(__DIR__.'/assets/app.js');
     $filesystem->remove(__DIR__.'/assets/styles/app.css');
@@ -33,25 +33,25 @@ function webpackEncore_removeUnusedFiles(SymfonyStyle $io): void
     $filesystem->remove(__DIR__.'/assets/controllers');
 }
 
-function init_removeUnusedFiles(SymfonyStyle $io): void
+function init_removeUnusedFiles(SymfonyStyle $symfonyStyle): void
 {
     $filesystem = new Filesystem();
     $unusedFiles = [__DIR__.'/README.md'];
 
-    $io->note('Removing some unused files...');
+    $symfonyStyle->note('Removing some unused files...');
 
     $filesystem->remove($unusedFiles);
 }
 
-function init_removeInitFile(SymfonyStyle $io): void
+function init_removeInitFile(SymfonyStyle $symfonyStyle): void
 {
     $filesystem = new Filesystem();
 
-    $io->note('Removing this script...');
+    $symfonyStyle->note('Removing this script...');
 
     $filesystem->remove(__FILE__);
 
-    $io->note('Removing the init script from composer.json...');
+    $symfonyStyle->note('Removing the init script from composer.json...');
 
     $composerFileContent = file_get_contents(__DIR__.'/composer.json');
 
@@ -75,9 +75,9 @@ function init_removeInitFile(SymfonyStyle $io): void
     file_put_contents(__DIR__.'/composer.json', $composerJsonContent);
 }
 
-function generateRsaPrivateKeyInDotEnv(SymfonyStyle $io): void
+function generateRsaPrivateKeyInDotEnv(SymfonyStyle $symfonyStyle): void
 {
-    $io->note('Generating RSA private key...');
+    $symfonyStyle->note('Generating RSA private key...');
 
     $rsaPrivateKey = RSA::createKey(2048);
     $base64RsaPrivateKey = base64_encode($rsaPrivateKey->toString('PKCS8'));
