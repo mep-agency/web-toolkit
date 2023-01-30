@@ -14,18 +14,14 @@ declare(strict_types=1);
 use PhpCsFixer\Fixer\Comment\HeaderCommentFixer;
 use PhpCsFixer\Fixer\ControlStructure\TrailingCommaInMultilineFixer;
 use PhpCsFixer\Fixer\Phpdoc\PhpdocToCommentFixer;
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symplify\CodingStandard\Fixer\LineLength\DocBlockLineLengthFixer;
 use Symplify\CodingStandard\Fixer\LineLength\LineLengthFixer;
-use Symplify\EasyCodingStandard\ValueObject\Option;
+use Symplify\EasyCodingStandard\Config\ECSConfig;
 use Symplify\EasyCodingStandard\ValueObject\Set\SetList;
 
-return static function (ContainerConfigurator $containerConfigurator): void {
-    $services = $containerConfigurator->services();
-    $parameters = $containerConfigurator->parameters();
-
+return static function (ECSConfig $ecsConfig): void {
     // Sources
-    $parameters->set(Option::PATHS, [
+    $ecsConfig->paths([
         __DIR__.'/composer',
         __DIR__.'/ecs.php',
         __DIR__.'/monorepo-builder.php',
@@ -33,45 +29,40 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     ]);
 
     // Skip some stuff
-    $parameters->set(Option::SKIP, [
+    $ecsConfig->skip([
         HeaderCommentFixer::class => [__DIR__.'/composer/projects/symfony-web-toolkit-skeleton/*'],
     ]);
 
     // Define what rule sets will be applied
-    $containerConfigurator->import(SetList::CLEAN_CODE);
-    $containerConfigurator->import(SetList::COMMON);
-    $containerConfigurator->import(SetList::PSR_12);
-    $containerConfigurator->import(SetList::SYMFONY);
-    $containerConfigurator->import(SetList::PHP_CS_FIXER);
+    $ecsConfig->sets([
+        SetList::CLEAN_CODE,
+        SetList::COMMON,
+        SetList::PSR_12,
+        SetList::SYMFONY,
+        SetList::PHP_CS_FIXER,
+    ]);
 
     // Custom configuration
-    $services->set(LineLengthFixer::class);
-    $services->set(DocBlockLineLengthFixer::class);
+    $ecsConfig->rules([LineLengthFixer::class, DocBlockLineLengthFixer::class]);
 
-    $services->set(HeaderCommentFixer::class)
-        ->call('configure', [[
-            'header' => trim(
-                implode(
-                    "\n",
-                    array_map(
-                        fn ($line) => trim($line, '/* '),
-                        explode("\n", (string) file_get_contents(__DIR__.'/license-header-template.txt')),
-                    ),
+    $ecsConfig->ruleWithConfiguration(HeaderCommentFixer::class, [
+        'header' => trim(
+            implode(
+                "\n",
+                array_map(
+                    fn ($line) => trim($line, '/* '),
+                    explode("\n", (string) file_get_contents(__DIR__.'/license-header-template.txt')),
                 ),
             ),
-            'location' => 'after_open',
-        ]])
-    ;
+        ),
+        'location' => 'after_open',
+    ]);
 
-    $services->get(PhpdocToCommentFixer::class)
-        ->call('configure', [[
-            'ignored_tags' => ['author', 'var', 'phpstan-ignore-next-line'],
-        ]])
-    ;
+    $ecsConfig->ruleWithConfiguration(PhpdocToCommentFixer::class, [
+        'ignored_tags' => ['author', 'var', 'phpstan-ignore-next-line'],
+    ]);
 
-    $services->get(TrailingCommaInMultilineFixer::class)
-        ->call('configure', [[
-            'elements' => ['arrays', 'arguments', 'parameters'],
-        ]])
-    ;
+    $ecsConfig->ruleWithConfiguration(TrailingCommaInMultilineFixer::class, [
+        'elements' => ['arrays', 'arguments', 'parameters'],
+    ]);
 };
