@@ -176,8 +176,8 @@ final class AdminEditorJsType extends AbstractType implements DataTransformerInt
             'compound' => false,
             'constraints' => [new Valid()],
             self::TOOLS_OPTIONS => [],
-            'is_empty_callback' => static function (EditorJsContent $value): bool {
-                return $value->getBlocks()->isEmpty();
+            'is_empty_callback' => static function (EditorJsContent $editorJsContent): bool {
+                return $editorJsContent->getBlocks()->isEmpty();
             },
         ]);
 

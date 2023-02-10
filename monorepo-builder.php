@@ -30,7 +30,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $parameters->set(Option::DATA_TO_APPEND, [
         ComposerJsonSection::REQUIRE_DEV => [
             'phpunit/phpunit' => '^9.5',
-            'phpstan/phpstan' => '^1.2.0',
+            'phpstan/phpstan' => '^1.6.8',
             'phpstan/extension-installer' => '^1.1',
             'rector/rector' => '^0.12.8',
             'symplify/easy-coding-standard' => '^10.0',

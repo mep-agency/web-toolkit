@@ -41,10 +41,7 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\InheritanceType('JOINED')]
 #[ORM\DiscriminatorColumn(name: 'type', type: 'string')]
 #[ORM\DiscriminatorMap(Block::BLOCKS_MAPPING)]
-#[DiscriminatorMap(
-    typeProperty: 'type',
-    mapping: Block::BLOCKS_MAPPING,
-)]
+#[DiscriminatorMap(typeProperty: 'type', mapping: Block::BLOCKS_MAPPING)]
 abstract class Block implements JsonSerializable, Stringable
 {
     /**

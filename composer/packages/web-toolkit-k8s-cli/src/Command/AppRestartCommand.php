@@ -23,10 +23,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 /**
  * @author Marco Lipparini <developer@liarco.net>
  */
-#[AsCommand(
-    name: self::NAME,
-    description: self::DESCRIPTION,
-)]
+#[AsCommand(name: self::NAME, description: self::DESCRIPTION)]
 class AppRestartCommand extends AbstractHelmCommand
 {
     /**

@@ -60,5 +60,28 @@
 
     <!-- Entity names [END] -->
 
+    <!-- Properties [START] -->
+
+    <unit id=".x7SSlD" name="user.role.user">
+      <segment>
+        <source>user.role.user</source>
+        <target>User</target>
+      </segment>
+    </unit>
+    <unit id="i5uszea" name="user.role.editor">
+      <segment>
+        <source>user.role.editor</source>
+        <target>Editor</target>
+      </segment>
+    </unit>
+    <unit id="WG_UUFK" name="user.role.admin">
+      <segment>
+        <source>user.role.admin</source>
+        <target>Admin</target>
+      </segment>
+    </unit>
+
+    <!-- Properties [END] -->
+
   </file>
 </xliff>

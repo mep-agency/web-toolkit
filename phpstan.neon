@@ -5,7 +5,7 @@ parameters:
   ignoreErrors:
     - message: '#autowire\(\), autoconfigure\(\), and public\(\) are required in config service#'
       paths:
-        - composer/packages/web-toolkit-k8s-cli/config/services.php
+    #    - composer/packages/web-toolkit-k8s-cli/config/services.php
         - composer/packages/web-toolkit-bundle/src/Resources/config/services.php
   bootstrapFiles:
     # Fix class not found error for Symplify\MonorepoBuilder\Release\Contract\ReleaseWorker\ReleaseWorkerInterface
@@ -15,6 +15,8 @@ parameters:
   scanFiles:
     # Allows to use this function in the global scope
     - vendor/twig/twig/src/Extension/EscaperExtension.php
+    # Allows to use configuration functions in the global scope (probably not the best solution)
+    - vendor/symfony/dependency-injection/Loader/Configurator/ContainerConfigurator.php
 
 includes:
   # TODO: include more rule-sets

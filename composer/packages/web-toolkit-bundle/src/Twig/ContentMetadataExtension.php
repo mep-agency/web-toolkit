@@ -37,8 +37,8 @@ class ContentMetadataExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('content_metadata', function (Environment $env, bool $isSuccessResponse): string {
-                return $this->getContentMetadata($env, $isSuccessResponse);
+            new TwigFunction('content_metadata', function (Environment $environment, bool $isSuccessResponse): string {
+                return $this->getContentMetadata($environment, $isSuccessResponse);
             }, [
                 'needs_environment' => true,
                 'is_safe' => ['html'],

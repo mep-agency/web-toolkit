@@ -12,25 +12,24 @@
 declare(strict_types=1);
 
 use Rector\CodeQuality\Rector\Array_\CallableThisArrayToAnonymousFunctionRector;
-use Rector\Core\Configuration\Option;
+use Rector\Config\RectorConfig;
 use Rector\Core\ValueObject\PhpVersion;
 use Rector\Doctrine\Set\DoctrineSetList;
 use Rector\Set\ValueObject\SetList;
 use Rector\Symfony\Set\SymfonySetList;
 use Rector\TypeDeclaration\Rector\ClassMethod\AddArrayReturnDocTypeRector;
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 // Fix class not found error for Symplify\MonorepoBuilder\Release\Contract\ReleaseWorker\ReleaseWorkerInterface
 require_once __DIR__.'/vendor/symplify/monorepo-builder/vendor/autoload.php';
 
-return static function (ContainerConfigurator $containerConfigurator): void {
-    $parameters = $containerConfigurator->parameters();
+return static function (RectorConfig $rectorConfig): void {
+    $rectorConfig->parallel();
 
     // Set target PHP version
-    $parameters->set(Option::PHP_VERSION_FEATURES, PhpVersion::PHP_81);
+    $rectorConfig->phpVersion(PhpVersion::PHP_81);
 
     // Sources
-    $parameters->set(Option::PATHS, [
+    $rectorConfig->paths([
         __DIR__.'/composer',
         __DIR__.'/ecs.php',
         __DIR__.'/monorepo-builder.php',
@@ -38,7 +37,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     ]);
 
     // Skip some stuff
-    $parameters->set(Option::SKIP, [
+    $rectorConfig->skip([
         AddArrayReturnDocTypeRector::class => [
             // Avoid "@return null“ comments
             __DIR__.'/composer/packages/web-toolkit-bundle/src/Form/TypeGuesser/AdminAttachmentTypeGuesser.php',
@@ -51,15 +50,17 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     ]);
 
     // Define what rule sets will be applied
-    $containerConfigurator->import(SetList::PHP_81);
-    $containerConfigurator->import(SetList::DEAD_CODE);
-    $containerConfigurator->import(SetList::CODE_QUALITY);
-    $containerConfigurator->import(SymfonySetList::SYMFONY_CODE_QUALITY);
-    $containerConfigurator->import(DoctrineSetList::DOCTRINE_CODE_QUALITY);
-    $containerConfigurator->import(SetList::CODING_STYLE);
-    $containerConfigurator->import(SetList::NAMING);
-    $containerConfigurator->import(SetList::TYPE_DECLARATION);
+    $rectorConfig->sets([
+        SetList::PHP_81,
+        SetList::DEAD_CODE,
+        SetList::CODE_QUALITY,
+        SymfonySetList::SYMFONY_CODE_QUALITY,
+        DoctrineSetList::DOCTRINE_CODE_QUALITY,
+        SetList::CODING_STYLE,
+        SetList::NAMING,
+        SetList::TYPE_DECLARATION,
+    ]);
 
     // Custom configuration
-    $parameters->set(Option::AUTO_IMPORT_NAMES, true);
+    $rectorConfig->importNames();
 };
