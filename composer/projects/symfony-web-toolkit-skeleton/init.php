@@ -88,7 +88,7 @@ function generateRsaPrivateKeyInDotEnv(SymfonyStyle $symfonyStyle): void
     }
 
     $privateKeyPlaceholderRegex = '#MWT_PRIVACY_CONSENT_MANAGER_PRIVATE_KEY_PLACEHOLDER#';
-    $dotEnvFile = preg_replace($privateKeyPlaceholderRegex, $base64RsaPrivateKey, $dotEnvFile,);
+    $dotEnvFile = preg_replace($privateKeyPlaceholderRegex, $base64RsaPrivateKey, $dotEnvFile);
 
     file_put_contents(__DIR__.'/.env', $dotEnvFile);
 }
