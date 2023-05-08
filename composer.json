@@ -77,6 +77,6 @@
         "ecs-fix": "php vendor/bin/ecs check --fix",
         "rector": "php vendor/bin/rector process --dry-run",
         "rector-fix": "php vendor/bin/rector process",
-        "phpstan": "php vendor/bin/phpstan analyse"
+        "phpstan": "php vendor/bin/phpstan analyse --memory-limit=-1"
     }
 }
