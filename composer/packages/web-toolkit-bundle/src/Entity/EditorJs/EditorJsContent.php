@@ -72,7 +72,7 @@ class EditorJsContent implements JsonSerializable, Stringable
         $this->blocks = new ArrayCollection();
 
         if (self::CURRENT_TIME_PLACEHOLDER === $this->time) {
-            $this->time = microtime();
+            $this->time = strval(floor(microtime(true) * 1000));
         }
     }
 
