@@ -29,11 +29,9 @@ class K8sConfigGenerator
     public function generateConfigFile(string $path, string $serviceAccountName, string $namespace): void
     {
         $k8sServiceAccount = $this->kubernetesCluster->getServiceAccountByName($serviceAccountName, $namespace);
-        /** @phpstan-ignore-next-line The vendor lib uses magic calls for undocumented resources */
-        $secretName = $k8sServiceAccount->getSecrets()[0]['name'];
         /** @var array<string, mixed> $secretData */
         $secretData = $this->kubernetesCluster
-            ->getSecretByName($secretName, $namespace)
+            ->getSecretByName($serviceAccountName.'-token', $namespace)
             ->getData(true)
         ;
         /** @var string $caCrt */
