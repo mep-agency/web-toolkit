@@ -21,11 +21,6 @@ class Argument
     /**
      * @var string
      */
-    final public const NAMESPACE = Option::NAMESPACE;
-
-    /**
-     * @var string
-     */
     final public const GENERIC_NAME = 'name';
 
     /**

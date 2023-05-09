@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Mep\MepWebToolkitK8sCli\Contract;
 
-use Mep\MepWebToolkitK8sCli\Config\Argument;
 use Mep\MepWebToolkitK8sCli\Config\Option;
 use Mep\MepWebToolkitK8sCli\Exception\StopExecutionException;
 use Mep\MepWebToolkitK8sCli\Factory\KubernetesClusterFactory;
@@ -54,25 +53,20 @@ abstract class AbstractK8sCommand extends Command
             }
 
             try {
-                // Check given namespace names
-                $namespaceNames = [];
-
-                if ($input->hasArgument(Argument::NAMESPACE)) {
-                    $namespaceNames[] = $input->getArgument(Argument::NAMESPACE);
-                }
-
+                // Check given namespace name
                 if ($input->hasOption(Option::NAMESPACE)) {
-                    $namespaceNames[] = $input->getOption(Option::NAMESPACE);
+                    $namespaceName = $input->getOption(Option::NAMESPACE);
                 }
 
-                /** @var string $namespaceName */
-                foreach ($namespaceNames as $namespaceName) {
-                    $this->isCreatedByThisToolOrStop(
-                        $this->kubernetesCluster->getNamespaceByName($namespaceName),
-                        $input,
-                        $output,
-                    );
+                if (! isset($namespaceName) || ! is_string($namespaceName)) {
+                    throw new StopExecutionException('Invalid namespace value!', Command::FAILURE);
                 }
+
+                $this->isCreatedByThisToolOrStop(
+                    $this->kubernetesCluster->getNamespaceByName($namespaceName),
+                    $input,
+                    $output,
+                );
 
                 return $this->execute($input, $output);
             } catch (StopExecutionException $stopExecutionException) {

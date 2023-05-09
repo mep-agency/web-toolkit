@@ -100,7 +100,7 @@ abstract class AbstractHelmCommand extends AbstractK8sCommand
 
     public function getNamespace(InputInterface $input): string
     {
-        $namespace = $input->getArgument(Argument::NAMESPACE);
+        $namespace = $input->getOption(Option::NAMESPACE);
 
         if (! is_string($namespace)) {
             throw new LogicException('Data is not of the correct type.');

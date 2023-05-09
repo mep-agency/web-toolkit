@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Mep\MepWebToolkitK8sCli\Command;
 
+use Mep\MepWebToolkitK8sCli\Config\Argument;
 use Mep\MepWebToolkitK8sCli\Config\Option;
 use Mep\MepWebToolkitK8sCli\Contract\AbstractK8sCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -42,7 +43,7 @@ class NamespaceDeleteCommand extends AbstractK8sCommand
 
     protected function configure(): void
     {
-        $this->addArgument(Option::NAMESPACE, InputArgument::REQUIRED, 'The namespace name');
+        $this->addArgument(Argument::GENERIC_NAME, InputArgument::REQUIRED, 'The namespace name');
 
         $this->addOption(
             Option::FORCE,
@@ -56,7 +57,7 @@ class NamespaceDeleteCommand extends AbstractK8sCommand
     {
         $symfonyStyle = new SymfonyStyle($input, $output);
         /** @var string $namespaceName */
-        $namespaceName = $input->getArgument(Option::NAMESPACE);
+        $namespaceName = $input->getArgument(Argument::GENERIC_NAME);
 
         $k8sNamespace = $this->kubernetesCluster
             ->getNamespaceByName($namespaceName)
