@@ -3,10 +3,10 @@ parameters:
   paths:
     - composer
   ignoreErrors:
-    #- message: '#autowire\(\), autoconfigure\(\), and public\(\) are required in config service#'
-    #  paths:
-    #    - composer/packages/web-toolkit-k8s-cli/config/services.php
-    #    - composer/packages/web-toolkit-bundle/src/Resources/config/services.php
+    - message: '#autowire\(\), autoconfigure\(\), and public\(\) are required in config service#'
+      paths:
+        - composer/packages/web-toolkit-k8s-cli/config/services.php
+        - composer/packages/web-toolkit-bundle/src/Resources/config/services.php
   bootstrapFiles:
     # Fix class not found error for Symplify\MonorepoBuilder\Release\Contract\ReleaseWorker\ReleaseWorkerInterface
     - vendor/symplify/monorepo-builder/vendor/autoload.php
