@@ -40,7 +40,7 @@ class NestedList extends Block
         'remove',
     ], fetch: 'EAGER')]
     #[ORM\JoinTable(name: 'mwt_editor_js_nested_list_nested_list_item')]
-    #[ORM\JoinColumn(name: 'nested_list_id', referencedColumnName: 'uuid')]
+    #[ORM\JoinColumn(name: 'nested_list_id', referencedColumnName: 'uuid', onDelete: 'CASCADE')]
     #[ORM\InverseJoinColumn(
         name: 'nested_list_item_id',
         referencedColumnName: 'uuid',
