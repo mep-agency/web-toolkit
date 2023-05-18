@@ -124,7 +124,7 @@ class AttachmentField implements Field {
     this.passFileData({
       fileSize: AttachmentField.fileSizeFormatter(response.headers.get('content-length')!),
       fileType: response.headers.get('content-type'),
-      fileName: fileData.fileURL.split('/')[5],
+      fileName: fileData.fileURL.split('/').slice(-1),
       fileURL: fileData.fileURL,
     });
   }

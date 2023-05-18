@@ -63,7 +63,11 @@ final class TinifyProcessor implements ProcessorInterface
             return false;
         }
 
-        return in_array(mb_strtolower($unprocessedAttachmentDto->mimeType), ['image/jpeg', 'image/png'], true);
+        return in_array(
+            mb_strtolower($unprocessedAttachmentDto->mimeType),
+            ['image/jpeg', 'image/png', 'image/svg+xml'],
+            true,
+        );
     }
 
     public function run(UnprocessedAttachmentDto $unprocessedAttachmentDto): UnprocessedAttachmentDto
@@ -74,14 +78,18 @@ final class TinifyProcessor implements ProcessorInterface
             throw new RuntimeException('Cannot compress image: invalid file path.');
         }
 
-        if (! $this->dummyMode) {
-            $tinifyFile = fromFile($fileRealPath);
-            $tinifyFile->toFile($fileRealPath);
+        if ('image/svg+xml' !== mb_strtolower($unprocessedAttachmentDto->mimeType)) {
+            // SVG files cannot be compressed using the API so they must be skipped...
 
-            clearstatcache(true, $fileRealPath);
-            $unprocessedAttachmentDto->fileSize = $unprocessedAttachmentDto->file->getSize();
-        } else {
-            $unprocessedAttachmentDto->metadata[self::IS_DUMMY] = true;
+            if (! $this->dummyMode) {
+                $tinifyFile = fromFile($fileRealPath);
+                $tinifyFile->toFile($fileRealPath);
+
+                clearstatcache(true, $fileRealPath);
+                $unprocessedAttachmentDto->fileSize = $unprocessedAttachmentDto->file->getSize();
+            } else {
+                $unprocessedAttachmentDto->metadata[self::IS_DUMMY] = true;
+            }
         }
 
         $unprocessedAttachmentDto->metadata[self::IS_COMPRESSED] = true;
