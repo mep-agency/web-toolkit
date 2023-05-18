@@ -140,6 +140,7 @@ class CustomImageTool extends ImageTool implements BlockTool {
     } as CustomImageToolData;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   validate(blockData: BlockToolData): boolean {
     return blockData.attachment && blockData.attachment.uuid && blockData.attachment.publicUrl;
   }
