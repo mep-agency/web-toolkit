@@ -11,6 +11,7 @@ import {
   BlockTool,
   BlockToolConstructable,
   BlockToolConstructorOptions,
+  BlockToolData,
 } from '@editorjs/editorjs';
 
 const ImageTool: OriginalImageToolConstructable = require('@editorjs/image');
@@ -137,6 +138,10 @@ class CustomImageTool extends ImageTool implements BlockTool {
         publicUrl: data.file.url,
       },
     } as CustomImageToolData;
+  }
+
+  validate(blockData: BlockToolData): boolean {
+    return blockData.attachment && blockData.attachment.uuid && blockData.attachment.publicUrl;
   }
 
   onUpload(response: CustomUploadResponseFormat) {
