@@ -295,6 +295,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     ;
     $services->set(WebToolkitBundle::SERVICE_PRIVACY_CONSENT_EXTENSION, PrivacyConsentExtension::class)
         ->arg(0, new Reference(UrlGeneratorInterface::class))
+        ->arg(1, new Reference(RequestStack::class))
         ->tag('twig.extension')
     ;
     $services->set(WebToolkitBundle::SERVICE_PRIVACY_CREATE_CONSENT_CONTROLLER, CreateConsentController::class)

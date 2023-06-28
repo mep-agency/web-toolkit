@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace Mep\WebToolkitBundle\Twig;
 
 use Mep\WebToolkitBundle\Config\RouteName;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -58,9 +60,13 @@ class PrivacyConsentExtension extends AbstractExtension
      */
     private const COOKIE_POLICY_ENV_KEY = 'COOKIE_POLICY_URL';
 
+    private readonly ?Request $request;
+
     public function __construct(
         private readonly UrlGeneratorInterface $urlGenerator,
+        RequestStack $requestStack,
     ) {
+        $this->request = $requestStack->getCurrentRequest();
     }
 
     /**
@@ -116,11 +122,15 @@ class PrivacyConsentExtension extends AbstractExtension
 
     public function getPrivacyPolicyUrl(): string
     {
-        return $_ENV[self::PRIVACY_POLICY_ENV_KEY];
+        $envKey = self::PRIVACY_POLICY_ENV_KEY.'_'.($this->request?->getLocale() ?? 'NOLANG');
+
+        return $_ENV[isset($_ENV[$envKey]) ? $envKey : self::PRIVACY_POLICY_ENV_KEY];
     }
 
     public function getCookiePolicyUrl(): string
     {
-        return $_ENV[self::COOKIE_POLICY_ENV_KEY];
+        $envKey = self::COOKIE_POLICY_ENV_KEY.'_'.($this->request?->getLocale() ?? 'NOLANG');
+
+        return $_ENV[isset($_ENV[$envKey]) ? $envKey : self::COOKIE_POLICY_ENV_KEY];
     }
 }
