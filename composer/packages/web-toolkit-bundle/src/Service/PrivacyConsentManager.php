@@ -289,7 +289,7 @@ class PrivacyConsentManager
 
         $userTimestamp = $data[self::JSON_KEY_TIMESTAMP];
 
-        if ($userTimestamp < $_SERVER['REQUEST_TIME'] - $this->timestampTolerance || $userTimestamp > $_SERVER['REQUEST_TIME'] + 1) {
+        if ($userTimestamp < $_SERVER['REQUEST_TIME'] - $this->timestampTolerance || $userTimestamp > $_SERVER['REQUEST_TIME'] + $this->timestampTolerance) {
             throw new InvalidUserConsentDataException(
                 InvalidUserConsentDataException::TIMESTAMP_IS_NOT_IN_VALID_RANGE,
             );
